@@ -1,76 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FribergCars.Shared.SharedTypes
 {
-	#region Enums
+    #region Enums
 
-	public enum CarPropulsionSystem
+    public enum VehiclePropulsionType
 	{
-        None,
-        BEV, // Battery electric vehicles
-        Diesel,
-        Gasoline,
-        HEV, // Hybrid electric vehicles		
-        Other,
-        PHEV, // Plugin-in hybrid electric vehicles      
-	}
+        [Display(Name = "None", Description = "No propulsion system")]
+        None = 1,
+
+        [Display(Name = "Other", Description = "Other type of vehicle")]
+        Other = 2,
+
+        [Display(Name = "BEV", Description = "Battery electric vehicle")]
+        BEV = 3,
+
+        [Display(Name = "Diesel", Description = "Diesel powered vehicle")]
+        Diesel = 4,
+
+        [Display(Name = "Gasoline", Description = "Gasoline powered vehicle")]
+        Gasoline = 5,
+
+        [Display(Name = "HEV", Description = "Hybrid electric vehicle")]
+        HEV = 9,
+
+        [Display(Name = "PHEV", Description = "Plugin-in hybrid electric vehicle")]
+        PHEV = 7,
+    }
 
     public enum CarRentalStatus
     {
-        Active,
+        [Display(Name = "Unavailable", Description = "Not available for renting")]
+        Unavailable = 1,
+
+        [Display(Name = "Available", Description = "Available for renting")]
+        Available = 2,
+
+        [Display(Name = "Rented", Description = "Already rented")]
+        Rented = 3,
+
+        [Display(Name = "OutOfService", Description = "Taken out of service permanently")]
+        OutOfService = 4
     }
 
 	#endregion
 }
 
 
-
-//If you use EF Core 6, you can do such trick. For instance, you have an enum CurrencyId like this:
-
-//public enum CurrencyId
-//{
-//    USD = -1,
-//    AMD = -2,
-//    EUR = -3,
-//    RUB = -4,
-//    CAD = -5,
-//    AUD = -6,
-//}
-
-//And you want to use it in your domain EF class that will be mapped on table. Like this:
-
-//public sealed class Currency
-//{
-//    [Key]
-//    public CurrencyId CurrencyId { get; set; }
-//    public string Name { get; set; }
-//}
-
-//In your DatabaseContext you can override your OnModelCreating method and write there this data seeding declaration:
-
-//modelBuilder
-//        .Entity<Currency>().HasData(
-//            Enum.GetValues(typeof(CurrencyId))
-//                .Cast<CurrencyId>()
-//                .Select(e => new Currency
-//                {
-//                    CurrencyId = e,
-//                    Name = e.ToString()
-//                })
-//        );
-
-//Then your data in database will look like this:
-
-//CurrencyId Name
-//-6	   AUD
-//-5	   CAD
-//-4	   RUB
-//-3	   EUR
-//-2	   AMD
-//-1	   USD

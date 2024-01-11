@@ -31,15 +31,19 @@ namespace FribergCarRentals.Controllers
 
         public IActionResult Cars()
         {
-            var testCar = new CarEntity("Bmw", "Blue", "523", 2008, "ABC123", FribergCars.Shared.SharedTypes.CarPropulsionSystem.Gasoline);
+            var testCar = new CarEntity("Bmw", "Blue", "523", 2008, "ABC123", VehiclePropulsionEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.VehiclePropulsionType.Gasoline), 
+                CarRentalStatusEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.CarRentalStatus.Available));
             testCar.Images.Add(new ImageEntity(@"C:\test-image.jpg"));
+
             return View(new List<CarEntity>() { testCar });
         }
 
         public IActionResult CarDetails(int i)
         {
-            var testCar = new CarEntity("Bmw", "Blue", "523", 2008, "ABC123", FribergCars.Shared.SharedTypes.CarPropulsionSystem.Gasoline);
+            var testCar = new CarEntity("Bmw", "Blue", "523", 2008, "ABC123", VehiclePropulsionEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.VehiclePropulsionType.Gasoline),
+                CarRentalStatusEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.CarRentalStatus.Available));
             testCar.Images.Add(new ImageEntity(@"C:\test-image.jpg"));
+
             return View(testCar);
         }
     }

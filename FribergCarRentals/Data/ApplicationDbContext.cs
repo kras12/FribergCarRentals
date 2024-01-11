@@ -1,4 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using FribergCarRentals.Models;
+using FribergCars.Shared.SharedTypes;
+using FribergCars.Shared.SharedClasses;
+using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Data
 {
@@ -17,6 +21,36 @@ namespace FribergCarRentals.Data
         {
 
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The database set for cars.
+        /// </summary>
+        public DbSet<CarEntity> Cars { get; set; }
+
+        #endregion
+
+        #region Methods
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<VehiclePropulsionEntity>()
+                .HasData(
+                    Enum.GetValues(typeof(VehiclePropulsionType))
+                    .Cast<VehiclePropulsionType>()
+                    .Select(x => VehiclePropulsionEntity.CreateSeedObject(x)));
+
+            modelBuilder.Entity<CarRentalStatusEntity>()
+                .HasData(
+                    Enum.GetValues(typeof(CarRentalStatus))
+                    .Cast<CarRentalStatus>()
+                    .Select(x => CarRentalStatusEntity.CreateSeedObject(x)));
+    }
 
         #endregion
     }

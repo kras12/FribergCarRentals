@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using FribergCars.Shared.SharedTypes;
 
 namespace FribergCarRentals.Models
@@ -6,6 +7,7 @@ namespace FribergCarRentals.Models
     /// <summary>
     /// A class that represents a car
     /// </summary>
+    [Table("Cars")]
     public class CarEntity
     {
         #region Constants
@@ -29,28 +31,30 @@ namespace FribergCarRentals.Models
         /// <param name="modelYear">The model year for the car.</param>
         /// <param name="registrationNumber">The registration number for the car.</param>
         /// <param name="propulsionSystem">The propulsion system for the car.</param>
-        private CarEntity(int carId, string brand, string color, string model, int modelYear, string registrationNumber, CarPropulsionSystem propulsionSystem)
+        /// <param name="rentalStatus">The rental status for the car.</param>
+        private CarEntity(int carId, string brand, string color, string model, int modelYear, string registrationNumber, 
+            VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus)
         {
             #region Checks
 
             if (carId < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(carId), "The ID can't be a negative value.");
+                throw new ArgumentOutOfRangeException(nameof(carId), $"The value of parameter '{carId}' can't be a negative value.");
             }
 
             if (brand is null)
             {
-                throw new ArgumentNullException("The brand can't be null", nameof(brand));
+                throw new ArgumentNullException(nameof(brand), $"The value of parameter '{brand}' can't be null");
             }
 
             if (color is null)
             {
-                throw new ArgumentNullException("The color can't be null", nameof(color));
+                throw new ArgumentNullException(nameof(color), $"The value of parameter '{color}' can't be null");
             }
 
             if (model is null)
             {
-                throw new ArgumentNullException("The model can't be null", nameof(model));
+                throw new ArgumentNullException(nameof(model), "The value of parameter '{model}' can't be null");
             }
 
             //  We may have to support the next year's model
@@ -61,7 +65,17 @@ namespace FribergCarRentals.Models
 
             if (registrationNumber is null)
             {
-                throw new ArgumentNullException("The registration number can't be null", nameof(registrationNumber));
+                throw new ArgumentNullException(nameof(registrationNumber), $"The value of parameter '{registrationNumber}' can't be null");
+            }
+
+            if (propulsionSystem is null)   
+            {
+                throw new ArgumentNullException(nameof(propulsionSystem), $"The value of parameter '{propulsionSystem}' can't be null");
+            }
+
+            if (rentalStatus is null)
+            {
+                throw new ArgumentNullException(nameof(rentalStatus), $"The value of parameter '{rentalStatus}' can't be null");
             }
 
             #endregion
@@ -73,6 +87,7 @@ namespace FribergCarRentals.Models
             ModelYear = modelYear;
             RegistrationNumber = registrationNumber;
             PropulsionSystem = propulsionSystem;
+            RentalStatus = rentalStatus;
         }
 
         /// <summary>
@@ -84,8 +99,9 @@ namespace FribergCarRentals.Models
         /// <param name="modelYear">The model year for the car.</param>
         /// <param name="registrationNumber">The registration number for the car.</param>
         /// <param name="propulsionSystem">The propulsion system for the car.</param>
-        public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber, CarPropulsionSystem propulsionSystem) : 
-            this(carId: 0, brand, color, model, modelYear, registrationNumber, propulsionSystem)
+        public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber, 
+            VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus) : 
+            this(carId: 0, brand, color, model, modelYear, registrationNumber, propulsionSystem, rentalStatus)
         {
 
         }
@@ -98,7 +114,6 @@ namespace FribergCarRentals.Models
         /// The brand for the car.
         /// </summary>
         public string Brand { get; set; } = "";
-
 
         /// <summary>
         /// The ID for the car.
@@ -130,12 +145,17 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The propulsion system for the car.
         /// </summary>
-        public CarPropulsionSystem PropulsionSystem {  get; set; } = CarPropulsionSystem.None;
+        public VehiclePropulsionEntity PropulsionSystem {  get; set; } 
 
         /// <summary>
         /// A collection of images for the car.
         /// </summary>
-        public List<ImageEntity> Images { get; set; } = new List<ImageEntity>();
+        public List<ImageEntity> Images { get; set; } = [];
+
+        /// <summary>
+        /// The rental status for the car.
+        /// </summary>
+        public CarRentalStatusEntity RentalStatus { get; set; }
 
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing.Drawing2D;
 
 namespace FribergCarRentals.Models
@@ -6,6 +7,7 @@ namespace FribergCarRentals.Models
     /// <summary>
     /// A class that represents an image.
     /// </summary>
+    [Table("Images")]
     public class ImageEntity
     {
         #region Constructors
@@ -26,7 +28,7 @@ namespace FribergCarRentals.Models
 
             if (string.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentNullException("The filepath can't be null or empty.", nameof(filePath));
+                throw new ArgumentNullException(nameof(filePath), "The filepath can't be null or empty.");
             }
 
             #endregion

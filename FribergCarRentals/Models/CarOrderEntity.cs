@@ -1,15 +1,109 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FribergCarRentals.Models
 {
     /// <summary>
     /// A class that represents a car order. 
     /// </summary>
+    [Table("CarOrders")]
     public class CarOrderEntity
     {
         #region Constructors
 
+        /// <summary>
+        /// A constructor intended for EF core. 
+        /// </summary>
+        /// <param name="carOrderId">The database ID for this entity. Can't be a negative value.</param>
+        /// <param name="orderDate">The order date.</param>
+        /// <param name="pickupDate">The pickup date.</param>
+        /// <param name="returnDate">The return date.</param>
+        /// <param name="car">The car that was rented.</param>
+        /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
+        /// <param name="customer">The customer that rented the car.</param>
+        /// <param name="orderSum">The total sum of the order.</param>
+        /// <param name="payments"> A collection of payments tied to the order.</param>
+        /// <param name="orderDetails">Details about the order. </param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        private CarOrderEntity(int carOrderId, DateTime orderDate, DateTime pickupDate, DateTime returnDate,
+            CarEntity car, decimal rentalCostPerDay, CustomerEntity customer, decimal orderSum,
+            List<PaymentEntity> payments, string orderDetails)
+        {
+            #region Checks
 
+            if (carOrderId < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(carOrderId), $"The value of parameter '{carOrderId}' can't be negative.");
+            }
+
+            if (car is null)
+            {
+                throw new ArgumentNullException(nameof(car), $"The value of parameter '{car}' can't be null.");
+            }
+
+            if (rentalCostPerDay < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rentalCostPerDay), $"The value of parameter '{rentalCostPerDay}' can't be negative.");
+            }
+
+            if (customer is null)
+            {
+                throw new ArgumentNullException(nameof(customer), $"The value of parameter '{customer}' can't be null.");
+            }
+
+            if (orderSum < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(orderSum), $"The value of parameter '{orderSum}' can't be negative.");
+            }
+
+            if (payments is null)
+            {
+                throw new ArgumentNullException(nameof(payments), $"The value of parameter '{payments}' can't be null.");
+            }
+
+            if (orderDetails is null)
+            {
+                throw new ArgumentNullException(nameof(orderDetails), $"The value of parameter '{orderDetails}' can't be null.");
+            }
+
+
+            #endregion
+
+            CarOrderId = carOrderId;
+            OrderDate = orderDate;
+            PickupDate = pickupDate;
+            ReturnDate = returnDate;
+            Car = car;
+            RentalCostPerDay = rentalCostPerDay;
+            Customer = customer;
+            OrderSum = orderSum;
+            Payments = payments;
+            OrderDetails = orderDetails;
+        }
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="carOrderId">The database ID for this entity. Can't be a negative value.</param>
+        /// <param name="orderDate">The order date.</param>
+        /// <param name="pickupDate">The pickup date.</param>
+        /// <param name="returnDate">The return date.</param>
+        /// <param name="car">The car that was rented.</param>
+        /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
+        /// <param name="customer">The customer that rented the car.</param>
+        /// <param name="orderSum">The total sum of the order.</param>
+        /// <param name="payments"> A collection of payments tied to the order.</param>
+        /// <param name="orderDetails">Details about the order. </param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CarOrderEntity(DateTime orderDate, DateTime pickupDate, DateTime returnDate,
+            CarEntity car, decimal rentalCostPerDay, CustomerEntity customer, decimal orderSum,
+            List<PaymentEntity> payments, string orderDetails) : 
+            this(carOrderId: 0, orderDate, pickupDate, returnDate, car, rentalCostPerDay, customer, orderSum, payments, orderDetails)
+        {
+           
+        }
 
         #endregion
 
@@ -26,20 +120,44 @@ namespace FribergCarRentals.Models
         /// </summary>
         public DateTime OrderDate { get; set; }
 
+        /// <summary>
+        /// The pickup date.
+        /// </summary>
         public DateTime PickupDate { get; set; }
 
+        /// <summary>
+        /// The return date.
+        /// </summary>
         public DateTime ReturnDate { get; set; }
 
+        /// <summary>
+        /// The car that was rented.
+        /// </summary>
         public CarEntity Car {  get; set; } 
 
+        /// <summary>
+        /// The rental cost per day.
+        /// </summary>
         public Decimal RentalCostPerDay { get; set; }
 
+        /// <summary>
+        /// The customer that rented the car.
+        /// </summary>
         public CustomerEntity Customer { get; set; }
 
+        /// <summary>
+        /// The total sum of the order.
+        /// </summary>
         public Decimal OrderSum { get; set; }
 
-        public List<PaymentEntity> Payments { get; } = new List<PaymentEntity>();
+        /// <summary>
+        /// A collection of payments tied to the order.
+        /// </summary>
+        public List<PaymentEntity> Payments { get; } = new();
 
+        /// <summary>
+        /// Details about the order. 
+        /// </summary>
         public string OrderDetails { get; set; } = "";
 
         #endregion
