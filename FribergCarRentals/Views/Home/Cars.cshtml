@@ -31,6 +31,9 @@
                 @Html.DisplayNameFor(model => model.PropulsionSystem)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.RentalStatus)
+            </th>
+            <th>
                Image count
             </th>
             <th></th>
@@ -55,10 +58,13 @@
                 @Html.DisplayFor(modelItem => item.RegistrationNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PropulsionSystem)
+                @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
+                </td>
             <td>
-                @item.Images.Count();
+                @item.Images.Count()
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a> |

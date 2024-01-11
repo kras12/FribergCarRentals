@@ -44,7 +44,19 @@
             @Html.DisplayNameFor(model => model.PropulsionSystem)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PropulsionSystem)
+            @Html.DisplayFor(model => model.PropulsionSystem.PropulsionName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RentalStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RentalStatus.StatusName)
+        </dd>
+        <dt class="col-sm-2">
+            Image count
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Images.Count())
         </dd>
     </dl>
 </div>
