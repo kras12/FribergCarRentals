@@ -1,3 +1,7 @@
+using FribergCarRentals.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 namespace FribergCarRentals
 {
     public class Program
@@ -7,6 +11,8 @@ namespace FribergCarRentals
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("FribergCarRentalsDev") ?? throw new InvalidOperationException("Connection string 'FribergCarRentalsDev' not found.");
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
