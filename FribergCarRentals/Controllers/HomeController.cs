@@ -8,13 +8,10 @@ namespace FribergCarRentals.Controllers
     [Route("")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
         private readonly ICarRepository _carRepository;
 
-        public HomeController(ILogger<HomeController> logger, ICarRepository carRepository)
+        public HomeController(ICarRepository carRepository)
         {
-            _logger = logger;
             _carRepository = carRepository;
         }
 

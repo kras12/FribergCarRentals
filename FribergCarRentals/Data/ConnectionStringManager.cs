@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FribergCars.Shared.SharedClasses;
+using Microsoft.Extensions.Configuration;
 
 namespace FribergCarRentals.Data
 {
@@ -13,7 +14,7 @@ namespace FribergCarRentals.Data
                 configurationManager = WebApplication.CreateBuilder().Configuration;
             }
 
-            return configurationManager.GetConnectionString("ApplicationDbContext") ?? 
+            return configurationManager.GetConnectionString(AppSettingsHelper.ApplicationDbContextConnectionStringName) ?? 
                 throw new InvalidOperationException("Connection string 'FribergCarRentalsDev' was not found.");
         }
 
