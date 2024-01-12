@@ -12,8 +12,7 @@ namespace FribergCarRentals
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("FribergCarRentalsDev") ?? throw new InvalidOperationException("Connection string 'FribergCarRentalsDev' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConnectionStringManager().GetConnectionString()));
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddTransient<ICarRepository, CarRepository>();
