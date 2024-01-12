@@ -12,7 +12,7 @@ namespace FribergCarRentals
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConnectionStringManager().GetConnectionString()));
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConnectionStringManager().GetConnectionString(builder.Configuration)));
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddTransient<ICarRepository, CarRepository>();

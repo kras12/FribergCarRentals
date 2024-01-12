@@ -6,9 +6,14 @@ namespace FribergCarRentals.Data
     {
         #region Methods
 
-        public string GetConnectionString()
+        public string GetConnectionString(ConfigurationManager? configurationManager = null)
         {
-            return new ConfigurationManager().GetConnectionString("FribergCarRentalsDev") ?? 
+            if (configurationManager is null)
+            {
+                configurationManager = WebApplication.CreateBuilder().Configuration;
+            }
+
+            return configurationManager.GetConnectionString("FribergCarRentalsDev") ?? 
                 throw new InvalidOperationException("Connection string 'FribergCarRentalsDev' was not found.");
         }
 
