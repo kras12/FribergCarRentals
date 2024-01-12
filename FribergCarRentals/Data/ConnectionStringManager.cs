@@ -13,7 +13,7 @@ namespace FribergCarRentals.Data
                 configurationManager = WebApplication.CreateBuilder().Configuration;
             }
 
-            return configurationManager.GetConnectionString("FribergCarRentalsDev") ?? 
+            return configurationManager.GetConnectionString("ApplicationDbContext") ?? 
                 throw new InvalidOperationException("Connection string 'FribergCarRentalsDev' was not found.");
         }
 
