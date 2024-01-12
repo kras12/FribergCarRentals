@@ -50,6 +50,18 @@ namespace FribergCarRentals.Data
                     Enum.GetValues(typeof(CarRentalStatus))
                     .Cast<CarRentalStatus>()
                     .Select(x => CarRentalStatusEntity.CreateSeedObject(x)));
+
+            modelBuilder.Entity<CarEntity>()
+                .Navigation(x => x.PropulsionSystem)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarEntity>()
+                .Navigation(x => x.RentalStatus)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarEntity>()
+                .Navigation(x => x.Images)
+                .AutoInclude();
     }
 
         #endregion

@@ -60,15 +60,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
+            </td>
             <td>
                 @item.Images.Count()
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a> |
-                <a asp-action="CarDetails" asp-route-id="@item.CarId">Details</a> |
+                <a asp-action="Car" asp-route-id="@item.CarId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.CarId">Delete</a>
             </td>
         </tr>

@@ -19,5 +19,11 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #endregion
 
+        #region Methods
+
+        
+
+        #endregion
+
     }
 }

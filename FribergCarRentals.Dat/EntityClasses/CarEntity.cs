@@ -149,12 +149,12 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The registration number for the car.
         /// </summary>
-        public string RegistrationNumber { get; set; } = "";        
+        public string RegistrationNumber { get; set; } = "";
 
         /// <summary>
         /// A collection of images for the car.
         /// </summary>
-        public List<ImageEntity> Images { get; set; } = [];
+        public List<ImageEntity> Images { get; set; } = new();
 
         /// <summary>
         /// The rental status for the car.
