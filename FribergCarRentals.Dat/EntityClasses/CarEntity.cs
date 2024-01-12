@@ -30,10 +30,7 @@ namespace FribergCarRentals.Models
         /// <param name="model">The model for the car.</param>
         /// <param name="modelYear">The model year for the car.</param>
         /// <param name="registrationNumber">The registration number for the car.</param>
-        /// <param name="propulsionSystem">The propulsion system for the car.</param>
-        /// <param name="rentalStatus">The rental status for the car.</param>
-        private CarEntity(int carId, string brand, string color, string model, int modelYear, string registrationNumber, 
-            VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus)
+        private CarEntity(int carId, string brand, string color, string model, int modelYear, string registrationNumber)
         {
             #region Checks
 
@@ -68,16 +65,6 @@ namespace FribergCarRentals.Models
                 throw new ArgumentNullException(nameof(registrationNumber), $"The value of parameter '{registrationNumber}' can't be null");
             }
 
-            if (propulsionSystem is null)   
-            {
-                throw new ArgumentNullException(nameof(propulsionSystem), $"The value of parameter '{propulsionSystem}' can't be null");
-            }
-
-            if (rentalStatus is null)
-            {
-                throw new ArgumentNullException(nameof(rentalStatus), $"The value of parameter '{rentalStatus}' can't be null");
-            }
-
             #endregion
 
             CarId = carId;
@@ -86,8 +73,11 @@ namespace FribergCarRentals.Models
             Model = model;
             ModelYear = modelYear;
             RegistrationNumber = registrationNumber;
-            PropulsionSystem = propulsionSystem;
-            RentalStatus = rentalStatus;
+
+            // EF Core can't set navigational properties through a constructor, 
+            // so these will be setby EF Core via the properties after the constructor have run. 
+            PropulsionSystem = null!;
+            RentalStatus = null!;
         }
 
         /// <summary>
@@ -99,11 +89,30 @@ namespace FribergCarRentals.Models
         /// <param name="modelYear">The model year for the car.</param>
         /// <param name="registrationNumber">The registration number for the car.</param>
         /// <param name="propulsionSystem">The propulsion system for the car.</param>
+        /// <param name="rentalStatus">The rental status for the car.</param>
         public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber, 
             VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus) : 
-            this(carId: 0, brand, color, model, modelYear, registrationNumber, propulsionSystem, rentalStatus)
+            this(carId: 0, brand, color, model, modelYear, registrationNumber)
         {
+            #region Checks
 
+            if (propulsionSystem is null)
+            {
+                throw new ArgumentNullException(nameof(propulsionSystem), $"The value of parameter '{propulsionSystem}' can't be null");
+            }
+
+            if (rentalStatus is null)
+            {
+                throw new ArgumentNullException(nameof(rentalStatus), $"The value of parameter '{rentalStatus}' can't be null");
+            }
+
+            #endregion
+
+            // EF Core can't set navigational properties through a constructor, 
+            // so these values will have to be set in this constructor. 
+
+            PropulsionSystem = propulsionSystem;
+            RentalStatus = rentalStatus;
         }
 
         #endregion
@@ -140,12 +149,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The registration number for the car.
         /// </summary>
-        public string RegistrationNumber { get; set; } = "";
-
-        /// <summary>
-        /// The propulsion system for the car.
-        /// </summary>
-        public VehiclePropulsionEntity PropulsionSystem {  get; set; } 
+        public string RegistrationNumber { get; set; } = "";        
 
         /// <summary>
         /// A collection of images for the car.
@@ -156,6 +160,11 @@ namespace FribergCarRentals.Models
         /// The rental status for the car.
         /// </summary>
         public CarRentalStatusEntity RentalStatus { get; set; }
+
+        /// <summary>
+        /// The propulsion system for the car.
+        /// </summary>
+        public VehiclePropulsionEntity PropulsionSystem { get; set; }
 
         #endregion
     }

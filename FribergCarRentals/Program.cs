@@ -1,6 +1,7 @@
 using FribergCarRentals.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FribergCarRentals.DataAccess.Repositories;
 
 namespace FribergCarRentals
 {
@@ -14,6 +15,8 @@ namespace FribergCarRentals
             var connectionString = builder.Configuration.GetConnectionString("FribergCarRentalsDev") ?? throw new InvalidOperationException("Connection string 'FribergCarRentalsDev' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddTransient<ICarRepository, CarRepository>();
 
             var app = builder.Build();
 
