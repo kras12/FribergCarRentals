@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FribergCars.Shared.SharedTypes;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FribergCarRentals.Models
 {
@@ -80,6 +82,11 @@ namespace FribergCarRentals.Models
             RentalStatus = null!;
         }
 
+        public CarEntity()
+        {
+            
+        }
+
         /// <summary>
         /// A constructor.
         /// </summary>
@@ -128,7 +135,7 @@ namespace FribergCarRentals.Models
         /// The ID for the car.
         /// </summary>
         [Key]
-        public int CarId { get; private set; }
+        public int CarId { get; set; }
 
         /// <summary>
         /// The color for the car.

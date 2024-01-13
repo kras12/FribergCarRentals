@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using FribergCars.Shared.SharedClasses;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FribergCarRentals.Models
 {
@@ -97,6 +98,26 @@ namespace FribergCarRentals.Models
         public static CarRentalStatusEntity CreateSeedObject(CarRentalStatus rentalStatus)
         {
             return new CarRentalStatusEntity(rentalStatus);
+        }
+
+        public static bool TryCreateFromStatusName(string statusName, [NotNullWhen(true)] out CarRentalStatusEntity? entity)
+        {
+            #region Checks
+
+            if (string.IsNullOrEmpty(statusName))
+            {
+                throw new ArgumentException($"The value for parameter '{nameof(statusName)}' can't be null or empty.", nameof(statusName));
+            }
+
+            #endregion
+
+            entity = Enum.GetValues(typeof(CarRentalStatus))
+                    .Cast<CarRentalStatus>()
+                    .Where(x => x.GetAttribute<EnumDatabaseValueAttribute>().Value == statusName)
+                    .Select(x => new CarRentalStatusEntity(x))
+                    .SingleOrDefault();
+
+            return entity is not null;
         }
 
         #endregion

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FribergCars.Shared.SharedClasses;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FribergCarRentals.Models
 {
@@ -102,6 +103,26 @@ namespace FribergCarRentals.Models
         public static VehiclePropulsionEntity CreateSeedObject(VehiclePropulsionType propulsionType)
         {
             return new VehiclePropulsionEntity(propulsionType);
+        }
+
+        public static bool TryCreateFromPropulsionName(string propulsionName, [NotNullWhen(true)] out VehiclePropulsionEntity? entity)
+        {
+            #region Checks
+
+            if (string.IsNullOrEmpty(propulsionName))
+            {
+                throw new ArgumentException($"The value for parameter '{nameof(propulsionName)}' can't be null or empty.", nameof(propulsionName));
+            }
+
+            #endregion
+
+            entity = Enum.GetValues(typeof(VehiclePropulsionType))
+                    .Cast<VehiclePropulsionType>()
+                    .Where(x => x.GetAttribute<EnumDatabaseValueAttribute>().Value == propulsionName)
+                    .Select(x => new VehiclePropulsionEntity(x))
+                    .SingleOrDefault();
+
+            return entity is not null;
         }
 
         #endregion
