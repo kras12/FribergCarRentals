@@ -1,4 +1,5 @@
 ﻿using FribergCarRentals.Data;
+using FribergCarRentals.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,17 +50,11 @@ namespace FribergCarRentals.DataAccess.Repositories
         public virtual ValueTask<T?> GetById(int id)
         {
             return _databaseContext.Set<T>().FindAsync(id);
-        }        
-
-        //public virtual bool TryGetById(int id, [NotNullWhen(true)] out T? result)
-        //{
-        //    result = GetById(id);
-        //    return result != null;
-        //}
+        }
 
         public async virtual Task<IEnumerable<T>> GetAll()
         {
-            return await _databaseContext.Set<T>().AsQueryable().ToListAsync();
+            return await _databaseContext.Set<T>().AsQueryable().AsNoTracking().ToListAsync();
         }
 
         public async virtual Task<T> Update(T entity)

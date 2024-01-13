@@ -31,6 +31,10 @@ namespace FribergCarRentals.Data
         /// </summary>
         public DbSet<CarEntity> Cars { get; set; }
 
+        public DbSet<VehiclePropulsionEntity> PropulsionSystems { get; set; }  
+
+        public DbSet<CarRentalStatusEntity> CarRentalStatuses { get; set; }
+
         #endregion
 
         #region Methods
@@ -70,7 +74,7 @@ namespace FribergCarRentals.Data
             modelBuilder.Entity<CarEntity>()
                 .Navigation(x => x.Images)
                 .AutoInclude();
-    }
+        }
 
         #endregion
     }

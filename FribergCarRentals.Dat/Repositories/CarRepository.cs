@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace FribergCarRentals.DataAccess.Repositories
 {
+    /// <summary>
+    /// A repository class to handle the car entity.
+    /// </summary>
     public class CarRepository : GenericRepository<CarEntity>, ICarRepository
     {
         #region Constructors
@@ -19,7 +22,7 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #endregion
 
-        #region Methods
+        #region Methods        
 
         
 
