@@ -37,16 +37,27 @@ namespace FribergCarRentals.Controllers
         // POST: AdminCarController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var car = new CarEntity();
+
+                    if (await TryUpdateModelAsync(car))
+                    {
+                        await _carRepository.Add(car);
+                        return RedirectToAction(nameof(List));
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Console.WriteLine(ex.ToString());
             }
+
+            return View();
         }
 
         // GET: AdminCarController/Edit/5

@@ -24,7 +24,14 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #region Methods        
 
-        
+        public async override Task<CarEntity> Add(CarEntity entity)
+        {
+            await _databaseContext.Set<CarEntity>().AddAsync(entity);
+            _databaseContext.Entry(entity.PropulsionSystem).State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
+            _databaseContext.Entry(entity.RentalStatus).State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
+            await _databaseContext.SaveChangesAsync();
+            return entity;
+        }
 
         #endregion
 
