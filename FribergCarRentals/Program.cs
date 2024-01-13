@@ -13,7 +13,7 @@ namespace FribergCarRentals
 
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConnectionStringManager().GetConnectionString(builder.Configuration)));
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options => options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider()));
 
             builder.Services.AddTransient<ICarRepository, CarRepository>();
 
