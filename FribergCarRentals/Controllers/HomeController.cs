@@ -59,7 +59,7 @@ namespace FribergCarRentals.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(Error));
+                return RedirectToAction(nameof(Cars));
             }
         }
     }
