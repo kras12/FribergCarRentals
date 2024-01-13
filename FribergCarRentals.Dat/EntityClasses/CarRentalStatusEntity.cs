@@ -19,15 +19,9 @@ namespace FribergCarRentals.Models
         /// <param name="carRentalStatusId">The database ID for the entity. Can't be negative.</param>
         /// <param name="statusName">The status name.</param>
         /// <param name="statusDescription">The status description.</param>
-        private CarRentalStatusEntity(int carRentalStatusId, string statusName, string statusDescription)
+        private CarRentalStatusEntity(CarRentalStatus carRentalStatusId, string statusName, string statusDescription)
         {
             #region Checks
-
-
-            if (carRentalStatusId < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(carRentalStatusId), $"The value of parameter '{carRentalStatusId}' can't be negative.");
-            }
 
             if (statusName is null)
             {
@@ -53,10 +47,10 @@ namespace FribergCarRentals.Models
         /// <exception cref="InvalidOperationException"></exception>
         private CarRentalStatusEntity(CarRentalStatus rentalStatus)
         {
-            CarRentalStatusId = (int)rentalStatus;
-            StatusName = rentalStatus.GetAttribute<DisplayAttribute>().Name ??
+            CarRentalStatusId = rentalStatus;
+            StatusName = rentalStatus.GetAttribute<EnumDatabaseValueAttribute>().Value ??
                 throw new InvalidOperationException($"The field 'Name' of attribute 'DisplayAttribute' for enum value '{rentalStatus}' could not be found.");
-            StatusDescription = rentalStatus.GetAttribute<DisplayAttribute>().Description ??
+            StatusDescription = rentalStatus.GetAttribute<EnumDatabaseValueAttribute>().DescriptionValue ??
                 throw new InvalidOperationException($"The field 'Description' of attribute 'DisplayAttribute' for enum value '{rentalStatus}' could not be found.");
         }
 
@@ -68,17 +62,28 @@ namespace FribergCarRentals.Models
         /// The database ID for the entity.
         /// </summary>
         [Key]
-        public int CarRentalStatusId { get; set; }
+        public CarRentalStatus CarRentalStatusId { get; private set; }
+
+        /// <summary>
+        /// The rental status type.
+        /// </summary>
+        public CarRentalStatus StatusType
+        {
+            get
+            {
+                return CarRentalStatusId;
+            }
+        }
 
         /// <summary>
         /// The status name.
         /// </summary>
-        public string StatusName { get; set; } = "";
+        public string StatusName { get; private set; } = "";
 
         /// <summary>
         /// The status description.
         /// </summary>
-        public string StatusDescription { get; set; } = "";
+        public string StatusDescription { get; private set; } = "";
 
         #endregion
 

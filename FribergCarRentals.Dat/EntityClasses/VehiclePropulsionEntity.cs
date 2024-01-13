@@ -16,10 +16,10 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A constructor intended for EF Core.
         /// </summary>
-        /// <param name="vehiclePropulsionId">The database ID for the entity. Can't be negative.</param>
-        /// <param name="propulsionName">The short name for the propulsion system.</param>
-        /// <param name="propulsionDescription">A description for the propulsion system.</param>
-        private VehiclePropulsionEntity(int vehiclePropulsionId, string propulsionName, string propulsionDescription)
+        /// <param name="vehiclePropulsionId">The database ID for the entity.</param>
+        /// <param name="propulsionName">The name for the propulsion system. Can't be null.</param>
+        /// <param name="propulsionDescription">The description for the propulsion system. Can't be null.</param>
+        private VehiclePropulsionEntity(VehiclePropulsionType vehiclePropulsionId, string propulsionName, string propulsionDescription)
         {
             #region Checks
 
@@ -28,7 +28,7 @@ namespace FribergCarRentals.Models
                 throw new ArgumentOutOfRangeException(nameof(vehiclePropulsionId), $"The value of parameter '{vehiclePropulsionId}' can't be negative.");
             }
 
-            if (PropulsionName is null)
+            if (propulsionName is null)
             {
                 throw new ArgumentNullException(nameof(propulsionName), $"The value of parameter '{propulsionName}' can't be null.");
             }
@@ -52,10 +52,10 @@ namespace FribergCarRentals.Models
         /// <exception cref="InvalidOperationException"></exception>
         private VehiclePropulsionEntity(VehiclePropulsionType propulsionType)
         {
-            VehiclePropulsionId = (int)propulsionType;
-            PropulsionName = propulsionType.GetAttribute<DisplayAttribute>().Name ??
+            VehiclePropulsionId = propulsionType;
+            PropulsionName = propulsionType.GetAttribute<EnumDatabaseValueAttribute>().Value ??
                 throw new InvalidOperationException($"The field 'Name' of attribute 'DisplayAttribute' for enum value '{propulsionType}' could not be found.");
-            PropulsionDescription = propulsionType.GetAttribute<DisplayAttribute>().Description ??
+            PropulsionDescription = propulsionType.GetAttribute<EnumDatabaseValueAttribute>().DescriptionValue ??
                 throw new InvalidOperationException($"The field 'Description' of attribute 'DisplayAttribute' for enum value '{propulsionType}' could not be found.");
         }
 
@@ -67,18 +67,28 @@ namespace FribergCarRentals.Models
         /// The database ID for the entity.
         /// </summary>
         [Key]
-        public int VehiclePropulsionId { get; set; }
+        public VehiclePropulsionType VehiclePropulsionId { get; private set; }
 
         /// <summary>
-        /// The short name for the propulsion system.
+        /// The propulsion type.
         /// </summary>
-        public string PropulsionName { get; set; } = "";
-
+        public VehiclePropulsionType PropulsionType
+        {
+            get
+            {
+                return VehiclePropulsionId;
+            }
+        }
 
         /// <summary>
-        /// A description for the propulsion system.
+        /// The name for the propulsion system.
         /// </summary>
-        public string PropulsionDescription { get; set; } = "";
+        public string PropulsionName { get; private set; }
+
+        /// <summary>
+        /// The description for the propulsion system.
+        /// </summary>
+        public string PropulsionDescription { get; private set; }
 
         #endregion
 

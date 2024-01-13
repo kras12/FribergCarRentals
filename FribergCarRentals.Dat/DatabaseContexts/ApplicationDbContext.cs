@@ -45,11 +45,19 @@ namespace FribergCarRentals.Data
                     .Cast<VehiclePropulsionType>()
                     .Select(x => VehiclePropulsionEntity.CreateSeedObject(x)));
 
+            modelBuilder.Entity<VehiclePropulsionEntity>()
+                .Property(x => x.VehiclePropulsionId)
+                .HasConversion<int>();
+
             modelBuilder.Entity<CarRentalStatusEntity>()
                 .HasData(
                     Enum.GetValues(typeof(CarRentalStatus))
                     .Cast<CarRentalStatus>()
                     .Select(x => CarRentalStatusEntity.CreateSeedObject(x)));
+
+            modelBuilder.Entity<CarRentalStatusEntity>()
+               .Property(x => x.CarRentalStatusId)
+               .HasConversion<int>();
 
             modelBuilder.Entity<CarEntity>()
                 .Navigation(x => x.PropulsionSystem)
