@@ -7,7 +7,7 @@
 namespace FribergCarRentals.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,8 +16,7 @@ namespace FribergCarRentals.DataAccess.Migrations
                 name: "CarRentalStatuses",
                 columns: table => new
                 {
-                    CarRentalStatusId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CarRentalStatusId = table.Column<int>(type: "int", nullable: false),
                     StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StatusDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -30,8 +29,7 @@ namespace FribergCarRentals.DataAccess.Migrations
                 name: "VehiclePropulsion",
                 columns: table => new
                 {
-                    VehiclePropulsionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VehiclePropulsionId = table.Column<int>(type: "int", nullable: false),
                     PropulsionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PropulsionDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -106,13 +104,13 @@ namespace FribergCarRentals.DataAccess.Migrations
                 columns: new[] { "VehiclePropulsionId", "PropulsionDescription", "PropulsionName" },
                 values: new object[,]
                 {
-                    { 1, "No propulsion system", "None" },
-                    { 2, "Other type of vehicle", "Other" },
-                    { 3, "Battery electric vehicle", "BEV" },
-                    { 4, "Diesel powered vehicle", "Diesel" },
-                    { 5, "Gasoline powered vehicle", "Gasoline" },
-                    { 7, "Plugin-in hybrid electric vehicle", "PHEV" },
-                    { 9, "Hybrid electric vehicle", "HEV" }
+                    { 1, "No propulsion system.", "None" },
+                    { 2, "Other type of vehicle.", "Other" },
+                    { 3, "Battery electric vehicle.", "BEV" },
+                    { 4, "Diesel powered vehicle.", "Diesel" },
+                    { 5, "Gasoline powered vehicle.", "Gasoline" },
+                    { 7, "Plugin-in hybrid electric vehicle.", "PHEV" },
+                    { 9, "Hybrid electric vehicle.", "HEV" }
                 });
 
             migrationBuilder.CreateIndex(

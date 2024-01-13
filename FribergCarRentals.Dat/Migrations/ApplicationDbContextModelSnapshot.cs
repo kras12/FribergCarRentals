@@ -67,10 +67,7 @@ namespace FribergCarRentals.DataAccess.Migrations
             modelBuilder.Entity("FribergCarRentals.Models.CarRentalStatusEntity", b =>
                 {
                     b.Property<int>("CarRentalStatusId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarRentalStatusId"));
 
                     b.Property<string>("StatusDescription")
                         .IsRequired()
@@ -136,10 +133,7 @@ namespace FribergCarRentals.DataAccess.Migrations
             modelBuilder.Entity("FribergCarRentals.Models.VehiclePropulsionEntity", b =>
                 {
                     b.Property<int>("VehiclePropulsionId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehiclePropulsionId"));
 
                     b.Property<string>("PropulsionDescription")
                         .IsRequired()
@@ -157,43 +151,43 @@ namespace FribergCarRentals.DataAccess.Migrations
                         new
                         {
                             VehiclePropulsionId = 1,
-                            PropulsionDescription = "No propulsion system",
+                            PropulsionDescription = "No propulsion system.",
                             PropulsionName = "None"
                         },
                         new
                         {
                             VehiclePropulsionId = 2,
-                            PropulsionDescription = "Other type of vehicle",
+                            PropulsionDescription = "Other type of vehicle.",
                             PropulsionName = "Other"
                         },
                         new
                         {
                             VehiclePropulsionId = 3,
-                            PropulsionDescription = "Battery electric vehicle",
+                            PropulsionDescription = "Battery electric vehicle.",
                             PropulsionName = "BEV"
                         },
                         new
                         {
                             VehiclePropulsionId = 4,
-                            PropulsionDescription = "Diesel powered vehicle",
+                            PropulsionDescription = "Diesel powered vehicle.",
                             PropulsionName = "Diesel"
                         },
                         new
                         {
                             VehiclePropulsionId = 5,
-                            PropulsionDescription = "Gasoline powered vehicle",
+                            PropulsionDescription = "Gasoline powered vehicle.",
                             PropulsionName = "Gasoline"
                         },
                         new
                         {
                             VehiclePropulsionId = 7,
-                            PropulsionDescription = "Plugin-in hybrid electric vehicle",
+                            PropulsionDescription = "Plugin-in hybrid electric vehicle.",
                             PropulsionName = "PHEV"
                         },
                         new
                         {
                             VehiclePropulsionId = 9,
-                            PropulsionDescription = "Hybrid electric vehicle",
+                            PropulsionDescription = "Hybrid electric vehicle.",
                             PropulsionName = "HEV"
                         });
                 });
