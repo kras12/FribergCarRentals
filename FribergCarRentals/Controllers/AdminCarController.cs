@@ -1,6 +1,8 @@
 ﻿using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FribergCarRentals.Controllers
 {
@@ -15,7 +17,7 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: AdminCarController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> List()
         {
             return View(await _carRepository.GetAll());
         }
@@ -48,24 +50,45 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: AdminCarController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var car = await _carRepository.GetById(id);
+
+            if (car is not null)
+            {
+                return View(car);
+            }
+            else
+            {
+                return RedirectToAction(nameof(List));
+            }            
         }
 
         // POST: AdminCarController/Edit/5
+        [ActionName(nameof(Edit))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditPost(int carId)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid && carId > 0)
+                {
+                    var car = new CarEntity();
+
+                    if (car is not null && await TryUpdateModelAsync(car))
+                    {
+                        await _carRepository.Update(car);
+                        return RedirectToAction(nameof(List));
+                    }                    
+                }
             }
-            catch
+            catch (Exception)
             {
-                return View();
+
             }
+
+            return View();
         }
 
         // GET: AdminCarController/Delete/5
