@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FribergCarRentals.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240114004647_Init")]
+    [Migration("20240114153754_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -24,6 +24,38 @@ namespace FribergCarRentals.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.AdminEntity", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserRole")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Admins");
+                });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarEntity", b =>
                 {
@@ -65,6 +97,50 @@ namespace FribergCarRentals.DataAccess.Migrations
                     b.HasIndex("RentalStatusCarRentalStatusId");
 
                     b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("FribergCarRentals.Models.CarOrderEntity", b =>
+                {
+                    b.Property<int>("CarOrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarOrderId"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("OrderSum")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<DateTime>("PickupDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("RentalCostPerDay")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<DateTime>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CarOrderId");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("CustomerUserId");
+
+                    b.ToTable("CarOrders");
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarRentalStatusEntity", b =>
@@ -111,6 +187,38 @@ namespace FribergCarRentals.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FribergCarRentals.Models.CustomerEntity", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserRole")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("FribergCarRentals.Models.ImageEntity", b =>
                 {
                     b.Property<int>("ImageId")
@@ -131,6 +239,37 @@ namespace FribergCarRentals.DataAccess.Migrations
                     b.HasIndex("CarEntityCarId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("FribergCarRentals.Models.PaymentEntity", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int?>("CarOrderEntityCarOrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("CarOrderEntityCarOrderId");
+
+                    b.HasIndex("CustomerUserId");
+
+                    b.ToTable("PaymentEntity");
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.VehiclePropulsionEntity", b =>
@@ -214,6 +353,25 @@ namespace FribergCarRentals.DataAccess.Migrations
                     b.Navigation("RentalStatus");
                 });
 
+            modelBuilder.Entity("FribergCarRentals.Models.CarOrderEntity", b =>
+                {
+                    b.HasOne("FribergCarRentals.Models.CarEntity", "Car")
+                        .WithMany()
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FribergCarRentals.Models.CustomerEntity", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("FribergCarRentals.Models.ImageEntity", b =>
                 {
                     b.HasOne("FribergCarRentals.Models.CarEntity", null)
@@ -222,9 +380,34 @@ namespace FribergCarRentals.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("FribergCarRentals.Models.PaymentEntity", b =>
+                {
+                    b.HasOne("FribergCarRentals.Models.CarOrderEntity", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("CarOrderEntityCarOrderId");
+
+                    b.HasOne("FribergCarRentals.Models.CustomerEntity", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("FribergCarRentals.Models.CarEntity", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("FribergCarRentals.Models.CarOrderEntity", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("FribergCarRentals.Models.CustomerEntity", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
