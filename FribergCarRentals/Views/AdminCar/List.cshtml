@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.CarId)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Brand)
             </th>
             <th>
@@ -27,12 +30,23 @@
             <th>
                 @Html.DisplayNameFor(model => model.RegistrationNumber)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.PropulsionSystem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RentalStatus)
+            </th>
+            <th>
+                Image count
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarId)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Brand)
             </td>
@@ -48,6 +62,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.RegistrationNumber)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
+                </td>
+                <td>
+                    @item.Images.Count()
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CarId">Details</a> |

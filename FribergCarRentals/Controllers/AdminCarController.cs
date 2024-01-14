@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FribergCarRentals.Controllers
 {
+    [Route("Admin/Cars/[action]")]
     public class AdminCarController : Controller
     {
 
@@ -23,9 +24,18 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: AdminCarController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var car = await _carRepository.GetById(id);
+
+            if (car is not null)
+            {
+                return View(new CarViewModel(car));
+            }
+            else
+            {
+                return RedirectToAction(nameof(List));
+            }
         }
 
         // GET: AdminCarController/Create
@@ -67,12 +77,12 @@ namespace FribergCarRentals.Controllers
 
             if (car is not null)
             {
-                return View(car);
+                return View(new CarViewModel(car));
             }
             else
             {
                 return RedirectToAction(nameof(List));
-            }            
+            }
         }
 
         // POST: AdminCarController/Edit/5
@@ -87,7 +97,7 @@ namespace FribergCarRentals.Controllers
                 {
                     var car = new CarEntity();
 
-                    if (car is not null && await TryUpdateModelAsync(car))
+                    if (await TryUpdateModelAsync(car))
                     {
                         await _carRepository.Update(car);
                         return RedirectToAction(nameof(List));
@@ -103,24 +113,40 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: AdminCarController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var car = await _carRepository.GetById(id);
+
+            if (car is not null)
+            {
+                return View(new CarViewModel(car));
+            }
+            else
+            {
+                return RedirectToAction(nameof(List));
+            }
         }
 
         // POST: AdminCarController/Delete/5
+        [ActionName(nameof(Delete))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> DeletePost(int carId)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid && carId > 0)
+                {
+                    await _carRepository.Delete(carId);
+                    return RedirectToAction(nameof(List));
+                }
             }
-            catch
+            catch (Exception Ex)
             {
-                return View();
+                Console.WriteLine(Ex.ToString());
             }
+
+            return View();
         }
     }
 }

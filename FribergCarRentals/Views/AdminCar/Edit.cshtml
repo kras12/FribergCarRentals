@@ -1,7 +1,8 @@
 ﻿@using FribergCars.Shared.SharedTypes
 @using FribergCars.Shared.SharedClasses
 @using System.ComponentModel.DataAnnotations
-@model FribergCarRentals.Models.CarEntity
+@* @model FribergCarRentals.Models.CarEntity *@
+@model CarViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -65,7 +66,11 @@
                 </select>
                 <span asp-validation-for="PropulsionSystem" class="text-danger"></span>
             </div>
-            
+            <div class="form-group">
+                <label asp-for="Images" class="control-label">Images - One per line</label>
+                <textarea name="Images" class="form-control">@Model.ImageFilePaths</textarea>
+                <span asp-validation-for="ImageFilePaths" class="text-danger"></span>
+            </div>            
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
