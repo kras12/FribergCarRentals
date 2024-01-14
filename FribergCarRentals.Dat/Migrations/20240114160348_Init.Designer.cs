@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FribergCarRentals.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240114153754_Init")]
+    [Migration("20240114160348_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -55,6 +55,44 @@ namespace FribergCarRentals.DataAccess.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Admins");
+                });
+
+            modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.UserRoleEntity", b =>
+                {
+                    b.Property<int>("UserRoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserRoleDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserRoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserRoleId");
+
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserRoleId = 0,
+                            UserRoleDescription = "No role.",
+                            UserRoleName = "None"
+                        },
+                        new
+                        {
+                            UserRoleId = 1,
+                            UserRoleDescription = "Admin role.",
+                            UserRoleName = "Admin"
+                        },
+                        new
+                        {
+                            UserRoleId = 2,
+                            UserRoleDescription = "Customer role.",
+                            UserRoleName = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarEntity", b =>

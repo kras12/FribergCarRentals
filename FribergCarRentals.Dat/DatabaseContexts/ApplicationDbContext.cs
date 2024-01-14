@@ -96,6 +96,12 @@ namespace FribergCarRentals.Data
                 .HasMany(x => x.Images)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserRoleEntity>()
+                .HasData(
+                    Enum.GetValues(typeof(UserRole))
+                    .Cast<UserRole>()
+                    .Select(x => UserRoleEntity.CreateSeedObject(x)));
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

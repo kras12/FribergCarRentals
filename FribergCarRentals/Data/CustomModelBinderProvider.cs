@@ -1,4 +1,5 @@
-﻿using FribergCarRentals.Models;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
@@ -20,6 +21,10 @@ namespace FribergCarRentals.Data
             else if (context.Metadata.ModelType == typeof(CarRentalStatusEntity))
             {
                 return new BinderTypeModelBinder(typeof(CarRentalStatusModelBinder));
+            }
+            else if (context.Metadata.ModelType == typeof(UserRoleEntity))
+            {
+                return new BinderTypeModelBinder(typeof(UserRoleModelBinder));
             }
             else if (context.Metadata.ModelType == typeof(List<ImageEntity>))
             {

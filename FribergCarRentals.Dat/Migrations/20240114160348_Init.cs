@@ -61,6 +61,19 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    UserRoleId = table.Column<int>(type: "int", nullable: false),
+                    UserRoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserRoleDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => x.UserRoleId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VehiclePropulsion",
                 columns: table => new
                 {
@@ -195,6 +208,16 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "UserRoles",
+                columns: new[] { "UserRoleId", "UserRoleDescription", "UserRoleName" },
+                values: new object[,]
+                {
+                    { 0, "No role.", "None" },
+                    { 1, "Admin role.", "Admin" },
+                    { 2, "Customer role.", "Customer" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "VehiclePropulsion",
                 columns: new[] { "VehiclePropulsionId", "PropulsionDescription", "PropulsionName" },
                 values: new object[,]
@@ -255,6 +278,9 @@ namespace FribergCarRentals.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "PaymentEntity");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "CarOrders");

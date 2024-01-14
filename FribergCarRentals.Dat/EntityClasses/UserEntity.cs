@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FribergCars.Shared.SharedClasses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,8 +12,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
     public enum UserRole
     {
-        Uknown = 0,
+        [EnumDatabaseValue("None", DescriptionValue = "No role.")]
+        None = 0,
+        [EnumDatabaseValue("Admin", DescriptionValue = "Admin role.")]
         Admin,
+        [EnumDatabaseValue("Customer", DescriptionValue = "Customer role.")]
         Customer,
     }
 
