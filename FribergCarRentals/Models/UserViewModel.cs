@@ -1,30 +1,9 @@
-﻿using FribergCars.Shared.SharedClasses;
-using System;
-using System.Collections.Generic;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Models
 {
-    #region Enums
-
-    public enum UserRoleType
-    {
-        [EnumDatabaseValue("None", DescriptionValue = "No role.")]
-        None = 0,
-        [EnumDatabaseValue("Admin", DescriptionValue = "Admin role.")]
-        Admin,
-        [EnumDatabaseValue("Customer", DescriptionValue = "Customer role.")]
-        Customer,
-    }
-
-    #endregion
-
-    #region Classes
-    
-    public abstract class UserEntity
+    public abstract class UserViewModel
     {
         #region Constructors
 
@@ -32,7 +11,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// A constructor.
         /// </summary>
         /// <param name="userRole">The user role.</param>
-        protected UserEntity(UserRoleEntity userRole) 
+        protected UserViewModel(UserRoleType userRole)
         {
             UserRole = userRole;
         }
@@ -48,7 +27,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="userRole">The user role.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserEntity(int userId, string firstName, string lastName, string email, string hashedPassword, UserRoleEntity userRole)
+        protected UserViewModel(int userId, string firstName, string lastName, string email, string hashedPassword, UserRoleType userRole)
         {
             #region Checks
 
@@ -75,7 +54,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
             if (hashedPassword is null)
             {
                 throw new ArgumentNullException(nameof(hashedPassword), $"The value of parameter '{hashedPassword}' can't be null");
-            }            
+            }
 
             #endregion
 
@@ -120,10 +99,8 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// The user role.
         /// </summary>
-        public virtual UserRoleEntity UserRole { get; set; }
+        public virtual UserRoleType UserRole { get; set; } = UserRoleType.None;
 
         #endregion
     }
-
-    #endregion
 }

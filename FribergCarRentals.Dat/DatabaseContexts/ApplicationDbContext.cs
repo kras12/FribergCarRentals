@@ -99,8 +99,8 @@ namespace FribergCarRentals.Data
 
             modelBuilder.Entity<UserRoleEntity>()
                 .HasData(
-                    Enum.GetValues(typeof(UserRole))
-                    .Cast<UserRole>()
+                    Enum.GetValues(typeof(UserRoleType))
+                    .Cast<UserRoleType>()
                     .Select(x => UserRoleEntity.CreateSeedObject(x)));
         }
 

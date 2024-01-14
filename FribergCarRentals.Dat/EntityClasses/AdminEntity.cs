@@ -15,7 +15,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        public AdminEntity() : base(UserRole.Admin)
+        public AdminEntity() : base(UserRoleEntity.CreateSeedObject(UserRoleType.Admin))
         {
 
         }
@@ -31,7 +31,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword) : 
-            base(userId, firstName, lastName, email, hashedPassword, UserRole.Admin)
+            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateSeedObject(UserRoleType.Admin))
         {
 
         }
@@ -40,7 +40,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
         #region Properties
 
-        public override UserRole UserRole
+        public override UserRoleEntity UserRole
         {
             get
             {
@@ -50,7 +50,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
             set
             {
                 // Safe guard against invalid model bindings.
-                if (value != UserRole.Admin)
+                if (value.UserRoleType != UserRoleType.Admin)
                 {
                     throw new InvalidOperationException("Invalid user role assignment.");
                 }

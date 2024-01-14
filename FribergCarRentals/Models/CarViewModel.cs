@@ -68,12 +68,12 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The rental status for the car.
         /// </summary>
-        public CarRentalStatusEntity RentalStatus { get; set; }
+        public CarRentalStatusEntity? RentalStatus { get; set; } = null;
 
         /// <summary>
         /// The propulsion system for the car.
         /// </summary>
-        public VehiclePropulsionEntity PropulsionSystem { get; set; }
+        public VehiclePropulsionEntity? PropulsionSystem { get; set; } = null;
 
         #endregion
     }

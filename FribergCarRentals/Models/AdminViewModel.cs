@@ -1,17 +1,20 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FribergCarRentals.DataAccess.EntityClasses;
 
 namespace FribergCarRentals.Models
 {
-    public class CustomerEntity : UserEntity
+    internal class AdminViewModel : UserViewModel
     {
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerEntity() : base(UserRoleEntity.CreateSeedObject(UserRoleType.Customer))
+        public AdminViewModel() : base(UserRoleType.Admin)
         {
 
         }
@@ -26,8 +29,8 @@ namespace FribergCarRentals.Models
         /// <param name="hashedPassword">The hashed password for the user.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CustomerEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateSeedObject(UserRoleType.Customer))
+        public AdminViewModel(int userId, string firstName, string lastName, string email, string hashedPassword) :
+            base(userId, firstName, lastName, email, hashedPassword, UserRoleType.Admin)
         {
 
         }
@@ -36,22 +39,17 @@ namespace FribergCarRentals.Models
 
         #region Properties
 
-        /// <summary>
-        /// A collection of orders for the customer. 
-        /// </summary>
-        public List<CarOrderEntity> Orders { get; } = new();
-
-        public override UserRoleEntity UserRole
+        public override UserRoleType UserRole
         {
             get
             {
                 return base.UserRole;
             }
-            
+
             set
             {
                 // Safe guard against invalid model bindings.
-                if (value.UserRoleType != UserRoleType.Customer)
+                if (value != UserRoleType.Admin)
                 {
                     throw new InvalidOperationException("Invalid user role assignment.");
                 }

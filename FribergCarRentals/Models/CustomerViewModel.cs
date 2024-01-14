@@ -1,19 +1,27 @@
 ﻿using FribergCarRentals.DataAccess.EntityClasses;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FribergCarRentals.Models
 {
-    public class CustomerEntity : UserEntity
+    public class CustomerViewModel : UserViewModel
     {
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerEntity() : base(UserRoleEntity.CreateSeedObject(UserRoleType.Customer))
+        public CustomerViewModel() : base(UserRoleType.Customer)
         {
 
+        }
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="customer">The customer to copy data from.</param>
+        public CustomerViewModel(CustomerEntity customer) : 
+            this(customer.UserId, customer.FirstName, customer.LastName, customer.Email, customer.HashedPassword)
+        {
+            
         }
 
         /// <summary>
@@ -26,8 +34,8 @@ namespace FribergCarRentals.Models
         /// <param name="hashedPassword">The hashed password for the user.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CustomerEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateSeedObject(UserRoleType.Customer))
+        public CustomerViewModel(int userId, string firstName, string lastName, string email, string hashedPassword) :
+            base(userId, firstName, lastName, email, hashedPassword, UserRoleType.Customer)
         {
 
         }
@@ -39,19 +47,19 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A collection of orders for the customer. 
         /// </summary>
-        public List<CarOrderEntity> Orders { get; } = new();
+        public List<CarOrderEntity> Orders { get; } = new();        
 
-        public override UserRoleEntity UserRole
+        public override UserRoleType UserRole
         {
             get
             {
                 return base.UserRole;
             }
-            
+
             set
             {
                 // Safe guard against invalid model bindings.
-                if (value.UserRoleType != UserRoleType.Customer)
+                if (value != UserRoleType.Customer)
                 {
                     throw new InvalidOperationException("Invalid user role assignment.");
                 }

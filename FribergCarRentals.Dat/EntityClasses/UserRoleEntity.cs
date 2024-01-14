@@ -26,7 +26,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="userRoleId">The database ID for the user role.</param>
         /// <param name="userRoleName">The user role name.</param>
         /// <param name="userRoleDescription">The user role description.</param>
-        private UserRoleEntity(UserRole userRoleId, string userRoleName, string userRoleDescription)
+        private UserRoleEntity(UserRoleType userRoleId, string userRoleName, string userRoleDescription)
         {
             #region Checks
 
@@ -52,7 +52,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// </summary>
         /// <param name="userRoleId">The database ID for the user role.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        private UserRoleEntity(UserRole userRoleId)
+        private UserRoleEntity(UserRoleType userRoleId)
         {
             UserRoleId = userRoleId;
             UserRoleName = userRoleId.GetAttribute<EnumDatabaseValueAttribute>().Value ??
@@ -69,12 +69,12 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// The database ID for the user role.
         /// </summary>
         [Key]
-        public UserRole UserRoleId { get; private set; }
+        public UserRoleType UserRoleId { get; private set; }
 
         /// <summary>
         /// The user role type.
         /// </summary>
-        public UserRole UserRoleType
+        public UserRoleType UserRoleType
         {
             get
             {
@@ -101,7 +101,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// </summary>
         /// <param name="userRole">The user role.</param>
         /// <returns></returns>
-        public static UserRoleEntity CreateSeedObject(UserRole userRole)
+        public static UserRoleEntity CreateSeedObject(UserRoleType userRole)
         {
             return new UserRoleEntity(userRole);
         }
@@ -117,8 +117,8 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
             #endregion
 
-            entity = Enum.GetValues(typeof(UserRole))
-                    .Cast<UserRole>()
+            entity = Enum.GetValues(typeof(UserRoleType))
+                    .Cast<UserRoleType>()
                     .Where(x => x.GetAttribute<EnumDatabaseValueAttribute>().Value == userRoleName)
                     .Select(x => new UserRoleEntity(x))
                     .SingleOrDefault();
