@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
-    internal class AdminEntity : UserEntity
+    public class AdminEntity : UserEntity
     {
         #region Constructors
         

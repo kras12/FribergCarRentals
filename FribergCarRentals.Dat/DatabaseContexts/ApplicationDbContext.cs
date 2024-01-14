@@ -3,6 +3,7 @@ using FribergCarRentals.Models;
 using FribergCars.Shared.SharedTypes;
 using FribergCars.Shared.SharedClasses;
 using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.DataAccess.EntityClasses;
 
 namespace FribergCarRentals.Data
 {
@@ -31,14 +32,27 @@ namespace FribergCarRentals.Data
         /// </summary>
         public DbSet<CarEntity> Cars { get; set; }
 
+        /// <summary>
+        /// The database set for propulsion systems.
+        /// </summary>
         public DbSet<VehiclePropulsionEntity> PropulsionSystems { get; set; }  
 
+        /// <summary>
+        /// The database set for car rental status.
+        /// </summary>
         public DbSet<CarRentalStatusEntity> CarRentalStatuses { get; set; }
+
+        public DbSet<AdminEntity> Admins { get; set; }
+
+        public DbSet<CustomerEntity> Customers { get; set; }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Configures the database model.
+        /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
