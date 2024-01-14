@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FribergCarRentals.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240113113556_init")]
-    partial class init
+    [Migration("20240114004647_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -218,7 +218,8 @@ namespace FribergCarRentals.DataAccess.Migrations
                 {
                     b.HasOne("FribergCarRentals.Models.CarEntity", null)
                         .WithMany("Images")
-                        .HasForeignKey("CarEntityCarId");
+                        .HasForeignKey("CarEntityCarId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarEntity", b =>

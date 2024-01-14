@@ -7,7 +7,7 @@
 namespace FribergCarRentals.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,7 +85,8 @@ namespace FribergCarRentals.DataAccess.Migrations
                         name: "FK_Images_Cars_CarEntityCarId",
                         column: x => x.CarEntityCarId,
                         principalTable: "Cars",
-                        principalColumn: "CarId");
+                        principalColumn: "CarId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(

@@ -215,7 +215,8 @@ namespace FribergCarRentals.DataAccess.Migrations
                 {
                     b.HasOne("FribergCarRentals.Models.CarEntity", null)
                         .WithMany("Images")
-                        .HasForeignKey("CarEntityCarId");
+                        .HasForeignKey("CarEntityCarId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarEntity", b =>
