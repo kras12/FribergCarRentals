@@ -102,6 +102,14 @@ namespace FribergCarRentals.Data
                     Enum.GetValues(typeof(UserRoleType))
                     .Cast<UserRoleType>()
                     .Select(x => UserRoleEntity.CreateSeedObject(x)));
+
+            modelBuilder.Entity<CarOrderEntity>()
+                .Navigation(x => x.Customer)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarOrderEntity>()
+                .Navigation(x => x.Car)
+                .AutoInclude();
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
