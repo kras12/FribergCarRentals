@@ -9,7 +9,7 @@ namespace FribergCarRentals.Models
 
         public CarViewModel()
         {
-                
+            
         }
 
         public CarViewModel(CarEntity carEntity)
@@ -68,12 +68,12 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The rental status for the car.
         /// </summary>
-        public CarRentalStatusEntity? RentalStatus { get; set; } = null;
+        public CarRentalStatusEntity RentalStatus { get; set; } 
 
         /// <summary>
         /// The propulsion system for the car.
         /// </summary>
-        public VehiclePropulsionEntity? PropulsionSystem { get; set; } = null;
+        public VehiclePropulsionEntity PropulsionSystem { get; set; } 
 
         #endregion
     }

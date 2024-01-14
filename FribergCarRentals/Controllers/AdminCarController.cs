@@ -1,4 +1,5 @@
-﻿using FribergCarRentals.DataAccess.Repositories;
+﻿using FribergCarRentals.Data;
+using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace FribergCarRentals.Controllers
         // GET: AdminCarController
         public async Task<ActionResult> List()
         {
-            return View(await _carRepository.GetAll());
+            return View((await _carRepository.GetAll()).Select(x => new CarViewModel(x)));
         }
 
         // GET: AdminCarController/Details/5
@@ -47,19 +48,14 @@ namespace FribergCarRentals.Controllers
         // POST: AdminCarController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(IFormCollection collection)
+        public async Task<ActionResult> Create(CarViewModel carViewModel)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && DataTransferHelper.TryTransferData(carViewModel, out CarEntity car))
                 {
-                    var car = new CarEntity();
-
-                    if (await TryUpdateModelAsync(car))
-                    {
-                        await _carRepository.Add(car);
-                        return RedirectToAction(nameof(List));
-                    }
+                    await _carRepository.Add(car);
+                    return RedirectToAction(nameof(List));
                 }
             }
             catch (Exception ex)
@@ -86,22 +82,17 @@ namespace FribergCarRentals.Controllers
         }
 
         // POST: AdminCarController/Edit/5
-        [ActionName(nameof(Edit))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditPost(int carId)
+        public async Task<ActionResult> Edit(int carId, CarViewModel carViewModel)
         {
             try
             {
-                if (ModelState.IsValid && carId > 0)
+                if (ModelState.IsValid && carId > 0 && carId == carViewModel.CarId &&
+                    DataTransferHelper.TryTransferData(carViewModel, out CarEntity car))
                 {
-                    var car = new CarEntity();
-
-                    if (await TryUpdateModelAsync(car))
-                    {
-                        await _carRepository.Update(car);
-                        return RedirectToAction(nameof(List));
-                    }                    
+                    await _carRepository.Update(car);
+                    return RedirectToAction(nameof(List));
                 }
             }
             catch (Exception)
