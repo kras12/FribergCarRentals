@@ -14,15 +14,11 @@ namespace FribergCarRentals.Models
         /// <summary>
         ///  A constructor.
         /// </summary>
-        /// <param name="userId">The ID for the user. Can't be negative.</param>
-        /// <param name="firstName">The first name for the user.</param>
-        /// <param name="lastName">The last name for the user.</param>
-        /// <param name="email">The email address for the user.</param>
-        /// <param name="hashedPassword">The hashed password for the user.</param>
+        /// <param name="admin">The admin to copy data from.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public AdminViewModel(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword)
+        public AdminViewModel(AdminEntity admin) :
+            base(admin.UserId, admin.FirstName, admin.LastName, admin.Email, admin.HashedPassword)
         {
 
         }
