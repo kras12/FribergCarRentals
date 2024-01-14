@@ -54,7 +54,7 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         public async virtual Task<IEnumerable<T>> GetAll()
         {
-            return await _databaseContext.Set<T>().AsQueryable().AsNoTracking().ToListAsync();
+            return await _databaseContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public async virtual Task<T> Update(T entity)
