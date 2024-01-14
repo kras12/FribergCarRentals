@@ -12,6 +12,29 @@ namespace FribergCarRentals.Models
         #region Constructors
 
         /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="carOrderId">The database ID for this entity. Can't be a negative value.</param>
+        /// <param name="orderDate">The order date.</param>
+        /// <param name="pickupDate">The pickup date.</param>
+        /// <param name="returnDate">The return date.</param>
+        /// <param name="car">The car that was rented.</param>
+        /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
+        /// <param name="customer">The customer that rented the car.</param>
+        /// <param name="orderSum">The total sum of the order.</param>
+        /// <param name="payments"> A collection of payments tied to the order.</param>
+        /// <param name="orderDetails">Details about the order. </param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CarOrderEntity(DateTime orderDate, DateTime pickupDate, DateTime returnDate,
+            CarEntity car, decimal rentalCostPerDay, CustomerEntity customer, decimal orderSum,
+            List<PaymentEntity> payments, string orderDetails) :
+            this(carOrderId: 0, orderDate, pickupDate, returnDate, car, rentalCostPerDay, customer, orderSum, payments, orderDetails)
+        {
+
+        }
+
+        /// <summary>
         /// A constructor intended for EF core. 
         /// </summary>
         /// <param name="carOrderId">The database ID for this entity. Can't be a negative value.</param>
@@ -81,30 +104,6 @@ namespace FribergCarRentals.Models
             Payments = payments;
             OrderDetails = orderDetails;
         }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="carOrderId">The database ID for this entity. Can't be a negative value.</param>
-        /// <param name="orderDate">The order date.</param>
-        /// <param name="pickupDate">The pickup date.</param>
-        /// <param name="returnDate">The return date.</param>
-        /// <param name="car">The car that was rented.</param>
-        /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
-        /// <param name="customer">The customer that rented the car.</param>
-        /// <param name="orderSum">The total sum of the order.</param>
-        /// <param name="payments"> A collection of payments tied to the order.</param>
-        /// <param name="orderDetails">Details about the order. </param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        public CarOrderEntity(DateTime orderDate, DateTime pickupDate, DateTime returnDate,
-            CarEntity car, decimal rentalCostPerDay, CustomerEntity customer, decimal orderSum,
-            List<PaymentEntity> payments, string orderDetails) : 
-            this(carOrderId: 0, orderDate, pickupDate, returnDate, car, rentalCostPerDay, customer, orderSum, payments, orderDetails)
-        {
-           
-        }
-
         #endregion
 
         #region Properties
@@ -131,11 +130,6 @@ namespace FribergCarRentals.Models
         public DateTime OrderDate { get; set; }
 
         /// <summary>
-        /// The pickup date.
-        /// </summary>
-        public DateTime PickupDate { get; set; }
-
-        /// <summary>
         /// Details about the order. 
         /// </summary>
         public string OrderDetails { get; set; } = "";
@@ -150,6 +144,10 @@ namespace FribergCarRentals.Models
         /// </summary>
         public List<PaymentEntity> Payments { get; } = new();
 
+        /// <summary>
+        /// The pickup date.
+        /// </summary>
+        public DateTime PickupDate { get; set; }
         /// <summary>
         /// The rental cost per day.
         /// </summary>
