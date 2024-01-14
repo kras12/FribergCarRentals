@@ -11,6 +11,11 @@ namespace FribergCarRentals.Models
     {
         #region Constructors
 
+        public CarOrderEntity()
+        {
+            
+        }
+
         /// <summary>
         /// A constructor.
         /// </summary>
