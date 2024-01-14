@@ -116,8 +116,7 @@ namespace FribergCarRentals.Models
             #endregion
 
             // EF Core can't set navigational properties through a constructor, 
-            // so these values will have to be set in this constructor. 
-
+            // so these values will have to be set in this constructor.
             PropulsionSystem = propulsionSystem;
             RentalStatus = rentalStatus;
         }

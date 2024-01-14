@@ -29,9 +29,33 @@ namespace FribergCarRentals.Models
         public CarOrderEntity(DateTime orderDate, DateTime pickupDate, DateTime returnDate,
             CarEntity car, decimal rentalCostPerDay, CustomerEntity customer, decimal orderSum,
             List<PaymentEntity> payments, string orderDetails) :
-            this(carOrderId: 0, orderDate, pickupDate, returnDate, car, rentalCostPerDay, customer, orderSum, payments, orderDetails)
+            this(carOrderId: 0, orderDate, pickupDate, returnDate, rentalCostPerDay, orderSum, orderDetails)
         {
+            #region Checks
 
+            if (car is null)
+            {
+                throw new ArgumentNullException(nameof(car), $"The value of parameter '{car}' can't be null.");
+            }
+
+            if (customer is null)
+            {
+                throw new ArgumentNullException(nameof(customer), $"The value of parameter '{customer}' can't be null.");
+            }
+
+            if (payments is null)
+            {
+                throw new ArgumentNullException(nameof(payments), $"The value of parameter '{payments}' can't be null.");
+            }
+
+            #endregion
+
+            // EF Core can't set navigational properties through a constructor, 
+            // so these values will have to be set in this constructor.
+            Car = car;
+            Customer = customer;
+            OrderDetails = orderDetails;
+            Payments = payments;
         }
 
         /// <summary>
@@ -41,17 +65,13 @@ namespace FribergCarRentals.Models
         /// <param name="orderDate">The order date.</param>
         /// <param name="pickupDate">The pickup date.</param>
         /// <param name="returnDate">The return date.</param>
-        /// <param name="car">The car that was rented.</param>
         /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
-        /// <param name="customer">The customer that rented the car.</param>
         /// <param name="orderSum">The total sum of the order.</param>
-        /// <param name="payments"> A collection of payments tied to the order.</param>
         /// <param name="orderDetails">Details about the order. </param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         private CarOrderEntity(int carOrderId, DateTime orderDate, DateTime pickupDate, DateTime returnDate,
-            CarEntity car, decimal rentalCostPerDay, CustomerEntity customer, decimal orderSum,
-            List<PaymentEntity> payments, string orderDetails)
+            decimal rentalCostPerDay, decimal orderSum, string orderDetails)
         {
             #region Checks
 
@@ -60,50 +80,37 @@ namespace FribergCarRentals.Models
                 throw new ArgumentOutOfRangeException(nameof(carOrderId), $"The value of parameter '{carOrderId}' can't be negative.");
             }
 
-            if (car is null)
-            {
-                throw new ArgumentNullException(nameof(car), $"The value of parameter '{car}' can't be null.");
-            }
-
             if (rentalCostPerDay < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(rentalCostPerDay), $"The value of parameter '{rentalCostPerDay}' can't be negative.");
-            }
-
-            if (customer is null)
-            {
-                throw new ArgumentNullException(nameof(customer), $"The value of parameter '{customer}' can't be null.");
-            }
+            }            
 
             if (orderSum < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(orderSum), $"The value of parameter '{orderSum}' can't be negative.");
-            }
-
-            if (payments is null)
-            {
-                throw new ArgumentNullException(nameof(payments), $"The value of parameter '{payments}' can't be null.");
-            }
+            }                        
 
             if (orderDetails is null)
             {
                 throw new ArgumentNullException(nameof(orderDetails), $"The value of parameter '{orderDetails}' can't be null.");
             }
 
-
             #endregion
 
             CarOrderId = carOrderId;
             OrderDate = orderDate;
             PickupDate = pickupDate;
-            ReturnDate = returnDate;
-            Car = car;
-            RentalCostPerDay = rentalCostPerDay;
-            Customer = customer;
+            ReturnDate = returnDate;            
+            RentalCostPerDay = rentalCostPerDay;            
             OrderSum = orderSum;
-            Payments = payments;
             OrderDetails = orderDetails;
+
+            // EF Core can't set navigational properties through a constructor, 
+            // so these will be setby EF Core via the properties after the constructor have run. 
+            Car = null!;
+            Customer = null!;
         }
+
         #endregion
 
         #region Properties
@@ -142,7 +149,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A collection of payments tied to the order.
         /// </summary>
-        public List<PaymentEntity> Payments { get; } = new();
+        public List<PaymentEntity> Payments { get; set; } = new();
 
         /// <summary>
         /// The pickup date.

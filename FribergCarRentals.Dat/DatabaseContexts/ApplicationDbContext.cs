@@ -4,6 +4,7 @@ using FribergCars.Shared.SharedTypes;
 using FribergCars.Shared.SharedClasses;
 using System.ComponentModel.DataAnnotations;
 using FribergCarRentals.DataAccess.EntityClasses;
+using Microsoft.Identity.Client;
 
 namespace FribergCarRentals.Data
 {
@@ -45,6 +46,8 @@ namespace FribergCarRentals.Data
         public DbSet<AdminEntity> Admins { get; set; }
 
         public DbSet<CustomerEntity> Customers { get; set; }
+
+        public DbSet<CarOrderEntity> CarOrders { get; set; }
 
         #endregion
 
@@ -93,6 +96,16 @@ namespace FribergCarRentals.Data
                 .HasMany(x => x.Images)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            base.ConfigureConventions(configurationBuilder);
+
+            // Expliclity set the precision. The default is 18,2 but we choose to give a little more precision on the decimal side. 
+            // We will still be able to handle huge numbers. 
+            configurationBuilder.Properties<decimal>()
+                .HavePrecision(18, 4);
         }
 
         #endregion
