@@ -6,6 +6,7 @@ using FribergCarRentals.Data;
 
 namespace FribergCarRentals.Controllers
 {
+    [Route("Admin/Customers/[action]")]
     public class AdminCustomerController : Controller
     {
         #region Fields
@@ -30,10 +31,36 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: AdminCustomerController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
+        public async Task<ActionResult> Details(int id)
+        {
+            var refererUri = Request.GetTypedHeaders().Referer ?? throw new InvalidOperationException("Failed to retrieve the referer URI");
+            string actionUrl = Url.Action("List", "AdminCarOrder") ?? throw new InvalidOperationException("Failed to retrieve the action url");
+
+            if (refererUri.AbsolutePath.Contains(actionUrl, StringComparison.CurrentCultureIgnoreCase))
+            {
+                ViewBag.GoBackButtonData = new GoBackButtonData(action: "List", controller: "AdminCarOrder");
+            }
+            
+            //string controllerName = ControllerContext.ActionDescriptor.ControllerName;
+            //string actionName = ControllerContext.ActionDescriptor.ActionName;
+
+            //HttpContext context = _httpContextAccessor.HttpContext;
+            //string controllerName2 = context.Request.RouteValues["controller"].ToString();
+            //string actionName2 = context.Request.RouteValues["action"].ToString();
+
+
+
+            var customer = await _customerRepository.GetById(id);
+
+            if (customer is not null)
+            {
+                return View(new CustomerViewModel(customer));
+            }
+            else
+            {
+                return RedirectToAction(nameof(List));
+            }
+        }
 
         // GET: AdminCustomerController/Create
         public ActionResult Create()
