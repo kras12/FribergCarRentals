@@ -11,7 +11,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerEntity()
+        public CustomerEntity() : base(UserRole.Customer)
         {
 
         }
@@ -24,11 +24,10 @@ namespace FribergCarRentals.Models
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
         /// <param name="hashedPassword">The hashed password for the user.</param>
-        /// <param name="userRole">The user role.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CustomerEntity(int userId, string firstName, string lastName, string email, string hashedPassword, UserRole userRole) :
-            base(userId, firstName, lastName, email, hashedPassword, userRole)
+        public CustomerEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
+            base(userId, firstName, lastName, email, hashedPassword, UserRole.Customer)
         {
 
         }
@@ -41,6 +40,25 @@ namespace FribergCarRentals.Models
         /// A collection of orders for the customer. 
         /// </summary>
         public List<CarOrderEntity> Orders { get; } = new();
+
+        public override UserRole UserRole
+        {
+            get
+            {
+                return base.UserRole;
+            }
+            
+            set
+            {
+                // Safe guard against invalid model bindings.
+                if (value != UserRole.Customer)
+                {
+                    throw new InvalidOperationException("Invalid user role assignment.");
+                }
+
+                base.UserRole = value;
+            }
+        }
 
         #endregion
     }

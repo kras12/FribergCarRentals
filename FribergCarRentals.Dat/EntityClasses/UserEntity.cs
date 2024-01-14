@@ -31,9 +31,10 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        protected UserEntity() 
-        { 
-
+        /// <param name="userRole">The user role.</param>
+        protected UserEntity(UserRole userRole) 
+        {
+            UserRole = userRole;
         }
 
         /// <summary>
@@ -119,7 +120,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// The user role.
         /// </summary>
-        public UserRole UserRole { get; set; }
+        public virtual UserRole UserRole { get; set; }
 
         #endregion
     }

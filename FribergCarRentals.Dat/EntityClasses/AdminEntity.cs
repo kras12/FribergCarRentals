@@ -15,7 +15,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        public AdminEntity()
+        public AdminEntity() : base(UserRole.Admin)
         {
 
         }
@@ -28,13 +28,35 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
         /// <param name="hashedPassword">The hashed password for the user.</param>
-        /// <param name="userRole">The user role.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword, UserRole userRole) : 
-            base(userId, firstName, lastName, email, hashedPassword, userRole)
+        public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword) : 
+            base(userId, firstName, lastName, email, hashedPassword, UserRole.Admin)
         {
 
+        }
+
+        #endregion
+
+        #region Properties
+
+        public override UserRole UserRole
+        {
+            get
+            {
+                return base.UserRole;
+            }
+
+            set
+            {
+                // Safe guard against invalid model bindings.
+                if (value != UserRole.Admin)
+                {
+                    throw new InvalidOperationException("Invalid user role assignment.");
+                }
+
+                base.UserRole = value;
+            }
         }
 
         #endregion
