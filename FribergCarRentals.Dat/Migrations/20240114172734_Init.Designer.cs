@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FribergCarRentals.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240114160348_Init")]
+    [Migration("20240114172734_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -49,10 +49,12 @@ namespace FribergCarRentals.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserRole")
+                    b.Property<int>("UserRoleId")
                         .HasColumnType("int");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("UserRoleId");
 
                     b.ToTable("Admins");
                 });
@@ -249,10 +251,12 @@ namespace FribergCarRentals.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserRole")
+                    b.Property<int>("UserRoleId")
                         .HasColumnType("int");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("UserRoleId");
 
                     b.ToTable("Customers");
                 });
@@ -372,6 +376,17 @@ namespace FribergCarRentals.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.AdminEntity", b =>
+                {
+                    b.HasOne("FribergCarRentals.DataAccess.EntityClasses.UserRoleEntity", "UserRole")
+                        .WithMany()
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRole");
+                });
+
             modelBuilder.Entity("FribergCarRentals.Models.CarEntity", b =>
                 {
                     b.HasOne("FribergCarRentals.Models.VehiclePropulsionEntity", "PropulsionSystem")
@@ -408,6 +423,17 @@ namespace FribergCarRentals.DataAccess.Migrations
                     b.Navigation("Car");
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("FribergCarRentals.Models.CustomerEntity", b =>
+                {
+                    b.HasOne("FribergCarRentals.DataAccess.EntityClasses.UserRoleEntity", "UserRole")
+                        .WithMany()
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.ImageEntity", b =>

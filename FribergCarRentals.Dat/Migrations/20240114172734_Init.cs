@@ -14,23 +14,6 @@ namespace FribergCarRentals.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Admins",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserRole = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Admins", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CarRentalStatuses",
                 columns: table => new
                 {
@@ -41,23 +24,6 @@ namespace FribergCarRentals.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CarRentalStatuses", x => x.CarRentalStatusId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserRole = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,6 +50,52 @@ namespace FribergCarRentals.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VehiclePropulsion", x => x.VehiclePropulsionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Admins",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserRoleId = table.Column<int>(type: "int", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admins", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Admins_UserRoles_UserRoleId",
+                        column: x => x.UserRoleId,
+                        principalTable: "UserRoles",
+                        principalColumn: "UserRoleId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserRoleId = table.Column<int>(type: "int", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Customers_UserRoles_UserRoleId",
+                        column: x => x.UserRoleId,
+                        principalTable: "UserRoles",
+                        principalColumn: "UserRoleId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -232,6 +244,11 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Admins_UserRoleId",
+                table: "Admins",
+                column: "UserRoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CarOrders_CarId",
                 table: "CarOrders",
                 column: "CarId");
@@ -250,6 +267,11 @@ namespace FribergCarRentals.DataAccess.Migrations
                 name: "IX_Cars_RentalStatusCarRentalStatusId",
                 table: "Cars",
                 column: "RentalStatusCarRentalStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_UserRoleId",
+                table: "Customers",
+                column: "UserRoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_CarEntityCarId",
@@ -280,9 +302,6 @@ namespace FribergCarRentals.DataAccess.Migrations
                 name: "PaymentEntity");
 
             migrationBuilder.DropTable(
-                name: "UserRoles");
-
-            migrationBuilder.DropTable(
                 name: "CarOrders");
 
             migrationBuilder.DropTable(
@@ -296,6 +315,9 @@ namespace FribergCarRentals.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "VehiclePropulsion");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
         }
     }
 }
