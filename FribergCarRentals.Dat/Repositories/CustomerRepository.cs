@@ -24,6 +24,14 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #region Methods        
 
+        public async override Task<CustomerEntity> Add(CustomerEntity entity)
+        {
+            await _databaseContext.Set<CustomerEntity>().AddAsync(entity);
+            _databaseContext.Entry(entity.UserRole).State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
+            await _databaseContext.SaveChangesAsync();
+            return entity;
+        }
+
         public async Task Delete(int id)
         {
             var entity = new CustomerEntity() { UserId = id };
