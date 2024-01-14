@@ -29,9 +29,9 @@ namespace FribergCarRentals.Data
                 return Task.CompletedTask;
             }
 
-            if (TryCreateObjectFromString(firstValue, out var entity))
+            if (TryCreateObjectFromString(firstValue, out var result))
             {
-                bindingContext.Result = ModelBindingResult.Success(entity);
+                bindingContext.Result = ModelBindingResult.Success(result);
             }
             else
             {

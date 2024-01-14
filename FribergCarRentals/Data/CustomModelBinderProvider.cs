@@ -21,6 +21,10 @@ namespace FribergCarRentals.Data
             {
                 return new BinderTypeModelBinder(typeof(CarRentalStatusModelBinder));
             }
+            else if (context.Metadata.ModelType == typeof(List<ImageEntity>))
+            {
+                return new BinderTypeModelBinder(typeof(ImageListModelBinder));
+            }
 
             return null;
         }

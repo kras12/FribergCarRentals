@@ -6,9 +6,9 @@ namespace FribergCarRentals.Data
 {
     public class CarRentalStatusModelBinder : SingleValueModelBinderBase<CarRentalStatusEntity>
     {
-        protected override bool TryCreateObjectFromString(string value, [NotNullWhen(true)] out CarRentalStatusEntity? entity)
+        protected override bool TryCreateObjectFromString(string value, [NotNullWhen(true)] out CarRentalStatusEntity? result)
         {
-            return CarRentalStatusEntity.TryCreateFromStatusName(value, out entity);
+            return CarRentalStatusEntity.TryCreateFromStatusName(value, out result);
         }
     }
 }

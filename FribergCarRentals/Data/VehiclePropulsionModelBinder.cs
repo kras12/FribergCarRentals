@@ -7,9 +7,9 @@ namespace FribergCarRentals.Data
 {
     public class VehiclePropulsionModelBinder : SingleValueModelBinderBase<VehiclePropulsionEntity>
     {
-        protected override bool TryCreateObjectFromString(string value, [NotNullWhen(true)] out VehiclePropulsionEntity? entity)
+        protected override bool TryCreateObjectFromString(string value, [NotNullWhen(true)] out VehiclePropulsionEntity? result)
         {
-            return VehiclePropulsionEntity.TryCreateFromPropulsionName(value, out entity);
+            return VehiclePropulsionEntity.TryCreateFromPropulsionName(value, out result);
         }
     }
 }
