@@ -1,17 +1,21 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
-    public class CustomerEntity : UserEntity
+    internal class AdminEntity : UserEntity
     {
         #region Constructors
-
+        
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerEntity()
+        public AdminEntity()
         {
 
         }
@@ -27,20 +31,11 @@ namespace FribergCarRentals.Models
         /// <param name="userRole">The user role.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CustomerEntity(int userId, string firstName, string lastName, string email, string hashedPassword, UserRole userRole) :
+        public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword, UserRole userRole) : 
             base(userId, firstName, lastName, email, hashedPassword, userRole)
         {
 
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// A collection of orders for the customer. 
-        /// </summary>
-        public List<CarOrderEntity> Orders { get; } = new();
 
         #endregion
     }
