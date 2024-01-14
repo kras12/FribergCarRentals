@@ -1,5 +1,6 @@
 ﻿using FribergCarRentals.Data;
 using FribergCarRentals.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,13 @@ namespace FribergCarRentals.DataAccess.Repositories
         #endregion
 
         #region Methods        
+
+        public async Task Delete(int id)
+        {
+            var car = new CarEntity() { CarId = id };
+            _databaseContext.Cars.Remove(car);
+            await _databaseContext.SaveChangesAsync();
+        }
 
         public async override Task<CarEntity> Add(CarEntity entity)
         {

@@ -15,8 +15,6 @@ namespace FribergCarRentals.DataAccess.Repositories
     {
         public ValueTask<T?> GetById(int id);
 
-        //public bool TryGetById(int id, [NotNullWhen(true)] out T? result);
-
         public Task<IEnumerable<T>> GetAll();
 
         public Task<T> Update(T entity);

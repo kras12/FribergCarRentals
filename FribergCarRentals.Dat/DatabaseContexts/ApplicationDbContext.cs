@@ -74,6 +74,11 @@ namespace FribergCarRentals.Data
             modelBuilder.Entity<CarEntity>()
                 .Navigation(x => x.Images)
                 .AutoInclude();
+
+            modelBuilder.Entity<CarEntity>()
+                .HasMany(x => x.Images)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         #endregion

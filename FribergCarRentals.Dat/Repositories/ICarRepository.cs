@@ -18,19 +18,7 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #region Methods
 
-        //public CarEntity? GetCar(int id);
-
-        //public bool TryGetCar(int id, [NotNullWhen(true)] out CarEntity? result);
-
-        //public IEnumerable<CarEntity> GetAllCars();
-
-        //public CarEntity UpdateCar(CarEntity entity);
-
-        //public CarEntity? GetCar(CarEntity entity);
-
-        //public CarEntity AddCar(CarEntity entity);
-
-        //public IEnumerable<CarEntity> FindCar(Expression<Func<CarEntity, bool>> predicate);
+        public Task Delete(int id);
 
         #endregion
     }
