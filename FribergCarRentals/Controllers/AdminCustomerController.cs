@@ -1,14 +1,30 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FribergCarRentals.DataAccess.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
 {
     public class AdminCustomerController : Controller
     {
-        // GET: AdminCustomerController
-        public ActionResult Index()
+        #region Fields
+
+        private readonly ICustomerRepository _customerRepository;
+
+        #endregion
+
+        #region Constructors
+
+        public AdminCustomerController(ICustomerRepository customerRepository)
         {
-            return View();
+            _customerRepository = customerRepository;
+        }
+
+        #endregion
+
+        // GET: AdminCustomerController
+        public async Task<ActionResult> List()
+        {
+            return View(await _customerRepository.GetAll());
         }
 
         // GET: AdminCustomerController/Details/5

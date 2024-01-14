@@ -16,6 +16,7 @@ namespace FribergCarRentals
             builder.Services.AddControllersWithViews(options => options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider()));
 
             builder.Services.AddTransient<ICarRepository, CarRepository>();
+            builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 
             var app = builder.Build();
 
