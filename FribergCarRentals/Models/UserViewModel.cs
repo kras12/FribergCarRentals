@@ -1,4 +1,6 @@
 ﻿using FribergCarRentals.DataAccess.EntityClasses;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Models
@@ -8,15 +10,6 @@ namespace FribergCarRentals.Models
         #region Constructors
 
         /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="userRole">The user role.</param>
-        protected UserViewModel(UserRoleType userRole)
-        {
-            UserRole = userRole;
-        }
-
-        /// <summary>
         ///  A constructor.
         /// </summary>
         /// <param name="userId">The ID for the user. Can't be negative.</param>
@@ -24,10 +17,9 @@ namespace FribergCarRentals.Models
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
         /// <param name="hashedPassword">The hashed password for the user.</param>
-        /// <param name="userRole">The user role.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserViewModel(int userId, string firstName, string lastName, string email, string hashedPassword, UserRoleType userRole)
+        protected UserViewModel(int userId, string firstName, string lastName, string email, string hashedPassword)
         {
             #region Checks
 
@@ -62,8 +54,7 @@ namespace FribergCarRentals.Models
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            HashedPassword = hashedPassword;
-            UserRole = userRole;
+            InputPassword = hashedPassword;
         }
 
         #endregion
@@ -92,14 +83,11 @@ namespace FribergCarRentals.Models
         public string Email { get; set; } = "";
 
         /// <summary>
-        /// The hashed password for the user.
+        /// The input password for the user.
         /// </summary>
-        public string HashedPassword { get; set; } = "";
-
-        /// <summary>
-        /// The user role.
-        /// </summary>
-        public virtual UserRoleType UserRole { get; set; } = UserRoleType.None;
+        /// <remarks>Is used to input data to form fields and get data from form submissions.</remarks>
+        [DisplayName("Password")]
+        public string InputPassword { get; set; } = "";
 
         #endregion
     }

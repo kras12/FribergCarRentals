@@ -1,18 +1,11 @@
 ﻿using FribergCarRentals.DataAccess.EntityClasses;
+using System.ComponentModel;
 
 namespace FribergCarRentals.Models
 {
     public class CustomerViewModel : UserViewModel
     {
         #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        public CustomerViewModel() : base(UserRoleType.Customer)
-        {
-
-        }
 
         /// <summary>
         /// A constructor.
@@ -35,7 +28,7 @@ namespace FribergCarRentals.Models
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CustomerViewModel(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleType.Customer)
+            base(userId, firstName, lastName, email, hashedPassword)
         {
 
         }
@@ -47,26 +40,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A collection of orders for the customer. 
         /// </summary>
-        public List<CarOrderEntity> Orders { get; } = new();        
-
-        public override UserRoleType UserRole
-        {
-            get
-            {
-                return base.UserRole;
-            }
-
-            set
-            {
-                // Safe guard against invalid model bindings.
-                if (value != UserRoleType.Customer)
-                {
-                    throw new InvalidOperationException("Invalid user role assignment.");
-                }
-
-                base.UserRole = value;
-            }
-        }
+        public List<CarOrderEntity> Orders { get; } = new();
 
         #endregion
     }

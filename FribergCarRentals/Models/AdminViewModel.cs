@@ -12,14 +12,6 @@ namespace FribergCarRentals.Models
         #region Constructors
 
         /// <summary>
-        /// A constructor.
-        /// </summary>
-        public AdminViewModel() : base(UserRoleType.Admin)
-        {
-
-        }
-
-        /// <summary>
         ///  A constructor.
         /// </summary>
         /// <param name="userId">The ID for the user. Can't be negative.</param>
@@ -30,32 +22,9 @@ namespace FribergCarRentals.Models
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public AdminViewModel(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleType.Admin)
+            base(userId, firstName, lastName, email, hashedPassword)
         {
 
-        }
-
-        #endregion
-
-        #region Properties
-
-        public override UserRoleType UserRole
-        {
-            get
-            {
-                return base.UserRole;
-            }
-
-            set
-            {
-                // Safe guard against invalid model bindings.
-                if (value != UserRoleType.Admin)
-                {
-                    throw new InvalidOperationException("Invalid user role assignment.");
-                }
-
-                base.UserRole = value;
-            }
         }
 
         #endregion
