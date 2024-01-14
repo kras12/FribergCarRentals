@@ -110,10 +110,20 @@ namespace FribergCarRentals.Models
         #region Properties
 
         /// <summary>
+        /// The car that was rented.
+        /// </summary>
+        public CarEntity Car { get; set; }
+
+        /// <summary>
         /// The order ID.
         /// </summary>
         [Key]
         public int CarOrderId { get; set; }
+
+        /// <summary>
+        /// The customer that rented the car.
+        /// </summary>
+        public CustomerEntity Customer { get; set; }
 
         /// <summary>
         /// The order date.
@@ -126,29 +136,14 @@ namespace FribergCarRentals.Models
         public DateTime PickupDate { get; set; }
 
         /// <summary>
-        /// The return date.
+        /// Details about the order. 
         /// </summary>
-        public DateTime ReturnDate { get; set; }
-
-        /// <summary>
-        /// The car that was rented.
-        /// </summary>
-        public CarEntity Car {  get; set; } 
-
-        /// <summary>
-        /// The rental cost per day.
-        /// </summary>
-        public Decimal RentalCostPerDay { get; set; }
-
-        /// <summary>
-        /// The customer that rented the car.
-        /// </summary>
-        public CustomerEntity Customer { get; set; }
+        public string OrderDetails { get; set; } = "";
 
         /// <summary>
         /// The total sum of the order.
         /// </summary>
-        public Decimal OrderSum { get; set; }
+        public decimal OrderSum { get; set; }
 
         /// <summary>
         /// A collection of payments tied to the order.
@@ -156,9 +151,14 @@ namespace FribergCarRentals.Models
         public List<PaymentEntity> Payments { get; } = new();
 
         /// <summary>
-        /// Details about the order. 
+        /// The rental cost per day.
         /// </summary>
-        public string OrderDetails { get; set; } = "";
+        public decimal RentalCostPerDay { get; set; }
+
+        /// <summary>
+        /// The return date.
+        /// </summary>
+        public DateTime ReturnDate { get; set; }
 
         #endregion
     }
