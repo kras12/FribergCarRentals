@@ -64,6 +64,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// The car that was rented.
         /// </summary>
+        [Required]
         public CarEntity? Car { get; set; }
 
         /// <summary>
@@ -75,6 +76,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// The customer that rented the car.
         /// </summary>
+        [Required]
         public CustomerEntity? Customer { get; set; }
 
         /// <summary>

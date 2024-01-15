@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FribergCarRentals.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,19 @@ namespace FribergCarRentals.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CarRentalStatuses", x => x.CarRentalStatusId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderStatuses",
+                columns: table => new
+                {
+                    OrderStatusId = table.Column<int>(type: "int", nullable: false),
+                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderStatuses", x => x.OrderStatusId);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,9 +121,10 @@ namespace FribergCarRentals.DataAccess.Migrations
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ModelYear = table.Column<int>(type: "int", nullable: false),
+                    PropulsionSystemVehiclePropulsionId = table.Column<int>(type: "int", nullable: false),
                     RegistrationNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RentalStatusCarRentalStatusId = table.Column<int>(type: "int", nullable: false),
-                    PropulsionSystemVehiclePropulsionId = table.Column<int>(type: "int", nullable: false)
+                    RentalCostPerDay = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    RentalStatusCarRentalStatusId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,31 +144,28 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CarOrders",
+                name: "CarBookings",
                 columns: table => new
                 {
-                    CarOrderId = table.Column<int>(type: "int", nullable: false)
+                    CarBookingId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CarId = table.Column<int>(type: "int", nullable: false),
                     CustomerUserId = table.Column<int>(type: "int", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderSum = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    PickupDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PickupDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RentalCostPerDay = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ReturnDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarOrders", x => x.CarOrderId);
+                    table.PrimaryKey("PK_CarBookings", x => x.CarBookingId);
                     table.ForeignKey(
-                        name: "FK_CarOrders_Cars_CarId",
+                        name: "FK_CarBookings_Cars_CarId",
                         column: x => x.CarId,
                         principalTable: "Cars",
                         principalColumn: "CarId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CarOrders_Customers_CustomerUserId",
+                        name: "FK_CarBookings_Customers_CustomerUserId",
                         column: x => x.CustomerUserId,
                         principalTable: "Customers",
                         principalColumn: "UserId",
@@ -182,6 +193,42 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CarOrders",
+                columns: table => new
+                {
+                    CarOrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CarBookingId = table.Column<int>(type: "int", nullable: false),
+                    CustomerUserId = table.Column<int>(type: "int", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OrderDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderStatusId = table.Column<int>(type: "int", nullable: false),
+                    OrderSum = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CarOrders", x => x.CarOrderId);
+                    table.ForeignKey(
+                        name: "FK_CarOrders_CarBookings_CarBookingId",
+                        column: x => x.CarBookingId,
+                        principalTable: "CarBookings",
+                        principalColumn: "CarBookingId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CarOrders_Customers_CustomerUserId",
+                        column: x => x.CustomerUserId,
+                        principalTable: "Customers",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CarOrders_OrderStatuses_OrderStatusId",
+                        column: x => x.OrderStatusId,
+                        principalTable: "OrderStatuses",
+                        principalColumn: "OrderStatusId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PaymentEntity",
                 columns: table => new
                 {
@@ -189,17 +236,18 @@ namespace FribergCarRentals.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     CustomerUserId = table.Column<int>(type: "int", nullable: false),
-                    PaymentDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CarOrderEntityCarOrderId = table.Column<int>(type: "int", nullable: true)
+                    OrderCarOrderId = table.Column<int>(type: "int", nullable: false),
+                    PaymentDetails = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PaymentEntity", x => x.PaymentId);
                     table.ForeignKey(
-                        name: "FK_PaymentEntity_CarOrders_CarOrderEntityCarOrderId",
-                        column: x => x.CarOrderEntityCarOrderId,
+                        name: "FK_PaymentEntity_CarOrders_OrderCarOrderId",
+                        column: x => x.OrderCarOrderId,
                         principalTable: "CarOrders",
-                        principalColumn: "CarOrderId");
+                        principalColumn: "CarOrderId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PaymentEntity_Customers_CustomerUserId",
                         column: x => x.CustomerUserId,
@@ -249,14 +297,29 @@ namespace FribergCarRentals.DataAccess.Migrations
                 column: "UserRoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarOrders_CarId",
-                table: "CarOrders",
+                name: "IX_CarBookings_CarId",
+                table: "CarBookings",
                 column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarBookings_CustomerUserId",
+                table: "CarBookings",
+                column: "CustomerUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarOrders_CarBookingId",
+                table: "CarOrders",
+                column: "CarBookingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CarOrders_CustomerUserId",
                 table: "CarOrders",
                 column: "CustomerUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarOrders_OrderStatusId",
+                table: "CarOrders",
+                column: "OrderStatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cars_PropulsionSystemVehiclePropulsionId",
@@ -279,14 +342,14 @@ namespace FribergCarRentals.DataAccess.Migrations
                 column: "CarEntityCarId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentEntity_CarOrderEntityCarOrderId",
-                table: "PaymentEntity",
-                column: "CarOrderEntityCarOrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PaymentEntity_CustomerUserId",
                 table: "PaymentEntity",
                 column: "CustomerUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentEntity_OrderCarOrderId",
+                table: "PaymentEntity",
+                column: "OrderCarOrderId");
         }
 
         /// <inheritdoc />
@@ -303,6 +366,12 @@ namespace FribergCarRentals.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "CarOrders");
+
+            migrationBuilder.DropTable(
+                name: "CarBookings");
+
+            migrationBuilder.DropTable(
+                name: "OrderStatuses");
 
             migrationBuilder.DropTable(
                 name: "Cars");

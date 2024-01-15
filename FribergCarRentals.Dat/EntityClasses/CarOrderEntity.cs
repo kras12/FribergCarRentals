@@ -118,6 +118,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The order status.
         /// </summary>
+        [Required]
         public OrderStatusEntity? OrderStatus { get; set; }
 
         /// <summary>
