@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Models
 {
-    internal class CarOrderViewModel : ViewModelBase
+    public class CarOrderViewModel : ViewModelBase
     {
         #region Constructors
 

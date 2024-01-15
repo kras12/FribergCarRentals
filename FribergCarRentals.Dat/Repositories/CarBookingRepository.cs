@@ -40,9 +40,9 @@ namespace FribergCarRentals.DataAccess.Repositories
         {
             #region Checks
 
-            if (carBooking.Car is null || carBooking.Customer is null)
+            if (carBooking.Car is null)
             {
-                throw new InvalidOperationException("The car or customer of a booking can't be null.");
+                throw new InvalidOperationException("The car in the booking can't be null.");
             }
 
             #endregion

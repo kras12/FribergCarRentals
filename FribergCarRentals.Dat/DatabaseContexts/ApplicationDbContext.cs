@@ -5,6 +5,7 @@ using FribergCars.Shared.SharedClasses;
 using System.ComponentModel.DataAnnotations;
 using FribergCarRentals.DataAccess.EntityClasses;
 using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Internal;
 
 namespace FribergCarRentals.Data
 {
@@ -118,8 +119,16 @@ namespace FribergCarRentals.Data
                 .AutoInclude();
 
             modelBuilder.Entity<CarBookingEntity>()
-                .Navigation(x => x.Customer)
+                .Navigation(x => x.Order)
                 .AutoInclude();
+
+            modelBuilder.Entity<CarOrderEntity>()
+                .HasOne(x => x.CarBooking)
+                .WithOne(x => x.Order)
+                .HasForeignKey<CarBookingEntity>(x => x.CarBookingId);
+
+            
+            
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

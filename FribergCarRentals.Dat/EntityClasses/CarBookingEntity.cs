@@ -23,19 +23,19 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="customer">The customer tied to the booking. Can't be null.</param>
+        /// <param name="order">The order tied to the booking. Can't be null.</param>
         /// <param name="car">The car for the booking. Can't be null.</param>
         /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
         /// <param name="pickupDate"></param>
         /// <param name="returnDate"></param>
-        public CarBookingEntity(CustomerEntity customer, CarEntity car,
+        public CarBookingEntity(CarOrderEntity order, CarEntity car,
             decimal rentalCostPerDay, DateTime pickupDate, DateTime returnDate)
         {
             #region Checks
 
-            if (customer is null)
+            if (order is null)
             {
-                throw new ArgumentNullException(nameof(customer), $"The value of parameter '{customer}' can't be null.");
+                throw new ArgumentNullException(nameof(order), $"The value of parameter '{order}' can't be null.");
             }
 
             if (car is null)
@@ -50,7 +50,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
             #endregion
 
-            Customer = customer;
+            Order = order;
             Car = car;
             RentalCostPerDay = rentalCostPerDay;
             PickupDateUtc = pickupDate;            
@@ -74,10 +74,10 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         public int CarBookingId { get; set; }
 
         /// <summary>
-        /// The customer that rented the car.
+        /// The order that the booking belongs to.
         /// </summary>
         [Required]
-        public CustomerEntity? Customer { get; set; }
+        public CarOrderEntity? Order { get; set; }
 
         /// <summary>
         /// The pickup date.

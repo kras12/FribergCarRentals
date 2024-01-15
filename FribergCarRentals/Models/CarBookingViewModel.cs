@@ -15,9 +15,22 @@ namespace FribergCarRentals.Models
         /// <param name="carBooking">The car booking to copy data from.</param>
         public CarBookingViewModel(CarBookingEntity carBooking)
         {
+            #region Checks
+
+            if (carBooking.Order is null)
+            {
+                throw new ArgumentNullException("The order in the booking can't be null.");
+            }
+
+            if (carBooking.Car is null)
+            {
+                throw new ArgumentNullException("The car in the booking can't be null.");
+            }
+
+            #endregion
             CarBookingId = carBooking.CarBookingId;
-            Customer = carBooking.Customer ?? throw new ArgumentNullException("The customer can't be null.");
-            Car = carBooking.Car ?? throw new ArgumentNullException("The car can't be null");
+            Order = new CarOrderViewModel(carBooking.Order);
+            Car = carBooking.Car;
             RentalCostPerDay = carBooking.RentalCostPerDay;
             PickupDateUtc = carBooking.PickupDateUtc;
             ReturnDateUtc = carBooking.ReturnDateUtc;
@@ -79,9 +92,9 @@ namespace FribergCarRentals.Models
         public int CarBookingId { get; set; }
 
         /// <summary>
-        /// The customer that rented the car.
+        /// The order that the booking belongs to. 
         /// </summary>
-        public CustomerEntity Customer { get; set; }
+        public CarOrderViewModel Order { get; set; }
 
         #endregion
     }
