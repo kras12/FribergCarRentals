@@ -13,8 +13,18 @@ namespace FribergCarRentals.DataAccess.Repositories
 {
     public class GenericRepository<T> : IRepositoryBase<T> where T : class
     {
+        #region Fields
+
         protected readonly ApplicationDbContext _databaseContext;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="databaseContext">The database context to use.</param>
         public GenericRepository(ApplicationDbContext databaseContext)
         {
             #region Checks
@@ -28,6 +38,10 @@ namespace FribergCarRentals.DataAccess.Repositories
 
             #endregion
         }
+
+        #endregion
+
+        #region Methods
 
         public async virtual Task<T> Add(T entity)
         {
@@ -47,21 +61,22 @@ namespace FribergCarRentals.DataAccess.Repositories
             return await _databaseContext.Set<T>().Where(predicate).AsNoTracking().ToListAsync();
         }
 
-        public virtual ValueTask<T?> GetById(int id)
-        {
-            return _databaseContext.Set<T>().FindAsync(id);
-        }
-
         public async virtual Task<IEnumerable<T>> GetAll()
         {
             return await _databaseContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
+        public virtual ValueTask<T?> GetById(int id)
+        {
+            return _databaseContext.Set<T>().FindAsync(id);
+        }
         public async virtual Task<T> Update(T entity)
         {
             _databaseContext.Update(entity);
             await _databaseContext.SaveChangesAsync();
             return entity;
         }
+
+        #endregion
     }
 }

@@ -15,6 +15,10 @@ namespace FribergCarRentals.DataAccess.Repositories
     {
         #region Constructors
 
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="databaseContext">The database context to use.</param>
         public CustomerRepository(ApplicationDbContext databaseContext) : base(databaseContext)
         {
 
