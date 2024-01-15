@@ -16,6 +16,10 @@ namespace FribergCarRentals.DataAccess.Repositories
     {
         #region Constructors
 
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="databaseContext">The database context to use.</param>
         public CarRepository(ApplicationDbContext databaseContext) : base(databaseContext)
         {
 
@@ -35,8 +39,8 @@ namespace FribergCarRentals.DataAccess.Repositories
         public async override Task<CarEntity> Add(CarEntity entity)
         {
             await _databaseContext.Set<CarEntity>().AddAsync(entity);
-            _databaseContext.Entry(entity.PropulsionSystem).State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
-            _databaseContext.Entry(entity.RentalStatus).State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
+            _databaseContext.Entry(entity.PropulsionSystem).State = EntityState.Unchanged;
+            _databaseContext.Entry(entity.RentalStatus).State = EntityState.Unchanged;
             await _databaseContext.SaveChangesAsync();
             return entity;
         }
