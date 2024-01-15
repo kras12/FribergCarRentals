@@ -2,7 +2,7 @@
 
 namespace FribergCarRentals.Models
 {
-    public class CarViewModel
+    public class CarViewModel : ViewModelBase
     {
 
         #region Constructors

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Models
 {
-    public abstract class UserViewModel
+    public abstract class UserViewModel : ViewModelBase
     {
         #region Constructors
 
