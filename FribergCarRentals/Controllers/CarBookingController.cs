@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FribergCarRentals.DataAccess.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
@@ -14,19 +15,29 @@ namespace FribergCarRentals.Controllers
 
         #region Fields
 
-
+        private readonly ICarBookingRepository _carBookingRepository;
 
         #endregion
 
         #region Constructors
 
+        public CarBookingController(ICarBookingRepository carBookingRepository)
+        {
+            _carBookingRepository = carBookingRepository;
+        }
+
         #endregion
 
         #region Actions
 
-
         // GET: CarBookingController
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: CarBookingController
+        public ActionResult List()
         {
             return View();
         }
