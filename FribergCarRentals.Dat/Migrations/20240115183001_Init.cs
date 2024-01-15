@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FribergCarRentals.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -144,31 +144,24 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CarOrders",
+                name: "CarBookings",
                 columns: table => new
                 {
-                    CarOrderId = table.Column<int>(type: "int", nullable: false)
+                    CarBookingId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerUserId = table.Column<int>(type: "int", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderStatusId = table.Column<int>(type: "int", nullable: false),
-                    OrderSum = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false)
+                    CarId = table.Column<int>(type: "int", nullable: false),
+                    PickupDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RentalCostPerDay = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    ReturnDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarOrders", x => x.CarOrderId);
+                    table.PrimaryKey("PK_CarBookings", x => x.CarBookingId);
                     table.ForeignKey(
-                        name: "FK_CarOrders_Customers_CustomerUserId",
-                        column: x => x.CustomerUserId,
-                        principalTable: "Customers",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CarOrders_OrderStatuses_OrderStatusId",
-                        column: x => x.OrderStatusId,
-                        principalTable: "OrderStatuses",
-                        principalColumn: "OrderStatusId",
+                        name: "FK_CarBookings_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "CarId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -193,29 +186,38 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CarBookings",
+                name: "CarOrders",
                 columns: table => new
                 {
+                    CarOrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CarBookingId = table.Column<int>(type: "int", nullable: false),
-                    CarId = table.Column<int>(type: "int", nullable: false),
-                    PickupDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RentalCostPerDay = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    ReturnDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CustomerUserId = table.Column<int>(type: "int", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OrderDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderStatusId = table.Column<int>(type: "int", nullable: false),
+                    OrderSum = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarBookings", x => x.CarBookingId);
+                    table.PrimaryKey("PK_CarOrders", x => x.CarOrderId);
                     table.ForeignKey(
-                        name: "FK_CarBookings_CarOrders_CarBookingId",
+                        name: "FK_CarOrders_CarBookings_CarBookingId",
                         column: x => x.CarBookingId,
-                        principalTable: "CarOrders",
-                        principalColumn: "CarOrderId",
+                        principalTable: "CarBookings",
+                        principalColumn: "CarBookingId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CarBookings_Cars_CarId",
-                        column: x => x.CarId,
-                        principalTable: "Cars",
-                        principalColumn: "CarId",
+                        name: "FK_CarOrders_Customers_CustomerUserId",
+                        column: x => x.CustomerUserId,
+                        principalTable: "Customers",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CarOrders_OrderStatuses_OrderStatusId",
+                        column: x => x.OrderStatusId,
+                        principalTable: "OrderStatuses",
+                        principalColumn: "OrderStatusId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -252,6 +254,17 @@ namespace FribergCarRentals.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "OrderStatuses",
+                columns: new[] { "OrderStatusId", "StatusDescription", "StatusName" },
+                values: new object[,]
+                {
+                    { 1, "No order status.", "None" },
+                    { 2, "Order is created.", "Created" },
+                    { 3, "Order is completed.", "Completed" },
+                    { 4, "Order is canceled.", "Canceled" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "UserRoles",
                 columns: new[] { "UserRoleId", "UserRoleDescription", "UserRoleName" },
                 values: new object[,]
@@ -284,6 +297,11 @@ namespace FribergCarRentals.DataAccess.Migrations
                 name: "IX_CarBookings_CarId",
                 table: "CarBookings",
                 column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarOrders_CarBookingId",
+                table: "CarOrders",
+                column: "CarBookingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CarOrders_CustomerUserId",
@@ -328,25 +346,16 @@ namespace FribergCarRentals.DataAccess.Migrations
                 name: "Admins");
 
             migrationBuilder.DropTable(
-                name: "CarBookings");
-
-            migrationBuilder.DropTable(
                 name: "Images");
 
             migrationBuilder.DropTable(
                 name: "PaymentEntity");
 
             migrationBuilder.DropTable(
-                name: "Cars");
-
-            migrationBuilder.DropTable(
                 name: "CarOrders");
 
             migrationBuilder.DropTable(
-                name: "CarRentalStatuses");
-
-            migrationBuilder.DropTable(
-                name: "VehiclePropulsion");
+                name: "CarBookings");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -355,7 +364,16 @@ namespace FribergCarRentals.DataAccess.Migrations
                 name: "OrderStatuses");
 
             migrationBuilder.DropTable(
+                name: "Cars");
+
+            migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "CarRentalStatuses");
+
+            migrationBuilder.DropTable(
+                name: "VehiclePropulsion");
         }
     }
 }

@@ -83,6 +83,17 @@ namespace FribergCarRentals.Data
                .Property(x => x.CarRentalStatusId)
                .HasConversion<int>();
 
+            modelBuilder.Entity<OrderStatusEntity>()
+               .HasData(
+                   Enum.GetValues(typeof(OrderStatus))
+                   .Cast<OrderStatus>()
+                   .Select(x => OrderStatusEntity.CreateSeedObject(x)));
+
+            modelBuilder.Entity<OrderStatusEntity>()
+               .Property(x => x.OrderStatusId)
+               .HasConversion<int>();
+
+
             modelBuilder.Entity<CarEntity>()
                 .Navigation(x => x.PropulsionSystem)
                 .AutoInclude();
@@ -117,17 +128,6 @@ namespace FribergCarRentals.Data
             modelBuilder.Entity<CarBookingEntity>()
                 .Navigation(x => x.Car)
                 .AutoInclude();
-
-            modelBuilder.Entity<CarBookingEntity>()
-                .Navigation(x => x.Order)
-                .AutoInclude();
-
-            modelBuilder.Entity<CarOrderEntity>()
-                .HasOne(x => x.CarBooking)
-                .WithOne(x => x.Order)
-                .HasForeignKey<CarBookingEntity>(x => x.CarBookingId);
-
-            
             
         }
 

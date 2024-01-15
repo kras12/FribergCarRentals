@@ -53,13 +53,16 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasIndex("UserRoleId");
 
-                    b.ToTable("Admins");
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.CarBookingEntity", b =>
                 {
                     b.Property<int>("CarBookingId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarBookingId"));
 
                     b.Property<int>("CarId")
                         .HasColumnType("int");
@@ -78,7 +81,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("CarBookings");
+                    b.ToTable("CarBookings", (string)null);
                 });
 
             modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.OrderStatusEntity", b =>
@@ -96,7 +99,33 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasKey("OrderStatusId");
 
-                    b.ToTable("OrderStatuses");
+                    b.ToTable("OrderStatuses", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            OrderStatusId = 1,
+                            StatusDescription = "No order status.",
+                            StatusName = "None"
+                        },
+                        new
+                        {
+                            OrderStatusId = 2,
+                            StatusDescription = "Order is created.",
+                            StatusName = "Created"
+                        },
+                        new
+                        {
+                            OrderStatusId = 3,
+                            StatusDescription = "Order is completed.",
+                            StatusName = "Completed"
+                        },
+                        new
+                        {
+                            OrderStatusId = 4,
+                            StatusDescription = "Order is canceled.",
+                            StatusName = "Canceled"
+                        });
                 });
 
             modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.UserRoleEntity", b =>
@@ -114,7 +143,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasKey("UserRoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
 
                     b.HasData(
                         new
@@ -180,7 +209,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasIndex("RentalStatusCarRentalStatusId");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Cars", (string)null);
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarOrderEntity", b =>
@@ -190,6 +219,9 @@ namespace FribergCarRentals.DataAccess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarOrderId"));
+
+                    b.Property<int>("CarBookingId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CustomerUserId")
                         .HasColumnType("int");
@@ -210,11 +242,13 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasKey("CarOrderId");
 
+                    b.HasIndex("CarBookingId");
+
                     b.HasIndex("CustomerUserId");
 
                     b.HasIndex("OrderStatusId");
 
-                    b.ToTable("CarOrders");
+                    b.ToTable("CarOrders", (string)null);
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarRentalStatusEntity", b =>
@@ -232,7 +266,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasKey("CarRentalStatusId");
 
-                    b.ToTable("CarRentalStatuses");
+                    b.ToTable("CarRentalStatuses", (string)null);
 
                     b.HasData(
                         new
@@ -292,7 +326,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasIndex("UserRoleId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.ImageEntity", b =>
@@ -314,7 +348,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasIndex("CarEntityCarId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.PaymentEntity", b =>
@@ -340,7 +374,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasIndex("OrderCarOrderId");
 
-                    b.ToTable("PaymentEntity");
+                    b.ToTable("PaymentEntity", (string)null);
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.VehiclePropulsionEntity", b =>
@@ -358,7 +392,7 @@ namespace FribergCarRentals.DataAccess.Migrations
 
                     b.HasKey("VehiclePropulsionId");
 
-                    b.ToTable("VehiclePropulsion");
+                    b.ToTable("VehiclePropulsion", (string)null);
 
                     b.HasData(
                         new
@@ -418,12 +452,6 @@ namespace FribergCarRentals.DataAccess.Migrations
 
             modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.CarBookingEntity", b =>
                 {
-                    b.HasOne("FribergCarRentals.Models.CarOrderEntity", "Order")
-                        .WithOne("CarBooking")
-                        .HasForeignKey("FribergCarRentals.DataAccess.EntityClasses.CarBookingEntity", "CarBookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FribergCarRentals.Models.CarEntity", "Car")
                         .WithMany()
                         .HasForeignKey("CarId")
@@ -431,8 +459,6 @@ namespace FribergCarRentals.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Car");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("FribergCarRentals.Models.CarEntity", b =>
@@ -456,6 +482,12 @@ namespace FribergCarRentals.DataAccess.Migrations
 
             modelBuilder.Entity("FribergCarRentals.Models.CarOrderEntity", b =>
                 {
+                    b.HasOne("FribergCarRentals.DataAccess.EntityClasses.CarBookingEntity", "CarBooking")
+                        .WithMany()
+                        .HasForeignKey("CarBookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FribergCarRentals.Models.CustomerEntity", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerUserId")
@@ -467,6 +499,8 @@ namespace FribergCarRentals.DataAccess.Migrations
                         .HasForeignKey("OrderStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CarBooking");
 
                     b.Navigation("Customer");
 
@@ -510,9 +544,6 @@ namespace FribergCarRentals.DataAccess.Migrations
 
             modelBuilder.Entity("FribergCarRentals.Models.CarOrderEntity", b =>
                 {
-                    b.Navigation("CarBooking")
-                        .IsRequired();
-
                     b.Navigation("Payments");
                 });
 

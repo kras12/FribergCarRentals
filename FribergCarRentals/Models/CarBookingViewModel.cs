@@ -17,11 +17,6 @@ namespace FribergCarRentals.Models
         {
             #region Checks
 
-            if (carBooking.Order is null)
-            {
-                throw new ArgumentNullException("The order in the booking can't be null.");
-            }
-
             if (carBooking.Car is null)
             {
                 throw new ArgumentNullException("The car in the booking can't be null.");
@@ -29,7 +24,6 @@ namespace FribergCarRentals.Models
 
             #endregion
             CarBookingId = carBooking.CarBookingId;
-            Order = new CarOrderViewModel(carBooking.Order);
             Car = carBooking.Car;
             RentalCostPerDay = carBooking.RentalCostPerDay;
             PickupDateUtc = carBooking.PickupDateUtc;
@@ -90,11 +84,6 @@ namespace FribergCarRentals.Models
         /// The car booking ID.
         /// </summary>
         public int CarBookingId { get; set; }
-
-        /// <summary>
-        /// The order that the booking belongs to. 
-        /// </summary>
-        public CarOrderViewModel Order { get; set; }
 
         #endregion
     }
