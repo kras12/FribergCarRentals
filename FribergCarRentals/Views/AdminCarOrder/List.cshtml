@@ -24,15 +24,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.OrderSum)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PickupDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalCostPerDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReturnDate)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -52,17 +43,8 @@
                 @Html.DisplayFor(modelItem => item.OrderSum)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PickupDateString)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RentalCostPerDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDateString)
-            </td>
-            <td>
                 <a asp-controller="AdminCustomer" asp-action="Details" asp-route-id="@item.Customer.UserId" asp-data>View customer</a> |
-                <a asp-controller="AdminCar" asp-action="Details" asp-route-id="@item.Car.CarId">View car</a> |
+                <a asp-controller="AdminCar" asp-action="Details" asp-route-id="@item.CarBooking.Car.CarId">View car</a> |
                 <a asp-action="Delete" asp-route-id="@item.CarOrderId">Delete</a>
             </td>
         </tr>
