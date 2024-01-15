@@ -23,15 +23,21 @@ namespace FribergCarRentals.Models
         /// A constructor intended for EF core.
         /// </summary>
         /// <param name="customer">The customer that made the payment. </param>
+        /// <param name="order">The order the payment belongs to.</param>
         /// <param name="amount">The amount paid.</param>
         /// <param name="paymentDetails">The details of the payment</param>
-        public PaymentEntity(CustomerEntity customer, decimal amount, string paymentDetails)
+        public PaymentEntity(CustomerEntity customer, CarOrderEntity order, decimal amount, string paymentDetails)
         {
             #region Checks
 
             if (customer is null)
             {
                 throw new ArgumentNullException(nameof(customer), $"The value of parameter '{customer}' can't be null.");
+            }
+
+            if (order is null)
+            {
+                throw new ArgumentNullException(nameof(customer), $"The value of parameter '{order}' can't be null.");
             }
 
             if (paymentDetails is null)
@@ -42,6 +48,7 @@ namespace FribergCarRentals.Models
             #endregion
 
             Customer = customer;
+            Order = order;
             Amount = amount;
             PaymentDetails = paymentDetails;
         }
@@ -58,7 +65,14 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The customer that made the payment. 
         /// </summary>
+        [Required]
         public CustomerEntity? Customer { get; set; }
+
+        /// <summary>
+        /// The order the payment belongs to. 
+        /// </summary>
+        [Required]
+        public CarOrderEntity? Order { get; set; }
 
         /// <summary>
         /// The id of the entity in the database.
