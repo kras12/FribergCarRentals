@@ -63,6 +63,7 @@
             <td>
                 <a asp-controller="AdminCustomer" asp-action="Details" asp-route-id="@item.Customer.UserId" asp-data>View customer</a> |
                 <a asp-controller="AdminCar" asp-action="Details" asp-route-id="@item.Car.CarId">View car</a> |
+                <a asp-action="Delete" asp-route-id="@item.CarOrderId">Delete</a>
             </td>
         </tr>
 }

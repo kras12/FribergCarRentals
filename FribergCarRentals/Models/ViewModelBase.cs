@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        public bool IsGoBackButtonRequested { get; set; } = false;
+        public bool IsRequestFromAnotherController { get; set; } = false;
 
         #endregion
     }

@@ -5,9 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
 {
-    [Route("Admin/Orders/[action]")]
-    public class AdminCarOrderController : Controller
+    [Route($"{CurrentControllerRoutePart}/[action]")]
+    public class AdminCarOrderController : ViewControllerBase
     {
+        #region Constants
+
+        private const string CurrentControllerRoutePart = "Admin/Orders";
+
+        #endregion
+
         #region Fields
 
         private readonly ICarOrderRepository _carOrderRepository;
@@ -22,6 +28,8 @@ namespace FribergCarRentals.Controllers
         }
 
         #endregion
+
+        #region Actions
 
         // GET: AdminCarOrder
         public async Task<ActionResult> List()
@@ -85,5 +93,7 @@ namespace FribergCarRentals.Controllers
 
             return View();
         }
+
+        #endregion
     }
 }

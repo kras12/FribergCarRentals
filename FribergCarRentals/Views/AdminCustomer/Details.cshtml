@@ -38,9 +38,13 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-    @if (ViewBag.GoBackButtonData != null)
+    @if (Model!.IsRequestFromAnotherController)
     {
-        <a asp-action="@ViewBag.GoBackButtonData.Action" asp-controller="@ViewBag.GoBackButtonData.Controller">Go Back</a>
+        <a asp-action="List">View Customer List</a>
+        <span>| <button onclick="history.back()">Go Back</button></span>
+    }
+    else
+    {
+        <a asp-action="List">Back to Customer List</a>
     }
 </div>

@@ -6,14 +6,24 @@ using System.Diagnostics;
 namespace FribergCarRentals.Controllers
 {
     [Route("/[action]")]
-    public class HomeController : Controller
+    public class HomeController : ViewControllerBase
     {
+        #region Fields
+
         private readonly ICarRepository _carRepository;
+
+        #endregion
+
+        #region Constructor
 
         public HomeController(ICarRepository carRepository)
         {
             _carRepository = carRepository;
         }
+
+        #endregion
+
+        #region Actions        
 
         [Route("/")]
         public IActionResult Index()
@@ -50,5 +60,7 @@ namespace FribergCarRentals.Controllers
                 return RedirectToAction(nameof(Cars));
             }
         }
+
+        #endregion
     }
 }

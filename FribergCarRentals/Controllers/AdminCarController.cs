@@ -7,16 +7,31 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FribergCarRentals.Controllers
 {
-    [Route("Admin/Cars/[action]")]
-    public class AdminCarController : Controller
+    [Route($"{CurrentControllerRoutePart}/[action]")]
+    public class AdminCarController : ViewControllerBase
     {
+        #region Constants
+
+        private const string CurrentControllerRoutePart = "Admin/Cars";
+
+        #endregion
+
+        #region Fields
 
         private readonly ICarRepository _carRepository;
+
+        #endregion
+
+        #region Constructors
 
         public AdminCarController(ICarRepository carRepository)
         {
             _carRepository = carRepository;
         }
+
+        #endregion
+
+        #region Actions
 
         // GET: AdminCarController
         public async Task<ActionResult> List()
@@ -31,7 +46,7 @@ namespace FribergCarRentals.Controllers
 
             if (car is not null)
             {
-                return View(new CarViewModel(car));
+                return View(new CarViewModel(car) { IsRequestFromAnotherController = IsRequestFromAnotherController(CurrentControllerRoutePart) });
             }
             else
             {
@@ -139,5 +154,7 @@ namespace FribergCarRentals.Controllers
 
             return View();
         }
+
+        #endregion
     }
 }

@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : ViewControllerBase
     {
+        #region Actions
+
         // GET: AdminController
         public ActionResult Index()
         {
@@ -79,5 +81,7 @@ namespace FribergCarRentals.Controllers
                 return View();
             }
         }
+
+        #endregion
     }
 }

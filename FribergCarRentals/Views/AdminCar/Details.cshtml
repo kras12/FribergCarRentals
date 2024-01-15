@@ -66,6 +66,14 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.CarId">Edit</a> |
-    <a asp-action="List">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.CarId">Edit</a> |    
+    @if (Model!.IsRequestFromAnotherController)
+    {
+        <a asp-action="List">View Car List</a>
+        <span>| <button onclick="history.back()">Go Back</button></span>
+    }
+    else
+    {
+        <a asp-action="List">Back to Car List</a>
+    }
 </div>
