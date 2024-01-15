@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Models
@@ -10,29 +11,40 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="carOrder">The caro order to copy data from.</param>
+        /// <param name="carOrder">The car order to copy data from.</param>
         public CarOrderViewModel(CarOrderEntity carOrder)
         {
+            #region Checks
+
+            if (carOrder.Customer is null)
+            {
+                throw new ArgumentNullException("The customer can't be null");
+            }
+
+            if (carOrder.CarBooking is null)
+            {
+                throw new ArgumentNullException("The carb booking can't be null");
+            }
+
+            #endregion
+
             CarOrderId = carOrder.CarOrderId;
             OrderDate = carOrder.OrderDate;
-            PickupDate = carOrder.PickupDate;
-            ReturnDate = carOrder.ReturnDate;
-            RentalCostPerDay = carOrder.RentalCostPerDay;
             OrderSum = carOrder.OrderSum;
             OrderDetails = carOrder.OrderDetails;
-            Car = carOrder.Car;
             Customer = carOrder.Customer;
             Payments = carOrder.Payments;
-        }    
+            CarBooking = new CarBookingViewModel(carOrder.CarBooking);
+        }
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The car that was rented.
+        /// The car booking tied to the order.
         /// </summary>
-        public CarEntity Car { get; set; }
+        public CarBookingViewModel CarBooking { get; set; }
 
         /// <summary>
         /// The order ID.
@@ -68,40 +80,6 @@ namespace FribergCarRentals.Models
         /// A collection of payments tied to the order.
         /// </summary>
         public List<PaymentEntity> Payments { get; set; } = new();
-
-        /// <summary>
-        /// The pickup date.
-        /// </summary>
-        [DisplayName("Pickup Date")]
-        public DateTime PickupDate { get; set; }
-
-        public string PickupDateString
-        {
-            get
-            {
-                return PickupDate.ToString("d");
-            }
-        }
-
-        /// <summary>
-        /// The rental cost per day.
-        /// </summary>
-        [DisplayName("Cost Per Day")]
-        public decimal RentalCostPerDay { get; set; }
-
-        /// <summary>
-        /// The return date.
-        /// </summary>
-        [DisplayName("Return Date")]
-        public DateTime ReturnDate { get; set; }
-
-        public string ReturnDateString
-        {
-            get
-            {
-                return ReturnDate.ToString("d");
-            }
-        }
 
         #endregion
     }
