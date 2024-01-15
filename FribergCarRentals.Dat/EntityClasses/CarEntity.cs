@@ -24,22 +24,27 @@ namespace FribergCarRentals.Models
         #region Constructors
 
         /// <summary>
-        /// A constructor mainly intended for EF Core.
+        /// A constructor
         /// </summary>
-        /// <param name="carId">The id for the car. Can't be a negative value.</param>
+        public CarEntity()
+        {
+            
+        }
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
         /// <param name="brand">The brand for the car.</param>
         /// <param name="color">The color for the car.</param>
         /// <param name="model">The model for the car.</param>
         /// <param name="modelYear">The model year for the car.</param>
         /// <param name="registrationNumber">The registration number for the car.</param>
-        private CarEntity(int carId, string brand, string color, string model, int modelYear, string registrationNumber)
+        /// <param name="propulsionSystem">The propulsion system for the car.</param>
+        /// <param name="rentalStatus">The rental status for the car.</param>
+        public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber, 
+            VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus, decimal rentalCostPerDay)
         {
             #region Checks
-
-            if (carId < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(carId), $"The value of parameter '{carId}' can't be a negative value.");
-            }
 
             if (brand is null)
             {
@@ -67,42 +72,6 @@ namespace FribergCarRentals.Models
                 throw new ArgumentNullException(nameof(registrationNumber), $"The value of parameter '{registrationNumber}' can't be null");
             }
 
-            #endregion
-
-            CarId = carId;
-            Brand = brand;
-            Color = color;
-            Model = model;
-            ModelYear = modelYear;
-            RegistrationNumber = registrationNumber;
-
-            // EF Core can't set navigational properties through a constructor, 
-            // so these will be setby EF Core via the properties after the constructor have run. 
-            PropulsionSystem = null!;
-            RentalStatus = null!;
-        }
-
-        public CarEntity()
-        {
-            
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="brand">The brand for the car.</param>
-        /// <param name="color">The color for the car.</param>
-        /// <param name="model">The model for the car.</param>
-        /// <param name="modelYear">The model year for the car.</param>
-        /// <param name="registrationNumber">The registration number for the car.</param>
-        /// <param name="propulsionSystem">The propulsion system for the car.</param>
-        /// <param name="rentalStatus">The rental status for the car.</param>
-        public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber, 
-            VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus) : 
-            this(carId: 0, brand, color, model, modelYear, registrationNumber)
-        {
-            #region Checks
-
             if (propulsionSystem is null)
             {
                 throw new ArgumentNullException(nameof(propulsionSystem), $"The value of parameter '{propulsionSystem}' can't be null");
@@ -113,12 +82,21 @@ namespace FribergCarRentals.Models
                 throw new ArgumentNullException(nameof(rentalStatus), $"The value of parameter '{rentalStatus}' can't be null");
             }
 
+            if (rentalCostPerDay < 0)
+            {
+                throw new ArgumentOutOfRangeException($"The value of parameter '{rentalCostPerDay}' can't be negative.");
+            }
+
             #endregion
 
-            // EF Core can't set navigational properties through a constructor, 
-            // so these values will have to be set in this constructor.
+            Brand = brand;
+            Color = color;
+            Model = model;
+            ModelYear = modelYear;
+            RegistrationNumber = registrationNumber;
             PropulsionSystem = propulsionSystem;
             RentalStatus = rentalStatus;
+            RentalCostPerDay = rentalCostPerDay;
         }
 
         #endregion
@@ -142,6 +120,11 @@ namespace FribergCarRentals.Models
         public string Color { get; set; } = "";
 
         /// <summary>
+        /// A collection of images for the car.
+        /// </summary>
+        public List<ImageEntity> Images { get; set; } = new();
+
+        /// <summary>
         /// The model for the car.
         /// </summary>
         public string Model { get; set; } = "";
@@ -151,26 +134,27 @@ namespace FribergCarRentals.Models
         /// </summary>
         public int ModelYear { get; set; }
 
+        /// <summary>
+        /// The propulsion system for the car.
+        /// </summary>
+        [Required]
+        public VehiclePropulsionEntity? PropulsionSystem { get; set; }
+
         [Required]
         /// <summary>
         /// The registration number for the car.
         /// </summary>
         public string RegistrationNumber { get; set; } = "";
-
         /// <summary>
-        /// A collection of images for the car.
+        /// The rental cost per day.
         /// </summary>
-        public List<ImageEntity> Images { get; set; } = new();
+        public decimal RentalCostPerDay { get; set; }
 
         /// <summary>
         /// The rental status for the car.
         /// </summary>
-        public CarRentalStatusEntity RentalStatus { get; set; }
-
-        /// <summary>
-        /// The propulsion system for the car.
-        /// </summary>
-        public VehiclePropulsionEntity PropulsionSystem { get; set; }
+        [Required]
+        public CarRentalStatusEntity? RentalStatus { get; set; }
 
         #endregion
     }

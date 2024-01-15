@@ -13,11 +13,19 @@ namespace FribergCarRentals.Models
         #region Constructors
 
         /// <summary>
-        /// A constructor mainly intended for EF Core.
+        /// A constructor.
+        /// </summary>
+        public ImageEntity()
+        {
+
+        }
+
+        /// <summary>
+        /// A constructor.
         /// </summary>
         /// <param name="imageId">The ID for the image. Can't be a negative value</param>
         /// <param name="filePath">The filepath for the image. Can't be null or empty.</param>
-        private ImageEntity(int imageId, string filePath)
+        public ImageEntity(int imageId, string filePath)
         {
             #region Checks
 
@@ -36,6 +44,8 @@ namespace FribergCarRentals.Models
             ImageId = imageId;
             FilePath = filePath;
         }
+
+        
 
         /// <summary>
         /// A constructor.
