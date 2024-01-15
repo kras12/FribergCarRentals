@@ -23,7 +23,7 @@ namespace FribergCarRentals.Models
 
             if (carOrder.CarBooking is null)
             {
-                throw new ArgumentNullException("The carb booking can't be null");
+                throw new ArgumentNullException("The car booking can't be null");
             }
 
             #endregion
