@@ -49,6 +49,8 @@ namespace FribergCarRentals.Data
 
         public DbSet<CarOrderEntity> CarOrders { get; set; }
 
+        public DbSet<CarBookingEntity> CarBookings { get; set; }
+
         #endregion
 
         #region Methods
@@ -108,7 +110,15 @@ namespace FribergCarRentals.Data
                 .AutoInclude();
 
             modelBuilder.Entity<CarOrderEntity>()
+                .Navigation(x => x.CarBooking)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarBookingEntity>()
                 .Navigation(x => x.Car)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarBookingEntity>()
+                .Navigation(x => x.Customer)
                 .AutoInclude();
         }
 
