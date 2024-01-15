@@ -45,7 +45,22 @@ namespace FribergCars.Shared.SharedTypes
         OutOfService = 4
     }
 
-	#endregion
+    public enum OrderStatus
+    {
+        [EnumDatabaseValue("None", DescriptionValue = "No order status.")]
+        None = 1,
+
+        [EnumDatabaseValue("Created", DescriptionValue = "Order is created.")]
+        Created = 2,
+
+        [EnumDatabaseValue("Completed", DescriptionValue = "Order is completed.")]
+        Completed = 3,
+
+        [EnumDatabaseValue("Canceled", DescriptionValue = "Order is canceled.")]
+        Canceled = 4
+    }
+
+    #endregion
 }
 
 
