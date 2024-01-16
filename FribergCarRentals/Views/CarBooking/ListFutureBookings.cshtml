@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.CarBookingId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarInfo)
+                @Html.DisplayNameFor(model => model.Car.CarInfoWithRegistrationNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PickupDateString)
@@ -33,30 +33,30 @@
     <tbody>
 @foreach (var item in Model) 
 {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CarOrderId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CarBookingId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CarInfo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PickupDateString)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDateString)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RentalCostPerDay)
-            </td>
-            <td>
-                @* <a asp-action="Details" asp-route-id="@item.CarBookingId">Details</a> | *@
-                <a asp-action="Cancel" asp-route-id="@item.CarBookingId">Cancel booking</a>
-            </td>
-        </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CarOrderId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CarBookingId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Car.CarInfoWithRegistrationNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PickupDateString)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReturnDateString)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RentalCostPerDay)
+        </td>
+        <td>
+            @* <a asp-action="Details" asp-route-id="@item.CarBookingId">Details</a> | *@
+            <a asp-action="Cancel" asp-route-id="@item.CarBookingId">Cancel booking</a>
+        </td>
+    </tr>
 }
     </tbody>
 </table>

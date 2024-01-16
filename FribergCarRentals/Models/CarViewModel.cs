@@ -39,9 +39,41 @@ namespace FribergCarRentals.Models
         public int CarId { get; set; }
 
         /// <summary>
+        /// Returns a short description of the car (brand, model, and year).
+        /// </summary>
+        [DisplayName("Car")]
+        public string CarInfoWithRegistrationNumber
+        {
+            get
+            {
+                return $"{RegistrationNumber} - {Brand} {Model} {ModelYear} ";
+            }
+        }
+
+        /// <summary>
+        /// Returns a short description of the car (brand, model, and year).
+        /// </summary>
+        [DisplayName("Car")]
+        public string CarInfo
+        {
+            get
+            {
+                return $"{Brand} {Model} {ModelYear} ";
+            }
+        }
+
+        /// <summary>
         /// The color for the car.
         /// </summary>
         public string Color { get; set; } = "";
+
+        [DisplayName("Images")]
+        public string ImageFilePaths { get; set; } = "";
+
+        /// <summary>
+        /// A collection of images for the car.
+        /// </summary>
+        public List<ImageEntity> Images { get; set; } = new();
 
         /// <summary>
         /// The model for the car.
@@ -54,32 +86,23 @@ namespace FribergCarRentals.Models
         [DisplayName("Model Year")]
         public int ModelYear { get; set; }
 
+        /// <summary>
+        /// The propulsion system for the car.
+        /// </summary>
+        [DisplayName("Propulsion")]
+        public VehiclePropulsionEntity PropulsionSystem { get; set; }
+
         [Required]
         /// <summary>
         /// The registration number for the car.
         /// </summary>
         [DisplayName("Registration Nr")]
         public string RegistrationNumber { get; set; } = "";
-
-        /// <summary>
-        /// A collection of images for the car.
-        /// </summary>
-        public List<ImageEntity> Images { get; set; } = new();
-
-        [DisplayName("Images")]
-        public string ImageFilePaths { get; set; } = "";
-
         /// <summary>
         /// The rental status for the car.
         /// </summary>
         [DisplayName("Rental Status")]
         public CarRentalStatusEntity RentalStatus { get; set; }
-
-        /// <summary>
-        /// The propulsion system for the car.
-        /// </summary>
-        [DisplayName("Propulsion")]
-        public VehiclePropulsionEntity PropulsionSystem { get; set; } 
 
         #endregion
     }

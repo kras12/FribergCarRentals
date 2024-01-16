@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.OrderDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarBooking.CarInfo)
+                @Html.DisplayNameFor(model => model.CarBooking.Car.CarInfoWithRegistrationNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OrderDetails)
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.OrderDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.CarInfo)
+                @Html.DisplayFor(modelItem => item.CarBooking.Car.CarInfoWithRegistrationNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OrderDetails)

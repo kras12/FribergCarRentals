@@ -44,7 +44,7 @@ namespace FribergCarRentals.Controllers
 
         public async Task<IActionResult> Cars()
         {
-            return View(await _carRepository.GetAll());
+            return View((await _carRepository.GetAll()).Select(x => new CarViewModel(x)).ToList());
         }
 
         public async Task<IActionResult> Car(int id)

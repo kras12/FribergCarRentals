@@ -47,18 +47,6 @@ namespace FribergCarRentals.Models
         public int CarBookingId { get; set; }
 
         /// <summary>
-        /// Returns a short description of the car (brand, model, and year).
-        /// </summary>
-        [DisplayName("Car")]
-        public string CarInfo
-        {
-            get
-            {
-                return $"{Car.RegistrationNumber} - {Car.Brand} {Car.Model} {Car.ModelYear} ";
-            }
-        }
-
-        /// <summary>
         /// The order the booking belongs to.
         /// </summary>
         public CarOrderEntity CarOrder { get; set; }
