@@ -46,8 +46,11 @@ namespace FribergCarRentals.DataAccess.Repositories
             if (order != null)
             {
                 var targetBooking = order.CarBookings.Single(x => x.CarBookingId == carBookingId);
-                order.CarBookings.Remove(targetBooking);
+                _databaseContext.CarBookingStatuses.Entry(targetBooking.BookingStatus!).State = EntityState.Detached;
+                targetBooking.BookingStatus = CarBookingStatusEntity.CreateSeedObject(CarBookingStatus.Canceled);
+                _databaseContext.CarBookingStatuses.Entry(targetBooking.BookingStatus!).State = EntityState.Unchanged;
 
+                _databaseContext.CarRentalStatuses.Entry(targetBooking.Car!.RentalStatus!).State = EntityState.Detached;
                 targetBooking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available);
                 _databaseContext.CarRentalStatuses.Entry(targetBooking.Car!.RentalStatus).State = EntityState.Unchanged;
 
@@ -59,6 +62,12 @@ namespace FribergCarRentals.DataAccess.Repositories
                     _databaseContext.OrderStatuses.Entry(order.OrderStatus).State = EntityState.Unchanged;
                     result = CancelCarBookingResult.BookingAndOrderCanceled;
                 }
+
+                await _databaseContext.SaveChangesAsync();
+            }
+            else
+            {
+                result = CancelCarBookingResult.BookingNotFound;
             }
 
             return result;
@@ -95,7 +104,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// </summary>
         /// <param name="minDaysAheadInTime">The minimum number of days ahead in time that the pickup date must be. Minimum value is 1.</param>
         /// <returns>A collection of bookings.</returns>
-        public Task<List<CarOrderEntity>> GetOrdersWithFutureBookings(int minDaysAheadInTime = 1)
+        public Task<List<CarOrderEntity>> GetOrdersWithFutureCarBookings(int minDaysAheadInTime = 1)
         {
             minDaysAheadInTime = Math.Max(minDaysAheadInTime, 1);
             return _databaseContext.CarOrders.Where(x => x.CarBookings.Any(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime))).ToListAsync();
@@ -106,11 +115,53 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// </summary>
         /// <param name="minDaysAheadInTime">The minimum number of days back in time that the pickup date must be. Minimum value is 1.</param>
         /// <returns>A collection of bookings.</returns>
-        public Task<List<CarOrderEntity>> GetOrdersWithPastBookings(int minDaysBackInTime = 1)
+        public Task<List<CarOrderEntity>> GetOrdersWithPastCarBookings(int minDaysBackInTime = 1)
         {
             minDaysBackInTime = Math.Max(minDaysBackInTime, 1);
             return _databaseContext.CarOrders.Where(x => x.CarBookings.Any(x => x.PickupDateUtc.Date <= DateTime.UtcNow.Date.AddDays(-minDaysBackInTime))).ToListAsync();
-        }        
+        }
+
+        /// <summary>
+        /// Returns an order that contains a specifc car booking. 
+        /// </summary>
+        /// <param name="carBookingId">The ID of the carbooking to search for.</param>
+        /// <returns>A <see cref="CarOrderEntity"/> object if the order was found or else null.</returns>
+        public Task<CarOrderEntity?> GetOrderByCarBookingId(int carBookingId)
+        {
+            return _databaseContext.CarOrders.SingleOrDefaultAsync(x => x.CarBookings.Any(x => x.CarBookingId == carBookingId));
+        }
+
+        /// <summary>
+        /// Returns a car booking.
+        /// </summary>
+        /// <param name="carBookingId">The ID of the car booking to search for.</param>
+        /// <returns>A <see cref="CarBookingEntity"/> object.</returns>
+        public Task<CarBookingEntity?> GetCarBookingById(int carBookingId)
+        {
+            return _databaseContext.CarBookings.SingleOrDefaultAsync(x => x.CarBookingId == carBookingId);
+        }
+
+        /// <summary>
+        /// Returns all future car bookings.
+        /// </summary>
+        /// <param name="minDaysAheadInTime">The minimum number of days ahead in time that the pickup date must be. Minimum value is 1.</param>
+        /// <returns>A collection of bookings.</returns>
+        public Task<List<CarBookingEntity>> GetFutureCarBookings(int minDaysAheadInTime = 1)
+        {
+            minDaysAheadInTime = Math.Max(minDaysAheadInTime, 1);
+            return _databaseContext.CarBookings.Where(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime)).ToListAsync();
+        }
+
+        /// <summary>
+        /// Returns all past car bookings.
+        /// </summary>
+        /// <param name="minDaysAheadInTime">The minimum number of days back in time that the pickup date must be. Minimum value is 1.</param>
+        /// <returns>A collection of bookings.</returns>
+        public Task<List<CarBookingEntity>> GetPastCarBookings(int minDaysBackInTime = 1)
+        {
+            minDaysBackInTime = Math.Max(minDaysBackInTime, 1);
+            return _databaseContext.CarBookings.Where(x => x.PickupDateUtc.Date <= DateTime.UtcNow.Date.AddDays(-minDaysBackInTime)).ToListAsync();
+        }
 
         #endregion
     }

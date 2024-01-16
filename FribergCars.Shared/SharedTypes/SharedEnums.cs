@@ -60,6 +60,24 @@ namespace FribergCars.Shared.SharedTypes
         Canceled = 4
     }
 
+    public enum CarBookingStatus
+    {
+        [EnumDatabaseValue("None", DescriptionValue = "No status.")]
+        None = 1,
+
+        [EnumDatabaseValue("Pending", DescriptionValue = "Pending status.")]
+        Pending = 2,
+
+        [EnumDatabaseValue("PickedUpCar", DescriptionValue = "Car is picked up.")]
+        PickedUpCar = 3,
+
+        [EnumDatabaseValue("ReturnedCar", DescriptionValue = "Car is returned.")]
+        ReturnedCar = 4,
+
+        [EnumDatabaseValue("Canceled", DescriptionValue = "Booking is canceled.")]
+        Canceled = 5
+    }
+
     #endregion
 }
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CarOrderViewModel>
+﻿@model IEnumerable<CarBookingViewModel>
 
 @{
     ViewData["Title"] = "List";
@@ -13,25 +13,28 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CarBooking.Car.RegistrationNumber)
+                @Html.DisplayNameFor(model => model.CarOrder.CarOrderId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarBooking.Car.Brand)
+                @Html.DisplayNameFor(model => model.Car.RegistrationNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarBooking.Car.Model)
+                @Html.DisplayNameFor(model => model.Car.Brand)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarBooking.Car.ModelYear)
-            </th
-            <th>
-                @Html.DisplayNameFor(model => model.CarBooking.PickupDateUtc)
+                @Html.DisplayNameFor(model => model.Car.Model)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarBooking.ReturnDateUtc)
+                @Html.DisplayNameFor(model => model.Car.ModelYear)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarBooking.RentalCostPerDay)
+                @Html.DisplayNameFor(model => model.PickupDateUtc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnDateUtc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RentalCostPerDay)
             </th>
             <th></th>
         </tr>
@@ -40,29 +43,32 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.Car.RegistrationNumber)
+                @Html.DisplayFor(modelItem => item.CarOrder.CarOrderId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.Car.Brand)
+                @Html.DisplayFor(modelItem => item.Car.RegistrationNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.Car.Model)
+                @Html.DisplayFor(modelItem => item.Car.Brand)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.Car.ModelYear)
+                @Html.DisplayFor(modelItem => item.Car.Model)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.PickupDateUtc)
+                @Html.DisplayFor(modelItem => item.Car.ModelYear)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.ReturnDateUtc)
+                @Html.DisplayFor(modelItem => item.PickupDateUtc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CarBooking.RentalCostPerDay)
+                @Html.DisplayFor(modelItem => item.ReturnDateUtc)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.CarBooking.CarBookingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CarOrderId">Cancel booking</a>
+                @Html.DisplayFor(modelItem => item.RentalCostPerDay)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.CarBookingId">Details</a> |
+                <a asp-action="Cancel" asp-route-id="@item.CarBookingId">Cancel booking</a>
             </td>
         </tr>}
     </tbody>

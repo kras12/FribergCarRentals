@@ -40,9 +40,14 @@ namespace FribergCarRentals.Data
         public DbSet<VehiclePropulsionEntity> PropulsionSystems { get; set; }  
 
         /// <summary>
-        /// The database set for car rental status.
+        /// The database set for car rental statuses.
         /// </summary>
         public DbSet<CarRentalStatusEntity> CarRentalStatuses { get; set; }
+
+        /// <summary>
+        /// The database set for car booking statuses.
+        /// </summary>
+        public DbSet<CarBookingStatusEntity> CarBookingStatuses { get; set; }
 
         public DbSet<OrderStatusEntity> OrderStatuses { get; set; }
 
@@ -95,6 +100,15 @@ namespace FribergCarRentals.Data
                .Property(x => x.OrderStatusId)
                .HasConversion<int>();
 
+            modelBuilder.Entity<CarBookingStatusEntity>()
+               .HasData(
+                   Enum.GetValues(typeof(CarBookingStatus))
+                   .Cast<CarBookingStatus>()
+                   .Select(x => CarBookingStatusEntity.CreateSeedObject(x)));
+
+            modelBuilder.Entity<CarBookingStatusEntity>()
+               .Property(x => x.CarBookingStatusId)
+               .HasConversion<int>();
 
             modelBuilder.Entity<CarEntity>()
                 .Navigation(x => x.PropulsionSystem)
@@ -127,8 +141,20 @@ namespace FribergCarRentals.Data
                 .Navigation(x => x.CarBookings)
                 .AutoInclude();
 
+            modelBuilder.Entity<CarOrderEntity>()
+               .Navigation(x => x.OrderStatus)
+               .AutoInclude();
+
             modelBuilder.Entity<CarBookingEntity>()
                 .Navigation(x => x.Car)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarBookingEntity>()
+                .Navigation(x => x.CarOrder)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarBookingEntity>()
+                .Navigation(x => x.BookingStatus)
                 .AutoInclude();
         }
 

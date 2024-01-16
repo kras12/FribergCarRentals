@@ -23,6 +23,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
+        /// <param name="bookingStatus">The status of the booking.</param>
         /// <param name="order">The order the booking belongs to.</param>
         /// <param name="car">The car for the booking. Can't be null.</param>
         /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
@@ -30,7 +31,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="returnDate"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarBookingEntity(CarOrderEntity order, CarEntity car,
+        public CarBookingEntity(CarBookingStatusEntity bookingStatus, CarOrderEntity order, CarEntity car,
             decimal rentalCostPerDay, DateTime pickupDate, DateTime returnDate)
         {
             #region Checks
@@ -52,6 +53,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
             #endregion
 
+            BookingStatus = bookingStatus;
             CarOrder = order;
             Car = car;
             RentalCostPerDay = rentalCostPerDay;
@@ -62,6 +64,12 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// The status of the booking.
+        /// </summary>
+        [Required]
+        public CarBookingStatusEntity? BookingStatus { get; set; }
 
         /// <summary>
         /// The order the booking belongs to. 

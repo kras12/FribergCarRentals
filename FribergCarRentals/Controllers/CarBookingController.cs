@@ -2,6 +2,7 @@
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FribergCarRentals.Controllers
 {
@@ -40,7 +41,7 @@ namespace FribergCarRentals.Controllers
         // GET: CarBookingController
         public async Task<ActionResult> ListFutureBookings()
         {
-            return View((await _carOrderRepository.GetOrdersWithFutureBookings()).Select(x => new CarOrderViewModel(x)).ToList());
+            return View((await _carOrderRepository.GetFutureCarBookings()).Select(x => new CarBookingViewModel(x)).ToList());
         }
 
         // GET: CarBookingController/Details/5
@@ -91,25 +92,34 @@ namespace FribergCarRentals.Controllers
             }
         }
 
-        // GET: CarBookingController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: CarBookingController/Cancel/5
+        public async Task<ActionResult> Cancel(int id)
         {
-            return View();
+            var carBooking = await _carOrderRepository.GetCarBookingById(id);
+
+            if (carBooking is not null)
+            {
+                return View(new CarBookingViewModel(carBooking));
+            }
+
+            return NotFound();
         }
 
-        // POST: CarBookingController/Delete/5
+        // POST: CarBookingController/Delete/(5)
+        [ActionName(nameof(Cancel))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> CancelPost(int carBookingId)
         {
-            try
+            var result = await _carOrderRepository.CancelCarBookingOrOrder(carBookingId);
+
+            if (result == CancelCarBookingResult.BookingCanceled || result == CancelCarBookingResult.BookingAndOrderCanceled)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListFutureBookings));
             }
-            catch
-            {
-                return View();
-            }
+  
+
+            return NotFound();
         }
 
         #endregion

@@ -24,6 +24,7 @@ namespace FribergCarRentals.Models
 
             #endregion
             CarBookingId = carBooking.CarBookingId;
+            CarOrder = carBooking.CarOrder;
             Car = carBooking.Car;
             RentalCostPerDay = carBooking.RentalCostPerDay;
             PickupDateUtc = carBooking.PickupDateUtc;
@@ -35,28 +36,19 @@ namespace FribergCarRentals.Models
         #region Properties
 
         /// <summary>
-        /// The return date.
+        /// The car that was rented.
         /// </summary>
-        [DisplayName("Return Date")]
-        public DateTime ReturnDateUtc { get; set; }
-
+        public CarEntity Car { get; set; }
 
         /// <summary>
-        /// The return date.
+        /// The car booking ID.
         /// </summary>
-        [DisplayName("Pickup Date")]
-        public DateTime PickupDateUtc { get; set; }
+        public int CarBookingId { get; set; }
 
         /// <summary>
-        /// Returna the return date as a formatted string.
+        /// The order the booking belongs to.
         /// </summary>
-        public string ReturnDateString
-        {
-            get
-            {
-                return ReturnDateUtc.ToLocalTime().ToString("d");
-            }
-        }
+        public CarOrderEntity CarOrder { get; set; }
 
         /// <summary>
         /// Returna the picup date as a formatted string.
@@ -70,21 +62,33 @@ namespace FribergCarRentals.Models
         }
 
         /// <summary>
+        /// The return date.
+        /// </summary>
+        [DisplayName("Pickup Date")]
+        public DateTime PickupDateUtc { get; set; }
+
+        /// <summary>
         /// The rental cost per day.
         /// </summary>
         [DisplayName("Cost Per Day")]
         public decimal RentalCostPerDay { get; set; }
 
         /// <summary>
-        /// The car that was rented.
+        /// Returna the return date as a formatted string.
         /// </summary>
-        public CarEntity Car { get; set; }
+        public string ReturnDateString
+        {
+            get
+            {
+                return ReturnDateUtc.ToLocalTime().ToString("d");
+            }
+        }
 
         /// <summary>
-        /// The car booking ID.
+        /// The return date.
         /// </summary>
-        public int CarBookingId { get; set; }
-
+        [DisplayName("Return Date")]
+        public DateTime ReturnDateUtc { get; set; }
         #endregion
     }
 }
