@@ -43,11 +43,6 @@ namespace FribergCarRentals.Models
                 throw new ArgumentNullException(nameof(orderStatus), $"The value of parameter '{orderStatus}' can't be null.");
             }
 
-            if (orderSum < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(orderSum), $"The value of parameter '{orderSum}' can't be negative.");
-            }
-
             if (orderDetails is null)
             {
                 throw new ArgumentNullException(nameof(orderDetails), $"The value of parameter '{orderDetails}' can't be null.");
@@ -70,12 +65,11 @@ namespace FribergCarRentals.Models
 
             #endregion
 
+            CarOrderId = 0;
             OrderStatus = orderStatus;
             OrderDate = orderDate;
-            OrderSum = orderSum;
             OrderDetails = orderDetails;
             Customer = customer;
-            OrderDetails = orderDetails;
             Payments = payments;
             CarBookings = carBookings;
         }
@@ -87,7 +81,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The car booking tied to the order.
         /// </summary>
-        public List<CarBookingEntity> CarBookings { get; set; }
+        public List<CarBookingEntity> CarBookings { get; set; } = new();
 
         /// <summary>
         /// The order ID.
@@ -115,12 +109,7 @@ namespace FribergCarRentals.Models
         /// The order status.
         /// </summary>
         [Required]
-        public OrderStatusEntity? OrderStatus { get; set; }
-
-        /// <summary>
-        /// The total sum of the order.
-        /// </summary>
-        public decimal OrderSum { get; set; }
+        public OrderStatusEntity? OrderStatus { get; set; } = null;
 
         /// <summary>
         /// A collection of payments tied to the order.
