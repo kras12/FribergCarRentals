@@ -1,5 +1,6 @@
 ﻿using FribergCarRentals.Data;
 using FribergCarRentals.Models;
+using FribergCars.Shared.SharedTypes;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,15 @@ namespace FribergCarRentals.DataAccess.Repositories
             _databaseContext.Entry(entity.RentalStatus).State = EntityState.Unchanged;
             await _databaseContext.SaveChangesAsync();
             return entity;
+        }
+
+        /// <summary>
+        /// Returns all the cars that are availble to be rented out. 
+        /// </summary>
+        /// <returns>A collection of cars.</returns>
+        public Task<List<CarEntity>> GetRentableCars()
+        {
+            return _databaseContext.Cars.Where(x => x.RentalStatus!.StatusType == CarRentalStatus.Available).ToListAsync();
         }
 
         #endregion

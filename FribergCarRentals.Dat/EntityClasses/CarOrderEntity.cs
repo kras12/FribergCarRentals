@@ -25,19 +25,16 @@ namespace FribergCarRentals.Models
         /// </summary>
         /// <param name="orderStatus">The order status. Can't be null.</param>
         /// <param name="orderDate">The order date.</param>
-        /// <param name="pickupDate">The pickup date.</param>
-        /// <param name="returnDate">The return date.</param>
-        /// <param name="car">The car that was rented.</param>
         /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
         /// <param name="customer">The customer that rented the car.</param>
         /// <param name="orderSum">The total sum of the order.</param>
         /// <param name="payments"> A collection of payments tied to the order.</param>
         /// <param name="orderDetails">Details about the order. </param>
-        /// <param name="carBooking">The car booking tied to the order.</param>
+        /// <param name="carBookings">The car bookings tied to the order.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CarOrderEntity(OrderStatusEntity orderStatus, DateTime orderDate, CarEntity car, CustomerEntity customer, decimal orderSum,
-            List<PaymentEntity> payments, string orderDetails, CarBookingEntity carBooking)
+        public CarOrderEntity(OrderStatusEntity orderStatus, DateTime orderDate, CustomerEntity customer, decimal orderSum,
+            List<PaymentEntity> payments, string orderDetails, List<CarBookingEntity> carBookings)
         {
             #region Checks
 
@@ -56,11 +53,6 @@ namespace FribergCarRentals.Models
                 throw new ArgumentNullException(nameof(orderDetails), $"The value of parameter '{orderDetails}' can't be null.");
             }
 
-            if (car is null)
-            {
-                throw new ArgumentNullException(nameof(car), $"The value of parameter '{car}' can't be null.");
-            }
-
             if (customer is null)
             {
                 throw new ArgumentNullException(nameof(customer), $"The value of parameter '{customer}' can't be null.");
@@ -69,6 +61,11 @@ namespace FribergCarRentals.Models
             if (payments is null)
             {
                 throw new ArgumentNullException(nameof(payments), $"The value of parameter '{payments}' can't be null.");
+            }
+
+            if (carBookings is null)
+            {
+                throw new ArgumentNullException(nameof(carBookings), $"The value of parameter '{carBookings}' can't be null.");
             }
 
             #endregion
@@ -80,7 +77,7 @@ namespace FribergCarRentals.Models
             Customer = customer;
             OrderDetails = orderDetails;
             Payments = payments;
-            CarBooking = carBooking;
+            CarBookings = carBookings;
         }
 
         #endregion
@@ -90,8 +87,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The car booking tied to the order.
         /// </summary>
-        [Required]
-        public CarBookingEntity? CarBooking { get; set; }
+        public List<CarBookingEntity> CarBookings { get; set; }
 
         /// <summary>
         /// The order ID.

@@ -44,6 +44,8 @@ namespace FribergCarRentals.Data
         /// </summary>
         public DbSet<CarRentalStatusEntity> CarRentalStatuses { get; set; }
 
+        public DbSet<OrderStatusEntity> OrderStatuses { get; set; }
+
         public DbSet<AdminEntity> Admins { get; set; }
 
         public DbSet<CustomerEntity> Customers { get; set; }
@@ -122,13 +124,12 @@ namespace FribergCarRentals.Data
                 .AutoInclude();
 
             modelBuilder.Entity<CarOrderEntity>()
-                .Navigation(x => x.CarBooking)
+                .Navigation(x => x.CarBookings)
                 .AutoInclude();
 
             modelBuilder.Entity<CarBookingEntity>()
                 .Navigation(x => x.Car)
                 .AutoInclude();
-            
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

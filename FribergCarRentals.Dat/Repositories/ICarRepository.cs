@@ -23,6 +23,12 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task"/> object.</returns>
         public Task Delete(int id);
 
+        /// <summary>
+        /// Returns all the cars that are availble to be rented out. 
+        /// </summary>
+        /// <returns>A collection of cars.</returns>
+        public Task<List<CarEntity>> GetRentableCars();
+
         #endregion
     }
 }
