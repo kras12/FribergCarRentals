@@ -50,10 +50,10 @@ namespace FribergCarRentals.DataAccess.Repositories
             return entity;
         }
 
-        public async virtual Task Delete(T entity)
+        public async virtual Task<bool> Delete(T entity)
         {
             _databaseContext.Set<T>().Remove(entity);
-            await _databaseContext.SaveChangesAsync();
+            return await _databaseContext.SaveChangesAsync() > 0;
         }
 
         public async virtual Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)

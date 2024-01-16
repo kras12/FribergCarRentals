@@ -23,7 +23,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         // Since there's no convenient way of deleting entities by ID in a generic way, 
         // we can only support a T parameter here. 
 
-        public Task Delete(T entity);
+        public Task<bool> Delete(T entity);
 
         public Task<T> Add(T entity);
 
