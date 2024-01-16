@@ -25,7 +25,7 @@ namespace FribergCarRentals.Models
             #endregion
             CarBookingId = carBooking.CarBookingId;
             CarOrder = carBooking.CarOrder;
-            Car = carBooking.Car;
+            Car = new CarViewModel(carBooking.Car);
             RentalCostPerDay = carBooking.RentalCostPerDay;
             PickupDateUtc = carBooking.PickupDateUtc;
             ReturnDateUtc = carBooking.ReturnDateUtc;
@@ -38,12 +38,25 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The car that was rented.
         /// </summary>
-        public CarEntity Car { get; set; }
+        public CarViewModel Car { get; set; }
 
         /// <summary>
         /// The car booking ID.
         /// </summary>
+        [DisplayName("Booking ID")]
         public int CarBookingId { get; set; }
+
+        /// <summary>
+        /// Returns a short description of the car (brand, model, and year).
+        /// </summary>
+        [DisplayName("Car")]
+        public string CarInfo
+        {
+            get
+            {
+                return $"{Car.RegistrationNumber} - {Car.Brand} {Car.Model} {Car.ModelYear} ";
+            }
+        }
 
         /// <summary>
         /// The order the booking belongs to.
@@ -51,8 +64,20 @@ namespace FribergCarRentals.Models
         public CarOrderEntity CarOrder { get; set; }
 
         /// <summary>
+        /// The car order id.
+        /// </summary>
+        [DisplayName("Order ID")]
+        public int CarOrderId
+        {
+            get
+            {
+                return CarOrder.CarOrderId;
+            }
+        }
+        /// <summary>
         /// Returna the picup date as a formatted string.
         /// </summary>
+        [DisplayName("Pickup Date")]
         public string PickupDateString
         {
             get
@@ -76,6 +101,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// Returna the return date as a formatted string.
         /// </summary>
+        [DisplayName("Return Date")]
         public string ReturnDateString
         {
             get
@@ -89,6 +115,7 @@ namespace FribergCarRentals.Models
         /// </summary>
         [DisplayName("Return Date")]
         public DateTime ReturnDateUtc { get; set; }
+
         #endregion
     }
 }

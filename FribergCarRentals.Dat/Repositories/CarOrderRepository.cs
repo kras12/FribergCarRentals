@@ -149,7 +149,9 @@ namespace FribergCarRentals.DataAccess.Repositories
         public Task<List<CarBookingEntity>> GetFutureCarBookings(int minDaysAheadInTime = 1)
         {
             minDaysAheadInTime = Math.Max(minDaysAheadInTime, 1);
-            return _databaseContext.CarBookings.Where(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime)).ToListAsync();
+            return _databaseContext.CarBookings
+                .Where(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime) && x.BookingStatus!.StatusType == CarBookingStatus.Pending)
+                .ToListAsync();
         }
 
         /// <summary>

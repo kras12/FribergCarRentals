@@ -30,7 +30,6 @@ namespace FribergCarRentals.Models
 
             CarOrderId = carOrder.CarOrderId;
             OrderDate = carOrder.OrderDate;
-            OrderSum = carOrder.OrderSum;
             OrderDetails = carOrder.OrderDetails;
             Customer = carOrder.Customer;
             Payments = carOrder.Payments;
@@ -50,8 +49,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The order ID.
         /// </summary>
-        [Key]
-        [DisplayName("ID")]
+        [DisplayName("Order ID")]
         public int CarOrderId { get; set; }
 
         /// <summary>
@@ -75,7 +73,25 @@ namespace FribergCarRentals.Models
         /// The total sum of the order.
         /// </summary>
         [DisplayName("Order Sum")]
-        public decimal OrderSum { get; set; }
+        public decimal OrderSum
+        {
+            get
+            {
+                return CarBooking.RentalCostPerDay * (CarBooking.ReturnDateUtc - CarBooking.PickupDateUtc).Days;
+            }
+        }
+
+        /// <summary>
+        /// The total sum of all payments.
+        /// </summary>
+        [DisplayName("Payments Sum")]
+        public decimal PaymentsSum
+        {
+            get
+            {
+                return Payments.Sum(x => x.Amount);
+            }
+        }
 
         /// <summary>
         /// A collection of payments tied to the order.

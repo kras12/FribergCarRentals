@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Models
 {
@@ -9,7 +10,7 @@ namespace FribergCarRentals.Models
 
         public CarViewModel()
         {
-            
+
         }
 
         public CarViewModel(CarEntity carEntity)
@@ -23,7 +24,7 @@ namespace FribergCarRentals.Models
             Images = carEntity.Images;
             ImageFilePaths = string.Join(Environment.NewLine, carEntity.Images.Select(x => x.FilePath).ToList());
             RentalStatus = carEntity.RentalStatus;
-            PropulsionSystem = carEntity.PropulsionSystem;          
+            PropulsionSystem = carEntity.PropulsionSystem;
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The ID for the car.
         /// </summary>
-        [Key]
+        [DisplayName("Car ID")]
         public int CarId { get; set; }
 
         /// <summary>
@@ -50,12 +51,14 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The model year for the car.
         /// </summary>
+        [DisplayName("Model Year")]
         public int ModelYear { get; set; }
 
         [Required]
         /// <summary>
         /// The registration number for the car.
         /// </summary>
+        [DisplayName("Registration Nr")]
         public string RegistrationNumber { get; set; } = "";
 
         /// <summary>
@@ -63,16 +66,19 @@ namespace FribergCarRentals.Models
         /// </summary>
         public List<ImageEntity> Images { get; set; } = new();
 
+        [DisplayName("Images")]
         public string ImageFilePaths { get; set; } = "";
 
         /// <summary>
         /// The rental status for the car.
         /// </summary>
-        public CarRentalStatusEntity RentalStatus { get; set; } 
+        [DisplayName("Rental Status")]
+        public CarRentalStatusEntity RentalStatus { get; set; }
 
         /// <summary>
         /// The propulsion system for the car.
         /// </summary>
+        [DisplayName("Propulsion")]
         public VehiclePropulsionEntity PropulsionSystem { get; set; } 
 
         #endregion

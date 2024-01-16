@@ -4,11 +4,8 @@
     ViewData["Title"] = "List";
 }
 
-<h1>List</h1>
+<h1>Car orders</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,10 +16,16 @@
                 @Html.DisplayNameFor(model => model.OrderDate)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.CarBooking.CarInfo)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.OrderDetails)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OrderSum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentsSum)
             </th>
             <th></th>
         </tr>
@@ -37,10 +40,16 @@
                 @Html.DisplayFor(modelItem => item.OrderDate)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.CarInfo)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.OrderDetails)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OrderSum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentsSum)
             </td>
             <td>
                 <a asp-controller="AdminCustomer" asp-action="Details" asp-route-id="@item.Customer.UserId" asp-data>View customer</a> |

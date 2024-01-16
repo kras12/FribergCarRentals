@@ -4,34 +4,25 @@
     ViewData["Title"] = "List";
 }
 
-<h1>List</h1>
+<h1>Your bookings</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CarOrder.CarOrderId)
+                @Html.DisplayNameFor(model => model.CarOrderId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Car.RegistrationNumber)
+                @Html.DisplayNameFor(model => model.CarBookingId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Car.Brand)
+                @Html.DisplayNameFor(model => model.CarInfo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Car.Model)
+                @Html.DisplayNameFor(model => model.PickupDateString)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Car.ModelYear)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PickupDateUtc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReturnDateUtc)
+                @Html.DisplayNameFor(model => model.ReturnDateString)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RentalCostPerDay)
@@ -40,36 +31,32 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model) 
+{
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CarOrder.CarOrderId)
+                @Html.DisplayFor(modelItem => item.CarOrderId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Car.RegistrationNumber)
+                @Html.DisplayFor(modelItem => item.CarBookingId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Car.Brand)
+                @Html.DisplayFor(modelItem => item.CarInfo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Car.Model)
+                @Html.DisplayFor(modelItem => item.PickupDateString)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Car.ModelYear)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PickupDateUtc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDateUtc)
+                @Html.DisplayFor(modelItem => item.ReturnDateString)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RentalCostPerDay)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.CarBookingId">Details</a> |
+                @* <a asp-action="Details" asp-route-id="@item.CarBookingId">Details</a> | *@
                 <a asp-action="Cancel" asp-route-id="@item.CarBookingId">Cancel booking</a>
             </td>
-        </tr>}
+        </tr>
+}
     </tbody>
 </table>
