@@ -150,7 +150,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         {
             minDaysAheadInTime = Math.Max(minDaysAheadInTime, 1);
             return _databaseContext.CarBookings
-                .Where(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime) && x.BookingStatus!.StatusType == CarBookingStatus.Pending)
+                .Where(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime) && x.BookingStatus!.CarBookingStatusId == CarBookingStatus.Pending)
                 .ToListAsync();
         }
 

@@ -44,6 +44,12 @@ namespace FribergCarRentals.Controllers
             return View((await _carOrderRepository.GetFutureCarBookings()).Select(x => new CarBookingViewModel(x)).ToList());
         }
 
+        // GET: CarBookingController
+        public async Task<ActionResult> ListPastBookings()
+        {
+            return View((await _carOrderRepository.GetPastCarBookings()).Select(x => new CarBookingViewModel(x)).ToList());
+        }
+
         // GET: CarBookingController/Details/5
         public ActionResult Details(int id)
         {
