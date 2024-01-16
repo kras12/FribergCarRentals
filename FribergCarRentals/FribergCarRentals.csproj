@@ -22,8 +22,4 @@
     <ProjectReference Include="..\FribergCars.Shared\FribergCars.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\CarBooking\" />
-  </ItemGroup>
-
 </Project>

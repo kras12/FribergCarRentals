@@ -21,7 +21,7 @@ namespace FribergCarRentals.Models
                 throw new ArgumentNullException("The customer can't be null");
             }
 
-            if (carOrder.CarBooking is null)
+            if (carOrder.CarBookings is null)
             {
                 throw new ArgumentNullException("The car booking can't be null");
             }
@@ -34,7 +34,8 @@ namespace FribergCarRentals.Models
             OrderDetails = carOrder.OrderDetails;
             Customer = carOrder.Customer;
             Payments = carOrder.Payments;
-            CarBooking = new CarBookingViewModel(carOrder.CarBooking);
+            CarBooking = carOrder.CarBookings.Count > 0 ? new CarBookingViewModel(carOrder.CarBookings.First()) 
+                : throw new InvalidOperationException("Could not find a car booking");
         }
 
         #endregion

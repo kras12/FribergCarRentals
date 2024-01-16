@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CarOrderViewModel>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>List</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.Car.RegistrationNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.Car.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.Car.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.Car.ModelYear)
+            </th
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.PickupDateUtc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.ReturnDateUtc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.RentalCostPerDay)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.Car.RegistrationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.Car.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.Car.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.Car.ModelYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.PickupDateUtc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.ReturnDateUtc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarBooking.RentalCostPerDay)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.CarBooking.CarBookingId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CarOrderId">Cancel booking</a>
+            </td>
+        </tr>}
+    </tbody>
+</table>

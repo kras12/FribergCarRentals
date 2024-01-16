@@ -82,7 +82,7 @@ namespace FribergCarRentals.Controllers
             {
                 if (ModelState.IsValid && carOrderId > 0)
                 {
-                    await _carOrderRepository.Delete(carOrderId);
+                    await _carOrderRepository.DeleteOrder(carOrderId);
                     return RedirectToAction(nameof(List));
                 }
             }

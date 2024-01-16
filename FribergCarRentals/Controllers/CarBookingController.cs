@@ -1,4 +1,5 @@
 ﻿using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,15 +16,15 @@ namespace FribergCarRentals.Controllers
 
         #region Fields
 
-        private readonly ICarBookingRepository _carBookingRepository;
+        private readonly ICarOrderRepository _carOrderRepository;
 
         #endregion
 
         #region Constructors
 
-        public CarBookingController(ICarBookingRepository carBookingRepository)
+        public CarBookingController(ICarOrderRepository carOrderRepository)
         {
-            _carBookingRepository = carBookingRepository;
+            _carOrderRepository = carOrderRepository;
         }
 
         #endregion
@@ -37,9 +38,9 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: CarBookingController
-        public ActionResult List()
+        public async Task<ActionResult> ListFutureBookings()
         {
-            return View();
+            return View((await _carOrderRepository.GetOrdersWithFutureBookings()).Select(x => new CarOrderViewModel(x)).ToList());
         }
 
         // GET: CarBookingController/Details/5
