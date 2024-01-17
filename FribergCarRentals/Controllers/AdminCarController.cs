@@ -65,17 +65,10 @@ namespace FribergCarRentals.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CarViewModel carViewModel)
         {
-            try
+            if (ModelState.IsValid && DataTransferHelper.TryTransferData(carViewModel, out CarEntity car))
             {
-                if (ModelState.IsValid && DataTransferHelper.TryTransferData(carViewModel, out CarEntity car))
-                {
-                    await _carRepository.Add(car);
-                    return RedirectToAction(nameof(List));
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
+                await _carRepository.Add(car);
+                return RedirectToAction(nameof(List));
             }
 
             return View();
@@ -101,20 +94,12 @@ namespace FribergCarRentals.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int carId, CarViewModel carViewModel)
         {
-            try
+            if (ModelState.IsValid && carId > 0 && carId == carViewModel.CarId &&
+                DataTransferHelper.TryTransferData(carViewModel, out CarEntity car))
             {
-                if (ModelState.IsValid && carId > 0 && carId == carViewModel.CarId &&
-                    DataTransferHelper.TryTransferData(carViewModel, out CarEntity car))
-                {
-                    await _carRepository.Update(car);
-                    return RedirectToAction(nameof(List));
-                }
+                await _carRepository.Update(car);
+                return RedirectToAction(nameof(List));
             }
-            catch (Exception)
-            {
-
-            }
-
             return View();
         }
 
@@ -139,17 +124,10 @@ namespace FribergCarRentals.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeletePost(int carId)
         {
-            try
+            if (ModelState.IsValid && carId > 0)
             {
-                if (ModelState.IsValid && carId > 0)
-                {
-                    await _carRepository.Delete(carId);
-                    return RedirectToAction(nameof(List));
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
+                await _carRepository.Delete(carId);
+                return RedirectToAction(nameof(List));
             }
 
             return View();

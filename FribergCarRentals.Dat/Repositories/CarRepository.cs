@@ -55,6 +55,41 @@ namespace FribergCarRentals.DataAccess.Repositories
             return _databaseContext.Cars.Where(x => x.RentalStatus!.StatusType == CarRentalStatus.Available).ToListAsync();
         }
 
+        public async override Task<CarEntity> Update(CarEntity entity)
+        {
+            var oldCar = await GetById(entity.CarId);
+
+            if (oldCar is not null)
+            {
+                // Copy car data
+                _databaseContext.Entry(oldCar).CurrentValues.SetValues(entity);
+
+                // Existing images
+                var existingImages = oldCar.Images.IntersectBy(entity.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
+
+                foreach (var existingImage in existingImages)
+                {
+                    var sourceImage = entity.Images.Single(y => y.FilePath == existingImage.FilePath);
+                    sourceImage.ImageId = existingImage.ImageId;
+                    _databaseContext.Entry(existingImage).CurrentValues.SetValues(sourceImage);
+                }
+
+                // New images
+                var newImages = entity.Images.ExceptBy(oldCar.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
+                oldCar.Images.AddRange(newImages);
+
+                // Deleted images
+                var deletedImages = oldCar.Images.ExceptBy(entity.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
+                deletedImages.ForEach(x => oldCar.Images.Remove(x));
+
+                // Save
+                await _databaseContext.SaveChangesAsync();
+                return oldCar;
+            }
+
+            throw new Exception("The car could not be found.");
+        }
+
         #endregion
 
     }

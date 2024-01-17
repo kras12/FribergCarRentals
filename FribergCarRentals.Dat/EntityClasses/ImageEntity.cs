@@ -64,12 +64,12 @@ namespace FribergCarRentals.Models
         /// The ID for the image.
         /// </summary>
         [Key]
-        public int ImageId { get; private set; }
+        public int ImageId { get; set; }
 
         /// <summary>
         /// The filepath for the image.
         /// </summary>
-        public string FilePath { get; private set; } = "";
+        public string FilePath { get; set; } = "";
 
         #endregion
     }
