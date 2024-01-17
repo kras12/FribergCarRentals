@@ -843,7 +843,7 @@ textarea
 }
 
 /*==================================================*/
-/*    Image galleries                               */
+/*    Flexbox Image galleries                       */
 /*==================================================*/
 
 /* Image galleries */
@@ -891,6 +891,15 @@ textarea
 .vertical-image-gallery > figure
 {
   margin: 0;
+}
+
+/*==================================================*/
+/*    Grid Image galleries                          */
+/*==================================================*/
+.grid-image-gallery
+{
+    display: grid;
+    grid-template-columns: auto auto auto;
 }
 
 /*==================================================*/
@@ -1612,6 +1621,12 @@ table tr td
     --convert-primary-navigation-menu-to-hamburger-menu: 1;
   }
 
+  /*Grid image gallery*/
+  .grid-image-gallery
+  {
+      grid-template-columns: auto auto;
+  }
+
   /* Page content container */
   .page-content-container
   {
@@ -1646,6 +1661,12 @@ table tr td
 /* 650 px (40.625 rem) */
 @media only screen and (max-width: 40.625rem)
 {
+    /*Grid image gallery*/
+  .grid-image-gallery
+  {
+      grid-template-columns: auto;
+  }
+
   /* Tiled image galleries - Figures */
   div.tiled-image-gallery > figure
   {
@@ -1747,3 +1768,43 @@ table tr td
     display: none;
   }    
 }
+
+
+
+
+  /*==================================================*/
+  /* Test - Containers - Background themes            */
+  /*==================================================*/
+
+:root 
+{
+    /* The background color for header containers */
+    --header-container-background-color: #000000; /* Black */
+    --header-container-background-color: #E05815; /* Dark Orange*/
+    --header-container-background-color: #B95020; /* Darker Orange*/
+      --header-container-background-color: #3c3c3c; /*Dark grey*/
+
+    /* The background color for footer containers */
+    --footer-container-background-color: var(--menu-container-background-color);
+
+    /* The background color for menu containers */
+    --menu-container-background-color: #E05815; /* Dark Orange*/
+    --menu-container-background-color: #E88C11; /* Orange Yellow  */
+    --menu-container-background-color: #8C3500; /* Red orange  */
+    --menu-container-background-color: #6F7C82;/* Grey blue  */ 
+
+    /* The background color for the page container */
+    --page-container-background-color: #e1e1e1; /* Light grey  */ 
+
+
+
+    /* Theme 1 */
+
+    /* Theme 1 */
+
+    /* Theme 1 */
+
+    /* Theme 1 */
+}
+
+  

@@ -59,17 +59,19 @@
                 <button asp-action="BookCar" asp-controller="CarBooking" asp-route-id="@item.CarId">Book Car</button>
             </form>            
         </div>
-        <div class="horizontal-flex-container flex-container__justify-content__space-evenly">
+        <div class="grid-image-gallery">
         @foreach (var image in item.Images)
         {
-            <img src="@image.FilePath" />
+            <figure>
+                <img class="full-width" src="@image.FilePath" />
+            </figure>            
         }
         </div>
     </div>
 }
 </div>
 
-@section RightSidebar
+@* @section RightSidebar
 {
     <p>You must login to book a car.</p>
-}
+} *@

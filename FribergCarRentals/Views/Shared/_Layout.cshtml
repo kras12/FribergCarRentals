@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="~/FribergCarRentals.styles.css" asp-append-version="true" />
     <script defer src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script defer src="Scripts/read-mode.js"></script>
+    @* <script defer src="Scripts/read-mode.js"></script>
     <script defer src="Scripts/contrast-mode.js"></script>
-    <script defer src="Scripts/measure-mode.js"></script>
+    <script defer src="Scripts/measure-mode.js"></script> *@
     <script defer src="Scripts/responsive-menu.js"></script>
 </head>
 <body>
@@ -23,7 +23,7 @@
                 <div class="jump-to-content-container">
                     <a href="#main">To main content</a>
                 </div>
-                <div class="horizontal-flex-container flex-container__justify-content__space-between flex-container__align-items-center">
+                @* <div class="horizontal-flex-container flex-container__justify-content__space-between flex-container__align-items-center"> *@
                     <div class="site-info-container">
                         <div class="site-logo-container">
                             <img src="graphics/logo.webp" alt="Site logo.">
@@ -32,20 +32,14 @@
                             <a asp-area="" asp-controller="Home" asp-action="Index">Friberg Car Rentals</a>
                         </div>
                     </div>
-                    <form role="search" method="get" action="?">
-                        <div class="horizontal-flex-container flex-container__column-gap-small">
-                            <input type="search" class="input-field" id="widget-search-phrase" name="widget-search-phrase" value="" placeholder="" required />
-                            <button type="submit">Search</button>
-                        </div>
-                    </form>
-                </div>                
+                @* </div>    *@             
                 <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__when-contains-dropdown-nav-menu__justify-content-center">
-                    <div id="accessibility-menu" class="dropdown-menu dropdown-menu__is-function-menu" tabindex="0">
+                    @* <div id="accessibility-menu" class="dropdown-menu dropdown-menu__is-function-menu" tabindex="0">
                         <div class="dropdown-menu-icon">
                             <img src="graphics/accessibility-white-32.png" alt="accessibility menu icon">
                         </div>
                         <ul id="accessibility-menu-item-container"></ul>
-                    </div>
+                    </div> *@
                     <!-- The primary navigation menu -->
                     <nav id="primary-navigation-menu" class="horizontal-menu" aria-label="Primary navigation menu">
                         <ul>
