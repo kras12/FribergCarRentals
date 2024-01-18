@@ -87,7 +87,7 @@ namespace FribergCarRentals.Models
         public decimal RentalCostPerDay { get; set; }
 
         /// <summary>
-        /// Returna the return date as a formatted string.
+        /// Returns the return date as a formatted string.
         /// </summary>
         [DisplayName("Return Date")]
         public string ReturnDateString

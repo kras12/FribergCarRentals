@@ -78,17 +78,10 @@ namespace FribergCarRentals.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int carOrderId, IFormCollection collection)
         {
-            try
+            if (ModelState.IsValid && carOrderId > 0)
             {
-                if (ModelState.IsValid && carOrderId > 0)
-                {
-                    await _carOrderRepository.DeleteOrder(carOrderId);
-                    return RedirectToAction(nameof(List));
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
+                await _carOrderRepository.DeleteOrder(carOrderId);
+                return RedirectToAction(nameof(List));
             }
 
             return View();
