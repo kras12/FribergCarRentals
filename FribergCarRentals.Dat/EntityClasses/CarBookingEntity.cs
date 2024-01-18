@@ -23,16 +23,31 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="bookingStatus">The status of the booking.</param>
         /// <param name="order">The order the booking belongs to.</param>
         /// <param name="car">The car for the booking. Can't be null.</param>
-        /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
         /// <param name="pickupDate"></param>
         /// <param name="returnDate"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarBookingEntity(CarBookingStatusEntity bookingStatus, CarOrderEntity order, CarEntity car,
-            decimal rentalCostPerDay, DateTime pickupDate, DateTime returnDate)
+        public CarBookingEntity(CarOrderEntity order, CarEntity car, DateTime pickupDate, DateTime returnDate) : 
+            this(CarBookingStatusEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.CarBookingStatus.Pending), 
+                order, car, pickupDate: pickupDate, returnDate: returnDate)
+        {
+            
+        }
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="bookingStatus">The status of the booking.</param>
+        /// <param name="order">The order the booking belongs to.</param>
+        /// <param name="car">The car for the booking. Can't be null.</param>
+        /// <param name="pickupDate"></param>
+        /// <param name="returnDate"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public CarBookingEntity(CarBookingStatusEntity bookingStatus, CarOrderEntity order, 
+            CarEntity car, DateTime pickupDate, DateTime returnDate)
         {
             #region Checks
 
@@ -46,9 +61,9 @@ namespace FribergCarRentals.DataAccess.EntityClasses
                 throw new ArgumentNullException(nameof(car), $"The value of parameter '{car}' can't be null.");
             }
 
-            if (rentalCostPerDay < 0)
+            if (returnDate < pickupDate)
             {
-                throw new ArgumentOutOfRangeException(nameof(rentalCostPerDay), $"The value of parameter '{rentalCostPerDay}' can't be negative.");
+                throw new ArgumentOutOfRangeException("The return date can't be smaller than the pickup date.");
             }
 
             #endregion
@@ -56,7 +71,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
             BookingStatus = bookingStatus;
             CarOrder = order;
             Car = car;
-            RentalCostPerDay = rentalCostPerDay;
+            RentalCostPerDay = car.RentalCostPerDay;
             PickupDateUtc = pickupDate;            
             ReturnDateUtc = returnDate;
         }

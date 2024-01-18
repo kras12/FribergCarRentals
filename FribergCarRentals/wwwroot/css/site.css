@@ -480,6 +480,12 @@ button img
   vertical-align: middle;
 }
 
+/*form button*/
+form button 
+{
+    display: block;
+}
+
 /* Function button */
 .function-button
 {

@@ -1,0 +1,43 @@
+﻿@model CarOrderViewModel
+
+@{
+    ViewData["Title"] = "OrderConfirmation";
+}
+
+<h1>Thank you for your order!</h1>
+<p>Details of the order can be found below.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CarOrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarBooking.Car.CarInfoWithRegistrationNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderSum)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.CarOrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.OrderDate)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.CarBooking.Car.CarInfoWithRegistrationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.OrderSum)
+            </td>
+        </tr>
+    </tbody>
+</table>

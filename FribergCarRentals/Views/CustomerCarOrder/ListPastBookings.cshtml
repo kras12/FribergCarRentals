@@ -27,7 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.RentalCostPerDay)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -51,10 +50,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RentalCostPerDay)
-                </td>
-                <td>
-                    @* <a asp-action="Details" asp-route-id="@item.CarBookingId">Details</a> | *@
-                    <a asp-action="Cancel" asp-route-id="@item.CarBookingId">Cancel booking</a>
                 </td>
             </tr>
         }

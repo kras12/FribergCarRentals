@@ -55,8 +55,8 @@
         </table>
         <div class="text-align-center">
             <form asp-action="BookCar" asp-controller="CarBooking">
-                <input type="hidden" asp-for="@item.CarId" />
-                <button asp-action="BookCar" asp-controller="CarBooking" asp-route-id="@item.CarId">Book Car</button>
+                <input type="hidden" name="@nameof(item.CarId)" value="@item.CarInfo" />
+                <button type="submit">Book Car</button>
             </form>            
         </div>
         <div class="grid-image-gallery">

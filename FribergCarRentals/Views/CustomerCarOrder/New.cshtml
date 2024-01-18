@@ -1,0 +1,35 @@
+﻿@model CustomerCarOrderFormInputViewModel
+
+@{
+    ViewData["Title"] = "Order";
+}
+
+<h1>Order</h1>
+<h2>@Model.CarDescription</h2>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">    
+    
+    <form asp-action="Create">
+        @Html.HiddenFor(x => x.CustomerId)
+        @Html.HiddenFor(x => x.CarId)
+        @* <input type="hidden" asp-for="CustomerId" /> *@
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="vertical-flex-container flex-container__row-gap__0-5-rem">
+            <div class="form-group">
+                <label asp-for="PickupDateString" class="control-label"></label>
+                <input type="datetime-local" name="@nameof(Model.PickupDateString)" value="@Model.PickupDateString" class="form-control" />
+                <span asp-validation-for="PickupDateString" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReturnDateString" class="control-label"></label>
+                <input type="datetime-local" name="@nameof(Model.ReturnDateString)" value="@Model.PickupDateString" class="form-control" />
+                <span asp-validation-for="ReturnDateString" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" value="Create">Book</button>
+            </div>
+        </div>        
+    </form>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>

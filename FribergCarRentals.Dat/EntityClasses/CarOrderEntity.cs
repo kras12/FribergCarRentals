@@ -23,29 +23,35 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="orderStatus">The order status. Can't be null.</param>
-        /// <param name="orderDate">The order date.</param>
-        /// <param name="rentalCostPerDay">The rental cost per day. Can't be negative.</param>
         /// <param name="customer">The customer that rented the car.</param>
-        /// <param name="orderSum">The total sum of the order.</param>
-        /// <param name="payments"> A collection of payments tied to the order.</param>
-        /// <param name="orderDetails">Details about the order. </param>
         /// <param name="carBookings">The car bookings tied to the order.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CarOrderEntity(OrderStatusEntity orderStatus, DateTime orderDate, CustomerEntity customer, decimal orderSum,
-            List<PaymentEntity> payments, string orderDetails, List<CarBookingEntity> carBookings)
+        public CarOrderEntity(CustomerEntity customer) : 
+            this(OrderStatusEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.OrderStatus.Created), 
+                DateTime.UtcNow, customer, payments: new(), carBookings: new())
+        {
+
+        }
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="orderStatus">The order status. Can't be null.</param>
+        /// <param name="orderDate">The order date.</param>
+        /// <param name="customer">The customer that rented the car.</param>
+        /// <param name="payments"> A collection of payments tied to the order.</param>
+        /// <param name="carBookings">The car bookings tied to the order.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CarOrderEntity(OrderStatusEntity orderStatus, DateTime orderDate, CustomerEntity customer, 
+            List<PaymentEntity> payments, List<CarBookingEntity> carBookings)
         {
             #region Checks
 
             if (orderStatus is null)
             {
                 throw new ArgumentNullException(nameof(orderStatus), $"The value of parameter '{orderStatus}' can't be null.");
-            }
-
-            if (orderDetails is null)
-            {
-                throw new ArgumentNullException(nameof(orderDetails), $"The value of parameter '{orderDetails}' can't be null.");
             }
 
             if (customer is null)
@@ -68,7 +74,6 @@ namespace FribergCarRentals.Models
             CarOrderId = 0;
             OrderStatus = orderStatus;
             OrderDate = orderDate;
-            OrderDetails = orderDetails;
             Customer = customer;
             Payments = payments;
             CarBookings = carBookings;
@@ -99,11 +104,6 @@ namespace FribergCarRentals.Models
         /// The order date.
         /// </summary>
         public DateTime OrderDate { get; set; }
-
-        /// <summary>
-        /// Details about the order. 
-        /// </summary>
-        public string OrderDetails { get; set; } = "";
 
         /// <summary>
         /// The order status.

@@ -31,6 +31,15 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #region Methods
 
+        public override async Task<CarOrderEntity> Add(CarOrderEntity entity)
+        {
+            await _databaseContext.CarOrders.AddAsync(entity);            
+            _databaseContext.Entry(entity.OrderStatus).State = EntityState.Unchanged;
+            entity.CarBookings.ForEach(x => _databaseContext.Entry(x.BookingStatus).State = EntityState.Unchanged);
+            await _databaseContext.SaveChangesAsync();
+            return entity;
+        }
+
         /// <summary>
         /// Attempts to cancel a future booking that is atleast one day ahead in time. 
         /// If the order only contains one booking the order will be canceled as well. 
@@ -78,25 +87,9 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// </summary>
         /// <param name="id">The ID of the entity to delete.</param>
         /// <returns>A <see cref="Task"/> object.</returns>
-        public async Task<bool> DeleteOrder(int id)
+        public Task<bool> DeleteOrder(int id)
         {
-            //var carOrder = new CarOrderEntity() { CarOrderId = id };
-            var carOrder = await _databaseContext.CarOrders.SingleOrDefaultAsync(x => x.CarOrderId == id);
-
-            if (carOrder != null)
-            {
-                foreach (var booking in carOrder.CarBookings)
-                {
-                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available);
-                    _databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus).State = EntityState.Unchanged;
-                }
-               
-                _databaseContext.CarOrders.Remove(carOrder);
-                await _databaseContext.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
+            return Task.Run(() => _databaseContext.CarOrders.Where(x => x.CarOrderId == id).ExecuteDelete() > 0);
         }
 
         /// <summary>

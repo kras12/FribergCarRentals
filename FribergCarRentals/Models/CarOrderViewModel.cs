@@ -1,4 +1,5 @@
 ﻿using FribergCarRentals.DataAccess.EntityClasses;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,6 +8,14 @@ namespace FribergCarRentals.Models
     public class CarOrderViewModel : ViewModelBase
     {
         #region Constructors
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        public CarOrderViewModel()
+        {
+            
+        }
 
         /// <summary>
         /// A constructor.
@@ -30,7 +39,6 @@ namespace FribergCarRentals.Models
 
             CarOrderId = carOrder.CarOrderId;
             OrderDate = carOrder.OrderDate;
-            OrderDetails = carOrder.OrderDetails;
             Customer = carOrder.Customer;
             Payments = carOrder.Payments;
             CarBooking = carOrder.CarBookings.Count > 0 ? new CarBookingViewModel(carOrder.CarBookings.First()) 
@@ -64,12 +72,6 @@ namespace FribergCarRentals.Models
         public DateTime OrderDate { get; set; }
 
         /// <summary>
-        /// Details about the order. 
-        /// </summary>
-        [DisplayName("Details")]
-        public string OrderDetails { get; set; } = "";
-
-        /// <summary>
         /// The total sum of the order.
         /// </summary>
         [DisplayName("Order Sum")]
@@ -77,7 +79,7 @@ namespace FribergCarRentals.Models
         {
             get
             {
-                return CarBooking.RentalCostPerDay * (CarBooking.ReturnDateUtc - CarBooking.PickupDateUtc).Days;
+                return CarBooking?.RentalCostPerDay * (CarBooking?.ReturnDateUtc - CarBooking?.PickupDateUtc)?.Days ?? 0;
             }
         }
 
