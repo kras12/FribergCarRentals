@@ -26,7 +26,7 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #endregion
 
-        #region Methods        
+        #region Methods
 
         public async override Task<CustomerEntity> Add(CustomerEntity entity)
         {
@@ -41,6 +41,12 @@ namespace FribergCarRentals.DataAccess.Repositories
             var entity = new CustomerEntity() { UserId = id };
             _databaseContext.Customers.Remove(entity);
             await _databaseContext.SaveChangesAsync();
+        }
+
+        public Task<CustomerEntity> UpdateExcludePassword(CustomerEntity entity)
+        {
+            _databaseContext.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
+            return base.Update(entity);
         }
 
         #endregion

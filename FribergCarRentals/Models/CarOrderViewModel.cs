@@ -38,8 +38,8 @@ namespace FribergCarRentals.Models
             #endregion
 
             CarOrderId = carOrder.CarOrderId;
-            OrderDate = carOrder.OrderDate;
-            Customer = carOrder.Customer;
+            OrderDateUtc = carOrder.OrderDateUtc;
+            Customer = new CustomerViewModel(carOrder.Customer);
             Payments = carOrder.Payments;
             CarBooking = carOrder.CarBookings.Count > 0 ? new CarBookingViewModel(carOrder.CarBookings.First()) 
                 : throw new InvalidOperationException("Could not find a car booking");
@@ -63,13 +63,38 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The customer that rented the car.
         /// </summary>
-        public CustomerEntity Customer { get; set; }
+        public CustomerViewModel Customer { get; set; }
+
+        /// <summary>
+        /// Returns true if the order can be cancelled.
+        /// </summary>
+        /// <remarks>A cancellable order is an order where 
+        /// the car booking have a pickup calender date that is ahead 
+        /// of the current calender day.</remarks>
+        public bool IsCancelable
+        {
+            get
+            {
+                return CarBooking.PickupDateUtc.Date > DateTime.UtcNow.Date;
+            }
+        }
+
+        /// <summary>
+        /// The order date in local time.
+        /// </summary>
+        public DateTime OrderDateLocal
+        {
+            get
+            {
+                return OrderDateUtc.ToLocalTime();
+            }
+        }
 
         /// <summary>
         /// The order date.
         /// </summary>
-        [DisplayName("Date")]
-        public DateTime OrderDate { get; set; }
+        [DisplayName("Order Date")]
+        public DateTime OrderDateUtc { get; set; }
 
         /// <summary>
         /// The total sum of the order.
@@ -84,10 +109,10 @@ namespace FribergCarRentals.Models
         }
 
         /// <summary>
-        /// The total sum of all payments.
+        /// The total sum of all payments made by the customer.
         /// </summary>
-        [DisplayName("Payments Sum")]
-        public decimal PaymentsSum
+        [DisplayName("Paid")]
+        public decimal Paid
         {
             get
             {

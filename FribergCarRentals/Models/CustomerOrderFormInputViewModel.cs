@@ -4,14 +4,14 @@ using System.Drawing.Drawing2D;
 
 namespace FribergCarRentals.Models
 {
-    public class CustomerCarOrderFormInputViewModel
+    public class CustomerOrderFormInputViewModel
     {
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerCarOrderFormInputViewModel()
+        public CustomerOrderFormInputViewModel()
         {
             
         }
@@ -23,7 +23,7 @@ namespace FribergCarRentals.Models
         /// <param name="car">The car for the order.</param>
         /// <param name="pickupDate">The pickup date for the booking.</param>
         /// <param name="returnDate">The return date the booking.</param>
-        public CustomerCarOrderFormInputViewModel(int customerId, CarEntity car, DateTime pickupDate, DateTime returnDate)
+        public CustomerOrderFormInputViewModel(int customerId, CarEntity car, DateTime pickupDate, DateTime returnDate)
         {
             CustomerId = customerId;
             CarId = car.CarId;

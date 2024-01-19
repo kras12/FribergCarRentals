@@ -63,22 +63,44 @@ namespace FribergCarRentals.Models
             }
         }
         /// <summary>
-        /// Returna the picup date as a formatted string.
+        /// Returns the pickup date as a formatted string.
         /// </summary>
         [DisplayName("Pickup Date")]
         public string PickupDateString
         {
             get
             {
-                return PickupDateUtc.ToLocalTime().ToString("d");
+                return PickupDateLocal.ToString("d");
             }
         }
 
         /// <summary>
-        /// The return date.
+        /// The pickup date.
         /// </summary>
         [DisplayName("Pickup Date")]
         public DateTime PickupDateUtc { get; set; }
+
+        /// <summary>
+        /// The pickup date in local time.
+        /// </summary>
+        public DateTime PickupDateLocal
+        {
+            get
+            {
+                return PickupDateUtc.ToLocalTime();
+            }
+        }
+
+        /// <summary>
+        /// The return date in local time.
+        /// </summary>
+        public DateTime ReturnDateLocal
+        {
+            get
+            {
+                return ReturnDateUtc.ToLocalTime();
+            }
+        }
 
         /// <summary>
         /// The rental cost per day.
@@ -94,7 +116,7 @@ namespace FribergCarRentals.Models
         {
             get
             {
-                return ReturnDateUtc.ToLocalTime().ToString("d");
+                return ReturnDateLocal.ToString("d");
             }
         }
 

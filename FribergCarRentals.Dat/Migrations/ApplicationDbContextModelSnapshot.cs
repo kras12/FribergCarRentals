@@ -283,7 +283,7 @@ namespace FribergCarRentals.DataAccess.Migrations
                     b.Property<int>("CustomerUserId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<DateTime>("OrderDateUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("OrderStatusId")

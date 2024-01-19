@@ -38,9 +38,23 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: AdminCarOrder/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var order = await _carOrderRepository.GetById(id);
+
+                if (order is not null)
+                {
+                    return View(new CarOrderViewModel(order));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(List));
+                }
+            }
+
+            return NotFound();
         }
 
         // POST: AdminCarOrder/Create
@@ -61,16 +75,21 @@ namespace FribergCarRentals.Controllers
         // GET: AdminCarOrder/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var order = await _carOrderRepository.GetById(id);
+            if (ModelState.IsValid)
+            {
+                var order = await _carOrderRepository.GetById(id);
 
-            if (order is not null)
-            {
-                return View(new CarOrderViewModel(order));
+                if (order is not null)
+                {
+                    return View(new CarOrderViewModel(order));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(List));
+                }
             }
-            else
-            {
-                return RedirectToAction(nameof(List));
-            }
+
+            return NotFound();
         }
 
         // POST: AdminCarOrder/Delete/5

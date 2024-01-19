@@ -2,6 +2,7 @@
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.Models;
 using FribergCars.Shared.SharedTypes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -38,48 +39,39 @@ namespace FribergCarRentals.DataAccess.Repositories
             entity.CarBookings.ForEach(x => _databaseContext.Entry(x.BookingStatus).State = EntityState.Unchanged);
             await _databaseContext.SaveChangesAsync();
             return entity;
+
         }
 
         /// <summary>
-        /// Attempts to cancel a future booking that is atleast one day ahead in time. 
-        /// If the order only contains one booking the order will be canceled as well. 
+        /// Attempts to cancel a car order.
         /// </summary>
-        /// <param name="carBooking">The ID of the car booking to cancel.</param>
-        /// <returns>True if the booking was canceled. False if the date of the booking is in the past.</returns>
-        public async Task<CancelCarBookingResult> CancelCarBookingOrOrder(int carBookingId)
+        /// <param name="carOrderId">The ID of the order to cancel.</param>
+        /// <returns>True if the order was canceled.</returns>
+        public async Task<bool> CancelOrder(int carOrderId)
         {
-            CancelCarBookingResult result = CancelCarBookingResult.BookingNotFound;
-
-            var order = await _databaseContext.CarOrders.SingleOrDefaultAsync(x => x.CarBookings.Any(x => x.CarBookingId == carBookingId));
+            var order = await GetById(carOrderId);
 
             if (order != null)
             {
-                var targetBooking = order.CarBookings.Single(x => x.CarBookingId == carBookingId);
-                _databaseContext.CarBookingStatuses.Entry(targetBooking.BookingStatus!).State = EntityState.Detached;
-                targetBooking.BookingStatus = CarBookingStatusEntity.CreateSeedObject(CarBookingStatus.Canceled);
-                _databaseContext.CarBookingStatuses.Entry(targetBooking.BookingStatus!).State = EntityState.Unchanged;
-
-                _databaseContext.CarRentalStatuses.Entry(targetBooking.Car!.RentalStatus!).State = EntityState.Detached;
-                targetBooking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available);
-                _databaseContext.CarRentalStatuses.Entry(targetBooking.Car!.RentalStatus).State = EntityState.Unchanged;
-
-                result = CancelCarBookingResult.BookingCanceled;
-
-                if (order.CarBookings.Count == 0)
+                foreach (var booking in order.CarBookings)
                 {
-                    order.OrderStatus = OrderStatusEntity.CreateSeedObject(OrderStatus.Canceled);
-                    _databaseContext.OrderStatuses.Entry(order.OrderStatus).State = EntityState.Unchanged;
-                    result = CancelCarBookingResult.BookingAndOrderCanceled;
+                    //_databaseContext.CarBookingStatuses.Entry(booking.BookingStatus!).State = EntityState.Detached;
+                    booking.BookingStatus = CarBookingStatusEntity.CreateSeedObject(CarBookingStatus.Canceled);
+                    _databaseContext.CarBookingStatuses.Entry(booking.BookingStatus!).State = EntityState.Unchanged;
+
+                    //_databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus!).State = EntityState.Detached;
+                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available);
+                    _databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus).State = EntityState.Unchanged;
                 }
 
+                order.OrderStatus = OrderStatusEntity.CreateSeedObject(OrderStatus.Canceled);
+                _databaseContext.OrderStatuses.Entry(order.OrderStatus).State = EntityState.Unchanged;
+
                 await _databaseContext.SaveChangesAsync();
-            }
-            else
-            {
-                result = CancelCarBookingResult.BookingNotFound;
+                return true;
             }
 
-            return result;
+            return false;
         }
 
         /// <summary>
@@ -90,72 +82,6 @@ namespace FribergCarRentals.DataAccess.Repositories
         public Task<bool> DeleteOrder(int id)
         {
             return Task.Run(() => _databaseContext.CarOrders.Where(x => x.CarOrderId == id).ExecuteDelete() > 0);
-        }
-
-        /// <summary>
-        /// Returns all orders that contains future bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days ahead in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarOrderEntity>> GetOrdersWithFutureCarBookings(int minDaysAheadInTime = 1)
-        {
-            minDaysAheadInTime = Math.Max(minDaysAheadInTime, 1);
-            return _databaseContext.CarOrders.Where(x => x.CarBookings.Any(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime))).ToListAsync();
-        }
-
-        /// <summary>
-        /// Returns all orders that contains past bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days back in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarOrderEntity>> GetOrdersWithPastCarBookings(int minDaysBackInTime = 1)
-        {
-            minDaysBackInTime = Math.Max(minDaysBackInTime, 1);
-            return _databaseContext.CarOrders.Where(x => x.CarBookings.Any(x => x.PickupDateUtc.Date <= DateTime.UtcNow.Date.AddDays(-minDaysBackInTime))).ToListAsync();
-        }
-
-        /// <summary>
-        /// Returns an order that contains a specifc car booking. 
-        /// </summary>
-        /// <param name="carBookingId">The ID of the carbooking to search for.</param>
-        /// <returns>A <see cref="CarOrderEntity"/> object if the order was found or else null.</returns>
-        public Task<CarOrderEntity?> GetOrderByCarBookingId(int carBookingId)
-        {
-            return _databaseContext.CarOrders.SingleOrDefaultAsync(x => x.CarBookings.Any(x => x.CarBookingId == carBookingId));
-        }
-
-        /// <summary>
-        /// Returns a car booking.
-        /// </summary>
-        /// <param name="carBookingId">The ID of the car booking to search for.</param>
-        /// <returns>A <see cref="CarBookingEntity"/> object.</returns>
-        public Task<CarBookingEntity?> GetCarBookingById(int carBookingId)
-        {
-            return _databaseContext.CarBookings.SingleOrDefaultAsync(x => x.CarBookingId == carBookingId);
-        }
-
-        /// <summary>
-        /// Returns all future car bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days ahead in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarBookingEntity>> GetFutureCarBookings(int minDaysAheadInTime = 1)
-        {
-            minDaysAheadInTime = Math.Max(minDaysAheadInTime, 1);
-            return _databaseContext.CarBookings
-                .Where(x => x.PickupDateUtc.Date >= DateTime.UtcNow.Date.AddDays(minDaysAheadInTime) && x.BookingStatus!.CarBookingStatusId == CarBookingStatus.Pending)
-                .ToListAsync();
-        }
-
-        /// <summary>
-        /// Returns all past car bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days back in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarBookingEntity>> GetPastCarBookings(int minDaysBackInTime = 1)
-        {
-            minDaysBackInTime = Math.Max(minDaysBackInTime, 1);
-            return _databaseContext.CarBookings.Where(x => x.PickupDateUtc.Date <= DateTime.UtcNow.Date.AddDays(-minDaysBackInTime)).ToListAsync();
         }
 
         #endregion

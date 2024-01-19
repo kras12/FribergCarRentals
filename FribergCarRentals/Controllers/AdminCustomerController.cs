@@ -64,7 +64,7 @@ namespace FribergCarRentals.Controllers
         // POST: AdminCustomerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CustomerViewModel customerViewModel)
+        public async Task<ActionResult> Create(CustomerFormViewModel customerViewModel)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace FribergCarRentals.Controllers
 
             if (customer is not null)
             {
-                return View(new CustomerViewModel(customer));
+                return View(new CustomerFormViewModel(customer));
             }
             else
             {
@@ -101,21 +101,22 @@ namespace FribergCarRentals.Controllers
         // POST: AdminCustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int userId, IFormCollection collection, CustomerViewModel customerViewModel)
+        public async Task<ActionResult> Edit(int userId, IFormCollection collection, CustomerFormViewModel customerViewModel)
         {
-            try
+            if (ModelState.IsValid && userId > 0 && userId == customerViewModel.UserId &&
+                DataTransferHelper.TryTransferData(customerViewModel, out CustomerEntity customer))
             {
-                if (ModelState.IsValid && userId > 0 && userId == customerViewModel.UserId &&
-                    DataTransferHelper.TryTransferData(customerViewModel, out CustomerEntity customer))
+                if (!string.IsNullOrEmpty(customerViewModel.InputPassword))
                 {
                     customer.HashedPassword = PasswordHelper.CreateHashedPassword(customerViewModel.InputPassword);
                     await _customerRepository.Update(customer);
-                    return RedirectToAction(nameof(List));
                 }
-            }
-            catch (Exception)
-            {
-
+                else
+                {
+                    await _customerRepository.UpdateExcludePassword(customer);
+                }                    
+                    
+                return RedirectToAction(nameof(List));
             }
 
             return View();

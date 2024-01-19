@@ -10,7 +10,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerViewModel() : base(0, "", "", "", "")
+        public CustomerViewModel() : base(0, "", "", "")
         {
             
         }
@@ -20,7 +20,7 @@ namespace FribergCarRentals.Models
         /// </summary>
         /// <param name="customer">The customer to copy data from.</param>
         public CustomerViewModel(CustomerEntity customer) :
-            base(customer.UserId, customer.FirstName, customer.LastName, customer.Email, customer.HashedPassword)
+            base(customer.UserId, customer.FirstName, customer.LastName, customer.Email)
         {
             
         }

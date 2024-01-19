@@ -8,16 +8,6 @@ using System.Threading.Tasks;
 
 namespace FribergCarRentals.DataAccess.Repositories
 {
-    #region Enums
-    public enum CancelCarBookingResult
-    {
-        BookingNotFound,
-        BookingCanceled,
-        BookingAndOrderCanceled
-    }
-
-    #endregion
-
     #region Interfaces
 
     /// <summary>
@@ -28,12 +18,11 @@ namespace FribergCarRentals.DataAccess.Repositories
         #region Methods
 
         /// <summary>
-        /// Attempts to cancel a future booking that is atleast one day ahead in time. 
-        /// If the order only contains one booking the order will be canceled as well. 
+        /// Attempts to cancel a car order.
         /// </summary>
-        /// <param name="carBooking">The ID of the car booking to cancel.</param>
-        /// <returns>True if the booking was canceled. False if the date of the booking is in the past.</returns>
-        public Task<CancelCarBookingResult> CancelCarBookingOrOrder(int carBookingId);
+        /// <param name="carOrderId">The ID of the order to cancel.</param>
+        /// <returns>True if the order was canceled.</returns>
+        public Task<bool> CancelOrder(int carOrderId);
 
         /// <summary>
         /// Attempts to delete an order from the database.
@@ -41,47 +30,6 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <param name="id">The ID of the entity to delete.</param>
         /// <returns>A <see cref="Task"/> object.</returns>
         public Task<bool> DeleteOrder(int id);
-
-        /// <summary>
-        /// Returns a car booking.
-        /// </summary>
-        /// <param name="carBookingId">The ID of the car booking to search for.</param>
-        /// <returns>A <see cref="CarBookingEntity"/> object.</returns>
-        public Task<CarBookingEntity?> GetCarBookingById(int carBookingId);
-
-        /// <summary>
-        /// Returns all future car bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days ahead in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarBookingEntity>> GetFutureCarBookings(int minDaysAheadInTime = 1);
-
-        /// <summary>
-        /// Returns an order that contains a specifc car booking. 
-        /// </summary>
-        /// <param name="carBookingId">The ID of the carbooking to search for.</param>
-        /// <returns>A <see cref="CarOrderEntity"/> object if the order was found or else null.</returns>
-        public Task<CarOrderEntity?> GetOrderByCarBookingId(int carBookingId);
-
-        /// <summary>
-        /// Returns all orders that contains future bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days ahead in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarOrderEntity>> GetOrdersWithFutureCarBookings(int minDaysAheadInTime = 1);
-
-        /// <summary>
-        /// Returns all orders that contains past bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days back in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarOrderEntity>> GetOrdersWithPastCarBookings(int minDaysBackInTime = 1);
-        /// <summary>
-        /// Returns all past car bookings.
-        /// </summary>
-        /// <param name="minDaysAheadInTime">The minimum number of days back in time that the pickup date must be. Minimum value is 1.</param>
-        /// <returns>A collection of bookings.</returns>
-        public Task<List<CarBookingEntity>> GetPastCarBookings(int minDaysBackInTime = 1);
 
         #endregion
     }

@@ -26,7 +26,7 @@
                 @* <div class="horizontal-flex-container flex-container__justify-content__space-between flex-container__align-items-center"> *@
                     <div class="site-info-container">
                         <div class="site-logo-container">
-                            <img src="graphics/logo.webp" alt="Site logo.">
+                            <img src="@Url.Content("~/graphics/logo.webp")" alt="Site logo.">
                         </div>
                         <div class="site-title-container">
                             <a asp-area="" asp-controller="Home" asp-action="Index">Friberg Car Rentals</a>
@@ -65,10 +65,7 @@
                                 <a asp-area="" asp-controller="AdminCarOrder" asp-action="List">Admin car orders</a>
                             </li>
                             <li>
-                                <a asp-area="" asp-controller="CustomerCarOrder" asp-action="ListFutureBookings">Car bookings</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="CustomerCarOrder" asp-action="ListPastBookings">Past car bookings</a>
+                                <a asp-area="" asp-controller="CustomerCarOrder" asp-action="List">Customer Orders</a>
                             </li>
                         </ul>
                     </nav>
@@ -96,13 +93,13 @@
                     <ul id="secondary-navigation-menu-container">
                         <li>
                             <a class="footer-link" asp-area="" asp-controller="Home" asp-action="AboutUs">
-                                <img src="graphics/about-us-icon.svg" alt="About us icon.">
+                                <img src="@Url.Content("~/graphics/about-us-icon.svg")" alt="About us icon.">
                                 <div>About us</div>
                             </a>
                         </li>
                         <li>
                             <a class="footer-link" href="#">
-                                <img src="graphics/contact-us-icon.svg" alt="Email icon.">
+                                <img src="@Url.Content("~/graphics/contact-us-icon.svg")" alt="Email icon.">
                                 <div>Contact us</div>
                             </a>
                         </li>

@@ -18,6 +18,13 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task"/> object.</returns>
         public Task Delete(int id);
 
+        /// <summary>
+        /// Updates a customer and ignore the password field.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public Task<CustomerEntity> UpdateExcludePassword(CustomerEntity entity);
+
         #endregion
     }
 }

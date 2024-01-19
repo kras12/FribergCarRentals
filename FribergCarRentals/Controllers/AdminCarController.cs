@@ -33,7 +33,8 @@ namespace FribergCarRentals.Controllers
 
         #region Actions
 
-        // GET: AdminCarController
+
+        // GET: AdminCarController/List
         public async Task<ActionResult> List()
         {
             return View((await _carRepository.GetAll()).Select(x => new CarViewModel(x)));

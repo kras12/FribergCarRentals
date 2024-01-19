@@ -35,7 +35,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The ID for the car.
         /// </summary>
-        [DisplayName("Car ID")]
+        [DisplayName("ID")]
         public int CarId { get; set; }
 
         /// <summary>
@@ -73,7 +73,20 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// A collection of images for the car.
         /// </summary>
+        [DisplayName("Images")]
         public List<ImageEntity> Images { get; set; } = new();
+
+        /// <summary>
+        /// The number of images for this car.
+        /// </summary>
+        [DisplayName("Images")]
+        public int ImageCount
+        {
+            get
+            {
+                return Images.Count;
+            }
+        }
 
         /// <summary>
         /// The model for the car.
@@ -83,7 +96,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The model year for the car.
         /// </summary>
-        [DisplayName("Model Year")]
+        [DisplayName("Year")]
         public int ModelYear { get; set; }
 
         /// <summary>
@@ -96,12 +109,12 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The registration number for the car.
         /// </summary>
-        [DisplayName("Registration Nr")]
+        [DisplayName("Reg Nr")]
         public string RegistrationNumber { get; set; } = "";
         /// <summary>
         /// The rental status for the car.
         /// </summary>
-        [DisplayName("Rental Status")]
+        [DisplayName("Status")]
         public CarRentalStatusEntity RentalStatus { get; set; }
 
         #endregion

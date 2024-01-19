@@ -18,7 +18,7 @@ namespace FribergCarRentals.Models
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public AdminViewModel(AdminEntity admin) :
-            base(admin.UserId, admin.FirstName, admin.LastName, admin.Email, admin.HashedPassword)
+            base(admin.UserId, admin.FirstName, admin.LastName, admin.Email)
         {
 
         }

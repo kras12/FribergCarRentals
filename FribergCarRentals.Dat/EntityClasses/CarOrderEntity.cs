@@ -73,7 +73,7 @@ namespace FribergCarRentals.Models
 
             CarOrderId = 0;
             OrderStatus = orderStatus;
-            OrderDate = orderDate;
+            OrderDateUtc = orderDate;
             Customer = customer;
             Payments = payments;
             CarBookings = carBookings;
@@ -103,7 +103,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The order date.
         /// </summary>
-        public DateTime OrderDate { get; set; }
+        public DateTime OrderDateUtc { get; set; }
 
         /// <summary>
         /// The order status.

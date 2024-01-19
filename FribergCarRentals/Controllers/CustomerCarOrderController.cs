@@ -4,6 +4,7 @@ using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Linq;
 
 namespace FribergCarRentals.Controllers
 {
@@ -37,38 +38,15 @@ namespace FribergCarRentals.Controllers
 
         #region Actions
 
-        // GET: CarBookingController
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        // GET: CarBookingController/Cancel/5
-        public async Task<ActionResult> Cancel(int id)
-        {
-            var carBooking = await _carOrderRepository.GetCarBookingById(id);
-
-            if (carBooking is not null)
-            {
-                return View(new CarBookingViewModel(carBooking));
-            }
-
-            return NotFound();
-        }
-
         // POST: CarBookingController/Cancel/(5)
-        [ActionName(nameof(Cancel))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CancelPost(int carBookingId)
+        public async Task<ActionResult> Cancel(int id)
         {
-            var result = await _carOrderRepository.CancelCarBookingOrOrder(carBookingId);
-
-            if (result == CancelCarBookingResult.BookingCanceled || result == CancelCarBookingResult.BookingAndOrderCanceled)
+            if (ModelState.IsValid && await _carOrderRepository.CancelOrder(id))
             {
-                return RedirectToAction(nameof(ListFutureBookings));
+                return RedirectToAction(nameof(List));
             }
-
 
             return NotFound();
         }
@@ -76,7 +54,7 @@ namespace FribergCarRentals.Controllers
         // POST: CarBookingController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CustomerCarOrderFormInputViewModel orderData)
+        public async Task<ActionResult> Create(CustomerOrderFormInputViewModel orderData)
         {
             bool isLoggedIn = true;
 
@@ -105,21 +83,31 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: CarBookingController
-        public async Task<ActionResult> ListFutureBookings()
+        public async Task<ActionResult> Details(int id)
         {
-            return View((await _carOrderRepository.GetFutureCarBookings()).Select(x => new CarBookingViewModel(x)).ToList());
+            if (ModelState.IsValid)
+            {
+                var order = await _carOrderRepository.GetById(id);
+
+                if (order is not null)
+                {
+                    return View(new CarOrderViewModel(order));
+                }                
+            }
+
+            return NotFound();
         }
 
         // GET: CarBookingController
-        public async Task<ActionResult> ListPastBookings()
+        public async Task<ActionResult> List()
         {
-            return View((await _carOrderRepository.GetPastCarBookings()).Select(x => new CarBookingViewModel(x)).ToList());
+            return View((await _carOrderRepository.GetAll()).Select(x => new CarOrderViewModel(x)).ToList());
         }
 
         // POST: CarBookingController/New
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> New(int carId, IFormCollection collection)
+        public async Task<ActionResult> New(int id)
         {
             bool isLoggedIn = true;
 
@@ -127,10 +115,9 @@ namespace FribergCarRentals.Controllers
             {
                 if (isLoggedIn)
                 {
-                    // TODO - Include the car id in the http post to here
-                    var car = await _carRepository.GetById(carId) ?? throw new Exception("The car was not found");
+                    var car = await _carRepository.GetById(id) ?? throw new Exception("The car was not found");
                     var randomCustomer = (await _customerRepository.GetAll()).First();
-                    return View(new CustomerCarOrderFormInputViewModel(randomCustomer.UserId, car, DateTime.Now, DateTime.Now.AddDays(1)));
+                    return View(new CustomerOrderFormInputViewModel(randomCustomer.UserId, car, DateTime.Now, DateTime.Now.AddDays(1)));
                 }
                 else
                 {

@@ -6,42 +6,44 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>CarEntity</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<h1>Create Car</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-action="List">View Car List</a>
+        <div>|</div>
+        <button onclick="history.back()">Go Back</button>
+    </div>
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__filled-box flex-container__padding__1-rem">
+        <form asp-action="Create" class="vertical-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Brand" class="control-label"></label>
-                <input asp-for="Brand" class="form-control" />
+            <div class="vertical-form-field">
+                <label asp-for="Brand"></label>
+                <input asp-for="Brand" />
                 <span asp-validation-for="Brand" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
+            <div class="vertical-form-field">
+                <label asp-for="Color"></label>
+                <input asp-for="Color" />
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Model" class="control-label"></label>
-                <input asp-for="Model" class="form-control" />
+            <div class="vertical-form-field">
+                <label asp-for="Model"></label>
+                <input asp-for="Model" />
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ModelYear" class="control-label"></label>
-                <input asp-for="ModelYear" class="form-control" />
+            <div class="vertical-form-field">
+                <label asp-for="ModelYear"></label>
+                <input asp-for="ModelYear" />
                 <span asp-validation-for="ModelYear" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="RegistrationNumber" class="control-label"></label>
-                <input asp-for="RegistrationNumber" class="form-control" />
+            <div class="vertical-form-field">
+                <label asp-for="RegistrationNumber"></label>
+                <input asp-for="RegistrationNumber" />
                 <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="RentalStatus" class="control-label"></label>
-                <select asp-for="RentalStatus" class="form-control">
+            <div class="vertical-form-field">
+                <label asp-for="RentalStatus"></label>
+                <select asp-for="RentalStatus">
                     @foreach (var value in Enum.GetValues<CarRentalStatus>())
                     {
                         <!option value="@value" @(value == CarRentalStatus.Unavailable ? "selected" : "")>
@@ -51,9 +53,9 @@
                 </select>
                 <span asp-validation-for="RentalStatus" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PropulsionSystem" class="control-label"></label>
-                <select asp-for="PropulsionSystem" class="form-control">
+            <div class="vertical-form-field">
+                <label asp-for="PropulsionSystem"></label>
+                <select asp-for="PropulsionSystem">
                     @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
                     {
                         <!option value="@value" @(value == VehiclePropulsionType.None ? "selected" : "")>
@@ -63,19 +65,14 @@
                 </select>
                 <span asp-validation-for="PropulsionSystem" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Images" class="control-label">Images - One per line</label>
-                <textarea asp-for="Images" class="form-control"></textarea>
+            <div class="vertical-form-field">
+                <label asp-for="Images">Images - One per line</label>
+                <textarea asp-for="Images" cols="0" rows="0"></textarea>
                 <span asp-validation-for="Images" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="vertical-form-field">
+                <button type="submit" class="positive-button">Create</button>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="List">Back to Car List</a>
-</div>
-

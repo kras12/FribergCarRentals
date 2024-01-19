@@ -4,79 +4,94 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CarId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Model)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModelYear)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RegistrationNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PropulsionSystem)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalStatus)
-            </th>
-            <th>
-                Image count
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CarId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModelYear)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistrationNumber)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
-                </td>
-                <td>
-                    @item.Images.Count()
-                </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CarId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CarId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<h1>Cars</h1>
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-action="Create">Create New Car</a>
+        @* <div>|</div>
+        <a asp-action="ListCard">Card Table List</a> *@
+    </div>
+    <table class="colored-table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CarId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Brand)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Model)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ModelYear)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Color)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PropulsionSystem)
+                </th>
+                @* <th>
+                    @Html.DisplayNameFor(model => model.RegistrationNumber)
+                </th>    *@             
+                <th>
+                    @Html.DisplayNameFor(model => model.RentalStatus)
+                </th>
+                @* <th>
+                    @Html.DisplayNameFor(model => model.ImageCount)
+                </th> *@
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) 
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CarId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Brand)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModelYear)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Color)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
+                    </td>
+                    @* <td>
+                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                    </td>    *@                 
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
+                    </td>
+                    @* <td>
+                        @Html.DisplayFor(model => item.ImageCount)
+                    </td> *@
+                    <td>
+                        <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                            <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a>
+                            <div>|</div>
+                            <a asp-action="Details" asp-route-id="@item.CarId">Details</a>
+                            <div>|</div>
+                            @* <a asp-action="Delete" asp-route-id="@item.CarId">Delete</a> *@
+                            <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+                                <input type="hidden" asp-for="@item.CarId" />
+                                <button type="submit" class="negative-button">Delete</button>
+                            </form>
+                        </div>                
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

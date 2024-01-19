@@ -5,73 +5,59 @@
 }
 
 <h1>Available cars</h1>
-
 <div class="vertical-flex-container flex-container__row-gap__2-rem">
-@foreach (var item in Model) 
-{
-    <div class="vertical-flex-container flex-container__filled-box flex-container__row-gap__1-rem padding__1rem">
-        <h2>@Html.DisplayFor(model => item.CarInfo)</h2>
-            <table>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => item.ModelYear)
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModelYear)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => item.Brand)
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Brand)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => item.Model)
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Model)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => item.Color)
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Color)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => item.PropulsionSystem)
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
-                </td>
-            </tr>            
-        </table>
-        <div class="text-align-center">
-            <form asp-action="BookCar" asp-controller="CarBooking">
-                <input type="hidden" name="@nameof(item.CarId)" value="@item.CarInfo" />
-                <button type="submit">Book Car</button>
-            </form>            
+    @foreach (var item in Model) 
+    {
+        <div class="vertical-flex-container flex-container__filled-box flex-container__padding__1-rem">
+            <h2>@($"{item.CarInfo}")</h2>
+            <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                <form asp-action="New" asp-controller="CustomerCarOrder">
+                    <input type="hidden" name="id" asp-for="@item.CarId" />
+                    <button type="submit">Book Car</button>
+                </form>
+            </div>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Brand)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => item.Brand)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Model)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => item.Model)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ModelYear)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => item.ModelYear)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Color)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => item.Color)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.PropulsionSystem)
+                </dt>
+                <dd>
+                    @item.PropulsionSystem.PropulsionName
+                </dd>
+            </dl>
+            <div class="tiled-image-gallery">
+                @foreach (var image in item.Images)
+                {
+                    <figure>
+                        <div class="vertical-flex-container">
+                            <img src="@image.FilePath" />
+                        </div>
+                    </figure>
+                }
+            </div>
         </div>
-        <div class="grid-image-gallery">
-        @foreach (var image in item.Images)
-        {
-            <figure>
-                <img class="full-width" src="@image.FilePath" />
-            </figure>            
-        }
-        </div>
-    </div>
-}
+    }
 </div>
-
-@* @section RightSidebar
-{
-    <p>You must login to book a car.</p>
-} *@

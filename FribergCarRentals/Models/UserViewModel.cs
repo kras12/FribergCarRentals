@@ -16,10 +16,9 @@ namespace FribergCarRentals.Models
         /// <param name="firstName">The first name for the user.</param>
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
-        /// <param name="hashedPassword">The hashed password for the user.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserViewModel(int userId, string firstName, string lastName, string email, string hashedPassword)
+        protected UserViewModel(int userId, string firstName, string lastName, string email)
         {
             #region Checks
 
@@ -43,18 +42,12 @@ namespace FribergCarRentals.Models
                 throw new ArgumentNullException(nameof(email), $"The value of parameter '{email}' can't be null");
             }
 
-            if (hashedPassword is null)
-            {
-                throw new ArgumentNullException(nameof(hashedPassword), $"The value of parameter '{hashedPassword}' can't be null");
-            }
-
             #endregion
 
             UserId = userId;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            InputPassword = hashedPassword;
         }
 
         #endregion
@@ -73,6 +66,18 @@ namespace FribergCarRentals.Models
         public string FirstName { get; set; } = "";
 
         /// <summary>
+        /// Returns the full name of the customer.
+        /// </summary>
+        [BindNever]
+        public string FullName
+        {
+            get
+            {
+                return $"{FirstName} {LastName}";
+            }
+        }
+
+        /// <summary>
         /// The last name for the user.
         /// </summary>
         public string LastName { get; set; } = "";
@@ -81,13 +86,6 @@ namespace FribergCarRentals.Models
         /// The email address for the user.
         /// </summary>
         public string Email { get; set; } = "";
-
-        /// <summary>
-        /// The input password for the user.
-        /// </summary>
-        /// <remarks>Is used to input data to form fields and get data from form submissions.</remarks>
-        [DisplayName("Password")]
-        public string InputPassword { get; set; } = "";
 
         #endregion
     }
