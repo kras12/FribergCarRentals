@@ -82,6 +82,7 @@ namespace FribergCarRentals.Models
         /// <summary>
         /// The order date in local time.
         /// </summary>
+        [DisplayName("Date")]
         public DateTime OrderDateLocal
         {
             get
