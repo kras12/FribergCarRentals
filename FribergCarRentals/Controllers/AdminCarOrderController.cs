@@ -31,10 +31,39 @@ namespace FribergCarRentals.Controllers
 
         #region Actions
 
-        // GET: AdminCarOrder
-        public async Task<ActionResult> List()
+        // GET: AdminCarOrder/Delete/5
+        public async Task<ActionResult> Delete(int id)
         {
-            return View((await _carOrderRepository.GetAll()).Select(x => new CarOrderViewModel(x)).ToList());
+            if (ModelState.IsValid)
+            {
+                var order = await _carOrderRepository.GetById(id);
+
+                if (order is not null)
+                {
+                    return View(new CarOrderViewModel(order));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(List));
+                }
+            }
+
+            return NotFound();
+        }
+
+        // POST: AdminCarOrder/Delete/5
+        [ActionName(nameof(Delete))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeletePost(int carOrderId)
+        {
+            if (ModelState.IsValid && carOrderId > 0)
+            {
+                await _carOrderRepository.DeleteOrder(carOrderId);
+                return RedirectToAction(nameof(List));
+            }
+
+            return View();
         }
 
         // GET: AdminCarOrder/Details/5
@@ -57,55 +86,11 @@ namespace FribergCarRentals.Controllers
             return NotFound();
         }
 
-        // POST: AdminCarOrder/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        // GET: AdminCarOrder
+        public async Task<ActionResult> List()
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View((await _carOrderRepository.GetAll()).Select(x => new CarOrderViewModel(x)).ToList());
         }
-
-        // GET: AdminCarOrder/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            if (ModelState.IsValid)
-            {
-                var order = await _carOrderRepository.GetById(id);
-
-                if (order is not null)
-                {
-                    return View(new CarOrderViewModel(order));
-                }
-                else
-                {
-                    return RedirectToAction(nameof(List));
-                }
-            }
-
-            return NotFound();
-        }
-
-        // POST: AdminCarOrder/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int carOrderId, IFormCollection collection)
-        {
-            if (ModelState.IsValid && carOrderId > 0)
-            {
-                await _carOrderRepository.DeleteOrder(carOrderId);
-                return RedirectToAction(nameof(List));
-            }
-
-            return View();
-        }
-
         #endregion
     }
 }
