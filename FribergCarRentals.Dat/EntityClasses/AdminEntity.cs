@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Data.EntityClasses
 {
     public class AdminEntity : UserEntity
     {

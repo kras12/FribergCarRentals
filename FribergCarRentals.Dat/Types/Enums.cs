@@ -1,8 +1,8 @@
-﻿using FribergCars.Shared.SharedClasses;
+﻿using FribergCarRentals.Data.SharedClasses;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergCars.Shared.SharedTypes
+namespace FribergCarRentals.Data.Enums
 {
     #region Enums
 

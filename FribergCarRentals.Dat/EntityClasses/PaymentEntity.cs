@@ -1,4 +1,4 @@
-﻿using FribergCars.Shared.SharedTypes;
+﻿using FribergCarRentals.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 

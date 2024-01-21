@@ -1,8 +1,8 @@
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Models;
 using FribergCarRentals.Models.Car;
 using FribergCarRentals.Models.Customer;
-using FribergCars.Shared.SharedTypes;
+using FribergCarRentals.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

@@ -1,15 +1,15 @@
 ﻿using FribergCarRentals.Data;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FribergCars.Shared.SharedTypes;
+using FribergCarRentals.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A repository that handles car bookings.

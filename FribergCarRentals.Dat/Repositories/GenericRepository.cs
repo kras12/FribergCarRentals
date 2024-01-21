@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     public class GenericRepository<T> : IRepositoryBase<T> where T : class
     {

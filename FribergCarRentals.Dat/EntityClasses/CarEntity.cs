@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using FribergCars.Shared.SharedTypes;
+using FribergCarRentals.Data.Enums;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FribergCarRentals.Models

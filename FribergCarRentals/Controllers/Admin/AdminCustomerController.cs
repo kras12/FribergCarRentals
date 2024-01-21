@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.DataAccess.Repositories;
+﻿using FribergCarRentals.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Models;

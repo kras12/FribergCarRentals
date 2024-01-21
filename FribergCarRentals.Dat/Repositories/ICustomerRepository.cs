@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     public interface ICustomerRepository : IRepositoryBase<CustomerEntity>
     {

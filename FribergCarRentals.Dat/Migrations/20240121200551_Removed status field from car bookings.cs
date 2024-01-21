@@ -4,7 +4,7 @@
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace FribergCarRentals.DataAccess.Migrations
+namespace FribergCarRentals.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Removedstatusfieldfromcarbookings : Migration

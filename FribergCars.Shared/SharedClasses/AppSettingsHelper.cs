@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCars.Shared.SharedClasses
+namespace FribergCarRentals.Data.SharedClasses
 {
     public static class AppSettingsHelper
     {

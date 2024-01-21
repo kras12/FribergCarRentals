@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace FribergCarRentals.DataAccess.Migrations
+namespace FribergCarRentals.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Removedfieldordersumfromcarorderdatabasetable : Migration

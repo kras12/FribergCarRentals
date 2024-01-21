@@ -1,5 +1,5 @@
 ﻿using FribergCarRentals.Data;
-using FribergCarRentals.DataAccess.Crypto;
+using FribergCarRentals.Data.Crypto;
 using FribergCarRentals.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A repository class to handle the customer entity.

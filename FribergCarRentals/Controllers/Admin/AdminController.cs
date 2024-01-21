@@ -1,7 +1,7 @@
 ﻿using FribergCarRentals.Controllers.Customer;
 using FribergCarRentals.Data;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Models;
 using FribergCarRentals.Models.Admin;

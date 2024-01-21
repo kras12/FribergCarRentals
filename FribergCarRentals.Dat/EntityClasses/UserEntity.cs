@@ -1,4 +1,4 @@
-﻿using FribergCars.Shared.SharedClasses;
+﻿using FribergCarRentals.Data.SharedClasses;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Data.EntityClasses
 {
     #region Enums
 

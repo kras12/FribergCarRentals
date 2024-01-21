@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FribergCarRentals.DataAccess.Migrations
+namespace FribergCarRentals.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240117225058_Removed order details from the car order table")]

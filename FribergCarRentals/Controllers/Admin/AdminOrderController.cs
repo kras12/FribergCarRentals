@@ -1,5 +1,5 @@
 ﻿using FribergCarRentals.Data;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Models;
 using FribergCarRentals.Models.Order;

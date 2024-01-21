@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Models.Car;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using System.ComponentModel;

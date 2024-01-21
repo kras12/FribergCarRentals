@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Models.User;
 
 namespace FribergCarRentals.Models.Admin

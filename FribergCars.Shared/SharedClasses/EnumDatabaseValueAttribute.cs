@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCars.Shared.SharedClasses
+namespace FribergCarRentals.Data.SharedClasses
 {
     [System.AttributeUsage(AttributeTargets.Field)]
     public class EnumDatabaseValueAttribute: System.Attribute

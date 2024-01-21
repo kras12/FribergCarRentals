@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using FribergCars.Shared.SharedClasses;
+using FribergCarRentals.Data.SharedClasses;
 
-namespace FribergCarRentals.DataAccess.DatabaseContexts
+namespace FribergCarRentals.Data.DatabaseContexts
 {
     /// <summary>
     /// A design time database context needed to support scaffolding when the database context class resides in a standalone project.

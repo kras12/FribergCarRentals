@@ -1,11 +1,11 @@
 ﻿using FribergCarRentals.Data;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Models;
 using FribergCarRentals.Models.Order;
 using FribergCarRentals.Session;
-using FribergCars.Shared.SharedTypes;
+using FribergCarRentals.Data.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;

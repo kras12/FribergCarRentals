@@ -1,6 +1,6 @@
-﻿using FribergCars.Shared.SharedTypes;
+﻿using FribergCarRentals.Data.Enums;
 using System.ComponentModel.DataAnnotations;
-using FribergCars.Shared.SharedClasses;
+using FribergCarRentals.Data.SharedClasses;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 

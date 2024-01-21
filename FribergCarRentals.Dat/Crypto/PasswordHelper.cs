@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FribergCarRentals.DataAccess.Crypto
+namespace FribergCarRentals.Data.Crypto
 {
     // https://github.com/aspnet/AspNetIdentity/blob/main/src/Microsoft.AspNet.Identity.Core/Crypto.cs
 

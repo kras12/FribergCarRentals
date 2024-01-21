@@ -7,7 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCars.Shared.SharedClasses
+namespace FribergCarRentals.Data.SharedClasses
 {
     public static class EnumExtensions
     {

@@ -1,4 +1,4 @@
-﻿using FribergCars.Shared.SharedClasses;
+﻿using FribergCarRentals.Data.SharedClasses;
 using Microsoft.Extensions.Configuration;
 
 namespace FribergCarRentals.Data

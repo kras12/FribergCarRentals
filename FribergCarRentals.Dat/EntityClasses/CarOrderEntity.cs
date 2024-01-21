@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -28,7 +28,7 @@ namespace FribergCarRentals.Models
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CarOrderEntity(CustomerEntity customer) : 
-            this(OrderStatusEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.OrderStatus.Created), 
+            this(OrderStatusEntity.CreateSeedObject(FribergCarRentals.Data.Enums.OrderStatus.Created), 
                 DateTime.UtcNow, customer, payments: new(), carBookings: new())
         {
 

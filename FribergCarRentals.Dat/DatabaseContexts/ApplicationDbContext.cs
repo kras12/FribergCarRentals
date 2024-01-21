@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FribergCarRentals.Models;
-using FribergCars.Shared.SharedTypes;
-using FribergCars.Shared.SharedClasses;
+using FribergCarRentals.Data.Enums;
+using FribergCarRentals.Data.SharedClasses;
 using System.ComponentModel.DataAnnotations;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Internal;
 

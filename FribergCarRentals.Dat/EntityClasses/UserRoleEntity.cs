@@ -1,6 +1,6 @@
 ﻿using FribergCarRentals.Models;
-using FribergCars.Shared.SharedClasses;
-using FribergCars.Shared.SharedTypes;
+using FribergCarRentals.Data.SharedClasses;
+using FribergCarRentals.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Data.EntityClasses
 {
     /// <summary>
     /// A class that represents an user role.
