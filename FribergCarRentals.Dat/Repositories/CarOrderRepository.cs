@@ -38,16 +38,10 @@ namespace FribergCarRentals.DataAccess.Repositories
 
             _databaseContext.Entry(entity.OrderStatus!).State = EntityState.Unchanged;
             _databaseContext.Entry(entity.Customer!).State = EntityState.Unchanged;
-
-            foreach (var booking in entity.CarBookings)
-            {
-                _databaseContext.Entry(booking.BookingStatus!).State = EntityState.Unchanged;
-                _databaseContext.Entry(booking!.Car!.RentalStatus!).State = EntityState.Unchanged;
-            }
+            entity.CarBookings.ForEach(booking => _databaseContext.Entry(booking!.Car!.RentalStatus!).State = EntityState.Unchanged);
 
             await _databaseContext.SaveChangesAsync();
             return entity;
-
         }
 
         /// <summary>
@@ -63,11 +57,6 @@ namespace FribergCarRentals.DataAccess.Repositories
             {
                 foreach (var booking in order.CarBookings)
                 {
-                    //_databaseContext.CarBookingStatuses.Entry(booking.BookingStatus!).State = EntityState.Detached;
-                    booking.BookingStatus = CarBookingStatusEntity.CreateSeedObject(CarBookingStatus.Canceled);
-                    _databaseContext.CarBookingStatuses.Entry(booking.BookingStatus!).State = EntityState.Unchanged;
-
-                    //_databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus!).State = EntityState.Detached;
                     booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available);
                     _databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus).State = EntityState.Unchanged;
                 }

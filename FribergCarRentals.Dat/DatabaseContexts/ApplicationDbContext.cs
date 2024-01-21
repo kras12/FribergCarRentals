@@ -44,11 +44,6 @@ namespace FribergCarRentals.Data
         /// </summary>
         public DbSet<CarRentalStatusEntity> CarRentalStatuses { get; set; }
 
-        /// <summary>
-        /// The database set for car booking statuses.
-        /// </summary>
-        public DbSet<CarBookingStatusEntity> CarBookingStatuses { get; set; }
-
         public DbSet<OrderStatusEntity> OrderStatuses { get; set; }
 
         public DbSet<AdminEntity> Admins { get; set; }
@@ -100,16 +95,6 @@ namespace FribergCarRentals.Data
                .Property(x => x.OrderStatusId)
                .HasConversion<int>();
 
-            modelBuilder.Entity<CarBookingStatusEntity>()
-               .HasData(
-                   Enum.GetValues(typeof(CarBookingStatus))
-                   .Cast<CarBookingStatus>()
-                   .Select(x => CarBookingStatusEntity.CreateSeedObject(x)));
-
-            modelBuilder.Entity<CarBookingStatusEntity>()
-               .Property(x => x.CarBookingStatusId)
-               .HasConversion<int>();
-
             modelBuilder.Entity<CarEntity>()
                 .Navigation(x => x.PropulsionSystem)
                 .AutoInclude();
@@ -151,10 +136,6 @@ namespace FribergCarRentals.Data
 
             modelBuilder.Entity<CarBookingEntity>()
                 .Navigation(x => x.CarOrder)
-                .AutoInclude();
-
-            modelBuilder.Entity<CarBookingEntity>()
-                .Navigation(x => x.BookingStatus)
                 .AutoInclude();
         }
 

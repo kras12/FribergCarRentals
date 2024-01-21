@@ -29,25 +29,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="returnDate"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarBookingEntity(CarOrderEntity order, CarEntity car, DateTime pickupDate, DateTime returnDate) : 
-            this(CarBookingStatusEntity.CreateSeedObject(FribergCars.Shared.SharedTypes.CarBookingStatus.Pending), 
-                order, car, pickupDate: pickupDate, returnDate: returnDate)
-        {
-            
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="bookingStatus">The status of the booking.</param>
-        /// <param name="order">The order the booking belongs to.</param>
-        /// <param name="car">The car for the booking. Can't be null.</param>
-        /// <param name="pickupDate"></param>
-        /// <param name="returnDate"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarBookingEntity(CarBookingStatusEntity bookingStatus, CarOrderEntity order, 
-            CarEntity car, DateTime pickupDate, DateTime returnDate)
+        public CarBookingEntity(CarOrderEntity order, CarEntity car, DateTime pickupDate, DateTime returnDate)
         {
             #region Checks
 
@@ -68,7 +50,6 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
             #endregion
 
-            BookingStatus = bookingStatus;
             CarOrder = order;
             Car = car;
             RentalCostPerDay = car.RentalCostPerDay;
@@ -79,12 +60,6 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// The status of the booking.
-        /// </summary>
-        [Required]
-        public CarBookingStatusEntity? BookingStatus { get; set; }
 
         /// <summary>
         /// The order the booking belongs to. 
