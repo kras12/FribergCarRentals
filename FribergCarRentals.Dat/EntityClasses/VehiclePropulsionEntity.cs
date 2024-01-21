@@ -1,10 +1,10 @@
-﻿using FribergCarRentals.Data.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FribergCarRentals.Data.SharedClasses;
 using System.Diagnostics.CodeAnalysis;
+using FribergCarRentals.DataAccess.Types;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// Represents the propulsion system for a vehicle.

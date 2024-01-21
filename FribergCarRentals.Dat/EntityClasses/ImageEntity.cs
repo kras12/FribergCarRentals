@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing.Drawing2D;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// A class that represents an image.
@@ -45,7 +45,7 @@ namespace FribergCarRentals.Models
             FilePath = filePath;
         }
 
-        
+
 
         /// <summary>
         /// A constructor.

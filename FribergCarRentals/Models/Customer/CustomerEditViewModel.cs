@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel;
-using FribergCarRentals.Models.User;
+using FribergCarRentals.Data.User;
+using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Models.Customer
+namespace FribergCarRentals.Data.Customer
 {
     public class CustomerEditViewModel : UserEditViewModel
     {

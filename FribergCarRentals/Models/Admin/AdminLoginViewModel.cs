@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using FribergCarRentals.Models.User;
+using FribergCarRentals.Data.User;
 
-namespace FribergCarRentals.Models.Admin
+namespace FribergCarRentals.Data.Admin
 {
     public class AdminLoginViewModel : UserLoginViewModel
     {

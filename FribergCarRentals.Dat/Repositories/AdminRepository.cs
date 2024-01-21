@@ -1,7 +1,6 @@
-﻿using FribergCarRentals.Data;
-using FribergCarRentals.Data.Crypto;
-using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models;
+﻿using FribergCarRentals.DataAccess.Crypto;
+using FribergCarRentals.DataAccess.DatabaseContexts;
+using FribergCarRentals.DataAccess.EntityClasses;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.Data.Repositories
+namespace FribergCarRentals.DataAccess.Repositories
 {
     /// <summary>
     /// A repository class to handle the customer entity.
@@ -47,7 +46,7 @@ namespace FribergCarRentals.Data.Repositories
         public async Task<AdminEntity?> GetMatchingAdmin(string email, string password)
         {
             var admin = await _databaseContext.Admins.Where(x => x.Email == email).SingleOrDefaultAsync();
-            
+
             if (admin is not null && PasswordHelper.VerifyHashedPassword(admin.Password, password))
             {
                 admin.Password = "";

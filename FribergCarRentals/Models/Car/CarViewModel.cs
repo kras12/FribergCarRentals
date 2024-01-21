@@ -1,7 +1,12 @@
-﻿using System.ComponentModel;
+﻿using FribergCarRentals.Data.SharedClasses;
+using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.DataAccess.Types;
+using Microsoft.CodeAnalysis.Options;
+using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace FribergCarRentals.Models.Car
+namespace FribergCarRentals.Data.Car
 {
     public class CarViewModel : ViewModelBase
     {
@@ -111,6 +116,8 @@ namespace FribergCarRentals.Models.Car
         /// </summary>
         [DisplayName("Reg Nr")]
         public string RegistrationNumber { get; set; } = "";
+
+
         /// <summary>
         /// The rental status for the car.
         /// </summary>

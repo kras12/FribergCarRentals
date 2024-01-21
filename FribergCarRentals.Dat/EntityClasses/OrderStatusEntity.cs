@@ -1,5 +1,4 @@
 ﻿using FribergCarRentals.Data.SharedClasses;
-using FribergCarRentals.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,8 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FribergCarRentals.DataAccess.Types;
 
-namespace FribergCarRentals.Data.EntityClasses
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// A class that represents an order status.

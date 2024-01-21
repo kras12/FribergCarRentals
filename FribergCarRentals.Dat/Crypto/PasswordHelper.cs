@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FribergCarRentals.Data.Crypto
+namespace FribergCarRentals.DataAccess.Crypto
 {
     // https://github.com/aspnet/AspNetIdentity/blob/main/src/Microsoft.AspNet.Identity.Core/Crypto.cs
 
@@ -56,7 +56,7 @@ namespace FribergCarRentals.Data.Crypto
 
             // Verify a version 0 (see comment above) text hash.
 
-            if (hashedPasswordBytes.Length != (1 + SaltSize + PBKDF2SubkeyLength) || hashedPasswordBytes[0] != 0x00)
+            if (hashedPasswordBytes.Length != 1 + SaltSize + PBKDF2SubkeyLength || hashedPasswordBytes[0] != 0x00)
             {
                 // Wrong length or version header.
                 return false;
@@ -92,7 +92,7 @@ namespace FribergCarRentals.Data.Crypto
             var areSame = true;
             for (var i = 0; i < a.Length; i++)
             {
-                areSame &= (a[i] == b[i]);
+                areSame &= a[i] == b[i];
             }
             return areSame;
         }

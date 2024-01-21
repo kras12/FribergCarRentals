@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Data.EntityClasses;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
 
 namespace FribergCarRentals.Session
 {

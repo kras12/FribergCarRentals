@@ -1,10 +1,10 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models.Car;
+﻿using FribergCarRentals.Data.Car;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Models.Order
+namespace FribergCarRentals.Data.Order
 {
     public class CarBookingViewModel : ViewModelBase
     {

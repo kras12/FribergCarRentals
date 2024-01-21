@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.Data.EntityClasses
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     #region Enums
 
@@ -23,7 +23,7 @@ namespace FribergCarRentals.Data.EntityClasses
     #endregion
 
     #region Classes
-    
+
     public abstract class UserEntity
     {
         #region Constructors
@@ -32,7 +32,7 @@ namespace FribergCarRentals.Data.EntityClasses
         /// A constructor.
         /// </summary>
         /// <param name="userRole">The user role.</param>
-        protected UserEntity(UserRoleEntity userRole) 
+        protected UserEntity(UserRoleEntity userRole)
         {
             UserRole = userRole;
         }
@@ -75,7 +75,7 @@ namespace FribergCarRentals.Data.EntityClasses
             if (password is null)
             {
                 throw new ArgumentNullException(nameof(password), $"The value of parameter '{password}' can't be null");
-            }            
+            }
 
             #endregion
 

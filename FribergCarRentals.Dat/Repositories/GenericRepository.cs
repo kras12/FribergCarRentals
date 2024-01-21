@@ -1,6 +1,4 @@
-﻿using FribergCarRentals.Data;
-using FribergCarRentals.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -8,8 +6,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using FribergCarRentals.DataAccess.DatabaseContexts;
 
-namespace FribergCarRentals.Data.Repositories
+namespace FribergCarRentals.DataAccess.Repositories
 {
     public class GenericRepository<T> : IRepositoryBase<T> where T : class
     {

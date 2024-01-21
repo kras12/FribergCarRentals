@@ -6,4 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "<Pending>", Scope = "member", Target = "~M:FribergCarRentals.Data.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions)")]
-[assembly: SuppressMessage("Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>", Scope = "member", Target = "~P:FribergCarRentals.Models.CarEntity.Images")]
+[assembly: SuppressMessage("Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>", Scope = "member", Target = "~P:FribergCarRentals.Data.CarEntity.Images")]

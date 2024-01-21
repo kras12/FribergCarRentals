@@ -1,8 +1,7 @@
-﻿using FribergCarRentals.Data.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// A class that represents a payment.
@@ -16,7 +15,7 @@ namespace FribergCarRentals.Models
         /// </summary>
         public PaymentEntity()
         {
-            
+
         }
 
         /// <summary>

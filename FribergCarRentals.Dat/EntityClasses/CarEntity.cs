@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using FribergCarRentals.Data.Enums;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// A class that represents a car
@@ -28,7 +27,7 @@ namespace FribergCarRentals.Models
         /// </summary>
         public CarEntity()
         {
-            
+
         }
 
         /// <summary>
@@ -41,7 +40,7 @@ namespace FribergCarRentals.Models
         /// <param name="registrationNumber">The registration number for the car.</param>
         /// <param name="propulsionSystem">The propulsion system for the car.</param>
         /// <param name="rentalStatus">The rental status for the car.</param>
-        public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber, 
+        public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber,
             VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus, decimal rentalCostPerDay)
         {
             #region Checks

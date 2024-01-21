@@ -1,10 +1,10 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models.Customer;
+﻿using FribergCarRentals.Data.Customer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Models.Order
+namespace FribergCarRentals.Data.Order
 {
     public class OrderViewModel : ViewModelBase
     {

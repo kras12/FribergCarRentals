@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Models;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Diagnostics.CodeAnalysis;
 

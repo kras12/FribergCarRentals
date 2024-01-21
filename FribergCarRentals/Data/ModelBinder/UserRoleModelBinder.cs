@@ -1,7 +1,7 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models;
+﻿using FribergCarRentals.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Diagnostics.CodeAnalysis;
+using FribergCarRentals.DataAccess.EntityClasses;
 
 namespace FribergCarRentals.Data.ModelBinder
 {

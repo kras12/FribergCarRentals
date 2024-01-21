@@ -1,10 +1,10 @@
-﻿using FribergCarRentals.Data.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using FribergCarRentals.Data.SharedClasses;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using FribergCarRentals.DataAccess.Types;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// A class that represents rental statuses for a car.

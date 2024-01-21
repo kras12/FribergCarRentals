@@ -1,12 +1,11 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Data.Repositories
+namespace FribergCarRentals.DataAccess.Repositories
 {
     public interface IAdminRepository
     {

@@ -1,12 +1,8 @@
-﻿using FribergCarRentals.Data;
-using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FribergCarRentals.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace FribergCarRentals.Data.Repositories

@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Data;
-using Microsoft.EntityFrameworkCore.Design;
+﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using FribergCarRentals.Data.SharedClasses;
 
-namespace FribergCarRentals.Data.DatabaseContexts
+namespace FribergCarRentals.DataAccess.DatabaseContexts
 {
     /// <summary>
     /// A design time database context needed to support scaffolding when the database context class resides in a standalone project.

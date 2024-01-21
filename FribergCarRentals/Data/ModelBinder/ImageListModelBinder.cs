@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Models;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FribergCarRentals.Data.ModelBinder

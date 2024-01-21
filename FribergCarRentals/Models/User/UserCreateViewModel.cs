@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace FribergCarRentals.Models.User
+namespace FribergCarRentals.Data.User
 {
     public abstract class UserCreateViewModel
     {

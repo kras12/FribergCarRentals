@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using FribergCarRentals.Models.User;
+using FribergCarRentals.Data.User;
 
-namespace FribergCarRentals.Models.Customer
+namespace FribergCarRentals.Data.Customer
 {
     public class CustomerRegisterViewModel : UserCreateViewModel
     {

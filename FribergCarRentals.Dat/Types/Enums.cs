@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergCarRentals.Data.Enums
+namespace FribergCarRentals.DataAccess.Types
 {
     #region Enums
 
     public enum VehiclePropulsionType
-	{
+    {
         [EnumDatabaseValue("None", DescriptionValue = "No propulsion system.")]
         None = 1,
 

@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FribergCarRentals.Models;
-using FribergCarRentals.Data.Enums;
 using FribergCarRentals.Data.SharedClasses;
 using System.ComponentModel.DataAnnotations;
-using FribergCarRentals.Data.EntityClasses;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Internal;
+using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.DataAccess.Types;
 
-namespace FribergCarRentals.Data
+namespace FribergCarRentals.DataAccess.DatabaseContexts
 {
     /// <summary>
     /// The database context for the application.
@@ -37,7 +36,7 @@ namespace FribergCarRentals.Data
         /// <summary>
         /// The database set for propulsion systems.
         /// </summary>
-        public DbSet<VehiclePropulsionEntity> PropulsionSystems { get; set; }  
+        public DbSet<VehiclePropulsionEntity> PropulsionSystems { get; set; }
 
         /// <summary>
         /// The database set for car rental statuses.

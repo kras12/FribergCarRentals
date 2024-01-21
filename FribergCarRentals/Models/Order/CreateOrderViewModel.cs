@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
 
-namespace FribergCarRentals.Models.Order
+namespace FribergCarRentals.Data.Order
 {
     public class CreateOrderViewModel
     {

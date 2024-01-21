@@ -1,8 +1,7 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     public class CustomerEntity : UserEntity
     {
@@ -47,7 +46,7 @@ namespace FribergCarRentals.Models
             {
                 return base.UserRole;
             }
-            
+
             set
             {
                 // Safe guard against invalid model bindings.

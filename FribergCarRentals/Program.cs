@@ -1,8 +1,9 @@
 using FribergCarRentals.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Data.ModelBinder;
+using FribergCarRentals.DataAccess.DatabaseContexts;
+using FribergCarRentals.DataAccess.Repositories;
 
 namespace FribergCarRentals
 {

@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Models;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.Data.Repositories
+namespace FribergCarRentals.DataAccess.Repositories
 {
     /// <summary>
     /// An interface for a car repository.

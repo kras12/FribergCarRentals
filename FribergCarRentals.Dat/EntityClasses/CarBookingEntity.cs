@@ -1,12 +1,11 @@
-﻿using FribergCarRentals.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.Data.EntityClasses
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     public class CarBookingEntity
     {
@@ -53,7 +52,7 @@ namespace FribergCarRentals.Data.EntityClasses
             CarOrder = order;
             Car = car;
             RentalCostPerDay = car.RentalCostPerDay;
-            PickupDateUtc = pickupDate;            
+            PickupDateUtc = pickupDate;
             ReturnDateUtc = returnDate;
         }
 

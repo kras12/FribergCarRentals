@@ -1,15 +1,15 @@
-﻿using FribergCarRentals.Data;
-using FribergCarRentals.Data.Crypto;
-using FribergCarRentals.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.DataAccess.DatabaseContexts;
+using FribergCarRentals.DataAccess.Crypto;
 
-namespace FribergCarRentals.Data.Repositories
+namespace FribergCarRentals.DataAccess.Repositories
 {
     /// <summary>
     /// A repository class to handle the customer entity.
@@ -74,7 +74,7 @@ namespace FribergCarRentals.Data.Repositories
         public async override Task<IEnumerable<CustomerEntity>> GetAll()
         {
             var customers = (await base.GetAll()).ToList();
-            
+
             foreach (var customer in customers)
             {
                 customer.Password = "";

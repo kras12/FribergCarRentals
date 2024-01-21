@@ -1,17 +1,16 @@
-﻿using FribergCarRentals.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.Data.EntityClasses
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     public class AdminEntity : UserEntity
     {
         #region Constructors
-        
+
         /// <summary>
         /// A constructor.
         /// </summary>
@@ -30,7 +29,7 @@ namespace FribergCarRentals.Data.EntityClasses
         /// <param name="hashedPassword">The hashed password for the user.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword) : 
+        public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
             base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateSeedObject(UserRoleType.Admin))
         {
 

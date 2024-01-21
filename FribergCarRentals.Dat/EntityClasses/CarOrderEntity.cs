@@ -1,8 +1,7 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergCarRentals.Models
+namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// A class that represents a car order. 
@@ -27,8 +26,8 @@ namespace FribergCarRentals.Models
         /// <param name="carBookings">The car bookings tied to the order.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CarOrderEntity(CustomerEntity customer) : 
-            this(OrderStatusEntity.CreateSeedObject(FribergCarRentals.Data.Enums.OrderStatus.Created), 
+        public CarOrderEntity(CustomerEntity customer) :
+            this(OrderStatusEntity.CreateSeedObject(Types.OrderStatus.Created),
                 DateTime.UtcNow, customer, payments: new(), carBookings: new())
         {
 
@@ -44,7 +43,7 @@ namespace FribergCarRentals.Models
         /// <param name="carBookings">The car bookings tied to the order.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public CarOrderEntity(OrderStatusEntity orderStatus, DateTime orderDate, CustomerEntity customer, 
+        public CarOrderEntity(OrderStatusEntity orderStatus, DateTime orderDate, CustomerEntity customer,
             List<PaymentEntity> payments, List<CarBookingEntity> carBookings)
         {
             #region Checks

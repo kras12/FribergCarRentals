@@ -1,8 +1,8 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models.User;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.User;
 using System.ComponentModel;
 
-namespace FribergCarRentals.Models.Customer
+namespace FribergCarRentals.Data.Customer
 {
     public class CustomerViewModel : UserViewModel
     {

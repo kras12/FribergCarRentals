@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace FribergCarRentals.Models.User
+namespace FribergCarRentals.Data.User
 {
     public abstract class UserEditViewModel : UserViewModel
     {

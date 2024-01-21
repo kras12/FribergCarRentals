@@ -1,9 +1,9 @@
-﻿using FribergCarRentals.Data.EntityClasses;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace FribergCarRentals.Models.User
+namespace FribergCarRentals.Data.User
 {
     public abstract class UserViewModel : ViewModelBase
     {

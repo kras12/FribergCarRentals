@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Models.User;
+using FribergCarRentals.Data.User;
+using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Models.Admin
+namespace FribergCarRentals.Data.Admin
 {
     internal class AdminViewModel : UserViewModel
     {

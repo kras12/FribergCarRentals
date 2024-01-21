@@ -1,11 +1,11 @@
 ﻿using FribergCarRentals.Data;
-using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Helpers;
-using FribergCarRentals.Models;
-using FribergCarRentals.Models.Order;
+using FribergCarRentals.Data;
+using FribergCarRentals.Data.Order;
 using FribergCarRentals.Session;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using FribergCarRentals.DataAccess.Repositories;
 
 namespace FribergCarRentals.Controllers.Admin
 {
