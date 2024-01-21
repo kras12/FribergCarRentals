@@ -35,9 +35,16 @@ namespace FribergCarRentals.DataAccess.Repositories
         public override async Task<CarOrderEntity> Add(CarOrderEntity entity)
         {
             await _databaseContext.CarOrders.AddAsync(entity);
+
             _databaseContext.Entry(entity.OrderStatus!).State = EntityState.Unchanged;
-            entity.CarBookings.ForEach(x => _databaseContext.Entry(x.BookingStatus!).State = EntityState.Unchanged);
-            _databaseContext.Entry(entity.Customer).State = EntityState.Unchanged;
+            _databaseContext.Entry(entity.Customer!).State = EntityState.Unchanged;
+
+            foreach (var booking in entity.CarBookings)
+            {
+                _databaseContext.Entry(booking.BookingStatus!).State = EntityState.Unchanged;
+                _databaseContext.Entry(booking!.Car!.RentalStatus!).State = EntityState.Unchanged;
+            }
+
             await _databaseContext.SaveChangesAsync();
             return entity;
 

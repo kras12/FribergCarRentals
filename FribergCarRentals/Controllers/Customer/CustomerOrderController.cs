@@ -99,6 +99,7 @@ namespace FribergCarRentals.Controllers.Customer
 
                 if (customer is not null && car is not null)
                 {
+                    car.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Rented);
                     var order = new CarOrderEntity(customer);
                     order.CarBookings.Add(
                         new CarBookingEntity(order, car, pickupDate: DateTime.Parse(orderData.PickupDateString),
