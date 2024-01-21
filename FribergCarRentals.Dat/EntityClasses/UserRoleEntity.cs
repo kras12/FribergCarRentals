@@ -1,5 +1,5 @@
-﻿using FribergCarRentals.Data.SharedClasses;
-using FribergCarRentals.DataAccess.Attributes;
+﻿using FribergCarRentals.DataAccess.Attributes;
+using FribergCarRentals.DataAccess.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

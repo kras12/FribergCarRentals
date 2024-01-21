@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Data.SharedClasses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FribergCarRentals.DataAccess.Types;
 using FribergCarRentals.DataAccess.Attributes;
+using FribergCarRentals.DataAccess.Extensions;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {

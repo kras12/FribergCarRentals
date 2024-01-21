@@ -7,7 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.Data.SharedClasses
+namespace FribergCarRentals.DataAccess.Extensions
 {
     public static class EnumExtensions
     {
@@ -16,7 +16,7 @@ namespace FribergCarRentals.Data.SharedClasses
             return enumValue.GetType()
                 .GetMember(enumValue.ToString())
                 .First()
-                .GetCustomAttribute<T>() ?? 
+                .GetCustomAttribute<T>() ??
                     throw new InvalidOperationException($"The attribute of type '{typeof(T)}' could not be found on the enum value.");
         }
     }
