@@ -58,7 +58,7 @@ namespace FribergCarRentals.Controllers.Customer
                     return RedirectToAction(nameof(CustomerController.RegisterOrLogin), ControllerHelper.GetControllerName<CustomerController>());
                 }
 
-                var car = await _carRepository.GetById(carId, CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available));
+                var car = await _carRepository.GetById(carId, CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable));
                 var customer = await _customerRepository.GetById(UserSessionHandler.GetUserData(HttpContext.Session).UserId);
 
                 if (car is not null && customer is not null)
@@ -98,7 +98,7 @@ namespace FribergCarRentals.Controllers.Customer
 
                 if (customer is not null && car is not null)
                 {
-                    car.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Rented);
+                    car.RentalStatus = CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.PendingPickup);
                     var order = new CarOrderEntity(customer);
                     order.CarBookings.Add(
                         new CarBookingEntity(order, car, pickupDate: DateTime.Parse(orderData.PickupDateString),

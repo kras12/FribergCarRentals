@@ -76,8 +76,8 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
 
             modelBuilder.Entity<CarRentalStatusEntity>()
                 .HasData(
-                    Enum.GetValues(typeof(CarRentalStatus))
-                    .Cast<CarRentalStatus>()
+                    Enum.GetValues(typeof(RentalCarStatus))
+                    .Cast<RentalCarStatus>()
                     .Select(x => CarRentalStatusEntity.CreateSeedObject(x)));
 
             modelBuilder.Entity<CarRentalStatusEntity>()

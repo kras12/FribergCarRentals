@@ -21,7 +21,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="carRentalStatusId">The database ID for the entity. Can't be negative.</param>
         /// <param name="statusName">The status name.</param>
         /// <param name="statusDescription">The status description.</param>
-        private CarRentalStatusEntity(CarRentalStatus carRentalStatusId, string statusName, string statusDescription)
+        private CarRentalStatusEntity(RentalCarStatus carRentalStatusId, string statusName, string statusDescription)
         {
             #region Checks
 
@@ -47,7 +47,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// </summary>
         /// <param name="rentalStatus">The rental status for the car.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        private CarRentalStatusEntity(CarRentalStatus rentalStatus)
+        private CarRentalStatusEntity(RentalCarStatus rentalStatus)
         {
             CarRentalStatusId = rentalStatus;
             StatusName = rentalStatus.GetAttribute<EnumDatabaseValueAttribute>().Value ??
@@ -64,12 +64,12 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// The database ID for the entity.
         /// </summary>
         [Key]
-        public CarRentalStatus CarRentalStatusId { get; private set; }
+        public RentalCarStatus CarRentalStatusId { get; private set; }
 
         /// <summary>
         /// The rental status type.
         /// </summary>
-        public CarRentalStatus StatusType
+        public RentalCarStatus StatusType
         {
             get
             {
@@ -96,7 +96,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// </summary>
         /// <param name="rentalStatus"></param>
         /// <returns></returns>
-        public static CarRentalStatusEntity CreateSeedObject(CarRentalStatus rentalStatus)
+        public static CarRentalStatusEntity CreateSeedObject(RentalCarStatus rentalStatus)
         {
             return new CarRentalStatusEntity(rentalStatus);
         }
@@ -112,8 +112,8 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
             #endregion
 
-            entity = Enum.GetValues(typeof(CarRentalStatus))
-                    .Cast<CarRentalStatus>()
+            entity = Enum.GetValues(typeof(RentalCarStatus))
+                    .Cast<RentalCarStatus>()
                     .Where(x => x.GetAttribute<EnumDatabaseValueAttribute>().Value == statusName)
                     .Select(x => new CarRentalStatusEntity(x))
                     .SingleOrDefault();

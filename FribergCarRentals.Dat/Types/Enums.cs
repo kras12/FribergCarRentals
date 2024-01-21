@@ -31,19 +31,28 @@ namespace FribergCarRentals.DataAccess.Types
         PHEV = 7,
     }
 
-    public enum CarRentalStatus
+    public enum RentalCarStatus
     {
-        [EnumDatabaseValue("Unavailable", DescriptionValue = "Not available for renting")]
-        Unavailable = 1,
+        [EnumDatabaseValue("None", DescriptionValue = "No status.")]
+        None = 1,
 
-        [EnumDatabaseValue("Available", DescriptionValue = "Available for renting")]
-        Available = 2,
+        [EnumDatabaseValue("Rentable", DescriptionValue = "Available for renting.")]
+        Rentable = 2,
 
-        [EnumDatabaseValue("Rented", DescriptionValue = "Already rented")]
-        Rented = 3,
+        [EnumDatabaseValue("PendingPickup", DescriptionValue = "Pending pickup.")]
+        PendingPickup = 3,
 
-        [EnumDatabaseValue("OutOfService", DescriptionValue = "Taken out of service permanently")]
-        OutOfService = 4
+        [EnumDatabaseValue("PickedUp", DescriptionValue = "Has been picked up.")]
+        PickedUp = 4,
+
+        [EnumDatabaseValue("Returned", DescriptionValue = "Has been returned.")]
+        Returned = 5,
+
+        [EnumDatabaseValue("TemporaryOutOfService", DescriptionValue = "Temporarily out of service.")]
+        TemporaryOutOfService = 6,
+
+        [EnumDatabaseValue("PermanentlyOutOfService", DescriptionValue = "Permanently out of service.")]
+        PermanentlyOutOfService = 7
     }
 
     public enum OrderStatus

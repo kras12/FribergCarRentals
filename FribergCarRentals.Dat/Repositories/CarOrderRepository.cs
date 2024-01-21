@@ -56,7 +56,7 @@ namespace FribergCarRentals.DataAccess.Repositories
             {
                 foreach (var booking in order.CarBookings)
                 {
-                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available);
+                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable);
                     _databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus).State = EntityState.Unchanged;
                 }
 

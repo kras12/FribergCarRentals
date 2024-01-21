@@ -48,7 +48,7 @@ namespace FribergCarRentals.Controllers
 
         public async Task<IActionResult> Cars()
         {
-            return View((await _carRepository.GetAll(CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available)))
+            return View((await _carRepository.GetAll(CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable)))
                 .Select(x => new CarViewModel(x)).ToList());
         }
 

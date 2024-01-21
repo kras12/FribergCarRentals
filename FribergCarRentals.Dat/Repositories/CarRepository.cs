@@ -78,7 +78,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A collection of cars.</returns>
         public Task<List<CarEntity>> GetRentableCars()
         {
-            return _databaseContext.Cars.Where(x => x.RentalStatus!.StatusType == CarRentalStatus.Available).ToListAsync();
+            return _databaseContext.Cars.Where(x => x.RentalStatus!.StatusType == RentalCarStatus.Rentable).ToListAsync();
         }
 
         public async override Task<CarEntity> Update(CarEntity entity)

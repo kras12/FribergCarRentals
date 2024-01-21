@@ -48,9 +48,9 @@
             <div class="vertical-form-field">
                 <label asp-for="RentalStatus"></label>
                 <select asp-for="RentalStatus">
-                    @foreach (var value in Enum.GetValues<CarRentalStatus>())
+                    @foreach (var value in Enum.GetValues<RentalCarStatus>())
                     {
-                        <!option value="@value" @(value == CarRentalStatus.Unavailable ? "selected" : "")>
+                        <!option value="@value" @(value == RentalCarStatus.None ? "selected" : "")>
                             @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
                         </!option>
                     }
