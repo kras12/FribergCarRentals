@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.Data.SharedClasses
+namespace FribergCarRentals.DataAccess.Attributes
 {
-    [System.AttributeUsage(AttributeTargets.Field)]
-    public class EnumDatabaseValueAttribute: System.Attribute
+    [AttributeUsage(AttributeTargets.Field)]
+    public class EnumDatabaseValueAttribute : Attribute
     {
         #region Constructors
 
@@ -17,7 +17,7 @@ namespace FribergCarRentals.Data.SharedClasses
 
             if (string.IsNullOrEmpty(databaseValue))
             {
-                throw new ArgumentException( $"The value of parameter '{nameof(databaseValue)}' can't be null or empty.", nameof(databaseValue));
+                throw new ArgumentException($"The value of parameter '{nameof(databaseValue)}' can't be null or empty.", nameof(databaseValue));
             }
 
             #endregion

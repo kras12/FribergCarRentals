@@ -3,6 +3,7 @@ using FribergCarRentals.Data.SharedClasses;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.DataAccess.Attributes;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {

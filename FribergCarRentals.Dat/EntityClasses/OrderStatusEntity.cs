@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.DataAccess.Attributes;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
