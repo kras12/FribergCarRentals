@@ -17,11 +17,26 @@ namespace FribergCarRentals.DataAccess.Repositories
         #region Methods
 
         /// <summary>
-        /// Deletes an entity from the database.
+        /// Deletes a car from the database.
         /// </summary>
-        /// <param name="id">The ID of the entity to delete.</param>
-        /// <returns>A <see cref="Task"/> object.</returns>
-        public Task Delete(int id);
+        /// <param name="id">The ID of the car to delete.</param>
+        /// <returns>A <see cref="Task{TResult}"/> object containing true if the car was deleted. False if not.</returns>
+        public Task<bool> Delete(int id);
+
+        /// <summary>
+        /// Attempts to fetch all cars with a specific rental status.
+        /// </summary>
+        /// <param name="rentalStatus">The rental status of the cars.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> that contains matched cars.</returns>
+        public Task<IEnumerable<CarEntity>> GetAll(CarRentalStatusEntity rentalStatus);
+
+        /// <summary>
+        /// Attempts to fetch a car with a specific ID and rental status.
+        /// </summary>
+        /// <param name="id">The ID of the car..</param>
+        /// <param name="rentalStatus">The rental status of the car.</param>
+        /// <returns>a <see cref="CarEntity"/> if the car was found. Null if not.</returns>
+        public Task<CarEntity?> GetById(int id, CarRentalStatusEntity rentalStatus);
 
         /// <summary>
         /// Returns all the cars that are availble to be rented out. 

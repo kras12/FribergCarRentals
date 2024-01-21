@@ -44,7 +44,7 @@
   --box-shadow-smooth: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); 
 
   /* The default box shadow */
-  --default-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
+  --default-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
 
   /* The default highlight box shadow color */
   --default-highlight-box-shadow-color: #98fb98;
@@ -93,6 +93,7 @@
 
   /* The background color for filled boxes */
   --filled-box-background-color: #d3d3d3;
+  --filled-box-background-color: #ddd;
 
   /* The background color for footer containers */
   --footer-container-background-color: #F39B24;  
@@ -392,7 +393,7 @@ a:visited
 }
 
 /* High contrast mode - Light background color and dark text color */
-.contrast-mode-active :is(.page-container, .header-container, .flex-container__filled-box, 
+.contrast-mode-active :is(.page-container, .header-container, .filled-container, 
   .code-box, input, textarea, select, .panel p, .site-title-container a)
 {
   background-color: var(--contrast-mode-bright-background-color);
@@ -567,10 +568,22 @@ dd
 }
 
 /*==================================================*/
+/* Filled containers                                */
+/*==================================================*/
+
+
+/* Filled container */
+.filled-container
+{
+  background-color: var(--filled-box-background-color);
+  box-shadow: var(--default-box-shadow);  
+}
+
+/*==================================================*/
 /* Flex containers                                  */
 /*==================================================*/
 
-/* Flex container - align items center */row-gap
+/* Flex container - align items center */
 .flex-container__align-items-center
 {
   align-items: center;
@@ -616,13 +629,6 @@ dd
 .flex-container__column-gap__4-rem
 {
   column-gap: 2rem;
-}
-
-/* Flex container - filled box */
-.flex-container__filled-box
-{
-  background-color: var(--filled-box-background-color);
-  box-shadow: var(--default-box-shadow);  
 }
 
 /* Flex container - justify content center */
@@ -816,13 +822,6 @@ textarea
   width: 25rem;
 }
 
-/* Vertical form - Buttons */
-/*.vertical-form :is(button, input[type="submit"], input[type="image"])
-{
-    margin-left: auto;
-    margin-right: auto
-}*/
-
 /* Vertical form - Field */
 .vertical-form-field
 {
@@ -834,6 +833,31 @@ textarea
 .vertical-form-field:has(button)
 {
   align-items: center;
+}
+
+/*==================================================*/
+/* Grid   containers                                */
+/*==================================================*/
+.grid-container
+{
+    display: grid;
+    column-gap: 2rem;
+    row-gap: 2rem;
+}
+
+.grid-container.grid-container__columns-2
+{
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid-container.grid-container__column-1
+{
+    grid-column: 1;
+}
+
+.grid-container.grid-container__column-2
+{
+    grid-column: 2;
 }
 
 /*==================================================*/
@@ -1338,10 +1362,10 @@ article
 /* Main content container */
 .main-content-container 
 {
-  /*border-right-color: rgba(0, 0, 0, 0.15);
-  border-right-style: solid;
-  border-right-width: 1px;*/
-  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+/*  padding-top: 1rem;*/
   overflow-x: auto;
 }
 
@@ -1356,7 +1380,7 @@ article
   min-height: 100vh;  
 
   /* Set the position to relative to ensure the footer is anchored to the bottom of the page */
-	position: relative;     
+  position: relative;     
 }
 
 /* Page content container */
@@ -1364,8 +1388,8 @@ article
 {
   display: grid;
   padding-bottom: calc(var(--footer-container-height) + 2rem);
-  padding-left: 1rem;
-  padding-right: 1rem;
+ /* padding-left: 1rem;
+  padding-right: 1rem;*/
 
   /* Grid #1: Main content. 
      Grid #2: Right sidebar. */
@@ -1661,6 +1685,12 @@ table tr td
 .font-size_x-large
 {
     font-size: x-large;
+}
+
+/* Full heigh */
+.full-height
+{
+  height: 100%;
 }
 
 /* Full width */

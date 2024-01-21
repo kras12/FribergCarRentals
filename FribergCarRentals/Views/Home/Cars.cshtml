@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CarViewModel>
+﻿@using FribergCarRentals.Models.Car
+@model IEnumerable<CarViewModel>
 
 @{
     ViewData["Title"] = "Cars";
@@ -8,11 +9,10 @@
 <div class="vertical-flex-container flex-container__row-gap__2-rem">
     @foreach (var item in Model) 
     {
-        <div class="vertical-flex-container flex-container__filled-box flex-container__padding__1-rem">
+        <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
             <h2>@($"{item.CarInfo}")</h2>
             <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                <form asp-action="New" asp-controller="CustomerCarOrder">
-                    <input type="hidden" name="id" asp-for="@item.CarId" />
+                <form asp-action="Book" asp-controller="CustomerOrder" asp-route-carId="@item.CarId" method="get">
                     <button type="submit">Book Car</button>
                 </form>
             </div>

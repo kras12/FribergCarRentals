@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using FribergCarRentals.Session
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,30 +44,14 @@
                     <!-- The primary navigation menu -->
                     <nav id="primary-navigation-menu" class="horizontal-menu" aria-label="Primary navigation menu">
                         <ul>
-                            <li>
-                                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="Home" asp-action="Cars">Cars</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="AdminCar" asp-action="List">Admin cars</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="AdminCustomer" asp-action="List">Admin customers</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="AdminCarOrder" asp-action="List">Admin car orders</a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="CustomerCarOrder" asp-action="List">Customer Orders</a>
-                            </li>
+                            @if (UserSessionHandler.IsAdminLoggedIn(ViewContext.HttpContext.Session))
+                            {
+                                <partial name="AdminMenuItems.cshtml" />
+                            }
+                            else
+                            {
+                                <partial name="CustomerMenuItems.cshtml" />
+                            }                           
                         </ul>
                     </nav>
                 </div>

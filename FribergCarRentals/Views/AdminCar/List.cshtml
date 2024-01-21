@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CarViewModel>
+﻿@using FribergCarRentals.Models.Car
+@model IEnumerable<CarViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -31,16 +32,10 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.PropulsionSystem)
-                </th>
-                @* <th>
-                    @Html.DisplayNameFor(model => model.RegistrationNumber)
-                </th>    *@             
+                </th>       
                 <th>
                     @Html.DisplayNameFor(model => model.RentalStatus)
                 </th>
-                @* <th>
-                    @Html.DisplayNameFor(model => model.ImageCount)
-                </th> *@
                 <th>
                     Actions
                 </th>
@@ -67,23 +62,16 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
-                    </td>
-                    @* <td>
-                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
-                    </td>    *@                 
+                    </td>            
                     <td>
                         @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
                     </td>
-                    @* <td>
-                        @Html.DisplayFor(model => item.ImageCount)
-                    </td> *@
                     <td>
                         <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
                             <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a>
                             <div>|</div>
                             <a asp-action="Details" asp-route-id="@item.CarId">Details</a>
                             <div>|</div>
-                            @* <a asp-action="Delete" asp-route-id="@item.CarId">Delete</a> *@
                             <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
                                 <input type="hidden" asp-for="@item.CarId" />
                                 <button type="submit" class="negative-button">Delete</button>

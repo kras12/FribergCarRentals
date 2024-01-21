@@ -30,11 +30,37 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #region Methods        
 
-        public async Task Delete(int id)
+        /// <summary>
+        /// Attempts to fetch all cars with a specific rental status.
+        /// </summary>
+        /// <param name="rentalStatus">The rental status of the cars.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> that contains matched cars.</returns>
+        public async Task<IEnumerable<CarEntity>> GetAll(CarRentalStatusEntity rentalStatus)
+        {
+            return await _databaseContext.Cars.Where(x => x.RentalStatus == rentalStatus).ToListAsync();
+        }
+
+        /// <summary>
+        /// Attempts to fetch a car with a specific ID and rental status.
+        /// </summary>
+        /// <param name="id">The ID of the car..</param>
+        /// <param name="rentalStatus">The rental status of the car.</param>
+        /// <returns>a <see cref="CarEntity"/> if the car was found. Null if not.</returns>
+        public Task<CarEntity?> GetById(int id, CarRentalStatusEntity rentalStatus)
+        {
+            return _databaseContext.Cars.SingleOrDefaultAsync(x => x.CarId == id && x.RentalStatus == rentalStatus);
+        }
+
+        /// <summary>
+        /// Deletes a car from the database.
+        /// </summary>
+        /// <param name="id">The ID of the car to delete.</param>
+        /// <returns>A <see cref="Task{TResult}"/> object containing true if the car was deleted. False if not.</returns>
+        public async Task<bool> Delete(int id)
         {
             var car = new CarEntity() { CarId = id };
             _databaseContext.Cars.Remove(car);
-            await _databaseContext.SaveChangesAsync();
+            return await _databaseContext.SaveChangesAsync() > 0;
         }
 
         public async override Task<CarEntity> Add(CarEntity entity)

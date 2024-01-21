@@ -1,0 +1,147 @@
+﻿@using FribergCarRentals.Models.Order
+@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<h1>@($"Order - #{Model.CarOrderId}")</h1>
+<h2>@($"{Model.Customer.FullName} - {Model.CarBooking.Car.CarInfo}")</h2>
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-action="List">View Order List</a>
+        <div>|</div>
+        @if (Model.IsCancelable)
+        {
+            <form asp-action="Cancel" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                <input type="hidden" name="id" asp-for="CarOrderId" />
+                <button type="submit" class="negative-button">Cancel</button>
+            </form>
+            <span>|</span>
+        }        
+        <button onclick="history.back()">Go Back</button>
+    </div>
+    <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+        <div class="vertical-flex-container flex-container__padding__1-rem">
+            <h2>Order details</h2>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarOrderId)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarOrderId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.PickupDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.PickupDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.ReturnDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.ReturnDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderSum)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderSum)
+                </dd>
+            </dl>
+        </div>
+        <div class="vertical-flex-container flex-container__padding__1-rem">
+            <h2>Customer</h2>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Customer.UserId)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Customer.UserId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Customer.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Customer.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Customer.LastName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Customer.LastName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Customer.Email)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Customer.Email)
+                </dd>
+            </dl>
+        </div>
+        <div class="vertical-flex-container flex-container__padding__1-rem">
+            <h2>Booked Car</h2>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.CarId)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.Car.CarId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.Brand)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.Car.Brand)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.Model)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.Car.Model)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.ModelYear)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.Car.ModelYear)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.Color)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.Car.Color)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.PropulsionSystem)
+                </dt>
+                <dd>
+                    @Model.CarBooking.Car.PropulsionSystem.PropulsionName
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.RegistrationNumber)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.Car.RegistrationNumber)
+                </dd>
+            </dl>
+            <div class="tiled-image-gallery">
+                @foreach (var image in Model.CarBooking.Car.Images)
+                {
+                    <figure>
+                        <div class="vertical-flex-container">
+                            <img src="@image.FilePath" />
+                        </div>
+                    </figure>
+                }
+            </div>
+        </div>
+    </div>
+</div>

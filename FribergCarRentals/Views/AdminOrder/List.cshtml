@@ -1,0 +1,63 @@
+﻿@using FribergCarRentals.Models.Order
+@model IEnumerable<OrderViewModel>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h1>Orders</h1>
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    <table class="colored-table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CarOrderId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDateLocal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.CarInfoWithRegistrationNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderSum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Paid)
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CarOrderId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderDateLocal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CarBooking.Car.CarInfoWithRegistrationNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderSum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Paid)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.CarOrderId">Details</a>
+                        <span>|</span>
+                        <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this order?');">
+                            <input type="hidden" asp-for="@item.CarOrderId" />
+                            <button type="submit" class="negative-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,4 +1,5 @@
-﻿@model CarViewModel
+﻿@using FribergCarRentals.Models.Car
+@model CarViewModel
 
 @{
     ViewData["Title"] = "View";
@@ -11,7 +12,7 @@
         <div>|</div>
         <button onclick="history.back()">Go Back</button>
     </div>
-    <div class="vertical-flex-container flex-container__filled-box flex-container__padding__1-rem">
+    <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
         <h2>@($"{Model.CarId} - {Model.CarInfo}")</h2>
         <p class="font-size_large text-align-center">Are you sure you want to delete this car?</p>
         <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">

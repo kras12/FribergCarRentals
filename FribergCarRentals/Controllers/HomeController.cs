@@ -1,5 +1,8 @@
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.Models;
+using FribergCarRentals.Models.Car;
+using FribergCarRentals.Models.Customer;
+using FribergCars.Shared.SharedTypes;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -44,7 +47,8 @@ namespace FribergCarRentals.Controllers
 
         public async Task<IActionResult> Cars()
         {
-            return View((await _carRepository.GetAll()).Select(x => new CarViewModel(x)).ToList());
+            return View((await _carRepository.GetAll(CarRentalStatusEntity.CreateSeedObject(CarRentalStatus.Available)))
+                .Select(x => new CarViewModel(x)).ToList());
         }
 
         public async Task<IActionResult> Car(int id)

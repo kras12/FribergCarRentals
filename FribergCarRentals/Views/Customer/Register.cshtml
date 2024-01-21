@@ -1,0 +1,36 @@
+﻿@using FribergCarRentals.Models.Customer
+@model CustomerRegisterViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem filled-container flex-container__padding__1-rem filled-box">
+    <h1>Register</h1>
+    <form asp-action="Create" class="vertical-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="vertical-form-field">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="vertical-form-field">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="vertical-form-field">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="vertical-form-field">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="vertical-form-field">
+            <button type="submit" class="positive-button">Register</button>
+        </div>
+    </form>
+</div>

@@ -1,4 +1,5 @@
-﻿@model CustomerFormViewModel
+﻿@using FribergCarRentals.Models.Customer
+@model CustomerRegisterViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -11,7 +12,7 @@
         <div>|</div>
         <button onclick="history.back()">Go Back</button>
     </div>
-    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__filled-box flex-container__padding__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
         <form asp-action="Create" class="vertical-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="vertical-form-field">
@@ -30,9 +31,9 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="InputPassword"></label>
-                <input asp-for="InputPassword" />
-                <span asp-validation-for="InputPassword" class="text-danger"></span>
+                <label asp-for="Password"></label>
+                <input asp-for="Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="vertical-form-field">
                 <button type="submit" class="positive-button">Create</button>

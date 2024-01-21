@@ -44,11 +44,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="firstName">The first name for the user.</param>
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
-        /// <param name="hashedPassword">The hashed password for the user.</param>
+        /// <param name="password">The password for the user.</param>
         /// <param name="userRole">The user role.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserEntity(int userId, string firstName, string lastName, string email, string hashedPassword, UserRoleEntity userRole)
+        protected UserEntity(int userId, string firstName, string lastName, string email, string password, UserRoleEntity userRole)
         {
             #region Checks
 
@@ -72,9 +72,9 @@ namespace FribergCarRentals.DataAccess.EntityClasses
                 throw new ArgumentNullException(nameof(email), $"The value of parameter '{email}' can't be null");
             }
 
-            if (hashedPassword is null)
+            if (password is null)
             {
-                throw new ArgumentNullException(nameof(hashedPassword), $"The value of parameter '{hashedPassword}' can't be null");
+                throw new ArgumentNullException(nameof(password), $"The value of parameter '{password}' can't be null");
             }            
 
             #endregion
@@ -83,7 +83,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            HashedPassword = hashedPassword;
+            Password = password;
             UserRole = userRole;
         }
 
@@ -113,9 +113,9 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         public string Email { get; set; } = "";
 
         /// <summary>
-        /// The hashed password for the user.
+        /// The password for the user.
         /// </summary>
-        public string HashedPassword { get; set; } = "";
+        public string Password { get; set; } = "";
 
         /// <summary>
         /// The user role.

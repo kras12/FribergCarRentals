@@ -1,5 +1,6 @@
 ﻿@using FribergCars.Shared.SharedClasses
 @using FribergCars.Shared.SharedTypes
+@using FribergCarRentals.Models.Car
 @model CarViewModel
 
 @{
@@ -13,7 +14,7 @@
         <div>|</div>
         <button onclick="history.back()">Go Back</button>
     </div>
-    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__filled-box flex-container__padding__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
         <form asp-action="Create" class="vertical-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="vertical-form-field">

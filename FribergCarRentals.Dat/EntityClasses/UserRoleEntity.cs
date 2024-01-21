@@ -96,6 +96,16 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
         #region Methods
 
+        public static UserRoleEntity CreateFromUserRoleName(string userRoleName)
+        {
+            if (TryCreateFromUserRoleName(userRoleName, out var entity))
+            {
+                return entity;
+            }
+
+            throw new ArgumentException("Invalid user role name.", nameof(userRoleName));
+        }
+
         /// <summary>
         /// Returns a new seed object for inserting into the database.
         /// </summary>
