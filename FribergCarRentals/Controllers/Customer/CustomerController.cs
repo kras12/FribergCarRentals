@@ -23,6 +23,7 @@ namespace FribergCarRentals.Controllers
 
         public const string RedirectToActionTempDataKey = "CustomerLoginRedirectToAction";
         private const string CurrentControllerRoutePart = "Customer";
+
         #endregion
 
         #region Fields
@@ -80,6 +81,7 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: CustomerController
+        //[Route("Logout")]
         public ActionResult Logout()
         {
             if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
@@ -91,9 +93,14 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: CustomerController
-        [Route("Login")]
-        public ActionResult RegisterOrLogin()
+        [HttpGet]
+        public ActionResult Authenticate()
         {
+            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            {
+                return RedirectToAction(nameof(HomeController.Index), ControllerHelper.GetControllerName<HomeController>());
+            }
+
             return View(new CustomerRegisterOrLoginViewModel());
         }
         #endregion

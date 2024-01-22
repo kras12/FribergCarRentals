@@ -74,11 +74,11 @@ namespace FribergCarRentals.Controllers.Admin
         [ActionName(nameof(Delete))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int carId)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.Count > 0 && ModelState.IsValid && carId > 0 && UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (ModelState.Count > 0 && ModelState.IsValid && id > 0 && UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                if (await _carRepository.Delete(carId))
+                if (await _carRepository.Delete(id))
                 {
                     return RedirectToAction(nameof(List));
                 }                

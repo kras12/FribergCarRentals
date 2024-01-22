@@ -13,8 +13,7 @@
 <h1>Create Car</h1>
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <a asp-action="List">View Car List</a>
-        <div>|</div>
+        <a asp-action="List" class="button">View Car List</a>
         <button onclick="history.back()">Go Back</button>
     </div>
     <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
@@ -75,7 +74,7 @@
                 <span asp-validation-for="Images" class="text-danger"></span>
             </div>
             <div class="vertical-form-field">
-                <button type="submit" class="positive-button">Create</button>
+                <button type="submit">Create</button>
             </div>
         </form>
     </div>

@@ -8,9 +8,7 @@
 <h1>Cars</h1>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <a asp-action="Create">Create New Car</a>
-        @* <div>|</div>
-        <a asp-action="ListCard">Card Table List</a> *@
+        <a asp-action="Create" class="button">Create Car</a>
     </div>
     <table class="colored-table">
         <thead>
@@ -68,12 +66,10 @@
                     </td>
                     <td>
                         <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
-                            <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a>
-                            <div>|</div>
-                            <a asp-action="Details" asp-route-id="@item.CarId">Details</a>
-                            <div>|</div>
+                            <a asp-action="Details" asp-route-id="@item.CarId" class="button">Details</a>
+                            <a asp-action="Edit" asp-route-id="@item.CarId" class="button">Edit</a>                            
                             <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
-                                <input type="hidden" asp-for="@item.CarId" />
+                                <input type="hidden" name="id" value="@item.CarId" asp-for="@item.CarId" />
                                 <button type="submit" class="negative-button">Delete</button>
                             </form>
                         </div>                

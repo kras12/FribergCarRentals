@@ -12,6 +12,13 @@ namespace FribergCarRentals.DataAccess.Repositories
         #region Methods
 
         /// <summary>
+        /// Attempts to fetch an admin by ID.
+        /// </summary>
+        /// <param name="id">The ID of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
+        public Task<AdminEntity?> GetById(int id);
+
+        /// <summary>
         /// Attempts to fetch an admin with matching email and password.
         /// </summary>
         /// <param name="email">The email for the admin.</param>

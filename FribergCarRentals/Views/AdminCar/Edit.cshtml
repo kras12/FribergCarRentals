@@ -13,14 +13,12 @@
 <h1>Edit</h1>
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <a asp-action="List">View Car List</a>
-        <div>|</div>
-        <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
-            <input type="hidden" asp-for="CarId" />
-            <button type="submit" class="negative-button">Delete</button>
-        </form>
-        <div>|</div>
         <button onclick="history.back()">Go Back</button>
+        <a asp-action="List" class="button">View Car List</a>
+        <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+            <input type="hidden" name="id" value="@Model.CarId" asp-for="CarId" />
+            <button type="submit" class="negative-button">Delete</button>
+        </form>        
     </div>
     <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
         <form asp-action="Edit" class="vertical-form">

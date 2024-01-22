@@ -8,7 +8,7 @@ using FribergCarRentals.DataAccess.EntityClasses;
 
 namespace FribergCarRentals.Data.Admin
 {
-    internal class AdminViewModel : UserViewModel
+    public class AdminViewModel : UserViewModel
     {
         #region Constructors
 

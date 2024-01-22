@@ -71,10 +71,38 @@ namespace FribergCarRentals.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Attempts to delete an order from the database.
+        /// Attempts to complete an order in the database. The order can only be completeded if the status is 'Created'.
         /// </summary>
-        /// <param name="id">The ID of the entity to delete.</param>
-        /// <returns>A <see cref="Task"/> object.</returns>
+        /// <param name="id">The ID of the order to complete.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the operation was successful.</returns>
+        public async Task<bool> CompleteOrder(int id)
+        {
+            var order = _databaseContext.CarOrders
+                .Where(x => x.CarOrderId == id && x.OrderStatus == OrderStatusEntity.CreateSeedObject(OrderStatus.Created))
+                .FirstOrDefault();
+
+            if (order is not null)
+            {
+                order.OrderStatus = OrderStatusEntity.CreateSeedObject(OrderStatus.Completed);
+                _databaseContext.Entry(order.OrderStatus).State = EntityState.Unchanged;
+
+                foreach (var booking in order.CarBookings)
+                {
+                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable);
+                    _databaseContext.Entry(booking.Car.RentalStatus).State = EntityState.Unchanged;
+                }
+
+                return await _databaseContext.SaveChangesAsync() > 0;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Attempts to delete an order in the database.
+        /// </summary>
+        /// <param name="id">The ID of the order to delete.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the operation was successful.</returns>
         public Task<bool> DeleteOrder(int id)
         {
             return Task.Run(() => _databaseContext.CarOrders.Where(x => x.CarOrderId == id).ExecuteDelete() > 0);

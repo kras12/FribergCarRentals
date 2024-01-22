@@ -55,7 +55,7 @@ namespace FribergCarRentals.Controllers.Customer
                         ControllerHelper.GetControllerName<CustomerOrderController>(),
                         new RouteValueDictionary(new { carId = carId })));
 
-                    return RedirectToAction(nameof(CustomerController.RegisterOrLogin), ControllerHelper.GetControllerName<CustomerController>());
+                    return RedirectToAction(nameof(CustomerController.Authenticate), ControllerHelper.GetControllerName<CustomerController>());
                 }
 
                 var car = await _carRepository.GetById(carId, CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable));
@@ -126,7 +126,7 @@ namespace FribergCarRentals.Controllers.Customer
                         ControllerHelper.GetControllerName<CustomerOrderController>(),
                         new RouteValueDictionary(new { orderId = id })));
 
-                    return RedirectToAction(nameof(CustomerController.RegisterOrLogin), ControllerHelper.GetControllerName<CustomerController>());
+                    return RedirectToAction(nameof(CustomerController.Authenticate), ControllerHelper.GetControllerName<CustomerController>());
                 }
 
                 var order = await _carOrderRepository.GetById(id);
@@ -150,7 +150,7 @@ namespace FribergCarRentals.Controllers.Customer
                     nameof(List), 
                     ControllerHelper.GetControllerName<CustomerOrderController>()));
 
-                return RedirectToAction(nameof(CustomerController.RegisterOrLogin), ControllerHelper.GetControllerName<CustomerController>());
+                return RedirectToAction(nameof(CustomerController.Authenticate), ControllerHelper.GetControllerName<CustomerController>());
             }
 
             return View((await _carOrderRepository.GetAll()).Select(x => new OrderViewModel(x)).OrderByDescending(x => x.CarOrderId).ToList());

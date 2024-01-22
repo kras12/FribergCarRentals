@@ -24,10 +24,17 @@ namespace FribergCarRentals.DataAccess.Repositories
         public Task<bool> CancelOrder(int carOrderId);
 
         /// <summary>
-        /// Attempts to delete an order from the database.
+        /// Attempts to complete an order in the database. The order can only be completeded if the status is 'Created'.
         /// </summary>
-        /// <param name="id">The ID of the entity to delete.</param>
-        /// <returns>A <see cref="Task"/> object.</returns>
+        /// <param name="id">The ID of the order to complete.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the operation was successful.</returns>
+        public Task<bool> CompleteOrder(int id);
+
+        /// <summary>
+        /// Attempts to delete an order in the database.
+        /// </summary>
+        /// <param name="id">The ID of the order to delete.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the operation was successful.</returns>
         public Task<bool> DeleteOrder(int id);
 
         #endregion

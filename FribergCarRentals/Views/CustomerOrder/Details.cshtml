@@ -9,17 +9,15 @@
 <h2>@($"{Model.Customer.FullName} - {Model.CarBooking.Car.CarInfo}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <a asp-action="List">View Order List</a>
-        <div>|</div>
+        <button onclick="history.back()">Go Back</button>
+        <a asp-action="List" class="button">View Order List</a>
         @if (Model.IsCancelable)
         {
             <form asp-action="Cancel" onsubmit="return confirm('Are you sure you want to cancel this order?');">
                 <input type="hidden" name="id" asp-for="CarOrderId" />
                 <button type="submit" class="negative-button">Cancel</button>
             </form>
-            <span>|</span>
         }        
-        <button onclick="history.back()">Go Back</button>
     </div>
     <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
         <div class="vertical-flex-container flex-container__padding__1-rem">

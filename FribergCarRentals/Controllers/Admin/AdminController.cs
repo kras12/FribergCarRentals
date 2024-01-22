@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -38,7 +39,7 @@ namespace FribergCarRentals.Controllers.Admin
         #region Actions
 
         // GET: AdminController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
@@ -49,12 +50,25 @@ namespace FribergCarRentals.Controllers.Admin
                 return RedirectToAction(nameof(Login));
             }
 
-            return View();
+            var userData = UserSessionHandler.GetUserData(HttpContext.Session);
+            var admin = await _adminRepository.GetById(userData.UserId);
+
+            if (admin is not null)
+            {
+                return View(new AdminViewModel(admin));
+            }
+
+            return StatusCode(500);
         }
 
         // GET: AdminController
         public ActionResult Login()
         {
+            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            {
+                UserSessionHandler.RemoveUserData(HttpContext.Session);
+            }
+
             if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
                 return RedirectToAction(nameof(Index));

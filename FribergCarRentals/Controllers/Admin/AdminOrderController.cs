@@ -35,15 +35,32 @@ namespace FribergCarRentals.Controllers.Admin
 
         #region Actions
 
+        // POST: AdminOrder/Complete/5
+        [ActionName(nameof(Complete))]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Complete(int carOrderId)
+        {
+            if (ModelState.IsValid && carOrderId > 0 && UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            {
+                if (await _carOrderRepository.CompleteOrder(carOrderId))
+                {
+                    return RedirectToAction(nameof(List));
+                }
+            }
+
+            return StatusCode(500);
+        }
+
         // POST: AdminOrder/Delete/5
         [ActionName(nameof(Delete))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int carOrderId)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (ModelState.IsValid && carOrderId > 0 && UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (ModelState.IsValid && id > 0 && UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                if (await _carOrderRepository.DeleteOrder(carOrderId))
+                if (await _carOrderRepository.DeleteOrder(id))
                 {
                     return RedirectToAction(nameof(List));
                 }
@@ -53,6 +70,7 @@ namespace FribergCarRentals.Controllers.Admin
         }
 
         // GET: AdminOrder/Details/5
+        [HttpGet("{id}")]
         public async Task<ActionResult> Details(int id)
         {
             if (ModelState.Count > 0 && ModelState.IsValid)

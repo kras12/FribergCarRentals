@@ -42,6 +42,7 @@ namespace FribergCarRentals.Data.Order
             OrderDateUtc = carOrder.OrderDateUtc;
             Customer = new CustomerViewModel(carOrder.Customer);
             Payments = carOrder.Payments;
+            OrderStatus = carOrder.OrderStatus!;
             CarBooking = carOrder.CarBookings.Count > 0 ? new CarBookingViewModel(carOrder.CarBookings.First())
                 : throw new InvalidOperationException("Could not find a car booking");
         }
@@ -49,6 +50,17 @@ namespace FribergCarRentals.Data.Order
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Returns true if the order can be marked as completed.
+        /// </summary>
+        public bool CanBeCompleted
+        {
+            get
+            {
+                return OrderStatus.StatusType == DataAccess.Types.OrderStatus.Created;
+            }
+        }
 
         /// <summary>
         /// The car booking tied to the order.
@@ -99,6 +111,10 @@ namespace FribergCarRentals.Data.Order
         [DisplayName("Order Date")]
         public DateTime OrderDateUtc { get; set; }
 
+        /// <summary>
+        /// The order status.
+        /// </summary>
+        public OrderStatusEntity OrderStatus { get; set; }
         /// <summary>
         /// The total sum of the order.
         /// </summary>
