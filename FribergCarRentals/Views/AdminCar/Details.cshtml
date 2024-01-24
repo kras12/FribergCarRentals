@@ -24,13 +24,13 @@
                 @Html.DisplayNameFor(model => model.CarId)
             </dt>
             <dd>
-                @Model.CarId
+                @Html.DisplayFor(model => model.CarId)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.RentalStatus)
             </dt>
             <dd>
-                @Model.RentalStatus.StatusName
+                @Html.DisplayFor(model => model.RentalStatus.StatusDescription)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.Brand)
@@ -60,7 +60,7 @@
                 @Html.DisplayNameFor(model => model.PropulsionSystem)
             </dt>
             <dd>
-                @Model.PropulsionSystem.PropulsionName
+                @Html.DisplayFor(model => model.PropulsionSystem.PropulsionDescription)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.RegistrationNumber)

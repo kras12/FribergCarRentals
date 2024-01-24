@@ -58,8 +58,12 @@ namespace FribergCarRentals.DataAccess.Repositories
             {
                 foreach (var booking in order.CarBookings)
                 {
-                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable);
-                    _databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus).State = EntityState.Unchanged;
+                    // If we run the code when the status is already set to rentable, EF Core will start to track another entity with the same ID and throw an error. 
+                    if (booking.Car!.RentalStatus!.StatusType != RentalCarStatus.Rentable)
+                    {
+                        booking.Car!.RentalStatus = CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable);
+                        _databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus).State = EntityState.Unchanged;
+                    }
                 }
 
                 order.OrderStatus = OrderStatusEntity.CreateSeedObject(OrderStatus.Canceled);

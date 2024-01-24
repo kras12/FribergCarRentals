@@ -142,7 +142,7 @@ namespace FribergCarRentals.Controllers.Admin
         // POST: AdminCustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int userId, IFormCollection collection, CustomerEditViewModel customerViewModel)
+        public async Task<ActionResult> Edit(int userId, CustomerEditViewModel customerViewModel)
         {
             if (string.IsNullOrEmpty(customerViewModel.Password))
             {

@@ -1,6 +1,5 @@
 ﻿using FribergCarRentals.Data;
 using FribergCarRentals.Helpers;
-using FribergCarRentals.Data;
 using FribergCarRentals.Data.Order;
 using FribergCarRentals.Session;
 using Microsoft.AspNetCore.Http;

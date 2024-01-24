@@ -124,7 +124,7 @@ namespace FribergCarRentals.Controllers.Customer
                     TempDataHelper.Set(TempData, CustomerController.RedirectToActionTempDataKey, new LoginRedirectActionWithId(
                         nameof(Details),
                         ControllerHelper.GetControllerName<CustomerOrderController>(),
-                        new RouteValueDictionary(new { orderId = id })));
+                        new RouteValueDictionary(new { id = id })));
 
                     return RedirectToAction(nameof(CustomerController.Authenticate), ControllerHelper.GetControllerName<CustomerController>());
                 }
