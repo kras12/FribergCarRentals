@@ -44,13 +44,15 @@ namespace FribergCarRentals.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Attempts to cancel a car order.
+        /// Attempts to cancel a car order. The order can only be completeded if the status is 'Created'
         /// </summary>
-        /// <param name="carOrderId">The ID of the order to cancel.</param>
+        /// <param name="id">The ID of the order to cancel.</param>
         /// <returns>True if the order was canceled.</returns>
-        public async Task<bool> CancelOrder(int carOrderId)
+        public async Task<bool> CancelOrder(int id)
         {
-            var order = await GetById(carOrderId);
+            var order = _databaseContext.CarOrders
+                .Where(x => x.CarOrderId == id && x.OrderStatus == OrderStatusEntity.CreateSeedObject(OrderStatus.Created))
+                .FirstOrDefault();
 
             if (order != null)
             {
@@ -103,9 +105,11 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// </summary>
         /// <param name="id">The ID of the order to delete.</param>
         /// <returns>A <see cref="Task"/> object containing true if the operation was successful.</returns>
-        public Task<bool> DeleteOrder(int id)
+        public async Task<bool> DeleteOrder(int id)
         {
-            return Task.Run(() => _databaseContext.CarOrders.Where(x => x.CarOrderId == id).ExecuteDelete() > 0);
+            // If the order is cancelable it will be done and the car will get rentable again.
+            await CancelOrder(id);
+            return await _databaseContext.CarOrders.Where(x => x.CarOrderId == id).ExecuteDeleteAsync() > 0;
         }
 
         #endregion

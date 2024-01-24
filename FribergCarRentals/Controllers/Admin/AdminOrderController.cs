@@ -39,11 +39,11 @@ namespace FribergCarRentals.Controllers.Admin
         [ActionName(nameof(Complete))]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Complete(int carOrderId)
+        public async Task<ActionResult> Complete(int id)
         {
-            if (ModelState.IsValid && carOrderId > 0 && UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (ModelState.IsValid && id > 0 && UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                if (await _carOrderRepository.CompleteOrder(carOrderId))
+                if (await _carOrderRepository.CompleteOrder(id))
                 {
                     return RedirectToAction(nameof(List));
                 }

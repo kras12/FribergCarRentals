@@ -88,7 +88,7 @@ namespace FribergCarRentals.Data.Order
         {
             get
             {
-                return CarBooking.PickupDateUtc.Date > DateTime.UtcNow.Date;
+                return OrderStatus.StatusType == DataAccess.Types.OrderStatus.Created && CarBooking.PickupDateUtc.Date > DateTime.UtcNow.Date;
             }
         }
 
@@ -114,7 +114,20 @@ namespace FribergCarRentals.Data.Order
         /// <summary>
         /// The order status.
         /// </summary>
-        public OrderStatusEntity OrderStatus { get; set; }
+        private OrderStatusEntity OrderStatus { get; set; }
+
+        /// <summary>
+        /// The order status name.
+        /// </summary>
+        [DisplayName("Order Status")]
+        public string OrderStatusName
+        {
+            get
+            {
+                return OrderStatus.StatusName;
+            }
+        }
+
         /// <summary>
         /// The total sum of the order.
         /// </summary>

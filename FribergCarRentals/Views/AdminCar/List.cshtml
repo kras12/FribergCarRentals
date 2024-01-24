@@ -17,6 +17,9 @@
                     @Html.DisplayNameFor(model => model.CarId)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.RentalStatus)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Brand)
                 </th>
                 <th>
@@ -30,10 +33,7 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.PropulsionSystem)
-                </th>       
-                <th>
-                    @Html.DisplayNameFor(model => model.RentalStatus)
-                </th>
+                </th>                
                 <th>
                     Actions
                 </th>
@@ -45,6 +45,9 @@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.CarId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RentalStatus.StatusDescription)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Brand)
@@ -60,10 +63,7 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
-                    </td>            
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RentalStatus.StatusName)
-                    </td>
+                    </td>                    
                     <td>
                         <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
                             <a asp-action="Details" asp-route-id="@item.CarId" class="button">Details</a>

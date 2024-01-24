@@ -21,6 +21,18 @@
     <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
         <dl>
             <dt>
+                @Html.DisplayNameFor(model => model.CarId)
+            </dt>
+            <dd>
+                @Model.CarId
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.RentalStatus)
+            </dt>
+            <dd>
+                @Model.RentalStatus.StatusName
+            </dd>
+            <dt>
                 @Html.DisplayNameFor(model => model.Brand)
             </dt>
             <dd>
@@ -55,13 +67,7 @@
             </dt>
             <dd>
                 @Html.DisplayFor(model => model.RegistrationNumber)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.RentalStatus)
-            </dt>
-            <dd>
-                @Model.RentalStatus.StatusName
-            </dd>        
+            </dd>      
             <dt>
                 @Html.DisplayNameFor(model => model.ImageFilePaths)
             </dt>

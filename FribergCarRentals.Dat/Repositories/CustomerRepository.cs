@@ -107,15 +107,15 @@ namespace FribergCarRentals.DataAccess.Repositories
             return customers;
         }
 
-        public Task<CustomerEntity> UpdateExcludePassword(CustomerEntity entity)
+        public async Task<CustomerEntity> UpdateExcludePassword(CustomerEntity entity)
         {
-            _databaseContext.Entry(entity).State = EntityState.Unchanged;
-            return base.Update(entity);
+            entity.Password = await _databaseContext.Customers.Where(x => x.UserId == entity.UserId).Select(x => x.Password).SingleAsync();
+            return await base.Update(entity);
         }
 
         public override Task<CustomerEntity> Update(CustomerEntity entity)
         {
-            if (string.IsNullOrEmpty(entity.Password))
+            if (!string.IsNullOrEmpty(entity.Password))
             {
                 entity.Password = PasswordHelper.HashPassword(entity.Password);
             }

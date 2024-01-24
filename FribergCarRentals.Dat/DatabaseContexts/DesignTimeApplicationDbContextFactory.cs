@@ -23,7 +23,7 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
             .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString(AppSettingsHelper.ApplicationDbContextConnectionStringName));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString(AppSettingsHelper.ApplicationDbContextConnectionStringKey));
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

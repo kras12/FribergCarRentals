@@ -83,14 +83,30 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         public async override Task<CarEntity> Update(CarEntity entity)
         {
-            var oldCar = await GetById(entity.CarId);
+            var oldCar = await _databaseContext.Cars.Where(x => x.CarId == entity.CarId).SingleOrDefaultAsync();
 
             if (oldCar is not null)
             {
                 // Copy car data
                 _databaseContext.Entry(oldCar).CurrentValues.SetValues(entity);
+                
+                // EF Core will get duplicate keys in tracking if we add the same type
+                if (oldCar.RentalStatus!.StatusType != entity.RentalStatus!.StatusType)
+                {
+                    oldCar.RentalStatus = entity.RentalStatus;
+                }
 
-                // Existing images
+                // EF Core will get duplicate keys in tracking if we add the same type
+                if (oldCar.PropulsionSystem!.PropulsionType != entity.PropulsionSystem!.PropulsionType)
+                {
+                    oldCar.PropulsionSystem = entity.PropulsionSystem;
+                }                
+                
+                // EF Core needs to know that the states already exists in the database
+                _databaseContext.Entry(oldCar.RentalStatus!).State = EntityState.Unchanged;
+                _databaseContext.Entry(oldCar.PropulsionSystem!).State = EntityState.Unchanged;
+
+                // Existing images with no changes. 
                 var existingImages = oldCar.Images.IntersectBy(entity.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
 
                 foreach (var existingImage in existingImages)
@@ -106,7 +122,11 @@ namespace FribergCarRentals.DataAccess.Repositories
 
                 // Deleted images
                 var deletedImages = oldCar.Images.ExceptBy(entity.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
-                deletedImages.ForEach(x => oldCar.Images.Remove(x));
+                foreach (var image in deletedImages)
+                {
+                    oldCar.Images.Remove(image);
+                    _databaseContext.Entry(image).State = EntityState.Deleted;
+                }
 
                 // Save
                 await _databaseContext.SaveChangesAsync();

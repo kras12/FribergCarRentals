@@ -144,6 +144,12 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int userId, IFormCollection collection, CustomerEditViewModel customerViewModel)
         {
+            if (string.IsNullOrEmpty(customerViewModel.Password))
+            {
+                customerViewModel.Password = "";
+                ModelState[nameof(customerViewModel.Password)]!.ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Skipped;
+            }
+
             if (ModelState.Count > 0 && ModelState.IsValid && userId > 0 && userId == customerViewModel.UserId &&
                 UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
