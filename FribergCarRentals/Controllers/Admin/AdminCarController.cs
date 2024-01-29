@@ -107,7 +107,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (car is not null)
                 {
-                    return View(new CarViewModel(car) { IsRequestFromAnotherController = IsRequestFromAnotherController(CurrentControllerRoutePart) });
+                    return View(new CarViewModel(car));
                 }
             }
 
