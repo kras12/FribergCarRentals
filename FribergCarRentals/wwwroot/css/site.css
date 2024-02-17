@@ -24,6 +24,9 @@
   /* The background color for hovered action elements */
   --action-element-hover-background-color: #EEC09A;
 
+  /* The transparent background color for hovered action elements */
+  --action-element-transparent-hover-background-color: #EEC09A30;
+
   /* The text color for hovered action elements */
   --action-element-hover-text-color: black;  
 
@@ -57,16 +60,20 @@
   --button-padding: 0.1rem 1rem;
 
   /* The text color for buttons */
-  --button-text-color: var(--default-bright-text-color);  
+  --button-text-color: var(--default-bright-text-color);
 
   /* The background color for function buttons */
-  --function-button-background-color: #66bbaf;
+/*  --function-button-background-color: #62a3c1;*/
+  --function-button-background-color: #bd9942;
+
+    /* The background color for navigational buttons */
+  --navigational-button-background-color: var(--menu-container-background-color);
 
   /* The background color for negative buttons */
   --negative-button-background-color: #b3626e;  
 
-  /* The background color for positive buttons */
-  --positive-button-background-color: #8dc4a5;
+  /* The background color for positive buttons */  
+  --positive-button-background-color: #6c9371;
 
   /* The background color for regular buttons */
   --regular-button-background-color: var(--header-container-background-color);
@@ -97,6 +104,11 @@
   /* The background color for footer containers */
   --footer-container-background-color: var(--menu-container-background-color);
 
+  /* The background image for menu containers */
+  --footer-container-background-image: linear-gradient(180deg, 
+    var(--page-container-background-color) 0%, 
+    var(--footer-container-background-color) 5%);
+
   /* The background color for header containers */
   --header-container-background-color: #676e74;
   
@@ -105,6 +117,13 @@
 
   /* The background color for menu containers */
   --menu-container-background-color: #c18062;
+
+  /* The background image for menu containers */
+  --menu-container-background-image: linear-gradient(180deg, 
+    var(--header-container-background-color) 0%, 
+    var(--menu-container-background-color) 5%, 
+    var(--menu-container-background-color) 95%, 
+    var(--page-container-background-color) 100%);
 
   /* The background color for the page container */
   --page-container-background-color: #e1e1e1;
@@ -182,6 +201,13 @@
   --header-text-color: var(--default-bright-text-color);
 
   /*==================================================*/
+  /* Layout                                           */
+  /*==================================================*/  
+
+  /* The max content width  */
+  --max-content-width: 80rem;
+
+  /*==================================================*/
   /* Links                                            */
   /*==================================================*/  
 
@@ -218,10 +244,7 @@
   --neutral-message-background-color: #66bbaf;
 
   /* The background color for success messages */
-  --success-message-background-color: #8dc4a5;  
-
-  /* The background color for warning messages */
-  --warning-message-background-color:  #daaf22;  
+  --success-message-background-color: #8dc4a5;
 
   /*==================================================*/
   /* Messages - Text colors                           */
@@ -235,6 +258,9 @@
 
   /* The text color for success messages */
   --success-message-text-color: #0a4f28;  
+
+  /* The text color for validation error messages */
+  --validation-error-message-text-color: #8c4953;
 
   /* The text color for warning messages */
   --warning-message-text-color: #66510b;  
@@ -467,21 +493,6 @@ a.button
 
 }
 
-/* Buttons - Focus */
-:is(button, input[type = 'submit'], input[type = 'image'], a.button):focus
-{
-  background-color: var(--action-element-focus-background-color);
-  color: var(--action-element-focus-text-color);
-}
-
-/* Buttons - Hover */
-:is(button, input[type = 'submit'], input[type = 'image'], a.button):hover
-{
-  background-color: var(--action-element-hover-background-color);  
-  box-shadow: var(--box-shadow-hover);
-  color: var(--action-element-hover-text-color);
-}
-
 /* Buttons - Images */
 button img
 {
@@ -495,7 +506,10 @@ form button
 }
 
 /* Function button */
-.function-button
+:is(button,
+input[type = 'submit'],
+input[type = 'image'],
+a.button).function-button
 {
   background-color: var(--function-button-background-color);
 }
@@ -513,16 +527,53 @@ input[type = 'image'].image-button
    box-shadow: var(--box-shadow-hover-extra-glow);
 }
 
+/* Navigational button */
+:is(button,
+input[type = 'submit'],
+input[type = 'image'],
+a.button).navigational-button
+{
+  background-color: var(--navigational-button-background-color);
+}
+
 /* Negative button */
-.negative-button
+:is(button,
+input[type = 'submit'],
+input[type = 'image'],
+a.button).negative-button
 {
   background-color: var(--negative-button-background-color);
 }
 
 /* Positive button */
-.positive-button
+:is(button,
+input[type = 'submit'],
+input[type = 'image'],
+a.button).positive-button
 {
   background-color: var(--positive-button-background-color);
+}
+
+/*==================================================*/
+/* Buttons - Focus/Hover                            */
+/*                                                  */
+/* Keep focus and hover below special button types  */
+/* so they are not overriden.                       */
+/*==================================================*/
+
+/* Buttons - Focus */
+:is(button, input[type = 'submit'], input[type = 'image'], a.button):focus
+{
+  background-color: var(--action-element-focus-background-color);
+  color: var(--action-element-focus-text-color);
+}
+
+/* Buttons - Hover */
+:is(button, input[type = 'submit'], input[type = 'image'], a.button):hover
+{
+  background-color: var(--action-element-hover-background-color);  
+  box-shadow: var(--box-shadow-hover);
+  color: var(--action-element-hover-text-color);
 }
 
 /*==================================================*/
@@ -561,12 +612,13 @@ dt
     background-color: var(--description-list-background-color);
     text-align: right;
     color: var(--header-text-color);
+    word-wrap: anywhere;
 }
 
 /* Dd */
 dd
 {
-    flex-basis: 70%;
+    flex-basis: 80%;
     flex-grow: 1;
     margin: 0;
     padding: 2px 4px;
@@ -635,6 +687,13 @@ dd
 .flex-container__column-gap__4-rem
 {
   column-gap: 2rem;
+}
+
+/* Flex container - dl */
+:is(.vertical-flex-container, .horizontal-flex-container) dl
+{
+    margin-bottom: 0;
+    margin-top: 0;    
 }
 
 /* Flex container - justify content center */
@@ -709,6 +768,12 @@ dd
   row-gap: 2rem;
 }
 
+/* Flex container - row gap */
+.flex-container__wrap
+{
+  flex-wrap: wrap;
+}
+
 /* Horizontal flex container */
 .horizontal-flex-container
 {
@@ -730,7 +795,7 @@ dd
 /* Footer container */
 .footer-container
 {
-  background-color: var(--footer-container-background-color);
+  background-image: var(--footer-container-background-image);
   bottom: 0;
   color: var(--footer-text-color);	
   column-gap: 0.625rem;  
@@ -803,6 +868,20 @@ select
 	text-align: left;
 }
 
+/* Number field - Chrome */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button 
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Number field - Mozilla */
+input[type=number] 
+{
+  -moz-appearance: textfield;
+}
+
 /* Required label 
    '*' character after the label name */
 .required-label
@@ -827,11 +906,11 @@ textarea
 /* Vertical form */
 .vertical-form
 {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  /*min-width: 23.4375rem;*/
   row-gap: 0.9375rem;  
-  width: 25rem;
+  width: 100%;
 }
 
 /* Vertical form - Field */
@@ -839,6 +918,9 @@ textarea
 {
   display: flex;
   flex-direction: column;
+  max-width: 19rem;
+  min-width: 16rem;
+  width: 100%;
 }
 
 /* Vertical form - Field - Buttons */
@@ -850,6 +932,8 @@ textarea
 /*==================================================*/
 /* Grid   containers                                */
 /*==================================================*/
+
+/* Grid container */
 .grid-container
 {
     display: grid;
@@ -857,19 +941,10 @@ textarea
     row-gap: 2rem;
 }
 
-.grid-container.grid-container__columns-2
+/* Grid container - Auto columns */
+.grid-container.grid-container__auto-columns
 {
-    grid-template-columns: 1fr 1fr;
-}
-
-.grid-container.grid-container__column-1
-{
-    grid-column: 1;
-}
-
-.grid-container.grid-container__column-2
-{
-    grid-column: 2;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 /*==================================================*/
@@ -890,8 +965,11 @@ textarea
   column-gap: 1rem;
   flex-wrap: nowrap; 
   height: var(--site-info-container-height);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--max-content-width);
   padding: 0.8rem;
-  row-gap: 0;
+  row-gap: 0;    
 }
 
 /* Site logo container */
@@ -963,6 +1041,123 @@ textarea
 }
 
 /*==================================================*/
+/* Image Slideshow                                  */
+/*==================================================*/
+
+/* Slideshow container */
+.image-slideshow-container
+{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    row-gap: 0.5rem;
+}
+
+/* Slideshow container - Image */
+.image-slideshow-container image
+{
+    max-height: 50vh;
+}
+
+/* Slideshow container - Image animation */
+.image-slideshow-container .image-fade 
+{
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+/* Slideshow container - Image animation - Keyframes */
+@keyframes fade 
+{
+    from {
+        opacity: .4
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+/* Slideshow container - Image slide */
+.image-slideshow-container .image-slide
+{
+    display: none;
+}
+
+/* Slideshow container - Image slide - Active */
+.image-slideshow-container .image-slide.active
+{
+    display: block;
+}
+
+/* Slideshow container - Image slide - Buttons */
+.image-slideshow-container :is(.previous-slider-button, .next-slider-button)
+{
+    color: var(--default-bright-text-color);
+    font-size: larger;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: -2.9rem;
+    padding: 1rem;
+    position: absolute;
+    top: 50%;
+    transition: 0.6s ease;
+    user-select: none;
+    width: auto;
+}
+
+/* Slideshow container - Image slide - Buttons - Hover */
+.image-slideshow-container :is(.previous-slider-button, .next-slider-button):hover
+{
+   background-color: var(--action-element-transparent-hover-background-color);
+}
+
+/* Slideshow container - Image slide - Next button */
+.image-slideshow-container :is(.next-slider-button)
+{
+  right: 0;
+}
+
+/* Slideshow container - Navigation dots */
+.image-slideshow-container .navigation-dot 
+{
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  background-color: var(--header-container-background-color);
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+/* Slideshow container - Navigation dots - Hover */
+.image-slideshow-container :is(.navigation-dot.active, .navigation-dot:hover)
+{
+    background-color: #717171;
+    background-color: var(--menu-container-background-color);
+}
+
+/*==================================================*/
+/* Images                                           */
+/*==================================================*/  
+
+/* Image */
+img
+{
+    object-fit: scale-down;
+}
+
+/* Image - Cover image */
+img.cover-image
+{
+    border-radius: 10px;
+    box-shadow: var(--default-box-shadow);
+}
+
+/*==================================================*/
 /* Logo                                             */
 /*==================================================*/  
 
@@ -1016,22 +1211,44 @@ textarea
 /* Tiled image gallery (Grid - Autocolumn)          */
 /*==================================================*/
 
-/* Grid image gallery */
+/* Tiled image gallery */
 .tiled-image-gallery
 {
     display: grid;
     grid-auto-rows: 300px;
     grid-gap: 40px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));   
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* Tiled image gallery - Auto rows */
+.tiled-image-gallery.tiled-image-gallery__auto-rows
+{
+    grid-auto-rows: auto;
 }
 
 /* Tiled image gallery - Figure */
 .tiled-image-gallery figure
 {
-    border: 1px solid #b7b7b7;
     border-radius: 10px;
+    box-shadow: var(--default-box-shadow);
     display: flex;
+    height: 100%;
+    margin: 0px;
     padding: 10px;
+}
+
+/* Tiled image gallery - Figure caption */
+.tiled-image-gallery figcaption
+{
+    text-align: center;
+}
+
+/* Tiled image gallery - Grid gap */
+.tiled-image-gallery.tiled-image-gallery__grid-gap__0
+{
+    grid-gap: 0px;
 }
 
 /* Tiled image gallery - Image */
@@ -1041,6 +1258,12 @@ textarea
     height: 100%;
     object-fit: contain;
     width: 100%;
+}
+
+/* Tiled image gallery - Image size */
+.tiled-image-gallery.tiled-image-gallery__image-size_medium
+{
+    grid-template-columns: repeat(auto-fit, minmax(180px, 400px));
 }
 
 /*==================================================*/
@@ -1216,8 +1439,9 @@ textarea
 /* Menus - Horizontal menus                         */
 /*==================================================*/
 
-/* Center when having dropdown menus */
-.horizontal-menu-container.horizontal-menu-container__when-contains-dropdown-nav-menu__justify-content-center:has(nav.dropdown-menu)
+/* Center navigation menus */
+.horizontal-menu-container.horizontal-menu-container__when-contains-dropdown-nav-menu__justify-content-center:has(nav.dropdown-menu),
+.horizontal-menu-container.horizontal-menu-container__justify-content__center
 {
   justify-content: center;
 }
@@ -1233,6 +1457,7 @@ textarea
 {
   align-self: center;
   height: 100%;  
+  max-width: var(--max-content-width);
   padding-left: 0.1rem;
   padding-right: 0.1rem;
 }
@@ -1252,7 +1477,7 @@ textarea
 /* Horizontal menu - Container */
 .horizontal-menu-container
 {
-  background-color: var(--menu-container-background-color);
+  background-image: var(--menu-container-background-image);
   display: flex;
 }
 
@@ -1320,12 +1545,12 @@ textarea
   background: none;
   border: none;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.3);
-  color:#000000;  
-  float: right;
-  padding-bottom: 3px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 3px;
+  color:#000000;
+  font-size: small;
+  padding-bottom: 0px;
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-top: 0px;
 }
 
 /* Messages and panels */
@@ -1336,8 +1561,10 @@ textarea
   border-radius: 10px;
   border-style: dotted;
   border-width: 1px;
-  box-shadow: 0px 0px 4px 0px rgb(0 0 0 / 30%);  
+  box-shadow: 0px 0px 4px 0px rgb(0 0 0 / 30%);
+  min-width: 16rem;
   padding: 0.6rem;  
+  width: 100%;
 }
 
 /* Messages and panels - Paragraphs */
@@ -1411,11 +1638,14 @@ article
 /* Main content container */
 .main-content-container 
 {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--max-content-width);
   padding-bottom: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
-/*  padding-top: 1rem;*/
   overflow-x: auto;
+  width: 100%;
 }
 
 /* Page container */
@@ -1708,6 +1938,14 @@ table tr td
 /* Text                                             */
 /*==================================================*/
 
+/* Error text */
+
+.error-text,
+.field-validation-error
+{
+    color: var(--error-message-text-color);
+}
+
 /* Sub paragraph */
 .sub-paragraph
 {
@@ -1758,6 +1996,36 @@ table tr td
 .hidden
 {
   display: none;
+}
+
+/* Max height */
+.max-height__30vh
+{
+    max-height: 30vh;
+}
+
+/* Max height */
+.max-height__40vh
+{
+    max-height: 40vh;
+}
+
+/* Max height */
+.max-height__50vh
+{
+    max-height: 50vh;
+}
+
+/* Max height */
+.max-height__60vh
+{
+    max-height: 60vh;
+}
+
+/* No margin */
+.no-margin
+{
+  margin: 0;
 }
 
 /* No top margin */
@@ -1857,7 +2125,6 @@ table tr td
   /* Vertical forms */
   .vertical-form
   {
-    max-width: 80%;
     min-width: auto;
     width: 100%;
   }
@@ -1867,13 +2134,25 @@ table tr td
 /*  540 px (33.75 rem) */
 @media only screen and (max-width: 33.75rem)
 {
+  /* Dt */
+  dt 
+  {
+     flex-basis: 30%;
+  }
+
+  /* Dd */
+  dd
+  {
+    flex-basis: 70%;
+  }
+
   /* Site info container */
   .site-info-container
   {
     flex-wrap: wrap;
     height: 100%;
-    justify-content: center;    
-    text-align: center;   
+    justify-content: center;
+    text-align: center;
   }
 
   /* Site logo container */
@@ -1904,6 +2183,7 @@ table tr td
   .horizontal-menu-container
   {
       flex-direction: column;
+      align-items: center;
       
   }
 
@@ -1952,25 +2232,12 @@ table tr td
   {
     display: none;
   }    
+
+  /* Tiled image gallery */
+  .tiled-image-gallery,
+  .tiled-image-gallery figure
+  {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+  }
 }
-
-
-
-
-  /*==================================================*/
-  /* Test - Containers - Background themes            */
-  /*==================================================*/
-
-:root 
-{
-    /* Theme 1 - Gray - Gray */
-/*    --header-container-background-color: #676e74; 
-   --menu-container-background-color: #6F7C82;
-   
-   --action-element-hover-background-color: #CACACA;
-   --action-element-focus-background-color: #CACACA;*/
-/*   --default-highlight-box-shadow-color: #FF940A;*/
-   
-}
-
-  
