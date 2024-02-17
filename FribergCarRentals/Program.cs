@@ -1,9 +1,9 @@
+using FribergCarRentals.Data.ModelBinders;
 using FribergCarRentals.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using FribergCarRentals.Data.ModelBinder;
 using FribergCarRentals.DataAccess.DatabaseContexts;
 using FribergCarRentals.DataAccess.Repositories;
+using Microsoft.EntityFrameworkCore;
+using FribergCarRentals.Data.SharedClasses;
 
 namespace FribergCarRentals
 {
@@ -13,14 +13,23 @@ namespace FribergCarRentals
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConnectionStringManager().GetConnectionString(builder.Configuration)));
-            builder.Services.AddControllersWithViews(options => options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider()));
-            builder.Services.AddTransient<ICarRepository, CarRepository>();
+			// Add services to the container.
+
+			// Controllers with model binders
+			builder.Services.AddControllersWithViews(options => options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider()));
+
+			// DB Context
+			builder.Services.AddDbContext<ApplicationDbContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString(AppSettingsHelper.ApplicationDbContextConnectionStringKey)));
+
+			// Repositories
+			builder.Services.AddTransient<ICarRepository, CarRepository>();
             builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
             builder.Services.AddTransient<ICarOrderRepository, CarOrderRepository>();
             builder.Services.AddTransient<IAdminRepository, AdminRepository>();
-            builder.Services.AddDistributedMemoryCache();
+
+			// Sessions
+			builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(15);
@@ -33,7 +42,7 @@ namespace FribergCarRentals
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
