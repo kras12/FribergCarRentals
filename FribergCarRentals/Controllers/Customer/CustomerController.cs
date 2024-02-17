@@ -117,7 +117,7 @@ namespace FribergCarRentals.Controllers
         [NonAction]
         private ActionResult TempDataOrHomeRedirect()
         {
-            if (TempDataHelper.TryGet<RedirectToAction>(TempData, RedirectToActionTempDataKey, out var data))
+            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, RedirectToActionTempDataKey, out var data))
             {
                 return RedirectToAction(data.Action, data.Controller, data.RouteValues);
             }

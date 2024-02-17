@@ -1,5 +1,5 @@
-﻿@using FribergCarRentals.Data.Customer
-@model CustomerRegisterOrLoginViewModel
+﻿@using FribergCarRentals.Models.Customer
+@model RegisterOrLoginCustomerViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -7,12 +7,18 @@
 
 <h1>Logged out</h1>
 <p class="text-align-center">You must login to continue. If you don't have an account you can create one below.</p>
-
-<div class="grid-container grid-container__columns-2">
-    <div class="grid-container__column-1">
-        <partial name="Register.cshtml" model="@Model.CustomerCreateViewModel" />
+<div class="grid-container grid-container__auto-columns">
+    <div>
+        <partial name="Register.cshtml" for="RegisterCustomerViewModel" />
     </div>
-    <div class="grid-container__column-2">
-        <partial name="Login.cshtml" model="@Model.CustomerLoginViewModel" />
+    <div>
+        <partial name="Login.cshtml" for="LoginCustomerViewModel" />
     </div>
 </div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

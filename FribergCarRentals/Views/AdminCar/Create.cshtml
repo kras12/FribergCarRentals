@@ -1,10 +1,12 @@
-﻿@using FribergCarRentals.Data.Car
-@using FribergCarRentals.DataAccess.Types
+﻿@using FribergCarRentals.DataAccess.Types
 @using FribergCarRentals.DataAccess.EntityClasses
 @using FribergCarRentals.Data.SharedClasses
 @using FribergCarRentals.DataAccess.Attributes
 @using FribergCarRentals.DataAccess.Extensions
-@model CarViewModel
+@using FribergCarRentals.Models.Car
+@using FribergCarRentals.Controllers.Admin
+@using FribergCarRentals.Helpers
+@model CreateCarViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,36 +15,12 @@
 <h1>Create Car</h1>
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <a asp-action="List" class="button">View Car List</a>
-        <button onclick="history.back()">Go Back</button>
+        <a asp-action="List" class="button navigational-button">View Cars</a>
     </div>
     <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
-        <form asp-action="Create" class="vertical-form">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Create" class="vertical-form" enctype="multipart/form-data">
             <div class="vertical-form-field">
-                <label asp-for="Brand"></label>
-                <input asp-for="Brand" />
-                <span asp-validation-for="Brand" class="text-danger"></span>
-            </div>            
-            <div class="vertical-form-field">
-                <label asp-for="Model"></label>
-                <input asp-for="Model" />
-                <span asp-validation-for="Model" class="text-danger"></span>
-            </div>
-            <div class="vertical-form-field">
-                <label asp-for="ModelYear"></label>
-                <input asp-for="ModelYear" />
-                <span asp-validation-for="ModelYear" class="text-danger"></span>
-            </div>
-            <div class="vertical-form-field">
-                <label asp-for="Color"></label>
-                <input asp-for="Color" />
-                <span asp-validation-for="Color" class="text-danger"></span>
-            </div>
-            <div class="vertical-form-field">
-                <label asp-for="RegistrationNumber"></label>
-                <input asp-for="RegistrationNumber" />
-                <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+                <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="RentalStatus"></label>
@@ -54,7 +32,37 @@
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="RentalStatus" class="text-danger"></span>
+                <span asp-validation-for="RentalStatus" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="Brand"></label>
+                <input asp-for="Brand" />
+                <span asp-validation-for="Brand" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="Model"></label>
+                <input asp-for="Model" />
+                <span asp-validation-for="Model" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="ModelYear"></label>
+                <input asp-for="ModelYear" />
+                <span asp-validation-for="ModelYear" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="Color"></label>
+                <input asp-for="Color" />
+                <span asp-validation-for="Color" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="RegistrationNumber"></label>
+                <input asp-for="RegistrationNumber" />
+                <span asp-validation-for="RegistrationNumber" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="RentalCostPerDay"></label>
+                <input asp-for="RentalCostPerDay" type="number" step="0.01" />
+                <span asp-validation-for="RentalCostPerDay " class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="PropulsionSystem"></label>
@@ -66,12 +74,12 @@
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="PropulsionSystem" class="text-danger"></span>
+                <span asp-validation-for="PropulsionSystem" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="Images">Images - One per line</label>
-                <textarea asp-for="Images" cols="0" rows="0"></textarea>
-                <span asp-validation-for="Images" class="text-danger"></span>
+                <label asp-for="UploadImages"></label>
+                <input asp-for="UploadImages" multiple />
+                <span asp-validation-for="UploadImages" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <button type="submit">Create</button>
@@ -79,3 +87,10 @@
         </form>
     </div>
 </div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

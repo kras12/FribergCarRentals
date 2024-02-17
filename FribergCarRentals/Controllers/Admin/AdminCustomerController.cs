@@ -42,7 +42,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                     nameof(Create),
                     ControllerHelper.GetControllerName<AdminCustomerController>()));
 
@@ -94,7 +94,7 @@ namespace FribergCarRentals.Controllers.Admin
             {
                 if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
                 {
-                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                         nameof(Details),
                         ControllerHelper.GetControllerName<AdminCustomerController>(),
                         new RouteValueDictionary(new { id = id })));
@@ -120,7 +120,7 @@ namespace FribergCarRentals.Controllers.Admin
             {
                 if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
                 {
-                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                         nameof(Edit),
                         ControllerHelper.GetControllerName<AdminCustomerController>(),
                         new RouteValueDictionary(new { id = id })));
@@ -177,7 +177,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                     nameof(List),
                     ControllerHelper.GetControllerName<AdminCustomerController>()));
 

@@ -1,86 +1,96 @@
-﻿@using FribergCarRentals.Data.Order
-@model IEnumerable<OrderViewModel>
+﻿@using FribergCarRentals.Models.Order
+@using FribergCarRentals.Models.Other
+@model ListViewModel<OrderViewModel>
 
 @{
     ViewData["Title"] = "Orders";
 }
 
 <h1>Orders</h1>
-<div class="vertical-flex-container flex-container__row-gap__1-rem">
-    <table class="colored-table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.CarOrderId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.OrderStatusName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.OrderDateLocal)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CarBooking.Car.CarInfoWithRegistrationNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CarBooking.PickupDateLocal)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CarBooking.ReturnDateLocal)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CarBooking.RentalCostPerDay)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.OrderSum)
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model) 
-            {
+@if (Model.Count > 0)
+{
+    <div class="vertical-flex-container flex-container__row-gap__1-rem">
+        <partial name="/Pages/Shared/_UserMessages.cshtml" for="Messages" />
+        <table class="colored-table">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CarOrderId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OrderStatusName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OrderDateLocal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CarBooking.Car.CarInfo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CarBooking.PickupDateLocal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CarBooking.PickupDateLocal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CarBooking.RentalCostPerDay)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OrderSum)
-                    </td>
-                    <td>
-                        <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
-                            <a asp-action="Details" asp-controller="CustomerOrder" asp-route-id="@item.CarOrderId" class="button">Details</a>
-                            @if (item.IsCancelable)
-                            {
-                                <form asp-action="Cancel" onsubmit="return confirm('Are you sure you want to cancel this order?');">
-                                    <input type="hidden" name="id" value="@item.CarOrderId" asp-for="@item.CarOrderId" />
-                                    <button type="submit" class="negative-button">Cancel</button>
-                                </form>
-                            }       
-                        </div>
-                    </td>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].CarOrderId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].OrderStatusName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].OrderDateLocal)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].CarBooking.Car.CarInfoWithRegistrationNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].CarBooking.CarPickupDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].CarBooking.CarReturnDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].CarBooking.RentalCostPerDay)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Models[0].OrderSum)
+                    </th>
+                    <th>
+                        Actions
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Models)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CarOrderId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderStatusName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDateLocal)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CarBooking.Car.CarInfo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CarBooking.CarPickupDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CarBooking.CarReturnDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CarBooking.RentalCostPerDay)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderSum)
+                        </td>
+                        <td>
+                            <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                <a asp-action="Details" asp-route-id="@item.CarOrderId" class="button navigational-button">Details</a>
+                                @if (item.IsCancelable)
+                                {
+                                    <form asp-action="Cancel" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                                        <input type="hidden" name="id" value="@item.CarOrderId" asp-for="@item.CarOrderId" />
+                                        <button type="submit" class="negative-button">Cancel</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-align-center">You have not placed any orders yet.</p>
+}
+

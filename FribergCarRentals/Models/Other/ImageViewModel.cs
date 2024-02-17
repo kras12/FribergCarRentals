@@ -32,13 +32,13 @@ namespace FribergCarRentals.Models.Other
         /// <param name="url">The url for the image.</param>
         /// <param name="fileName">The filename for the image.</param>
         /// <param name="imageId">The ID for the image.</param>
-        /// <param name="linksToPage">An optional link to another page.</param>
-        public ImageViewModel(string url, string fileName = "", int? imageId = null, RedirectToPageData? linksToPage = null)
+        /// <param name="linksToAction">An optional link to another action.</param>
+        public ImageViewModel(string url, string fileName = "", int? imageId = null, RedirectToActionData? linksToAction = null)
         {
             FileName = fileName;
             Url = url;
             ImageId = imageId;
-            LinksToPage = linksToPage;
+            LinksToAction = linksToAction;
         }
 
         #endregion
@@ -64,7 +64,7 @@ namespace FribergCarRentals.Models.Other
 		/// </summary>
 		[DisplayName("Link")]
 		[BindNever]
-		public RedirectToPageData? LinksToPage { get; set;  }
+		public RedirectToActionData? LinksToAction { get; set;  }
 
         /// <summary>
         /// The url for the image.

@@ -1,4 +1,4 @@
-﻿@using FribergCarRentals.Data.Order
+﻿@using FribergCarRentals.Models.Order
 @model CreateOrderViewModel
 
 @{
@@ -8,27 +8,28 @@
 <h1>Book</h1>
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <h2>@Model.CarDescription</h2>
-    <div class="horizontal-flex-container flex-container__justify-content__center">    
-        <form asp-action="Create" class="vertical-form">
-            @Html.HiddenFor(x => x.CustomerId)
-            @Html.HiddenFor(x => x.CarId)
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="horizontal-flex-container flex-container__justify-content__center">
+        <form asp-action="Book" class="vertical-form">
+            <input type="hidden" asp-for="CustomerId" />
+            <input type="hidden" asp-for="CarId" />
             <div class="vertical-flex-container flex-container__row-gap__0-5-rem">
                 <div class="vertical-form-field">
-                    <label asp-for="PickupDateString"></label>
-                    <input type="datetime-local" name="@nameof(Model.PickupDateString)" value="@Model.PickupDateString" />
-                    <span asp-validation-for="PickupDateString" class="text-danger"></span>
+                    <div asp-validation-summary="ModelOnly" class="error-text"></div>
                 </div>
                 <div class="vertical-form-field">
-                    <label asp-for="ReturnDateString"></label>
-                    <input type="datetime-local" name="@nameof(Model.ReturnDateString)" value="@Model.PickupDateString" />
-                    <span asp-validation-for="ReturnDateString" class="text-danger"></span>
+                    <label asp-for="PickupDateLocalTime"></label>
+                    <input type="date" asp-for="PickupDateLocalTime" />
+                    <span asp-validation-for="PickupDateLocalTime" class="error-text"></span>
+                </div>
+                <div class="vertical-form-field">
+                    <label asp-for="ReturnDateLocalTime"></label>
+                    <input type="date" asp-for="ReturnDateLocalTime" />
+                    <span asp-validation-for="ReturnDateLocalTime" class="error-text"></span>
                 </div>
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
                     <button type="submit">Book</button>
-                    <button onclick="history.back()">Go Back</button>
                 </div>
-            </div>        
+            </div>
         </form>
     </div>
 </div>

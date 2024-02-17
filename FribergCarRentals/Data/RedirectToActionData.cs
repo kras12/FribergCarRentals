@@ -1,19 +1,20 @@
 ﻿namespace FribergCarRentals.Data
 {
-    public class RedirectToAction
+    public class RedirectToActionData
     {
         #region Constructors
 
-        public RedirectToAction()
+        public RedirectToActionData()
         {
         }
 
-        public RedirectToAction(string action, string controller, RouteValueDictionary? routeValues = null)
+        public RedirectToActionData(string action, string controller, RouteValueDictionary? routeValues = null, string? urlFragment = null)
         {
             Action = action;
             Controller = controller;
             RouteValues = routeValues;
-        }
+			UrlFragment = urlFragment;
+		}
 
         #endregion
 
@@ -25,6 +26,11 @@
 
         public RouteValueDictionary? RouteValues { get; set; }
 
-        #endregion
-    }
+		/// <summary>
+		/// An optional URL fragment for targeting regions within a page (#ID).
+		/// </summary>
+		public string? UrlFragment { get; set; }
+
+		#endregion
+	}
 }

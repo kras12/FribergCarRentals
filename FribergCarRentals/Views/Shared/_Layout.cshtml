@@ -1,4 +1,4 @@
-﻿@using FribergCarRentals.Session
+﻿@using FribergCarRentals.Sessions
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FribergCarRentals.styles.css" asp-append-version="true" />
     <script defer src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @* <script defer src="Scripts/read-mode.js"></script>
-    <script defer src="Scripts/contrast-mode.js"></script>
-    <script defer src="Scripts/measure-mode.js"></script> *@
     <script defer src="~/js/responsive-menu.js"></script>
 </head>
 <body>
@@ -24,36 +19,28 @@
                 <div class="jump-to-content-container">
                     <a href="#main">To main content</a>
                 </div>
-                @* <div class="horizontal-flex-container flex-container__justify-content__space-between flex-container__align-items-center"> *@
-                    <div class="site-info-container">
-                        <div class="site-logo-container">
-                            <img class="logo-effect" src="@Url.Content("~/graphics/logo.webp")" alt="Site logo.">
-                        </div>
-                        <div class="site-title-container">
-                            <a asp-area="" asp-controller="Home" asp-action="Index">Friberg Car Rentals</a>
-                        </div>
+                <div class="site-info-container">
+                    <div class="site-logo-container">
+                        <img class="logo-effect" src="/graphics/logo.webp" alt="Site logo.">
                     </div>
-                @* </div>    *@             
-                <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__space-between horizontal-menu-container__when-contains-dropdown-nav-menu__justify-content-center">
-                    @* <div id="accessibility-menu" class="dropdown-menu dropdown-menu__is-function-menu" tabindex="0">
-                        <div class="dropdown-menu-icon">
-                            <img src="graphics/accessibility-white-32.png" alt="accessibility menu icon">
-                        </div>
-                        <ul id="accessibility-menu-item-container"></ul>
-                    </div> *@
+                    <div class="site-title-container">
+                        <a asp-area="" asp-page="/Index">Friberg Car Rentals</a>
+                    </div>
+                </div>
+                <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
                     <!-- The primary navigation menu -->
                     <nav id="primary-navigation-menu" class="horizontal-menu horizontal-menu__align-last-child__right" aria-label="Primary navigation menu">
                         <ul>
                             @if (UserSessionHandler.IsAdminLoggedIn(ViewContext.HttpContext.Session))
                             {
-                                <partial name="AdminMenuItems.cshtml" />
+                                <partial name="_AdminMenuItems.cshtml" />
                             }
                             else
                             {
-                                <partial name="CustomerMenuItems.cshtml" />
-                            }                           
+                                <partial name="_CustomerMenuItems.cshtml" />
+                            }
                         </ul>
-                    </nav>           
+                    </nav>
                 </div>
             </header>
             <!-- The page content -->
@@ -74,23 +61,6 @@
             <footer id="site-footer" class="footer-container">
                 <div class="left-footer-container"></div>
                 <span class="align-self-center">© Copyright 2024- Friberg Car Rentals</span>
-                <!-- The secondary navigation menu -->
-                @* <nav id="secondary-navigation-menu" class="horizontal-menu footer-menu" aria-label="Secondary navigation menu">
-                    <ul id="secondary-navigation-menu-container">
-                        <li>
-                            <a class="footer-link" asp-area="" asp-controller="Home" asp-action="AboutUs">
-                                <img src="@Url.Content("~/graphics/about-us-icon.svg")" alt="About us icon.">
-                                <div>About us</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="footer-link" href="#">
-                                <img src="@Url.Content("~/graphics/contact-us-icon.svg")" alt="Email icon.">
-                                <div>Contact us</div>
-                            </a>
-                        </li>
-                    </ul>
-                </nav> *@
                 <div class="right-footer-container">
                 </div>
             </footer>

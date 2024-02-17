@@ -1,13 +1,20 @@
-﻿@{
+﻿@using FribergCarRentals.Models.Other
+@using FribergCarRentalsRazor.Components
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <header>
     <h1 class="display-4">Browse our cars</h1>
-    <p class="text-align-center">We have a fine selection of cars that you can rent right away.</p>
 </header>
-<div class="horizontal-flex-container flex-container__justify-content-center">
-    <a asp-area="" asp-controller="Home" asp-action="Cars">
-        <img class="full-width" src="/images/tesla-model-s-black.jpg" />
-    </a>
+<div class="vertical-flex-container flex-container__justify-content__center flex-container__align-items-center flex-container__row-gap__1-rem">
+    @(await Component.InvokeAsync<CarImageSlideShow>(new
+    {
+        onlyRentableCars = true,
+        maxImagesPerCar = 1,
+        prefixImages = new List<ImageViewModel>() { new ImageViewModel(@"/graphics/front-cover.webp") }
+    }))
+    <p class="text-align-center no-margin">We have a fine selection of cars that you can rent right away.</p>
+    <a class="button" asp-page="Cars">Find your car</a>
 </div>

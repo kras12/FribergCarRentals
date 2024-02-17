@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentalsRazor.Helpers;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -42,7 +43,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                     nameof(Create),
                     ControllerHelper.GetControllerName<AdminCarController>()));
 
@@ -95,7 +96,7 @@ namespace FribergCarRentals.Controllers.Admin
             {
                 if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
                 {
-                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                         nameof(Details),
                         ControllerHelper.GetControllerName<AdminCarController>(),
                         new RouteValueDictionary(new { id = id })));
@@ -121,7 +122,7 @@ namespace FribergCarRentals.Controllers.Admin
             {
                 if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
                 {
-                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                         nameof(Edit),
                         ControllerHelper.GetControllerName<AdminCarController>(),
                         new RouteValueDictionary(new { id = id })));
@@ -162,7 +163,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
+                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToActionData(
                     nameof(List),
                     ControllerHelper.GetControllerName<AdminCarController>()));
 

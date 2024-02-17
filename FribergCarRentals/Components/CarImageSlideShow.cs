@@ -78,7 +78,7 @@ namespace FribergCarRentalsRazor.Components
 
             if (prefixImages != null && prefixImages.Count > 0)
             {
-                prefixImages.ForEach(x => x.LinksToPage = new FribergCarRentals.Data.RedirectToPageData("Cars"));
+                prefixImages.ForEach(x => x.LinksToAction = new FribergCarRentals.Data.RedirectToPageData("Cars"));
                 images = prefixImages;
 			}
 

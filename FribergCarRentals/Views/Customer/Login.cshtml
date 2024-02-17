@@ -1,23 +1,25 @@
-﻿@using FribergCarRentals.Data.Customer
-@model CustomerLoginViewModel
+﻿@using FribergCarRentals.Models.Customer
+@model LoginCustomerViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem filled-container flex-container__padding__1-rem full-height">
-    <h1>Login</h1>
+<div class="vertical-flex-container flex-container__align-items-center filled-container flex-container__padding__1-rem full-height">
+    <h2>Login</h2>
     <form asp-action="Login" class="vertical-form">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="vertical-form-field">
+            <div asp-validation-summary="ModelOnly" class="error-text"></div>
+        </div>
         <div class="vertical-form-field">
             <label asp-for="Email"></label>
             <input asp-for="Email" />
-            <span asp-validation-for="Email" class="text-danger"></span>
+            <span asp-validation-for="Email" class="error-text"></span>
         </div>
         <div class="vertical-form-field">
             <label asp-for="Password"></label>
             <input asp-for="Password" type="password" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+            <span asp-validation-for="Password" class="error-text"></span>
         </div>
         <div class="vertical-form-field">
             <button type="submit">Login</button>

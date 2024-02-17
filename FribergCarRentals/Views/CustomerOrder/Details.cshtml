@@ -1,27 +1,35 @@
-﻿@using FribergCarRentals.Data.Order
+﻿@using FribergCarRentals.Models.Order
 @model OrderViewModel
 
 @{
     ViewData["Title"] = "Order Details";
 }
 
-<h1>@($"Order - #{Model.CarOrderId}")</h1>
-<h2>@($"{Model.Customer.FullName} - {Model.CarBooking.Car.CarInfo}")</h2>
+@if (Model.IsNewOrder)
+{
+    <h1>Thank you for your order!</h1>
+    <p class="text-align-center">Details of your order can be found below.</p>
+}
+else
+{
+    <h1>@($"Order - #{Model.CarOrderId}")</h1>
+}
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <button onclick="history.back()">Go Back</button>
-        <a asp-action="List" class="button">View Order List</a>
+        <a asp-action="List" class="button navigational-button">View Orders</a>
         @if (Model.IsCancelable)
         {
             <form asp-action="Cancel" onsubmit="return confirm('Are you sure you want to cancel this order?');">
                 <input type="hidden" name="id" asp-for="CarOrderId" />
-                <button type="submit" class="negative-button">Cancel</button>
+                <button type="submit" class="negative-button">Cancel Order</button>
             </form>
-        }        
+        }
     </div>
+    <partial name="/Pages/Shared/_UserMessages.cshtml" for="Messages" />
     <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
         <div class="vertical-flex-container flex-container__padding__1-rem">
-            <h2>Order details</h2>
+            <h2>@($"#{Model.CarOrderId} - {Model.CarBooking.Car.CarInfo}")</h2>
+            <h3>Order Details</h3>
             <dl>
                 <dt>
                     @Html.DisplayNameFor(model => model.CarOrderId)
@@ -30,28 +38,28 @@
                     @Html.DisplayFor(model => model.CarOrderId)
                 </dd>
                 <dt>
-                    @Html.DisplayNameFor(model => model.OrderStatusName)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.OrderStatusName)
-                </dd>
-                <dt>
                     @Html.DisplayNameFor(model => model.OrderDateLocal)
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.OrderDateLocal)
                 </dd>
                 <dt>
-                    @Html.DisplayNameFor(model => model.CarBooking.PickupDateLocal)
+                    @Html.DisplayNameFor(model => model.OrderStatusName)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.CarBooking.PickupDateLocal)
+                    @Html.DisplayFor(model => model.OrderStatusName)
                 </dd>
                 <dt>
-                    @Html.DisplayNameFor(model => model.CarBooking.ReturnDateLocal)
+                    @Html.DisplayNameFor(model => model.Customer.UserId)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.CarBooking.ReturnDateLocal)
+                    @Html.DisplayFor(model => model.Customer.UserId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Customer.FullName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Customer.FullName)
                 </dd>
                 <dt>
                     @Html.DisplayNameFor(model => model.OrderSum)
@@ -62,43 +70,8 @@
             </dl>
         </div>
         <div class="vertical-flex-container flex-container__padding__1-rem">
-            <h2>Customer</h2>
+            <h3>Booked Car</h3>
             <dl>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Customer.UserId)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.Customer.UserId)
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Customer.FirstName)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.Customer.FirstName)
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Customer.LastName)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.Customer.LastName)
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Customer.Email)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.Customer.Email)
-                </dd>
-            </dl>
-        </div>
-        <div class="vertical-flex-container flex-container__padding__1-rem">
-            <h2>Booked Car</h2>
-            <dl>
-                <dt>
-                    @Html.DisplayNameFor(model => model.CarBooking.Car.CarId)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.CarBooking.Car.CarId)
-                </dd>
                 <dt>
                     @Html.DisplayNameFor(model => model.CarBooking.Car.Brand)
                 </dt>
@@ -135,13 +108,25 @@
                 <dd>
                     @Html.DisplayFor(model => model.CarBooking.Car.RegistrationNumber)
                 </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.CarPickupDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.CarPickupDate)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.CarReturnDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.CarReturnDate)
+                </dd>
             </dl>
             <div class="tiled-image-gallery">
                 @foreach (var image in Model.CarBooking.Car.Images)
                 {
                     <figure>
                         <div class="vertical-flex-container">
-                            <img src="@image.FilePath" />
+                            <img src="@image.Url" />
                         </div>
                     </figure>
                 }
