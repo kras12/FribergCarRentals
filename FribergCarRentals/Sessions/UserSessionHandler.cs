@@ -1,12 +1,23 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.SharedClasses;
+using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Types;
 
-namespace FribergCarRentals.Session
+namespace FribergCarRentals.Sessions
 {
+    /// <summary>
+    /// A helper class to handle user session data. 
+    /// </summary>
     public static class UserSessionHandler
     {
         #region Methods
 
+        /// <summary>
+        /// Retrieves user data from a session. 
+        /// </summary>
+        /// <param name="session">The session to retrieve user data from.</param>
+        /// <returns>A <see cref="UserSessionData"/> object containing the retrieved data.</returns>
+        /// <remarks>If the user data was not found an <see cref="InvalidOperationException"/> will be thrown.</remarks>
+        /// <exception cref="InvalidOperationException"></exception>
         public static UserSessionData GetUserData(ISession session)
         {
             return new UserSessionData(
@@ -15,6 +26,11 @@ namespace FribergCarRentals.Session
                 UserRoleEntity.CreateFromUserRoleName(session.GetString(nameof(UserSessionData.UserRole))!) ?? throw new InvalidOperationException("The user role was not found in the session variable."));
         }
 
+        /// <summary>
+        /// Sets user data to a session.
+        /// </summary>
+        /// <param name="session">The session to store user data in.</param>
+        /// <param name="data">The user data to store.</param>
         public static void SetUserData(ISession session, UserSessionData data)
         {
             session.SetInt32(nameof(UserSessionData.UserId), data.UserId);
@@ -22,6 +38,10 @@ namespace FribergCarRentals.Session
             session.SetString(nameof(UserSessionData.UserRole), data.UserRole.UserRoleName);
         }
 
+        /// <summary>
+        /// Removes user data from a session.
+        /// </summary>
+        /// <param name="session">The session to remove user data from.</param>
         public static void RemoveUserData(ISession session)
         {
             session.Remove(nameof(UserSessionData.UserId));
@@ -29,6 +49,13 @@ namespace FribergCarRentals.Session
             session.Remove(nameof(UserSessionData.UserRole));
         }
 
+        /// <summary>
+        /// Checks whether a user with a specific role is logged in.
+        /// A logged in user have user data stored in the session.
+        /// </summary>
+        /// <param name="session">The session that contains the user data.</param>
+        /// <param name="userRole">The target role for the user.</param>
+        /// <returns>True if there was a logged in user matching the user role.</returns>
         private static bool IsUserLoggedIn(ISession session, UserRoleType userRole)
         {
             List<string> keys = new()
@@ -43,17 +70,27 @@ namespace FribergCarRentals.Session
             if (session.Keys.Intersect(keys).Count() == keys.Count)
             {
                 result = UserRoleEntity.CreateFromUserRoleName(
-                session.GetString(nameof(UserSessionData.UserRole))!).UserRoleType == userRole;
+                    session.GetString(nameof(UserSessionData.UserRole))!).UserRoleType == userRole;
             }
 
             return result;
         }
 
+        /// <summary>
+        /// Checks whether a customer is logged in. 
+        /// </summary>
+        /// <param name="session">The session that contains the user data.</param>
+        /// <returns>True if the there was a logged in user matching the customer role.</returns>
         public static bool IsCustomerLoggedIn(ISession session)
         {
             return IsUserLoggedIn(session, UserRoleType.Customer);
         }
 
+        /// <summary>
+        /// Checks whether an admin is logged in. 
+        /// </summary>
+        /// <param name="session">The session that contains the user data.</param>
+        /// <returns>True if the there was a logged in user matching the admin role.</returns>
         public static bool IsAdminLoggedIn(ISession session)
         {
             return IsUserLoggedIn(session, UserRoleType.Admin); 

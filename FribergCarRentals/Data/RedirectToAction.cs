@@ -1,14 +1,14 @@
 ﻿namespace FribergCarRentals.Data
 {
-    public class LoginRedirectActionWithId
+    public class RedirectToAction
     {
         #region Constructors
 
-        public LoginRedirectActionWithId()
+        public RedirectToAction()
         {
         }
 
-        public LoginRedirectActionWithId(string action, string controller, RouteValueDictionary? routeValues = null)
+        public RedirectToAction(string action, string controller, RouteValueDictionary? routeValues = null)
         {
             Action = action;
             Controller = controller;

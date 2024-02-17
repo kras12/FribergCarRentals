@@ -2,18 +2,43 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace FribergCarRentals.Data.User
+namespace FribergCarRentals.Models.User
 {
-    public abstract class UserCreateViewModel
+    /// <summary>
+    /// A view model class that handles data realting to the creation of users. 
+    /// </summary>
+    public abstract class UserCreateViewModel : UserViewModelBase
     {
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        protected UserCreateViewModel()
+        protected UserCreateViewModel() : base()
         {
+            
+        }
 
+        /// <summary>
+        ///  A constructor.
+        /// </summary>
+        /// <param name="firstName">The first name for the user.</param>
+        /// <param name="lastName">The last name for the user.</param>
+        /// <param name="email">The email address for the user.</param>
+        /// <param name="password">The password for the user.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected UserCreateViewModel(string firstName, string lastName, string email , string password) : base(firstName, lastName, email)
+        {
+            #region MyRegion
+
+            if (password is null)
+            {
+                throw new ArgumentNullException(nameof(password), $"The value of parameter '{password}' can't be null");
+            }
+
+            #endregion
+
+            Password = password;
         }
 
         #endregion
@@ -21,41 +46,12 @@ namespace FribergCarRentals.Data.User
         #region Properties
 
         /// <summary>
-        /// The first name for the user.
-        /// </summary>
-        [DisplayName("First Name")]
-        public string FirstName { get; set; } = "";
-
-        /// <summary>
-        /// Returns the full name of the customer.
-        /// </summary>
-        [BindNever]
-        [DisplayName("Full Name")]
-        public string FullName
-        {
-            get
-            {
-                return $"{FirstName} {LastName}";
-            }
-        }
-
-        /// <summary>
-        /// The last name for the user.
-        /// </summary>
-        [DisplayName("Last Name")]
-        public string LastName { get; set; } = "";
-
-        /// <summary>
-        /// The email address for the user.
-        /// </summary>
-        [DisplayName("Email")]
-        public string Email { get; set; } = "";
-
-        /// <summary>
         /// The password for the user.
         /// </summary>
         [DisplayName("Password")]
+        [Required(AllowEmptyStrings = false)]
         [DataType(DataType.Password)]
+        [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
         public string Password { get; set; } = "";
 
         #endregion

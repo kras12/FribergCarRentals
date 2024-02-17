@@ -50,7 +50,7 @@ namespace FribergCarRentals.Controllers.Customer
             {
                 if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
                 {
-                    TempDataHelper.Set(TempData, CustomerController.RedirectToActionTempDataKey, new LoginRedirectActionWithId(
+                    TempDataHelper.Set(TempData, CustomerController.RedirectToActionTempDataKey, new RedirectToAction(
                         nameof(Book),
                         ControllerHelper.GetControllerName<CustomerOrderController>(),
                         new RouteValueDictionary(new { carId = carId })));
@@ -121,7 +121,7 @@ namespace FribergCarRentals.Controllers.Customer
             {
                 if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
                 {
-                    TempDataHelper.Set(TempData, CustomerController.RedirectToActionTempDataKey, new LoginRedirectActionWithId(
+                    TempDataHelper.Set(TempData, CustomerController.RedirectToActionTempDataKey, new RedirectToAction(
                         nameof(Details),
                         ControllerHelper.GetControllerName<CustomerOrderController>(),
                         new RouteValueDictionary(new { id = id })));
@@ -146,7 +146,7 @@ namespace FribergCarRentals.Controllers.Customer
         {
             if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
             {
-                TempDataHelper.Set(TempData, CustomerController.RedirectToActionTempDataKey, new LoginRedirectActionWithId(
+                TempDataHelper.Set(TempData, CustomerController.RedirectToActionTempDataKey, new RedirectToAction(
                     nameof(List), 
                     ControllerHelper.GetControllerName<CustomerOrderController>()));
 

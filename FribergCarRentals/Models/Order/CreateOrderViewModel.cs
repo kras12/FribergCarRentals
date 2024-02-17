@@ -1,11 +1,16 @@
 ﻿using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Models.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing.Drawing2D;
 
-namespace FribergCarRentals.Data.Order
+namespace FribergCarRentals.Models.Order
 {
-    public class CreateOrderViewModel
+    /// <summary>
+    /// A view model class that handles data related to order creation. 
+    /// </summary>
+    public class CreateOrderViewModel : ViewModelBase
     {
         #region Constructors
 
@@ -20,17 +25,33 @@ namespace FribergCarRentals.Data.Order
         /// <summary>
         /// A constructor. 
         /// </summary>
-        /// <param name="customerId">The customer for the order.</param>
+        /// <param name="customerId">The ID of the customer for the order.</param>
         /// <param name="car">The car for the order.</param>
-        /// <param name="pickupDate">The pickup date for the booking.</param>
-        /// <param name="returnDate">The return date the booking.</param>
+        /// <param name="pickupDate">The pickup date for the car booking.</param>
+        /// <param name="returnDate">The return date for the car booking.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public CreateOrderViewModel(int customerId, CarEntity car, DateTime pickupDate, DateTime returnDate)
         {
+            #region Checks
+
+            if (customerId < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(customerId), $"The value of parameter '{customerId}' can't be negative.");
+            }
+
+            if (car is null)
+            {
+                throw new ArgumentNullException(nameof(car), $"The value of parameter '{car}' can't be null.");
+            }
+
+            #endregion
+
             CustomerId = customerId;
             CarId = car.CarId;
-            CarDescription = $"{car.Brand} {car.Model} {car.ModelYear} ";
-            PickupDateString = pickupDate.ToString("yyyy-MM-ddTHH:mm:00");
-            ReturnDateString = returnDate.ToString("yyyy-MM-ddTHH:mm:00");
+            CarDescription = $"{car.Brand} {car.Model} {car.ModelYear}";
+            PickupDateLocalTime = pickupDate;
+            ReturnDateLocalTime = returnDate;
         }
 
         #endregion
@@ -41,28 +62,39 @@ namespace FribergCarRentals.Data.Order
         /// Description of the car.
         /// </summary>
         [BindNever]
-        public string CarDescription { get; set; } = "";
+        public string CarDescription { get; } = "";
 
         /// <summary>
-        /// The car for the order.
+        /// The ID of the car for the order.
         /// </summary>
+        [DisplayName("Car ID")]
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "The value must be a positive number larger than 1.")]
         public int CarId { get; set; }
+
         /// <summary>
-        /// The customer for the car.
+        /// The ID of the customer for the order.
         /// </summary>
+        [DisplayName("Customer ID")]
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "The value must be a positive number larger than 1.")]
         public int CustomerId { get; set; }
 
         /// <summary>
-        /// The return date.
+        /// The pickup date in local time.
         /// </summary>
         [DisplayName("Pickup Date")]
-        public string PickupDateString { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [Required]
+        public DateTime PickupDateLocalTime { get; set; }
 
         /// <summary>
-        /// The return date.
+        /// The return date in local time.
         /// </summary>
         [DisplayName("Return Date")]
-        public string ReturnDateString { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [Required]
+        public DateTime ReturnDateLocalTime { get; set; }
 
         #endregion
     }

@@ -2,16 +2,31 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Data.ModelBinder
+namespace FribergCarRentals.Data.ModelBinders
 {
+    /// <summary>
+    /// A model binder provider class that provides model binders for the Friberg Car Rentals project. 
+    /// </summary>
     public class CustomModelBinderProvider : IModelBinderProvider
     {
+        #region Methods
+
+        /// <summary>
+        /// Creates a <see cref="IModelBinder"/> based on the provided <see cref="ModelBinderProviderContext"/>.
+        /// </summary>
+        /// <param name="context">The <see cref="ModelBinderProviderContext"/> to use.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <returns>An <see cref="IModelBinder"/>.</returns>
         public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
+            #region Checks
+            
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
+
+            #endregion
 
             if (context.Metadata.ModelType == typeof(VehiclePropulsionEntity))
             {
@@ -32,5 +47,7 @@ namespace FribergCarRentals.Data.ModelBinder
 
             return null;
         }
+
+        #endregion
     }
 }

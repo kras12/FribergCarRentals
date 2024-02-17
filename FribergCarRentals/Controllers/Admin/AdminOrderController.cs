@@ -76,7 +76,7 @@ namespace FribergCarRentals.Controllers.Admin
             {
                 if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
                 {
-                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new LoginRedirectActionWithId(
+                    TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
                         nameof(Details),
                         ControllerHelper.GetControllerName<AdminOrderController>(),
                         new RouteValueDictionary(new { id = id })));
@@ -100,7 +100,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new LoginRedirectActionWithId(
+                TempDataHelper.Set(TempData, AdminController.RedirectToActionTempDataKey, new RedirectToAction(
                     nameof(List),
                     ControllerHelper.GetControllerName<AdminOrderController>()));
 

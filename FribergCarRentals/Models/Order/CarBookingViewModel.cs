@@ -1,11 +1,16 @@
-﻿using FribergCarRentals.Data.Car;
+﻿using FribergCarRentals.Models.Car;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using FribergCarRentals.DataAccess.EntityClasses;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using FribergCarRentals.Models.Other;
 
-namespace FribergCarRentals.Data.Order
+namespace FribergCarRentals.Models.Order
 {
+    /// <summary>
+    /// A view model class that handles data relating to car bookings. 
+    /// </summary>
     public class CarBookingViewModel : ViewModelBase
     {
         #region Constructors
@@ -14,6 +19,7 @@ namespace FribergCarRentals.Data.Order
         /// A constructor.
         /// </summary>
         /// <param name="carBooking">The car booking to copy data from.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CarBookingViewModel(CarBookingEntity carBooking)
         {
             #region Checks
@@ -24,12 +30,13 @@ namespace FribergCarRentals.Data.Order
             }
 
             #endregion
+
             CarBookingId = carBooking.CarBookingId;
-            CarOrder = carBooking.CarOrder;
+            CarOrder = carBooking.CarOrder!;
             Car = new CarViewModel(carBooking.Car);
             RentalCostPerDay = carBooking.RentalCostPerDay;
-            PickupDateUtc = carBooking.PickupDateUtc;
-            ReturnDateUtc = carBooking.ReturnDateUtc;
+            CarPickupDate = carBooking.PickupDateUtc.Date;
+            CarReturnDate = carBooking.ReturnDateUtc.Date;
         }
 
         #endregion
@@ -39,23 +46,29 @@ namespace FribergCarRentals.Data.Order
         /// <summary>
         /// The car that was rented.
         /// </summary>
-        public CarViewModel Car { get; set; }
+        [DisplayName("Car")]
+        [BindNever]
+        public CarViewModel Car { get; }
 
         /// <summary>
-        /// The car booking ID.
+        /// The ID for the booking.
         /// </summary>
         [DisplayName("Booking ID")]
-        public int CarBookingId { get; set; }
+        [BindNever]
+        public int CarBookingId { get; }
 
         /// <summary>
         /// The order the booking belongs to.
         /// </summary>
-        public CarOrderEntity CarOrder { get; set; }
+        [DisplayName("Order")]
+        [BindNever]
+        public CarOrderEntity CarOrder { get; }
 
         /// <summary>
-        /// The car order id.
+        /// The ID for the order.
         /// </summary>
         [DisplayName("Order ID")]
+        [BindNever]
         public int CarOrderId
         {
             get
@@ -65,50 +78,43 @@ namespace FribergCarRentals.Data.Order
         }
 
         /// <summary>
-        /// The pickup date in local time.
-        /// </summary>        
+        /// The car pickup date.
+        /// </summary>
+        /// <remarks>The date is saved in the database with the time component stripped off.</remarks>
         [DisplayName("Pickup Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
-        public DateTime PickupDateLocal
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [BindNever]
+        public DateTime CarPickupDate { get; }
+
+        /// <summary>
+        /// The car return date.
+        /// </summary>
+        /// <remarks>The date is saved in the database with the time component stripped off.</remarks>
+        [DisplayName("Return Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [BindNever]
+        public DateTime CarReturnDate { get; }
+
+        /// <summary>
+        /// The number of rental days the customer is paying for. 
+        /// </summary>
+        [DisplayName("Debited Days")]
+        [BindNever]
+        public int DebitedRentalDays
         {
             get
             {
-                return PickupDateUtc.ToLocalTime();
+                return (CarReturnDate - CarPickupDate).Days + 1;
             }
         }
-
-        /// <summary>
-        /// The pickup date.
-        /// </summary>
-        [DisplayName("Pickup Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
-        public DateTime PickupDateUtc { get; set; }
 
         /// <summary>
         /// The rental cost per day.
         /// </summary>
         [DisplayName("Cost Per Day")]
-        public decimal RentalCostPerDay { get; set; }
-
-        /// <summary>
-        /// The return date in local time.
-        /// </summary>
-        [DisplayName("Return Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
-        public DateTime ReturnDateLocal
-        {
-            get
-            {
-                return ReturnDateUtc.ToLocalTime();
-            }
-        }
-
-        /// <summary>
-        /// The return date.
-        /// </summary>
-        [DisplayName("Return Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
-        public DateTime ReturnDateUtc { get; set; }
+        [DisplayFormat(DataFormatString = DefaultPriceOutputFormatString)]
+        [BindNever]
+        public decimal RentalCostPerDay { get; }
 
         #endregion
     }

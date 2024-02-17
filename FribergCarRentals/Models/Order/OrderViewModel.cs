@@ -1,11 +1,15 @@
-﻿using FribergCarRentals.Data.Customer;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Models.Customer;
+using FribergCarRentals.Models.Other;
 
-namespace FribergCarRentals.Data.Order
+namespace FribergCarRentals.Models.Order
 {
+    /// <summary>
+    ///  A view model class that handles data relating to an order. 
+    /// </summary>
     public class OrderViewModel : ViewModelBase
     {
         #region Constructors
@@ -13,27 +17,21 @@ namespace FribergCarRentals.Data.Order
         /// <summary>
         /// A constructor.
         /// </summary>
-        public OrderViewModel()
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="carOrder">The car order to copy data from.</param>
-        public OrderViewModel(CarOrderEntity carOrder)
+        /// <param name="carOrder">The car order to model.</param>
+        /// <param name="isNewOrder">True if the order was just created.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public OrderViewModel(CarOrderEntity carOrder, bool isNewOrder = false)
         {
             #region Checks
 
             if (carOrder.Customer is null)
             {
-                throw new ArgumentNullException("The customer can't be null");
+                throw new ArgumentNullException("The customer of the order can't be null");
             }
 
             if (carOrder.CarBookings is null)
             {
-                throw new ArgumentNullException("The car booking can't be null");
+                throw new ArgumentNullException("The car booking of the order can't be null");
             }
 
             #endregion
@@ -45,6 +43,7 @@ namespace FribergCarRentals.Data.Order
             OrderStatus = carOrder.OrderStatus!;
             CarBooking = carOrder.CarBookings.Count > 0 ? new CarBookingViewModel(carOrder.CarBookings.First())
                 : throw new InvalidOperationException("Could not find a car booking");
+            IsNewOrder = isNewOrder;
         }
 
         #endregion
@@ -54,6 +53,8 @@ namespace FribergCarRentals.Data.Order
         /// <summary>
         /// Returns true if the order can be marked as completed.
         /// </summary>
+        [DisplayName("Can be completed")]
+        [BindNever]
         public bool CanBeCompleted
         {
             get
@@ -65,38 +66,52 @@ namespace FribergCarRentals.Data.Order
         /// <summary>
         /// The car booking tied to the order.
         /// </summary>
-        public CarBookingViewModel CarBooking { get; set; }
+        [BindNever]
+        public CarBookingViewModel CarBooking { get; }
 
         /// <summary>
-        /// The order ID.
+        /// The ID of the order.
         /// </summary>
         [DisplayName("Order ID")]
-        public int CarOrderId { get; set; }
+        [BindNever]
+        public int CarOrderId { get; }
 
         /// <summary>
-        /// The customer that rented the car.
+        /// The customer that placed the order.
         /// </summary>
-        public CustomerViewModel Customer { get; set; }
+        [BindNever]
+        public CustomerViewModel Customer { get; }
 
         /// <summary>
         /// Returns true if the order can be cancelled.
         /// </summary>
-        /// <remarks>A cancellable order is an order where 
-        /// the car booking have a pickup calender date that is ahead 
+        /// <remarks>A cancellable order is an order having the 
+        /// status 'Create'" and where the booking have a 
+        /// car pickup calender date that is ahead 
         /// of the current calender day.</remarks>
+        [DisplayName("Is Cancelable")]
+        [BindNever]
         public bool IsCancelable
         {
             get
             {
-                return OrderStatus.StatusType == DataAccess.Types.OrderStatus.Created && CarBooking.PickupDateUtc.Date > DateTime.UtcNow.Date;
+                return OrderStatus.StatusType == DataAccess.Types.OrderStatus.Created && CarBooking.CarPickupDate.Date > DateTime.UtcNow.Date;
             }
         }
 
         /// <summary>
+        /// Returns true if the order was just created.
+        /// </summary>
+        [DisplayName("New Order")]
+        [BindNever]
+        public bool IsNewOrder { get; private set; }
+
+        /// <summary>
         /// The order date in local time.
         /// </summary>
-        [DisplayName("Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:g}")]
+        [DisplayName("Order Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DefaultDateFormatString)]
+        [BindNever]
         public DateTime OrderDateLocal
         {
             get
@@ -106,20 +121,17 @@ namespace FribergCarRentals.Data.Order
         }
 
         /// <summary>
-        /// The order date.
+        /// The order date in UTC time.
         /// </summary>
         [DisplayName("Order Date")]
-        public DateTime OrderDateUtc { get; set; }
-
-        /// <summary>
-        /// The order status.
-        /// </summary>
-        private OrderStatusEntity OrderStatus { get; set; }
+        [BindNever]
+        public DateTime OrderDateUtc { get; }
 
         /// <summary>
         /// The order status name.
         /// </summary>
         [DisplayName("Order Status")]
+        [BindNever]
         public string OrderStatusName
         {
             get
@@ -132,11 +144,13 @@ namespace FribergCarRentals.Data.Order
         /// The total sum of the order.
         /// </summary>
         [DisplayName("Order Sum")]
+        [DisplayFormat(DataFormatString = DefaultPriceOutputFormatString)]
+        [BindNever]
         public decimal OrderSum
         {
             get
             {
-                return CarBooking?.RentalCostPerDay * (CarBooking?.ReturnDateUtc - CarBooking?.PickupDateUtc)?.Days ?? 0;
+                return CarBooking?.RentalCostPerDay * ((CarBooking?.CarReturnDate - CarBooking?.CarPickupDate)?.Days + 1) ?? 0;
             }
         }
 
@@ -144,6 +158,7 @@ namespace FribergCarRentals.Data.Order
         /// The total sum of all payments made by the customer.
         /// </summary>
         [DisplayName("Paid")]
+        [BindNever]
         public decimal Paid
         {
             get
@@ -155,7 +170,15 @@ namespace FribergCarRentals.Data.Order
         /// <summary>
         /// A collection of payments tied to the order.
         /// </summary>
-        public List<PaymentEntity> Payments { get; set; } = new();
+        [DisplayName("Payments")]
+        [BindNever]
+        public List<PaymentEntity> Payments { get; } = new();
+
+        /// <summary>
+        /// The order status.
+        /// </summary>
+        [BindNever]
+        private OrderStatusEntity OrderStatus { get; }
 
         #endregion
     }

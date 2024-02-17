@@ -1,17 +1,31 @@
-﻿using System.ComponentModel;
+﻿using FribergCarRentals.Attributes;
+using FribergCarRentals.Models.Other;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace FribergCarRentals.Data.User
+namespace FribergCarRentals.Models.User
 {
-    public abstract class UserLoginViewModel
+    /// <summary>
+    /// A viewmodel base class that handles data related to user login. 
+    /// </summary>
+    public abstract class UserLoginViewModel : ViewModelBase
     {
-
         #region Constructors
 
+        /// <summary>
+        /// A constructor. 
+        /// </summary>
         protected UserLoginViewModel()
         {
 
         }
 
+        /// <summary>
+        /// A constructor. 
+        /// </summary>
+        /// <param name="email">The email for the user.</param>
+        /// <param name="password">The password for the user.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         protected UserLoginViewModel(string email, string password)
         {
             #region Checks
@@ -40,12 +54,20 @@ namespace FribergCarRentals.Data.User
         /// The email address for the user.
         /// </summary>
         [DisplayName("Email")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress]
+        [ServerSideRegularExpression(EmailRegexPattern, ErrorMessage = EmailInputValidationMessage)]
         public string Email { get; set; } = "";
 
         /// <summary>
         /// The password for the user.
         /// </summary>
         [DisplayName("Password")]
+        [Required(AllowEmptyStrings = false)]
+        [DataType(DataType.Password)]
+        [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
         public string Password { get; set; } = "";
 
         #endregion
