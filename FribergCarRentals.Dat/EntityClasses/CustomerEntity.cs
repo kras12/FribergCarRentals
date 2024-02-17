@@ -1,8 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FribergCarRentals.DataAccess.Types;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
+    /// <summary>
+    /// An entity class that represents a customer.
+    /// </summary>
     public class CustomerEntity : UserEntity
     {
         #region Constructors
@@ -10,7 +14,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerEntity() : base(UserRoleEntity.CreateSeedObject(UserRoleType.Customer))
+        public CustomerEntity() : base(UserRoleEntity.CreateFromType(UserRoleType.Customer))
         {
 
         }
@@ -18,7 +22,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         ///  A constructor.
         /// </summary>
-        /// <param name="userId">The ID for the user. Can't be negative.</param>
+        /// <param name="userId">The ID for the user.</param>
         /// <param name="firstName">The first name for the user.</param>
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
@@ -26,7 +30,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CustomerEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateSeedObject(UserRoleType.Customer))
+            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateFromType(UserRoleType.Customer))
         {
 
         }
@@ -40,6 +44,9 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// </summary>
         public List<CarOrderEntity> Orders { get; } = new();
 
+        /// <summary>
+        /// The user role for the customer.
+        /// </summary>
         public override UserRoleEntity UserRole
         {
             get
@@ -52,7 +59,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
                 // Safe guard against invalid model bindings.
                 if (value.UserRoleType != UserRoleType.Customer)
                 {
-                    throw new InvalidOperationException("Invalid user role assignment.");
+                    throw new ArgumentException("Invalid user role assignment.");
                 }
 
                 base.UserRole = value;

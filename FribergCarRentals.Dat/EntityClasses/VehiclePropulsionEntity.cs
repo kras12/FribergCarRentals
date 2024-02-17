@@ -8,7 +8,7 @@ using FribergCarRentals.DataAccess.Extensions;
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
-    /// Represents the propulsion system for a vehicle.
+    /// An entity class that represents the propulsion system for a vehicle.
     /// </summary>
     [Table("VehiclePropulsion")]
     public class VehiclePropulsionEntity
@@ -19,8 +19,10 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// A constructor intended for EF Core.
         /// </summary>
         /// <param name="vehiclePropulsionId">The database ID for the entity.</param>
-        /// <param name="propulsionName">The name for the propulsion system. Can't be null.</param>
-        /// <param name="propulsionDescription">The description for the propulsion system. Can't be null.</param>
+        /// <param name="propulsionName">The name for the propulsion system.</param>
+        /// <param name="propulsionDescription">The description for the propulsion system.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         private VehiclePropulsionEntity(VehiclePropulsionType vehiclePropulsionId, string propulsionName, string propulsionDescription)
         {
             #region Checks
@@ -66,10 +68,14 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #region Properties
 
         /// <summary>
-        /// The database ID for the entity.
+        /// The description for the propulsion system.
         /// </summary>
-        [Key]
-        public VehiclePropulsionType VehiclePropulsionId { get; private set; }
+        public string PropulsionDescription { get; private set; }
+
+        /// <summary>
+        /// The name for the propulsion system.
+        /// </summary>
+        public string PropulsionName { get; private set; }
 
         /// <summary>
         /// The propulsion type.
@@ -83,43 +89,46 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         }
 
         /// <summary>
-        /// The name for the propulsion system.
+        /// The ID for the entity.
         /// </summary>
-        public string PropulsionName { get; private set; }
-
-        /// <summary>
-        /// The description for the propulsion system.
-        /// </summary>
-        public string PropulsionDescription { get; private set; }
+        [Key]
+        public VehiclePropulsionType VehiclePropulsionId { get; private set; }
 
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Returns a new seed object for inserting into the database.
+        /// Creates a new entity that represents an entity stored in the database.
         /// </summary>
-        /// <param name="propulsionType"></param>
-        /// <returns></returns>
-        public static VehiclePropulsionEntity CreateSeedObject(VehiclePropulsionType propulsionType)
+        /// <param name="propulsionType">The propulsion type for the new object.</param>
+        /// <returns>A <see cref="VehiclePropulsionEntity"/> object.</returns>
+        public static VehiclePropulsionEntity CreateFromType(VehiclePropulsionType propulsionType)
         {
             return new VehiclePropulsionEntity(propulsionType);
         }
 
-        public static bool TryCreateFromPropulsionName(string propulsionName, [NotNullWhen(true)] out VehiclePropulsionEntity? entity)
+        /// <summary>
+        /// Attempts to create a new entity that represents an entity stored in the database.
+        /// </summary>
+        /// <param name="propulsionSystemName">The name of the propulsion system to match.</param>
+        /// <param name="entity">The resulting <see cref="VehiclePropulsionEntity"/> object if the operation was successful.</param>
+        /// <returns>True if the operation was successful.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static bool TryCreateFromPropulsionName(string propulsionSystemName, [NotNullWhen(true)] out VehiclePropulsionEntity? entity)
         {
             #region Checks
 
-            if (string.IsNullOrEmpty(propulsionName))
+            if (string.IsNullOrEmpty(propulsionSystemName))
             {
-                throw new ArgumentException($"The value for parameter '{nameof(propulsionName)}' can't be null or empty.", nameof(propulsionName));
+                throw new ArgumentException($"The value for parameter '{nameof(propulsionSystemName)}' can't be null or empty.", nameof(propulsionSystemName));
             }
 
             #endregion
 
             entity = Enum.GetValues(typeof(VehiclePropulsionType))
                     .Cast<VehiclePropulsionType>()
-                    .Where(x => x.GetAttribute<EnumDatabaseValueAttribute>().Value == propulsionName)
+                    .Where(x => x.GetAttribute<EnumDatabaseValueAttribute>().Value == propulsionSystemName)
                     .Select(x => new VehiclePropulsionEntity(x))
                     .SingleOrDefault();
 

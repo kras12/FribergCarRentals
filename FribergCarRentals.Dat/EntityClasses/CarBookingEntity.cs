@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
+    /// <summary>
+    /// An entity class that represents a car booking.
+    /// </summary>
     public class CarBookingEntity
     {
         #region Constructors
@@ -24,11 +27,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// </summary>
         /// <param name="order">The order the booking belongs to.</param>
         /// <param name="car">The car for the booking. Can't be null.</param>
-        /// <param name="pickupDate"></param>
-        /// <param name="returnDate"></param>
+        /// <param name="pickupDateUTC">The car pickup date (UTC) for the booking.</param>
+        /// <param name="returnDateUTC">The return pickup date (UTC) for the booking.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarBookingEntity(CarOrderEntity order, CarEntity car, DateTime pickupDate, DateTime returnDate)
+        public CarBookingEntity(CarOrderEntity order, CarEntity car, DateTime pickupDateUTC, DateTime returnDateUTC)
         {
             #region Checks
 
@@ -42,7 +45,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
                 throw new ArgumentNullException(nameof(car), $"The value of parameter '{car}' can't be null.");
             }
 
-            if (returnDate < pickupDate)
+            if (returnDateUTC < pickupDateUTC)
             {
                 throw new ArgumentOutOfRangeException("The return date can't be smaller than the pickup date.");
             }
@@ -52,19 +55,13 @@ namespace FribergCarRentals.DataAccess.EntityClasses
             CarOrder = order;
             Car = car;
             RentalCostPerDay = car.RentalCostPerDay;
-            PickupDateUtc = pickupDate;
-            ReturnDateUtc = returnDate;
+            PickupDateUtc = pickupDateUTC;
+            ReturnDateUtc = returnDateUTC;
         }
 
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// The order the booking belongs to. 
-        /// </summary>
-        [Required]
-        public CarOrderEntity CarOrder { get; set; }
 
         /// <summary>
         /// The car that was rented.
@@ -79,7 +76,13 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         public int CarBookingId { get; set; }
 
         /// <summary>
-        /// The pickup date.
+        /// The order the booking belongs to. 
+        /// </summary>
+        [Required]
+        public CarOrderEntity? CarOrder { get; set; }
+
+        /// <summary>
+        /// The car pickup date in UTC time.
         /// </summary>
         public DateTime PickupDateUtc { get; set; }
 
@@ -89,7 +92,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         public decimal RentalCostPerDay { get; set; }
 
         /// <summary>
-        /// The return date.
+        /// The car return date in UTC time.
         /// </summary>
         public DateTime ReturnDateUtc { get; set; }
 

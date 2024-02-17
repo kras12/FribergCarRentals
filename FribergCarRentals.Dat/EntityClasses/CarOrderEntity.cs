@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
-    /// A class that represents a car order. 
+    /// An entity class that represents a car order. 
     /// </summary>
     [Table("CarOrders")]
     public class CarOrderEntity
@@ -27,7 +27,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CarOrderEntity(CustomerEntity customer) :
-            this(OrderStatusEntity.CreateSeedObject(Types.OrderStatus.Created),
+            this(OrderStatusEntity.CreateFromType(Types.OrderStatus.Created),
                 DateTime.UtcNow, customer, payments: new(), carBookings: new())
         {
 
@@ -36,12 +36,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="orderStatus">The order status. Can't be null.</param>
+        /// <param name="orderStatus">The order status.</param>
         /// <param name="orderDate">The order date.</param>
         /// <param name="customer">The customer that rented the car.</param>
         /// <param name="payments"> A collection of payments tied to the order.</param>
         /// <param name="carBookings">The car bookings tied to the order.</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CarOrderEntity(OrderStatusEntity orderStatus, DateTime orderDate, CustomerEntity customer,
             List<PaymentEntity> payments, List<CarBookingEntity> carBookings)
@@ -83,7 +82,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #region Properties
 
         /// <summary>
-        /// The car booking tied to the order.
+        /// The car bookings tied to the order.
         /// </summary>
         public List<CarBookingEntity> CarBookings { get; set; } = new();
 
@@ -108,12 +107,13 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// The order status.
         /// </summary>
         [Required]
-        public OrderStatusEntity? OrderStatus { get; set; } = null;
+        public OrderStatusEntity? OrderStatus { get; set; }
 
         /// <summary>
         /// A collection of payments tied to the order.
         /// </summary>
         public List<PaymentEntity> Payments { get; set; } = new();
+
         #endregion
     }
 }

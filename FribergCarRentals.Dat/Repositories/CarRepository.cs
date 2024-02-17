@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.DatabaseContexts;
 using FribergCarRentals.DataAccess.Types;
+using static System.Net.Mime.MediaTypeNames;
+using System.Threading.Channels;
 
 namespace FribergCarRentals.DataAccess.Repositories
 {
     /// <summary>
-    /// A repository class to handle the car entity.
+    /// A repository class that handles the car entity.
     /// </summary>
+    /// <remarks>This repository class works on detached entities. All fetched entities will not be tracked by EF Core.</remarks>
     public class CarRepository : GenericRepository<CarEntity>, ICarRepository
     {
         #region Constructors
@@ -28,112 +31,126 @@ namespace FribergCarRentals.DataAccess.Repositories
 
         #endregion
 
-        #region Methods        
+        #region Methods
 
         /// <summary>
-        /// Attempts to fetch all cars with a specific rental status.
+        /// Adds a car to the database.
         /// </summary>
-        /// <param name="rentalStatus">The rental status of the cars.</param>
-        /// <returns>A <see cref="IEnumerable{T}"/> that contains matched cars.</returns>
-        public async Task<IEnumerable<CarEntity>> GetAll(CarRentalStatusEntity rentalStatus)
+        /// <param name="entity">The car to add.</param>
+        /// <returns></returns>
+        public async override Task AddAsync(CarEntity entity)
         {
-            return await _databaseContext.Cars.Where(x => x.RentalStatus == rentalStatus).ToListAsync();
-        }
-
-        /// <summary>
-        /// Attempts to fetch a car with a specific ID and rental status.
-        /// </summary>
-        /// <param name="id">The ID of the car..</param>
-        /// <param name="rentalStatus">The rental status of the car.</param>
-        /// <returns>a <see cref="CarEntity"/> if the car was found. Null if not.</returns>
-        public Task<CarEntity?> GetById(int id, CarRentalStatusEntity rentalStatus)
-        {
-            return _databaseContext.Cars.SingleOrDefaultAsync(x => x.CarId == id && x.RentalStatus == rentalStatus);
+            await _databaseContext.Set<CarEntity>().AddAsync(entity);
+            SetEnumPropertiesTrackingStateUnchanged(entity);
+            await _databaseContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Deletes a car from the database.
         /// </summary>
         /// <param name="id">The ID of the car to delete.</param>
-        /// <returns>A <see cref="Task{TResult}"/> object containing true if the car was deleted. False if not.</returns>
-        public async Task<bool> Delete(int id)
+        /// <returns>A <see cref="Task"/>.</returns>
+        public Task DeleteAsync(int id)
         {
             var car = new CarEntity() { CarId = id };
             _databaseContext.Cars.Remove(car);
-            return await _databaseContext.SaveChangesAsync() > 0;
+            return _databaseContext.SaveChangesAsync();
         }
 
-        public async override Task<CarEntity> Add(CarEntity entity)
+        /// <summary>
+        /// Attempts to fetch all cars with a specific rental status.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <param name="rentalStatus">The rental status of the cars.</param>
+        /// <returns>A <see cref="Task{TResult}{T}"/> that contains a collection of matched cars.</returns>
+        public async Task<IEnumerable<CarEntity>> GetAllAsync(CarRentalStatusEntity rentalStatus)
         {
-            await _databaseContext.Set<CarEntity>().AddAsync(entity);
-            _databaseContext.Entry(entity.PropulsionSystem).State = EntityState.Unchanged;
-            _databaseContext.Entry(entity.RentalStatus).State = EntityState.Unchanged;
-            await _databaseContext.SaveChangesAsync();
-            return entity;
+            return await _databaseContext.Cars.Where(x => x.RentalStatus == rentalStatus).AsNoTracking().ToListAsync();
+        }
+
+        /// <summary>
+        /// Attempts to fetch a car with a specific ID and rental status.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <param name="id">The ID of the car.</param>
+        /// <param name="rentalStatus">The rental status of the car.</param>
+        /// <returns>A <see cref="Task{TResult}"/> that contains the matched car, or null if not found.</returns>
+        public Task<CarEntity?> GetByIdAsync(int id, CarRentalStatusEntity rentalStatus)
+        {
+            return _databaseContext.Cars.AsNoTracking().SingleOrDefaultAsync(x => x.CarId == id && x.RentalStatus == rentalStatus);
+        }
+
+        /// <summary>
+        /// Attempts to fetch a car with a specific ID.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <param name="id">The ID of the car.</param>
+        /// <remarks>This override is needed to disable tracking since the base class lacks this ability.</remarks>
+        /// <returns>a <see cref="Task{TResult}"/> containing the car if found, or null if not found.</returns>
+        public override Task<CarEntity?> GetByIdAsync(int id)
+        {
+            return _databaseContext.Cars.AsNoTracking().SingleOrDefaultAsync(x => x.CarId == id);
+        }
+
+        /// <summary>
+        /// Attempts to fetch all images for a car with a specific ID. 
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>s>
+        /// <param name="id">The ID of the car.</param>
+        /// <returns>A <see cref="Task{TResult}"/> containing a collection containing the images found.</returns>
+        public async Task<IEnumerable<ImageEntity>> GetCarImagesAsync(int id)
+        {
+            // EF Core doesn't like the combination of include and AsNoTracking in this case, so we do a work around. 
+            var car = await GetByIdAsync(id);
+            return car?.Images ?? new List<ImageEntity>();
         }
 
         /// <summary>
         /// Returns all the cars that are availble to be rented out. 
         /// </summary>
-        /// <returns>A collection of cars.</returns>
-        public Task<List<CarEntity>> GetRentableCars()
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <returns>A <see cref="Task{TResult}{T}"/> that contains a collection of matched cars.</returns>
+        public async Task<IEnumerable<CarEntity>> GetRentableCarsAsync()
         {
-            return _databaseContext.Cars.Where(x => x.RentalStatus!.StatusType == RentalCarStatus.Rentable).ToListAsync();
+            return await _databaseContext.Cars.Where(x => x.RentalStatus!.StatusType == RentalCarStatus.Rentable).AsNoTracking().ToListAsync();
         }
 
-        public async override Task<CarEntity> Update(CarEntity entity)
+        /// <summary>
+        /// Updates the car entity in the database. 
+        /// </summary>
+        /// <param name="entity">The car to update.</param>
+        /// <returns>A <see cref="Task{TResult}{T}"/> object.</returns>
+        public async override Task UpdateAsync(CarEntity entity)
         {
-            var oldCar = await _databaseContext.Cars.Where(x => x.CarId == entity.CarId).SingleOrDefaultAsync();
+            // We must store the final images outside of the entity for our comparisions,
+            // since EF Core will add tracked images to the entity if they don't exist.
+            var targetImages = entity.Images.ToList();
+            _databaseContext.Update(entity);
+            SetEnumPropertiesTrackingStateUnchanged(entity);
 
-            if (oldCar is not null)
-            {
-                // Copy car data
-                _databaseContext.Entry(oldCar).CurrentValues.SetValues(entity);
-                
-                // EF Core will get duplicate keys in tracking if we add the same type
-                if (oldCar.RentalStatus!.StatusType != entity.RentalStatus!.StatusType)
+            // EF Core will add missing images to the entity here.
+            var databaseImages = await _databaseContext.Images.Where(x => x.Car!.CarId == entity.CarId).ToListAsync();
+            
+            // Modify status for deleted images
+            databaseImages.ExceptBy(targetImages.Select(x => x.ImageId), y => y.ImageId).ToList()
+                .ForEach(deletedImage =>
                 {
-                    oldCar.RentalStatus = entity.RentalStatus;
-                }
+                    _databaseContext.Images.Entry(deletedImage).State = EntityState.Deleted;
+                });
 
-                // EF Core will get duplicate keys in tracking if we add the same type
-                if (oldCar.PropulsionSystem!.PropulsionType != entity.PropulsionSystem!.PropulsionType)
-                {
-                    oldCar.PropulsionSystem = entity.PropulsionSystem;
-                }                
-                
-                // EF Core needs to know that the states already exists in the database
-                _databaseContext.Entry(oldCar.RentalStatus!).State = EntityState.Unchanged;
-                _databaseContext.Entry(oldCar.PropulsionSystem!).State = EntityState.Unchanged;
+            await _databaseContext.SaveChangesAsync();
+        }
 
-                // Existing images with no changes. 
-                var existingImages = oldCar.Images.IntersectBy(entity.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
-
-                foreach (var existingImage in existingImages)
-                {
-                    var sourceImage = entity.Images.Single(y => y.FilePath == existingImage.FilePath);
-                    sourceImage.ImageId = existingImage.ImageId;
-                    _databaseContext.Entry(existingImage).CurrentValues.SetValues(sourceImage);
-                }
-
-                // New images
-                var newImages = entity.Images.ExceptBy(oldCar.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
-                oldCar.Images.AddRange(newImages);
-
-                // Deleted images
-                var deletedImages = oldCar.Images.ExceptBy(entity.Images.Select(x => x.FilePath), y => y.FilePath).ToList();
-                foreach (var image in deletedImages)
-                {
-                    oldCar.Images.Remove(image);
-                    _databaseContext.Entry(image).State = EntityState.Deleted;
-                }
-
-                // Save
-                await _databaseContext.SaveChangesAsync();
-                return oldCar;
-            }
-
-            throw new Exception("The car could not be found.");
+        /// <summary>
+        /// Sets the necessary EF Core tracking state for enum properties in the car entity. 
+        /// This is needed to instruct the framework that the status entities already exists in the database.
+        /// </summary>
+        /// <param name="entity">The car to set the tracking states for.</param>
+        private void SetEnumPropertiesTrackingStateUnchanged(CarEntity entity)
+        {
+            // EF Core needs to know that the states already exists in the database
+            _databaseContext.Entry(entity.RentalStatus!).State = EntityState.Unchanged;
+            _databaseContext.Entry(entity.PropulsionSystem!).State = EntityState.Unchanged;
         }
 
         #endregion

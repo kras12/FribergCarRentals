@@ -8,7 +8,7 @@ using FribergCarRentals.DataAccess.Extensions;
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
-    /// A class that represents rental statuses for a car.
+    /// An entity class that represents rental statuses for a car.
     /// </summary>
     [Table("CarRentalStatuses")]
     public class CarRentalStatusEntity
@@ -18,9 +18,10 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor intended for EF Core.
         /// </summary>
-        /// <param name="carRentalStatusId">The database ID for the entity. Can't be negative.</param>
+        /// <param name="carRentalStatusId">The database ID for the entity.</param>
         /// <param name="statusName">The status name.</param>
         /// <param name="statusDescription">The status description.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         private CarRentalStatusEntity(RentalCarStatus carRentalStatusId, string statusName, string statusDescription)
         {
             #region Checks
@@ -61,13 +62,23 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #region Properties
 
         /// <summary>
-        /// The database ID for the entity.
+        /// The ID for the status.
         /// </summary>
         [Key]
         public RentalCarStatus CarRentalStatusId { get; private set; }
 
         /// <summary>
-        /// The rental status type.
+        /// The description for the status.
+        /// </summary>
+        public string StatusDescription { get; private set; } = "";
+
+        /// <summary>
+        /// The name for the status.
+        /// </summary>
+        public string StatusName { get; private set; } = "";
+
+        /// <summary>
+        /// The type for the status.
         /// </summary>
         public RentalCarStatus StatusType
         {
@@ -76,31 +87,27 @@ namespace FribergCarRentals.DataAccess.EntityClasses
                 return CarRentalStatusId;
             }
         }
-
-        /// <summary>
-        /// The status name.
-        /// </summary>
-        public string StatusName { get; private set; } = "";
-
-        /// <summary>
-        /// The status description.
-        /// </summary>
-        public string StatusDescription { get; private set; } = "";
-
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Returns a new seed object for inserting into the database.
+        /// Creates a new entity that represents an entity stored in the database.
         /// </summary>
-        /// <param name="rentalStatus"></param>
-        /// <returns></returns>
-        public static CarRentalStatusEntity CreateSeedObject(RentalCarStatus rentalStatus)
+        /// <param name="rentalStatusType">The rental status type for the new object.</param>
+        /// <returns>A <see cref="CarRentalStatusEntity"/> object.</returns>
+        public static CarRentalStatusEntity CreateFromType(RentalCarStatus rentalStatusType)
         {
-            return new CarRentalStatusEntity(rentalStatus);
+            return new CarRentalStatusEntity(rentalStatusType);
         }
 
+        /// <summary>
+        /// Attempts to create a new entity that represents an entity stored in the database.
+        /// </summary>
+        /// <param name="statusName">The name of the status to match.</param>
+        /// <param name="entity">The resulting <see cref="CarRentalStatusEntity"/> object if the operation was successful.</param>
+        /// <returns>True if the operation was successful.</returns>
+        /// <exception cref="ArgumentException"></exception>
         public static bool TryCreateFromStatusName(string statusName, [NotNullWhen(true)] out CarRentalStatusEntity? entity)
         {
             #region Checks

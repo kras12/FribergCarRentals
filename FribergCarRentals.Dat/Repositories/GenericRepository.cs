@@ -10,10 +10,18 @@ using FribergCarRentals.DataAccess.DatabaseContexts;
 
 namespace FribergCarRentals.DataAccess.Repositories
 {
-    public class GenericRepository<T> : IRepositoryBase<T> where T : class
+    /// <summary>
+    /// A generic repository class.
+    /// </summary>
+    /// <remarks>This repository class works on detached entities. All fetched entities will not be tracked by EF Core.</remarks>
+    /// <typeparam name="T">The entity type.</typeparam>
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         #region Fields
 
+        /// <summary>
+        /// The database context.
+        /// </summary>
         protected readonly ApplicationDbContext _databaseContext;
 
         #endregion
@@ -26,54 +34,73 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <param name="databaseContext">The database context to use.</param>
         public GenericRepository(ApplicationDbContext databaseContext)
         {
-            #region Checks
-
-            if (databaseContext is null)
-            {
-                throw new ArgumentNullException(nameof(databaseContext), "The DBContext can't be null.");
-            }
-
             _databaseContext = databaseContext;
-
-            #endregion
         }
 
         #endregion
 
         #region Methods
 
-        public async virtual Task<T> Add(T entity)
+        /// <summary>
+        /// Adds an entity to the database.
+        /// </summary>
+        /// <param name="entity">The entity to add.</param>
+        /// <returns>A <see cref="Task"/> object.</returns>
+        public async virtual Task AddAsync(T entity)
         {
             await _databaseContext.Set<T>().AddAsync(entity);
             await _databaseContext.SaveChangesAsync();
-            return entity;
         }
 
-        public async virtual Task<bool> Delete(T entity)
+        /// <summary>
+        /// Deletes an entity from the database.
+        /// </summary>
+        /// <param name="entity">The entity to delete.</param>
+        /// <returns>A <see cref="Task"/> object.</returns>
+        public virtual Task DeleteAsync(T entity)
         {
             _databaseContext.Set<T>().Remove(entity);
-            return await _databaseContext.SaveChangesAsync() > 0;
+            return _databaseContext.SaveChangesAsync();
         }
 
-        public async virtual Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
+        /// <summary>
+        /// Performs a search in the database and returns found entities.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <param name="predicate">The predicate to use.</param>
+        /// <returns>A <see cref="Task"/> object containing a collection of the resulting entities.</returns>
+        public async virtual Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await _databaseContext.Set<T>().Where(predicate).AsNoTracking().ToListAsync();
         }
 
-        public async virtual Task<IEnumerable<T>> GetAll()
+        /// <summary>
+        /// Gets all entities from the database.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <returns>A <see cref="Task"/> object containg a collection of all entities found.</returns>
+        public async virtual Task<IEnumerable<T>> GetAllAsync()
         {
             return await _databaseContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public virtual ValueTask<T?> GetById(int id)
-        {
-            return _databaseContext.Set<T>().FindAsync(id);
-        }
-        public async virtual Task<T> Update(T entity)
+        /// <summary>
+        /// Gets an entity by ID.
+        /// </summary>
+        /// <remarks>The resulting entity is not tracked by EF Core.</remarks>
+        /// <param name="id">The ID of the entity.</param>
+        /// <returns>A <see cref="Task"/> object containg the entity.</returns>
+        public abstract Task<T?> GetByIdAsync(int id);
+
+        /// <summary>
+        /// Updates an entity in the database.
+        /// </summary>
+        /// <param name="entity">The entity to update.</param>
+        /// <returns>A <see cref="Task"/> object.</returns>
+        public virtual Task UpdateAsync(T entity)
         {
             _databaseContext.Update(entity);
-            await _databaseContext.SaveChangesAsync();
-            return entity;
+            return _databaseContext.SaveChangesAsync();
         }
 
         #endregion

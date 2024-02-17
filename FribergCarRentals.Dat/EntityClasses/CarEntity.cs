@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
-    /// A class that represents a car
+    /// A an entity class that represents a car.
     /// </summary>
     [Table("Cars")]
     public class CarEntity
@@ -40,6 +39,8 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="registrationNumber">The registration number for the car.</param>
         /// <param name="propulsionSystem">The propulsion system for the car.</param>
         /// <param name="rentalStatus">The rental status for the car.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber,
             VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus, decimal rentalCostPerDay)
         {
@@ -139,11 +140,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         [Required]
         public VehiclePropulsionEntity? PropulsionSystem { get; set; }
 
-        [Required]
         /// <summary>
         /// The registration number for the car.
         /// </summary>
         public string RegistrationNumber { get; set; } = "";
+
         /// <summary>
         /// The rental cost per day.
         /// </summary>

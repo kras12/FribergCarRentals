@@ -15,6 +15,13 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
     /// </summary>
     public class DesignTimeApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
+        #region Methods
+
+        /// <summary>
+        /// Creates a new instance of a derived context.
+        /// </summary>
+        /// <param name="args">Arguments provided by the design-time service.</param>
+        /// <returns>An instance of <typeparamref name="TContext" />.</returns>
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
@@ -27,5 +34,7 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }
+
+        #endregion
     }
 }

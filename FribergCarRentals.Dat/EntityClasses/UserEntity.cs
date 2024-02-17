@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Data.SharedClasses;
-using FribergCarRentals.DataAccess.Attributes;
+﻿using FribergCarRentals.DataAccess.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,22 +8,9 @@ using System.Threading.Tasks;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
-    #region Enums
-
-    public enum UserRoleType
-    {
-        [EnumDatabaseValue("None", DescriptionValue = "No role.")]
-        None = 0,
-        [EnumDatabaseValue("Admin", DescriptionValue = "Admin role.")]
-        Admin,
-        [EnumDatabaseValue("Customer", DescriptionValue = "Customer role.")]
-        Customer,
-    }
-
-    #endregion
-
-    #region Classes
-
+    /// <summary>
+    /// An entity class that represents an user. 
+    /// </summary>
     public abstract class UserEntity
     {
         #region Constructors
@@ -41,7 +27,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         ///  A constructor.
         /// </summary>
-        /// <param name="userId">The ID for the user. Can't be negative.</param>
+        /// <param name="userId">The ID for the user.</param>
         /// <param name="firstName">The first name for the user.</param>
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
@@ -93,10 +79,9 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #region Properties
 
         /// <summary>
-        /// The ID for the user.
+        /// The email address for the user.
         /// </summary>
-        [Key]
-        public int UserId { get; set; }
+        public string Email { get; set; } = "";
 
         /// <summary>
         /// The first name for the user.
@@ -109,14 +94,15 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         public string LastName { get; set; } = "";
 
         /// <summary>
-        /// The email address for the user.
-        /// </summary>
-        public string Email { get; set; } = "";
-
-        /// <summary>
         /// The password for the user.
         /// </summary>
         public string Password { get; set; } = "";
+
+        /// <summary>
+        /// The ID for the user.
+        /// </summary>
+        [Key]
+        public int UserId { get; set; }
 
         /// <summary>
         /// The user role.
@@ -125,6 +111,4 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
         #endregion
     }
-
-    #endregion
 }

@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Data.SharedClasses;
-using FribergCarRentals.DataAccess.Attributes;
+﻿using FribergCarRentals.DataAccess.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,30 +7,21 @@ namespace FribergCarRentals.DataAccess.Types
     #region Enums
 
     /// <summary>
-    /// Propulsion types for a vehicle.
+    /// Statuses for an order. 
     /// </summary>
-    public enum VehiclePropulsionType
+    public enum OrderStatus
     {
-        [EnumDatabaseValue("None", DescriptionValue = "No propulsion system")]
+        [EnumDatabaseValue("None", DescriptionValue = "No order status")]
         None = 1,
 
-        [EnumDatabaseValue("Other", DescriptionValue = "Other type of vehicle")]
-        Other = 2,
+        [EnumDatabaseValue("Created", DescriptionValue = "Order is created")]
+        Created = 2,
 
-        [EnumDatabaseValue("BEV", DescriptionValue = "Battery electric vehicle")]
-        BEV = 3,
+        [EnumDatabaseValue("Completed", DescriptionValue = "Order is completed")]
+        Completed = 3,
 
-        [EnumDatabaseValue("Diesel", DescriptionValue = "Diesel powered vehicle")]
-        Diesel = 4,
-
-        [EnumDatabaseValue("Gasoline", DescriptionValue = "Gasoline powered vehicle")]
-        Gasoline = 5,
-
-        [EnumDatabaseValue("HEV", DescriptionValue = "Hybrid electric vehicle")]
-        HEV = 9,
-
-        [EnumDatabaseValue("PHEV", DescriptionValue = "Plugin-in hybrid electric vehicle")]
-        PHEV = 7,
+        [EnumDatabaseValue("Canceled", DescriptionValue = "Order is canceled")]
+        Canceled = 4
     }
 
     /// <summary>
@@ -62,21 +52,43 @@ namespace FribergCarRentals.DataAccess.Types
     }
 
     /// <summary>
-    /// Statuses for an order. 
+    /// User roles.
     /// </summary>
-    public enum OrderStatus
+    public enum UserRoleType
     {
-        [EnumDatabaseValue("None", DescriptionValue = "No order status")]
+        [EnumDatabaseValue("None", DescriptionValue = "No role.")]
+        None = 0,
+        [EnumDatabaseValue("Admin", DescriptionValue = "Admin role.")]
+        Admin,
+        [EnumDatabaseValue("Customer", DescriptionValue = "Customer role.")]
+        Customer,
+    }
+
+    /// <summary>
+    /// Propulsion types for a vehicle.
+    /// </summary>
+    public enum VehiclePropulsionType
+    {
+        [EnumDatabaseValue("None", DescriptionValue = "No propulsion system")]
         None = 1,
 
-        [EnumDatabaseValue("Created", DescriptionValue = "Order is created")]
-        Created = 2,
+        [EnumDatabaseValue("Other", DescriptionValue = "Other type of vehicle")]
+        Other = 2,
 
-        [EnumDatabaseValue("Completed", DescriptionValue = "Order is completed")]
-        Completed = 3,
+        [EnumDatabaseValue("BEV", DescriptionValue = "Battery electric vehicle")]
+        BEV = 3,
 
-        [EnumDatabaseValue("Canceled", DescriptionValue = "Order is canceled")]
-        Canceled = 4
+        [EnumDatabaseValue("Diesel", DescriptionValue = "Diesel powered vehicle")]
+        Diesel = 4,
+
+        [EnumDatabaseValue("Gasoline", DescriptionValue = "Gasoline powered vehicle")]
+        Gasoline = 5,
+
+        [EnumDatabaseValue("HEV", DescriptionValue = "Hybrid electric vehicle")]
+        HEV = 9,
+
+        [EnumDatabaseValue("PHEV", DescriptionValue = "Plugin-in hybrid electric vehicle")]
+        PHEV = 7,
     }
 
     #endregion

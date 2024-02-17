@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FribergCarRentals.DataAccess.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
+    /// <summary>
+    /// An entity class that represents an admin. 
+    /// </summary>
     public class AdminEntity : UserEntity
     {
         #region Constructors
@@ -14,7 +18,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
-        public AdminEntity() : base(UserRoleEntity.CreateSeedObject(UserRoleType.Admin))
+        public AdminEntity() : base(UserRoleEntity.CreateFromType(UserRoleType.Admin))
         {
 
         }
@@ -30,7 +34,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateSeedObject(UserRoleType.Admin))
+            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateFromType(UserRoleType.Admin))
         {
 
         }
@@ -39,6 +43,9 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
         #region Properties
 
+        /// <summary>
+        /// The user role.
+        /// </summary>
         public override UserRoleEntity UserRole
         {
             get
@@ -51,7 +58,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
                 // Safe guard against invalid model bindings.
                 if (value.UserRoleType != UserRoleType.Admin)
                 {
-                    throw new InvalidOperationException("Invalid user role assignment.");
+                    throw new ArgumentException("Invalid user role assignment.");
                 }
 
                 base.UserRole = value;

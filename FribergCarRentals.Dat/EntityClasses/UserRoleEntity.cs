@@ -1,5 +1,6 @@
 ﻿using FribergCarRentals.DataAccess.Attributes;
 using FribergCarRentals.DataAccess.Extensions;
+using FribergCarRentals.DataAccess.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
-    /// A class that represents an user role.
+    /// An entity class that represents an user role.
     /// </summary>
     [Table("UserRoles")]
     public class UserRoleEntity
@@ -25,6 +26,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="userRoleId">The database ID for the user role.</param>
         /// <param name="userRoleName">The user role name.</param>
         /// <param name="userRoleDescription">The user role description.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         private UserRoleEntity(UserRoleType userRoleId, string userRoleName, string userRoleDescription)
         {
             #region Checks
@@ -65,13 +67,23 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #region Properties
 
         /// <summary>
-        /// The database ID for the user role.
+        /// The description for the user role.
+        /// </summary>
+        public string UserRoleDescription { get; private set; } = "";
+
+        /// <summary>
+        /// The ID for the user role.
         /// </summary>
         [Key]
         public UserRoleType UserRoleId { get; private set; }
 
         /// <summary>
-        /// The user role type.
+        /// The name for the user role.
+        /// </summary>
+        public string UserRoleName { get; private set; } = "";
+
+        /// <summary>
+        /// The type for the user role.
         /// </summary>
         public UserRoleType UserRoleType
         {
@@ -81,20 +93,26 @@ namespace FribergCarRentals.DataAccess.EntityClasses
             }
         }
 
-        /// <summary>
-        /// The user role name.
-        /// </summary>
-        public string UserRoleName { get; private set; } = "";
-
-        /// <summary>
-        /// The user role description.
-        /// </summary>
-        public string UserRoleDescription { get; private set; } = "";
-
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Creates a new entity that represents an entity stored in the database.
+        /// </summary>
+        /// <param name="userRoleType">The rental status type for the new object.</param>
+        /// <returns>A <see cref="UserRoleEntity"/> object.</returns>
+        public static UserRoleEntity CreateFromType(UserRoleType userRoleType)
+        {
+            return new UserRoleEntity(userRoleType);
+        }
+
+        /// <summary>
+        /// Creates a new entity that represents an entity stored in the database.
+        /// </summary>
+        /// <param name="userRoleName">The name of the user role to match.</param>
+        /// <returns>The resulting <see cref="UserRoleEntity"/> object if the operation was successful. Null if it was not.</returns>
+        /// <exception cref="ArgumentException"></exception>
         public static UserRoleEntity CreateFromUserRoleName(string userRoleName)
         {
             if (TryCreateFromUserRoleName(userRoleName, out var entity))
@@ -106,15 +124,12 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         }
 
         /// <summary>
-        /// Returns a new seed object for inserting into the database.
+        /// Attempts to create a new entity that represents an entity stored in the database.
         /// </summary>
-        /// <param name="userRole">The user role.</param>
-        /// <returns></returns>
-        public static UserRoleEntity CreateSeedObject(UserRoleType userRole)
-        {
-            return new UserRoleEntity(userRole);
-        }
-
+        /// <param name="userRoleName">The name of the user role to match.</param>
+        /// <param name="entity">The resulting <see cref="UserRoleEntity"/> object if the operation was successful.</param>
+        /// <returns>True if the operation was successful.</returns>
+        /// <exception cref="ArgumentException"></exception>
         public static bool TryCreateFromUserRoleName(string userRoleName, [NotNullWhen(true)] out UserRoleEntity? entity)
         {
             #region Checks

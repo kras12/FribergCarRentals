@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 namespace FribergCarRentals.Data.SharedClasses
 {
     /// <summary>
-    /// A class that stores the name of the appsettings file and the database connection string. 
-    /// This class is used by the design database context to enable scaffolding, 
-    /// and by the connection string manager for normal operations.  
+    /// A helper class that stores the name of the appsettings file (development) and the database connection string. 
+    /// This class is used by the design database context to enable scaffolding when the database context resides in its own project.
     /// </summary>
     public static class AppSettingsHelper
     {

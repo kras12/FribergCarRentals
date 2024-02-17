@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
-    /// A class that represents a payment.
+    /// An entity class that represents a payment.
     /// </summary>
     public class PaymentEntity
     {
@@ -15,15 +15,17 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// </summary>
         public PaymentEntity()
         {
-
+            
         }
 
         /// <summary>
-        /// A constructor intended for EF core.
+        /// A constructor.
         /// </summary>
         /// <param name="order">The order the payment belongs to.</param>
         /// <param name="amount">The amount paid.</param>
         /// <param name="paymentDetails">The details of the payment</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public PaymentEntity(CarOrderEntity order, decimal amount, string paymentDetails)
         {
             #region Checks
@@ -31,6 +33,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
             if (order is null)
             {
                 throw new ArgumentNullException(nameof(order), $"The value of parameter '{order}' can't be null.");
+            }
+
+            if (amount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), $"The value of parameter '{amount}' can't be negative.");
             }
 
             if (paymentDetails is null)
@@ -61,15 +68,15 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         public CarOrderEntity? Order { get; set; }
 
         /// <summary>
-        /// The id of the entity in the database.
-        /// </summary>
-        [Key]
-        public int PaymentId { get; private set; }
-
-        /// <summary>
         /// The details of the payment.
         /// </summary>
         public string PaymentDetails { get; set; } = "";
+
+        /// <summary>
+        /// The id of the payment.
+        /// </summary>
+        [Key]
+        public int PaymentId { get; private set; }
 
         #endregion
     }
