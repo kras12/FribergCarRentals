@@ -137,7 +137,7 @@ namespace FribergCarRentals.Controllers.Customer
         }
 
         // POST: CustomerOrderController/Book
-        [HttpPost]
+        [HttpPost("{carId}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Book(CreateOrderViewModel createOrderViewModel)
         {
@@ -261,7 +261,7 @@ namespace FribergCarRentals.Controllers.Customer
             TempDataHelper.Set(TempData, CustomerController.RedirectInstructionsTempDataKey, new RedirectToActionData(
                     action, ControllerHelper.GetControllerName<CustomerOrderController>(), routeValues: routeValues));
 
-            return RedirectToAction(nameof(CustomerController.Login), ControllerHelper.GetControllerName<CustomerController>());
+            return RedirectToAction(nameof(CustomerController.Authenticate), ControllerHelper.GetControllerName<CustomerController>());
         }
 
         /// <summary>
