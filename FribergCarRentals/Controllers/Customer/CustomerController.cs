@@ -1,10 +1,6 @@
 ﻿using FribergCarRentals.Controllers.Customer;
 using FribergCarRentals.Data;
 using FribergCarRentals.Helpers;
-using FribergCarRentals.Data.Admin;
-using FribergCarRentals.Data.Customer;
-using FribergCarRentals.Data.Order;
-using FribergCarRentals.Session;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -13,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Models.Customer;
+using FribergCarRentals.Sessions;
+using FribergCarRentalsRazor.Helpers;
 
 namespace FribergCarRentals.Controllers
 {
@@ -21,9 +20,15 @@ namespace FribergCarRentals.Controllers
     {
         #region Constants
 
-        public const string RedirectToActionTempDataKey = "CustomerLoginRedirectToAction";
-        private const string CurrentControllerRoutePart = "Customer";
+        /// <summary>
+        /// The key used by other classes for storing redirect instructions to apply after the user have logged in.
+        /// </summary>
+        public const string RedirectInstructionsTempDataKey = "CustomerLoginRedirectToPage";
 
+        /// <summary>
+        /// The route part for this controller.
+        /// </summary>
+        private const string CurrentControllerRoutePart = "Customer";
         #endregion
 
         #region Fields
@@ -43,41 +48,78 @@ namespace FribergCarRentals.Controllers
 
         #region Actions
 
+        // GET: CustomerController
+        [HttpGet]
+        public ActionResult Authenticate()
+        {
+            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            {
+                return TempDataOrHomeRedirect();
+            }
+
+            return View(new RegisterOrLoginCustomerViewModel());
+        }
+
         // POST: CustomerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CustomerRegisterViewModel customerViewModel)
+        public async Task<IActionResult> Create(RegisterCustomerViewModel registerCustomerViewModel)
         {
-            if (ModelState.Count > 0 && ModelState.IsValid && !UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
             {
-                if (DataTransferHelper.TryTransferData(customerViewModel, out CustomerEntity customer))
-                {
-                    var addedCustomer = await _customerRepository.Add(customer);
-                    LoginCustomer(addedCustomer);
-                    return TempDataOrHomeRedirect();
-                }                
+                return TempDataOrHomeRedirect();
             }
 
-            return StatusCode(500);
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                if (!DataTransferHelper.TryTransferData(registerCustomerViewModel, out CustomerEntity customer))
+                {
+                    throw new Exception("Failed to transfer data from the view model to the entity.");
+                }
+
+                if (await _customerRepository.CustomerExists(customer.Email))
+                {
+                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
+                    ModelState.AddModelError(nameof(RegisterCustomerViewModel), "An account already exists with that email.");
+                    return View(registerCustomerViewModel);
+                }
+
+                await _customerRepository.AddAsync(customer);
+                LoginCustomer(customer);
+                return TempDataOrHomeRedirect();
+            }
+
+            return View(registerCustomerViewModel);
         }
 
         // Post: CustomerController
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(CustomerLoginViewModel customerModel)
+        public async Task<ActionResult> Login(LoginCustomerViewModel loginCustomerViewModel)
         {
-            if (ModelState.Count > 0 && ModelState.IsValid && !UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
             {
-                var customer = await _customerRepository.GetMatchingCustomer(customerModel.Email, customerModel.Password);                
+                return TempDataOrHomeRedirect();
+            }
 
-                if (customer is not null)
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                var customer = await _customerRepository.GetMatchingCustomerAsync(loginCustomerViewModel.Email, loginCustomerViewModel.Password);
+
+                if (customer is null)
+                {
+                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
+                    ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
+                    return View(loginCustomerViewModel);
+                }
+                else
                 {
                     LoginCustomer(customer);
                     return TempDataOrHomeRedirect();
                 }
             }
 
-            return RedirectToAction(nameof(CustomerOrderController.List), ControllerHelper.GetControllerName<CustomerOrderController>());
+            return View(loginCustomerViewModel);
         }
 
         // GET: CustomerController
@@ -92,21 +134,14 @@ namespace FribergCarRentals.Controllers
             return RedirectToAction(nameof(Index), ControllerHelper.GetControllerName<HomeController>());
         }
 
-        // GET: CustomerController
-        [HttpGet]
-        public ActionResult Authenticate()
-        {
-            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
-            {
-                return RedirectToAction(nameof(HomeController.Index), ControllerHelper.GetControllerName<HomeController>());
-            }
-
-            return View(new CustomerRegisterOrLoginViewModel());
-        }
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Saves the customer user data in the session storage. 
+        /// </summary>
+        /// <param name="customer">The customer to login.</param>
         [NonAction]
         private void LoginCustomer(CustomerEntity customer)
         {
@@ -114,15 +149,19 @@ namespace FribergCarRentals.Controllers
                     new UserSessionData(customer.UserId, customer.Email, customer.UserRole));
         }
 
+        /// <summary>
+        /// Redirects the customer to the page stored in the temp storage if such data exists, else redirects the customer to the homepage. 
+        /// </summary>
+        /// <returns><see cref="IActionResult"/>.</returns>
         [NonAction]
         private ActionResult TempDataOrHomeRedirect()
         {
-            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, RedirectToActionTempDataKey, out var data))
+            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, RedirectInstructionsTempDataKey, out var data))
             {
                 return RedirectToAction(data.Action, data.Controller, data.RouteValues);
             }
 
-            return RedirectToAction(nameof(Index), ControllerHelper.GetControllerName<HomeController>());
+            return RedirectToAction(nameof(Index));
         }
 
         #endregion

@@ -1,15 +1,13 @@
 ﻿using FribergCarRentals.Controllers.Customer;
 using FribergCarRentals.Data;
 using FribergCarRentals.Helpers;
-using FribergCarRentals.Data;
-using FribergCarRentals.Data.Admin;
-using FribergCarRentals.Data.Customer;
-using FribergCarRentals.Session;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
+using FribergCarRentals.Models.Admin;
+using FribergCarRentals.Sessions;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -17,7 +15,10 @@ namespace FribergCarRentals.Controllers.Admin
     {
         #region Constants
 
-        public const string RedirectToActionTempDataKey = "AdminLoginRedirectToAction";
+        /// <summary>
+        /// The key for the redirection data for the page to redirect to after logins. 
+        /// </summary>
+        public const string RedirectToPageTempDataKey = "AdminLoginRedirectToPage";
 
         #endregion
 
@@ -39,26 +40,23 @@ namespace FribergCarRentals.Controllers.Admin
         #region Actions
 
         // GET: AdminController
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                TempDataHelper.Set(TempData, RedirectToActionTempDataKey, new RedirectToActionData(
-                    nameof(Index),
-                    ControllerHelper.GetControllerName<AdminController>()));
-
-                return RedirectToAction(nameof(Login));
+                return RedirectToLogin(nameof(Index));
             }
 
             var userData = UserSessionHandler.GetUserData(HttpContext.Session);
-            var admin = await _adminRepository.GetById(userData.UserId);
+            var admin = await _adminRepository.GetByIdAsync(userData.UserId);
 
             if (admin is not null)
             {
-                return View(new AdminViewModel(admin));
+                AdminViewModel viewModel = new AdminViewModel(admin);
+                return View(viewModel);
             }
 
-            return StatusCode(500);
+            throw new Exception("Failed to find the admin in the database.");
         }
 
         // GET: AdminController
@@ -71,29 +69,40 @@ namespace FribergCarRentals.Controllers.Admin
 
             if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                return RedirectToAction(nameof(Index));
+                return TempDataOrHomeRedirect();
             }
 
-            return View(new AdminLoginViewModel());
+            LoginAdminViewModel viewModel = new();
+            return View(viewModel);
         }
 
         // Post: AdminController
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(CustomerLoginViewModel customerModel)
+        public async Task<ActionResult> Login(LoginAdminViewModel loginAdminViewModel)
         {
-            if (ModelState.Count > 0 && ModelState.IsValid && !UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
-                var admin = await _adminRepository.GetMatchingAdmin(customerModel.Email, customerModel.Password);
+                return TempDataOrHomeRedirect();
+            }
 
-                if (admin is not null)
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                var admin = await _adminRepository.GetMatchingAdminAsync(loginAdminViewModel.Email, loginAdminViewModel.Password);
+
+                if (admin is null)
+                {
+                    ModelState.AddModelError("", "No account matched the entered email/password.");
+                    return View(loginAdminViewModel);
+                }
+                else
                 {
                     LoginAdmin(admin);
                     return TempDataOrHomeRedirect();
                 }
             }
 
-            return RedirectToAction(nameof(Index));
+            return View(loginAdminViewModel);
         }
 
         // GET: AdminController
@@ -104,13 +113,17 @@ namespace FribergCarRentals.Controllers.Admin
                 UserSessionHandler.RemoveUserData(HttpContext.Session);
             }
 
-            return RedirectToAction(nameof(Index), ControllerHelper.GetControllerName<HomeController>());
+            return RedirectToAction(nameof(HomeController.Index), ControllerHelper.GetControllerName<HomeController>());
         }
 
         #endregion
 
         #region Methods       
 
+        /// <summary>
+        /// Saves the admin user data in the session storage. 
+        /// </summary>
+        /// <param name="admin">The admin to login.</param>
         [NonAction]
         private void LoginAdmin(AdminEntity admin)
         {
@@ -118,15 +131,36 @@ namespace FribergCarRentals.Controllers.Admin
                     new UserSessionData(admin.UserId, admin.Email, admin.UserRole));
         }
 
+        /// <summary>
+        /// Redirects the admin to the page stored in the temp storage if such data exists, else redirects the admin to the homepage. 
+        /// </summary>
+        /// <returns><see cref="IActionResult"/>.</returns>
         [NonAction]
         private ActionResult TempDataOrHomeRedirect()
         {
-            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, RedirectToActionTempDataKey, out var data))
+            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, RedirectToPageTempDataKey, out var data))
             {
                 return RedirectToAction(data.Action, data.Controller, data.RouteValues);
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
+
+        #region OtherMethods
+
+        /// <summary>
+        /// Redirects to the login page and request a redirect back afterwards. 
+        /// </summary>
+        /// <param name="action">The action to redirect to.</param>
+        /// <returns><see cref="IActionResult"/>.</returns>
+        private IActionResult RedirectToLogin(string action)
+        {
+            TempDataHelper.Set(TempData, RedirectToPageTempDataKey, new RedirectToActionData(
+                    action, ControllerHelper.GetControllerName<AdminController>()));
+
+            return RedirectToAction(nameof(Login), ControllerHelper.GetControllerName<AdminController>());
         }
 
         #endregion

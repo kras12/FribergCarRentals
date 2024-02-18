@@ -35,11 +35,6 @@ namespace FribergCarRentals.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -48,22 +43,11 @@ namespace FribergCarRentals.Controllers
 
         public async Task<IActionResult> Cars()
         {
-            return View((await _carRepository.GetAll(CarRentalStatusEntity.CreateSeedObject(RentalCarStatus.Rentable)))
-                .Select(x => new CarViewModel(x)).ToList());
-        }
+            ListViewModel<CarViewModel> viewModel = new ListViewModel<CarViewModel>((await _carRepository.GetAllAsync(CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable)))
+                .Select(x => new CarViewModel(x))
+                .ToList());
 
-        public async Task<IActionResult> Car(int id)
-        {
-            var car = await _carRepository.GetById(id);
-
-            if (car is not null)
-            {
-                return View(car);
-            }
-            else
-            {
-                return RedirectToAction(nameof(Cars));
-            }
+            return View(viewModel);
         }
 
         #endregion

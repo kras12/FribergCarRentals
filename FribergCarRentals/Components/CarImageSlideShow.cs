@@ -3,9 +3,11 @@ using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.DataAccess.Types;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Models.Other;
+using FribergCarRentals.Data;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Drawing2D;
+using FribergCarRentals.Controllers;
 
 namespace FribergCarRentalsRazor.Components
 {
@@ -78,13 +80,13 @@ namespace FribergCarRentalsRazor.Components
 
             if (prefixImages != null && prefixImages.Count > 0)
             {
-                prefixImages.ForEach(x => x.LinksToAction = new FribergCarRentals.Data.RedirectToPageData("Cars"));
+                prefixImages.ForEach(x => x.LinksToAction = new RedirectToActionData(nameof(HomeController.Cars), ControllerHelper.GetControllerName<HomeController>()));
                 images = prefixImages;
 			}
 
             images.AddRange(carEntityImages.Select(x => new ImageViewModel(
                 ImageHelper.GetImageFileUrl(x), x.FileName, x.ImageId, 
-                new FribergCarRentals.Data.RedirectToPageData("Cars", urlFragment: x.Car!.CarId.ToString()))));
+                new RedirectToActionData(nameof(HomeController.Cars), ControllerHelper.GetControllerName<HomeController>(), urlFragment: x.Car!.CarId.ToString()))));
 
 			return View(new ListViewModel<ImageViewModel>(images));
         }
