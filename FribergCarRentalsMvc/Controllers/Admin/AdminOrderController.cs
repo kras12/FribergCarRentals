@@ -38,7 +38,7 @@ namespace FribergCarRentals.Controllers.Admin
         /// <summary>
         /// The key for the redirect data containing the page to redirect to after completing an order.
         /// </summary>
-        public const string RedirectToPageAfterOrderCompletionTempDataKey = "AdminCompletedOrderRedirectToPage";        
+        public const string RedirectToPageAfterOrderCompletionTempDataKey = "AdminCompletedOrderRedirectToPage";
 
         #endregion
 
@@ -81,13 +81,13 @@ namespace FribergCarRentals.Controllers.Admin
                 {
                     TempDataHelper.Set(TempData, CompletedOrderIdTempDataKey, id);
 
-                    if (TempDataHelper.TryGet(TempData, RedirectToPageAfterOrderCompletionTempDataKey, out RedirectToPageData? data))
+                    if (TempDataHelper.TryGet(TempData, RedirectToPageAfterOrderCompletionTempDataKey, out RedirectToActionData? data))
                     {
-                        return RedirectToPage(data.Page, data.RouteValues);
+                        return RedirectToAction(data.Action, data.Controller, data.RouteValues);
                     }
                     else
                     {
-                        return RedirectToPage("Details", new { id = id });
+                        return RedirectToAction(nameof(Details), new { id = id });
                     }
                 }
             }
