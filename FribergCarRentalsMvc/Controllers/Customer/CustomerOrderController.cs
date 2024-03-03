@@ -40,11 +40,6 @@ namespace FribergCarRentals.Controllers.Customer
         /// </summary>
         public const string IsNewOrderTempDataKey = "CustomerOrderControllerIsNewOrder";
 
-        /// <summary>
-        /// The key for the redirect data containing the page to redirect to after cancelling an order.
-        /// </summary>
-        public const string RedirectToPageAfterOrderCancellationTempDataKey = "CustomerCancelOrderRedirectToPage";
-
         #endregion
 
         #region Fields
@@ -69,22 +64,22 @@ namespace FribergCarRentals.Controllers.Customer
         #region Actions
 
         // GET: CustomerOrderController/Book
-        [HttpGet("{carId}")]
-        public async Task<IActionResult> Book(int carId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Book(int id)
         {
             if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
             {
-                return RedirectToLogin(nameof(Book), carId);
+                return RedirectToLogin(nameof(Book), id);
             }
 
-            if (carId < 0)
+            if (id < 0)
             {
-                throw new Exception($"Invalid ID: {carId}");
+                throw new Exception($"Invalid ID: {id}");
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var car = await _carRepository.GetByIdAsync(carId, CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable));
+                var car = await _carRepository.GetByIdAsync(id, CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable));
                 var customer = await _customerRepository.GetByIdAsync(UserSessionHandler.GetUserData(HttpContext.Session).UserId);
 
                 if (car is not null && customer is not null)
@@ -93,10 +88,10 @@ namespace FribergCarRentals.Controllers.Customer
                     return View(viewModel);
                 }
 
-                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {carId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
+                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
             }
 
-            throw new Exception($"Failed to present booking form for car with id: {carId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Failed to present booking form for car with id: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         // POST: CustomerOrderController/Cancel/(5)
@@ -137,7 +132,7 @@ namespace FribergCarRentals.Controllers.Customer
         }
 
         // POST: CustomerOrderController/Book
-        [HttpPost("{carId}")]
+        [HttpPost("{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Book(CreateOrderViewModel createOrderViewModel)
         {
@@ -150,13 +145,13 @@ namespace FribergCarRentals.Controllers.Customer
             {
                 if (createOrderViewModel.PickupDateLocalTime.Date < DateTime.Now.Date)
                 {
-                    ModelState.AddModelError($"{nameof(CreateOrderViewModel)}.{nameof(CreateOrderViewModel.PickupDateLocalTime)}",
+                    ModelState.AddModelError($"{nameof(CreateOrderViewModel.PickupDateLocalTime)}",
                         "The pickup date can't be in the past.");
                     return View(createOrderViewModel);
                 }
                 else if (createOrderViewModel.ReturnDateLocalTime.Date < createOrderViewModel.PickupDateLocalTime.Date)
                 {
-                    ModelState.AddModelError($"{nameof(CreateOrderViewModel)}.{nameof(createOrderViewModel.ReturnDateLocalTime)}",
+                    ModelState.AddModelError($"{nameof(createOrderViewModel.ReturnDateLocalTime)}",
                         "The return date can't occur before the pickup date.");
                     return View(createOrderViewModel);
                 }
@@ -272,7 +267,7 @@ namespace FribergCarRentals.Controllers.Customer
         private void SaveRedirectBackInstructionsForCancelOrderAction(string redirectToAction, int? id = null)
         {
             RouteValueDictionary? routeValues = id is not null ? new RouteValueDictionary(new { id = id }) : null;
-            TempDataHelper.Set(TempData, RedirectToPageAfterOrderCancellationTempDataKey, new RedirectToActionData(
+            TempDataHelper.Set(TempData, CanceledOrderRedirectToPageTempDataKey, new RedirectToActionData(
                     redirectToAction, ControllerHelper.GetControllerName<CustomerOrderController>(), routeValues: routeValues));
         }
 

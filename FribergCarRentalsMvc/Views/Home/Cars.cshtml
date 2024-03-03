@@ -15,7 +15,7 @@
             <div id="@item.CarId" class="vertical-flex-container filled-container flex-container__padding__1-rem flex-container__row-gap__1-rem">
                 <h2>@($"{item.CarInfo}")</h2>
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <form asp-action="Book" asp-controller="CustomerOrder" asp-route-carId="@item.CarId" method="get">
+                    <form asp-action="Book" asp-controller="CustomerOrder" asp-route-id="@item.CarId" method="get">
                         <button class="function-button" type="submit">Book Car</button>
                     </form>
                 </div>
