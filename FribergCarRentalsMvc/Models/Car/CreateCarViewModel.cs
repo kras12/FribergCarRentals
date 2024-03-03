@@ -36,7 +36,6 @@ namespace FribergCarRentals.Models.Car
         /// <param name="registrationNumber">The registration number for the car.</param>
         /// <param name="rentalCostPerDay">The rental cost per day.</param>
         /// <param name="rentalStatus">The rental status for the car.</param>
-        /// <param name="uploadImages"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public CreateCarViewModel(string brand, string color, string model, int modelYear, VehiclePropulsionEntity propulsionSystem,
