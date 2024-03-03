@@ -111,17 +111,15 @@ namespace FribergCarRentals.Controllers
                 {
                     // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
                     ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
-                    return View(loginCustomerViewModel);
                 }
                 else
                 {
                     LoginCustomer(customer);
-                    //return RedirectToAction(nameof(CustomerOrderController.Book), "CustomerOrder", new { carid = 2003 });
                     return TempDataOrHomeRedirect();
                 }
             }
 
-            return View(loginCustomerViewModel);
+            return View(nameof(Authenticate), new RegisterOrLoginCustomerViewModel() { LoginCustomerViewModel = loginCustomerViewModel });
         }
 
         // GET: CustomerController
