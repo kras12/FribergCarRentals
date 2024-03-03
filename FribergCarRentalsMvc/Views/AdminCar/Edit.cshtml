@@ -32,6 +32,7 @@ else
     <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem filled-container flex-container__padding__1-rem full-width">
         <h2>Details</h2>
         <form asp-action="Edit" class="vertical-form full-width" enctype="multipart/form-data">
+            <input type="hidden" asp-for="CarId" />
             <div class="vertical-form-field">
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>
@@ -52,7 +53,6 @@ else
                 <input asp-for="Brand" />
                 <span asp-validation-for="Brand" class="error-text"></span>
             </div>
-            <input type="hidden" asp-for="CarId" />
             <div class="vertical-form-field">
                 <label asp-for="Model"></label>
                 <input asp-for="Model" />
@@ -106,7 +106,7 @@ else
                                 <img src="@(imageFile.Url)" />
                                 <figcaption>@imageFile.FileName</figcaption>
                                 <div class="horizontal-flex-container">
-                                    <input type="checkbox" name="@($"{nameof(EditCarViewModel)}.{nameof(EditCarViewModel.DeleteImages)}")" value="@imageFile.ImageId" />
+                                    <input type="checkbox" name="@($"{nameof(EditCarViewModel.DeleteImages)}")" value="@imageFile.ImageId" />
                                     <span>Delete</span>
                                 </div>
                             </figure>

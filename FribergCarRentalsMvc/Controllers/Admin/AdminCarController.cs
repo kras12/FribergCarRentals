@@ -184,6 +184,7 @@ namespace FribergCarRentals.Controllers.Admin
         }
 
         // GET: AdminCarController/Edit/5
+        [HttpGet("{id}")]
         public async Task<IActionResult> Edit(int id)
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
@@ -212,7 +213,7 @@ namespace FribergCarRentals.Controllers.Admin
         }
 
         // POST: AdminCarController/Edit/5
-        [HttpPost]
+        [HttpPost("{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditCarViewModel editCarViewModel)
         {
