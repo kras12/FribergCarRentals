@@ -81,15 +81,16 @@ namespace FribergCarRentals.Controllers
                 {
                     // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
                     ModelState.AddModelError(nameof(RegisterCustomerViewModel), "An account already exists with that email.");
-                    return View(registerCustomerViewModel);
                 }
-
-                await _customerRepository.AddAsync(customer);
-                LoginCustomer(customer);
-                return TempDataOrHomeRedirect();
+                else
+                {
+                    await _customerRepository.AddAsync(customer);
+                    LoginCustomer(customer);
+                    return TempDataOrHomeRedirect();
+                }
             }
 
-            return View(registerCustomerViewModel);
+            return View(nameof(Authenticate), new RegisterOrLoginCustomerViewModel() { RegisterCustomerViewModel = registerCustomerViewModel });
         }
 
         // Post: CustomerController
@@ -115,6 +116,7 @@ namespace FribergCarRentals.Controllers
                 else
                 {
                     LoginCustomer(customer);
+                    //return RedirectToAction(nameof(CustomerOrderController.Book), "CustomerOrder", new { carid = 2003 });
                     return TempDataOrHomeRedirect();
                 }
             }
@@ -161,7 +163,7 @@ namespace FribergCarRentals.Controllers
                 return RedirectToAction(data.Action, data.Controller, data.RouteValues);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), ControllerHelper.GetControllerName<HomeController>());
         }
 
         #endregion
