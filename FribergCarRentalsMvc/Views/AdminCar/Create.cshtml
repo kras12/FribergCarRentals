@@ -66,11 +66,6 @@
                 <span asp-validation-for="RegistrationNumber" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="RentalCostPerDay"></label>
-                <input asp-for="RentalCostPerDay" type="number" step="0.01" />
-                <span asp-validation-for="RentalCostPerDay " class="error-text"></span>
-            </div>
-            <div class="vertical-form-field">
                 <label asp-for="PropulsionSystem"></label>
                 <select asp-for="PropulsionSystem">
                     @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
@@ -82,6 +77,11 @@
                 </select>
                 <span asp-validation-for="PropulsionSystem" class="error-text"></span>
             </div>
+            <div class="vertical-form-field">
+                <label asp-for="RentalCostPerDay"></label>
+                <input asp-for="RentalCostPerDay" type="number" step="0.01" />
+                <span asp-validation-for="RentalCostPerDay " class="error-text"></span>
+            </div>            
             <div class="vertical-form-field">
                 <label asp-for="UploadImages"></label>
                 <input asp-for="UploadImages" multiple />
