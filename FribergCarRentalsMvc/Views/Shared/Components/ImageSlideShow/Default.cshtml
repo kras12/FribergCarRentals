@@ -1,5 +1,6 @@
-﻿@using FribergCarRentals.Models.Other
-@model ListViewModel<ImageViewModel>
+﻿@using FribergCarRentals.Models.Components
+@using FribergCarRentals.Models.Other
+@model ListViewModel<SlideShowImageViewModel>
 
 <div class="image-slideshow-container">
 	@foreach (var image in Model.Models)
@@ -20,19 +21,27 @@
 				{
 					<a asp-action="@image.LinksToAction.Action" asp-controller="@image.LinksToAction.Controller" asp-all-route-data="@routeDictionary">
 						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
+						@if (image.HaveCaption)
+						{
+							<div class="image-slide-caption">@image.ImageCaption</div>
+						}
 					</a>
 				}
 				else
 				{
 					<a asp-action="@image.LinksToAction.Action" asp-controller="@image.LinksToAction.Controller" asp-all-route-data="@routeDictionary" asp-fragment="@urlFragment">
 						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
+						@if (image.HaveCaption)
+						{
+							<div class="image-slide-caption">@image.ImageCaption</div>
+						}
 					</a>
 				}				
 			}
 			else
 			{
 				<img src="@image.Url" class="full-width max-height__50vh cover-image" />
-			}			
+			}
 		</div>
 	}
 	<a class="previous-slider-button" onclick="ShowNextSlide(-1)">&#10094;</a>
@@ -49,6 +58,10 @@
 	let imageSlideIndex = 0;
 	let imageSlides = document.getElementsByClassName("image-slide");
 	let navigationDots = document.getElementsByClassName("navigation-dot");
+
+	setInterval(() => (
+		ShowNextSlide(1)
+	), 5000);
 
 	ShowSlide();
 

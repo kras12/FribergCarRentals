@@ -9,6 +9,7 @@ using FribergCarRentals.DataAccess.DatabaseContexts;
 using FribergCarRentals.DataAccess.Types;
 using static System.Net.Mime.MediaTypeNames;
 using System.Threading.Channels;
+using System.Runtime.ConstrainedExecution;
 
 namespace FribergCarRentals.DataAccess.Repositories
 {
@@ -41,7 +42,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         public async override Task AddAsync(CarEntity entity)
         {
             await _databaseContext.Set<CarEntity>().AddAsync(entity);
-            SetEnumPropertiesTrackingStateUnchanged(entity);
+            SetSubPropertiesTrackingStateUnchanged(entity);
             await _databaseContext.SaveChangesAsync();
         }
 
@@ -106,13 +107,58 @@ namespace FribergCarRentals.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Returns all the cars that are availble to be rented out. 
+        /// Retrieves the first car with images in each car category. 
         /// </summary>
-        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
-        /// <returns>A <see cref="Task{TResult}{T}"/> that contains a collection of matched cars.</returns>
-        public async Task<IEnumerable<CarEntity>> GetRentableCarsAsync()
+        /// <returns>A <see cref="Task{TResult}"/> containing a collection containing the cars found.</returns>
+        public async Task<IEnumerable<CarEntity>> GetFirstCarWithImagesByCategory()
         {
-            return await _databaseContext.Cars.Where(x => x.RentalStatus!.StatusType == RentalCarStatus.Rentable).AsNoTracking().ToListAsync();
+            return await _databaseContext.Cars
+               .Where(x => x.Images.Count > 0)
+               .GroupBy(x => x.Category!.CarCategoryId)
+               .Select(x => x.First())
+               .ToListAsync();
+        }
+
+        /// <summary>
+        /// Returns all the cars that matches the specified category and that are available to be rented out within the desired timespan. 
+        /// </summary>
+        /// <param name="pickupDateUtc">The pickup date for the car in UTC format.</param>
+        /// /// <param name="returnDateUtc">The return date for the car in UTC format.</param>
+        /// <remarks>Returned cars will not be tracked by EF Core.</remarks>
+        /// <param name="category">The category of the car.</param>
+        /// <returns>A <see cref="Task{TResult}"/> containing a collection of matching cars.</returns>
+        public async Task<IEnumerable<CarEntity>> GetRentableCarsAsync(DateTime pickupDateUtc, DateTime returnDateUtc, CarCategoryEntity? category = null)
+        {
+            IQueryable<CarEntity> carQuery;
+
+            if (category is not null)
+            {
+                carQuery = _databaseContext.Cars.Where(car => car.RentalStatus! == CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable) && car.Category == category);
+            }
+            else
+            {
+                carQuery = _databaseContext.Cars.Where(car => car.RentalStatus! == CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable));
+            }
+
+            return await carQuery
+                .GroupJoin(
+                    _databaseContext.CarBookings.Where(carBooking => carBooking.CarOrder!.OrderStatus! == OrderStatusEntity.CreateFromType(OrderStatus.Created) &&
+                    (
+                        (pickupDateUtc >= carBooking.PickupDateUtc && pickupDateUtc <= carBooking.ReturnDateUtc) ||
+                        (returnDateUtc >= carBooking.PickupDateUtc && returnDateUtc <= carBooking.ReturnDateUtc) ||
+                        (pickupDateUtc < carBooking.PickupDateUtc && returnDateUtc > carBooking.ReturnDateUtc)
+                    )),
+                    car => car.CarId,
+                    carBooking => carBooking.Car!.CarId,
+                    (car, carBookings) => new
+                    {
+                        car,
+                        carBookings
+                    }
+                )
+                .Where(carGroup => !carGroup.carBookings.Any())
+                .Select(orderGroup => orderGroup.car)
+                .ToListAsync();
         }
 
         /// <summary>
@@ -126,7 +172,7 @@ namespace FribergCarRentals.DataAccess.Repositories
             // since EF Core will add tracked images to the entity if they don't exist.
             var targetImages = entity.Images.ToList();
             _databaseContext.Update(entity);
-            SetEnumPropertiesTrackingStateUnchanged(entity);
+            SetSubPropertiesTrackingStateUnchanged(entity);
 
             // EF Core will add missing images to the entity here.
             var databaseImages = await _databaseContext.Images.Where(x => x.Car!.CarId == entity.CarId).ToListAsync();
@@ -142,15 +188,16 @@ namespace FribergCarRentals.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Sets the necessary EF Core tracking state for enum properties in the car entity. 
-        /// This is needed to instruct the framework that the status entities already exists in the database.
+        /// Sets the necessary EF Core tracking state for entity properties. 
+        /// This is needed to instruct the framework that the sub entities already exists in the database.
         /// </summary>
         /// <param name="entity">The car to set the tracking states for.</param>
-        private void SetEnumPropertiesTrackingStateUnchanged(CarEntity entity)
+        private void SetSubPropertiesTrackingStateUnchanged(CarEntity entity)
         {
             // EF Core needs to know that the states already exists in the database
             _databaseContext.Entry(entity.RentalStatus!).State = EntityState.Unchanged;
             _databaseContext.Entry(entity.PropulsionSystem!).State = EntityState.Unchanged;
+            _databaseContext.Entry(entity.Category!).State = EntityState.Unchanged;
         }
 
         #endregion

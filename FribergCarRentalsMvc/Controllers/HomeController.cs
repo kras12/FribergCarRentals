@@ -6,6 +6,9 @@ using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.DataAccess.Types;
 using FribergCarRentals.Models.Other;
 using FribergCarRentals.Models.Car;
+using FribergCarRentals.Models.Components;
+using FribergCarRentals.Helpers;
+using FribergCarRentals.Controllers.Customer;
 
 namespace FribergCarRentals.Controllers
 {
@@ -14,12 +17,19 @@ namespace FribergCarRentals.Controllers
     {
         #region Fields
 
+        /// <summary>
+        /// Injected car repository.
+        /// </summary>
         private readonly ICarRepository _carRepository;
 
         #endregion
 
         #region Constructor
 
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="carRepository">Injected car repository.</param>
         public HomeController(ICarRepository carRepository)
         {
             _carRepository = carRepository;
@@ -30,24 +40,32 @@ namespace FribergCarRentals.Controllers
         #region Actions        
 
         [Route("/")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<SlideShowImageViewModel> images = new();
+
+            var cars = (await _carRepository.GetFirstCarWithImagesByCategory()).ToList();
+
+            foreach (var car in cars)
+            {
+                var image = car.Images.First();
+
+                images.Add(new SlideShowImageViewModel(
+                    ImageHelper.GetImageFileUrl(image), image.FileName, image.ImageId,
+                    imageCaption: car.Category!.CategoryName,
+                    linksToAction: new RedirectToActionData(
+                        action: nameof(CustomerOrderController.Book),
+                        controller: ControllerHelper.GetControllerName<CustomerOrderController>(),
+                        routeValues: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))));
+            }
+
+            return View(new ListViewModel<SlideShowImageViewModel>(images));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public async Task<IActionResult> Cars()
-        {
-            ListViewModel<CarViewModel> viewModel = new ListViewModel<CarViewModel>((await _carRepository.GetAllAsync(CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable)))
-                .Select(x => new CarViewModel(x))
-                .ToList());
-
-            return View(viewModel);
         }
 
         #endregion

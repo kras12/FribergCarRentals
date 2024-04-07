@@ -1,4 +1,5 @@
 ﻿using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Models.CarCategory;
 using FribergCarRentals.Models.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
@@ -17,50 +18,32 @@ namespace FribergCarRentals.Models.Car
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="carEntity">The car to model.</param>
-        public CarViewModel(CarEntity carEntity) :
-            this(carEntity.Brand, carEntity.CarId, carEntity.Color, carEntity.Model, carEntity.ModelYear, 
-                carEntity.PropulsionSystem!, carEntity.RegistrationNumber, carEntity.RentalCostPerDay, 
-                carEntity.RentalStatus!, carEntity.Images.Select(x => new ImageViewModel(x)).ToList()) 
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="brand">The brand for the car.</param>
-        /// <param name="carId">The ID for the car.</param>
-        /// <param name="color">The color for the car.</param>
-        /// <param name="model">The model for the car.</param>
-        /// <param name="modelYear">The model year for the car.</param>
-        /// <param name="propulsionSystem">The propulsion system for the car.</param>
-        /// <param name="registrationNumber">The registration number for the car.</param>
-        /// <param name="rentalCostPerDay">The rental cost per day.</param>
-        /// <param name="rentalStatus">The rental status for the car.</param>
-        /// <param name="images">The images for the car.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarViewModel(string brand, int carId, string color, string model, int modelYear, VehiclePropulsionEntity propulsionSystem,
-            string registrationNumber, decimal rentalCostPerDay, CarRentalStatusEntity rentalStatus, List<ImageViewModel> images)
-            : base(brand, color, model, modelYear, propulsionSystem, registrationNumber, rentalCostPerDay, rentalStatus)
+        /// <param name="car">The car to model.</param>
+        public CarViewModel(CarEntity car) 
+            : base(car.Brand, car.Color, car.Model, car.ModelYear, car.PropulsionSystem!, car.RegistrationNumber, car.RentalCostPerDay, car.RentalStatus!)
         {
             #region Checks
 
-            if (carId < 0)
+            if (car.Category is null)
             {
-                throw new ArgumentOutOfRangeException(nameof(carId), $"The value of parameter '{carId}' can't be negative.");
+                throw new ArgumentNullException(nameof(car.Category), $"The value of property '{nameof(car.Category)}' can't be null");
             }
 
-            if (images is null)
+            if (car.CarId < 0)
             {
-                throw new ArgumentNullException(nameof(images), $"The value of parameter '{images}' can't be null.");
+                throw new ArgumentNullException(nameof(car.CarId), $"The value of property '{nameof(car.CarId)}' can't be null");
+            }
+
+            if (car.Images is null)
+            {
+                throw new ArgumentNullException(nameof(car.Images), $"The value of property '{nameof(car.Images)}' can't be null");
             }
 
             #endregion
 
-            CarId = carId;
-            Images = images;
+            CarId = car.CarId;
+            Category = new CarCategoryViewModel(car.Category);
+            Images = car.Images.Select(x => new ImageViewModel(x)).ToList();
         }
 
         #endregion
@@ -73,6 +56,12 @@ namespace FribergCarRentals.Models.Car
         [DisplayName("Car ID")]
         [BindNever]
         public int CarId { get; }
+
+        /// <summary>
+        /// The category for the car.
+        /// </summary>
+        [DisplayName("Category")]
+        public virtual CarCategoryViewModel Category { get; set; }
 
         /// <summary>
         /// A collection of images for the car.

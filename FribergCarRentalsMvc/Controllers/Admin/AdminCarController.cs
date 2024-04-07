@@ -46,15 +46,29 @@ namespace FribergCarRentals.Controllers.Admin
 
         #region Fields
 
+        /// <summary>
+        /// The injected car category repository.
+        /// </summary>
+        private readonly ICarCategoryRepository _carCategoryRepository;
+
+        /// <summary>
+        /// The injected car repository.
+        /// </summary>
         private readonly ICarRepository _carRepository;
 
         #endregion
 
         #region Constructors
 
-        public AdminCarController(ICarRepository carRepository)
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="carRepository">The injected car repository.</param>
+        /// <param name="carCategoryRepository">The injected car category repository.</param>
+        public AdminCarController(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
         {
             _carRepository = carRepository;
+            _carCategoryRepository = carCategoryRepository;
         }
 
         #endregion
@@ -63,14 +77,16 @@ namespace FribergCarRentals.Controllers.Admin
 
 
         // GET: AdminCarController/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
             {
                 return RedirectToLogin(nameof(Create));
             }
 
-            return View();
+            CreateCarViewModel viewmodel = new CreateCarViewModel(await _carCategoryRepository.GetAllAsync());
+
+            return View(viewmodel);
         }
 
         // POST: AdminCarController/Create
@@ -89,6 +105,9 @@ namespace FribergCarRentals.Controllers.Admin
                 {
                     throw new Exception("Failed to transfer data from the view model to the entity");
                 }
+
+                var selectedCategory = await _carCategoryRepository.GetByIdAsync(createCarViewModel.SelectedCategoryId);
+                car.Category = selectedCategory;
 
                 if (createCarViewModel.UploadImages is not null && createCarViewModel.UploadImages.Count > 0)
                 {
@@ -203,7 +222,8 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (car is not null)
                 {
-                    EditCarViewModel  viewModel = new EditCarViewModel(car);
+                    var carCategories = await _carCategoryRepository.GetAllAsync();
+                    EditCarViewModel viewModel = new EditCarViewModel(car, carCategories);
                     TempDataHelper.Set(TempData, PageSubTitleTempDataKey, viewModel.PageSubTitle!);
                     return View(viewModel);
                 }
@@ -234,6 +254,7 @@ namespace FribergCarRentals.Controllers.Admin
             {
                 if (DataTransferHelper.TryTransferData(editCarViewModel, out CarEntity car))
                 {
+                    car.Category = await _carCategoryRepository.GetByIdAsync(editCarViewModel.SelectedCategoryId);
                     car.Images.AddRange(carImages);
 
                     if (editCarViewModel.UploadImages is not null && editCarViewModel.UploadImages.Count > 0)
@@ -254,10 +275,13 @@ namespace FribergCarRentals.Controllers.Admin
                     }
 
                     await _carRepository.UpdateAsync(car);
-                    EditCarViewModel viewModel = new EditCarViewModel(car);
+                    var carCategories = await _carCategoryRepository.GetAllAsync();
+                    EditCarViewModel viewModel = new EditCarViewModel(car, carCategories);
                     viewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
                     return View(viewModel);
                 }
+
+                throw new Exception("Failed to transfer data from view model to entity.");
             }
 
             editCarViewModel.Images = carImages.Select(x => new ImageViewModel(x)).ToList();

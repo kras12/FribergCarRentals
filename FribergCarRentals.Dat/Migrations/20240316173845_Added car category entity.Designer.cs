@@ -4,6 +4,7 @@ using FribergCarRentals.DataAccess.DatabaseContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FribergCarRentals.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316173845_Added car category entity")]
+    partial class Addedcarcategoryentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,9 +124,6 @@ namespace FribergCarRentals.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryCarCategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -150,8 +150,6 @@ namespace FribergCarRentals.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CarId");
-
-                    b.HasIndex("CategoryCarCategoryId");
 
                     b.HasIndex("PropulsionSystemVehiclePropulsionId");
 
@@ -509,12 +507,6 @@ namespace FribergCarRentals.Data.Migrations
 
             modelBuilder.Entity("FribergCarRentals.DataAccess.EntityClasses.CarEntity", b =>
                 {
-                    b.HasOne("FribergCarRentals.DataAccess.EntityClasses.CarCategory", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryCarCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("FribergCarRentals.DataAccess.EntityClasses.VehiclePropulsionEntity", "PropulsionSystem")
                         .WithMany()
                         .HasForeignKey("PropulsionSystemVehiclePropulsionId")
@@ -526,8 +518,6 @@ namespace FribergCarRentals.Data.Migrations
                         .HasForeignKey("RentalStatusCarRentalStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("PropulsionSystem");
 

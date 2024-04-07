@@ -5,7 +5,7 @@ using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.Models.Customer;
 using FribergCarRentals.Models.Other;
 
-namespace FribergCarRentals.Models.Order
+namespace FribergCarRentals.Models.Orders
 {
     /// <summary>
     ///  A view model class that handles data relating to an order. 

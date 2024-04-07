@@ -1,0 +1,42 @@
+﻿@using FribergCarRentals.Models.Orders
+@model CreateOrderViewModel
+
+@{
+    ViewData["Title"] = "Confirm Order";
+}
+
+<h1>Confirm Order</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <h2>@Model.CarDescription</h2> 
+        <div class="vertical-flex-container flex-container__row-gap__0-5-rem">
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarDescription)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarDescription)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.PickupDateLocalTime)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.PickupDateLocalTime)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ReturnDateLocalTime)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ReturnDateLocalTime)
+                </dd>
+            </dl>
+        </div>
+        <form asp-action="Create" class="vertical-form">
+            <div class="vertical-form-field">
+                <div asp-validation-summary="ModelOnly" class="error-text"></div>
+            </div>
+            <input type="hidden" name="confirm" value="true" />       
+            <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                <button type="submit">Confirm</button>
+            </div>
+        </form>
+</div>

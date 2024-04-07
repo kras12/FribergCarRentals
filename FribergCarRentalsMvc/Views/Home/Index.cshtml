@@ -1,20 +1,25 @@
-﻿@using FribergCarRentals.Models.Other
+﻿@using FribergCarRentals.Controllers.Customer
+@using FribergCarRentals.Helpers
+@using FribergCarRentals.Models.Components
+@using FribergCarRentals.Models.Other
 @using FribergCarRentalsRazor.Components
+@model ListViewModel<SlideShowImageViewModel>
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<header>
-    <h1 class="display-4">Browse our cars</h1>
-</header>
+<h1>Browse our cars</h1>
 <div class="vertical-flex-container flex-container__justify-content__center flex-container__align-items-center flex-container__row-gap__1-rem">
-    @(await Component.InvokeAsync<CarImageSlideShow>(new
-    {
-        onlyRentableCars = true,
-        maxImagesPerCar = 1,
-        prefixImages = new List<ImageViewModel>() { new ImageViewModel(@"/graphics/front-cover.webp") }
-    }))
+    <div>
+        @if (Model.Models.Count > 0)
+        {
+            @(await Component.InvokeAsync<ImageSlideShow>(new
+            {
+                images = Model.Models
+            }))
+        }
+    </div>
     <p class="text-align-center no-margin">We have a fine selection of cars that you can rent right away.</p>
-    <a class="button" asp-action="Cars">Find your car</a>
+    <a class="button" asp-action="@(nameof(CustomerOrderController.Book))" asp-controller="@(ControllerHelper.GetControllerName<CustomerOrderController>())">Find your car</a>
 </div>

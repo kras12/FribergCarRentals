@@ -1,4 +1,4 @@
-﻿@using FribergCarRentals.Models.Order
+﻿@using FribergCarRentals.Models.Orders
 @model OrderViewModel
 
 @{
@@ -116,6 +116,12 @@
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.CarBooking.Car.CarId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CarBooking.Car.Category.CategoryName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CarBooking.Car.Category.CategoryName)
                 </dd>
                 <dt>
                     @Html.DisplayNameFor(model => model.CarBooking.Car.Brand)

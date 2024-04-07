@@ -7,7 +7,60 @@ namespace FribergCarRentalsRazor.Helpers
     /// </summary>
     public static class UserMesssageHelper
     {
-        #region MyRegion
+        #region CarCategories
+
+        /// <summary>
+        /// Creates a car category creation success message.
+        /// </summary>
+        /// <param name="categoryId">The ID of the car category that was created.</param>
+        /// <returns>A <see cref="MessageViewModel"/>.</returns>
+        public static MessageViewModel CreateCarCategoryCreationSuccessMessage(int categoryId)
+        {
+            #region Checks
+
+            if (categoryId < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(categoryId), $"The value of parameter '{nameof(categoryId)}' can't be negative.");
+            }
+
+            #endregion
+
+            return new MessageViewModel(MessageType.Success, $"Category #{categoryId} was created successfully", "Created");
+        }
+
+        /// <summary>
+        /// Creates a car category deletion success message.
+        /// </summary>
+        /// <param name="categoryId">The ID of the car category that was deleted.</param>
+        /// <returns>A <see cref="MessageViewModel"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static MessageViewModel CreateCarCategoryDeletionSuccessMessage(int categoryId)
+        {
+            #region Checks
+
+            if (categoryId < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(categoryId), $"The value of parameter '{nameof(categoryId)}' can't be negative.");
+            }
+
+            #endregion
+
+            return new MessageViewModel(MessageType.Success, $"Category #{categoryId} was deleted successfully.", "Deleted");
+        }
+
+        /// <summary>
+        /// Creates a car category update success message.
+        /// </summary>
+        /// <param name="categoryId">The ID of the car category that was updated.</param>
+        /// <returns>A <see cref="MessageViewModel"/>.</returns>
+        public static MessageViewModel CreateCarCategoryUpdateSuccessMessage(int categoryId)
+        {
+            return new MessageViewModel(MessageType.Success, $"Category #{categoryId} was updated successfully.", "Saved");
+        }
+
+        #endregion
+
+        #region Cars
 
         /// <summary>
         /// Creates a car creation success message.
@@ -42,12 +95,16 @@ namespace FribergCarRentalsRazor.Helpers
         /// <summary>
         /// Creates a car update success message.
         /// </summary>
-        /// <param name="carId">The ID of the car that was updated.</param>
+        /// <param name="categoryId">The ID of the car that was updated.</param>
         /// <returns>A <see cref="MessageViewModel"/>.</returns>
         public static MessageViewModel CreateCarUpdateSuccessMessage(int carId)
         {
             return new MessageViewModel(MessageType.Success, $"Car #{carId} was updated successfully.", "Saved");
         }
+
+        #endregion
+
+        #region Customers
 
         /// <summary>
         /// Creates a customer creation success message.
@@ -89,6 +146,10 @@ namespace FribergCarRentalsRazor.Helpers
             return new MessageViewModel(MessageType.Success, $"Customer #{customerId} was updated successfully.", "Saved");
         }
 
+        #endregion
+
+        #region Orders
+
         /// <summary>
         /// Creates an order cancellation success message.
         /// </summary>
@@ -121,7 +182,7 @@ namespace FribergCarRentalsRazor.Helpers
 
             if (orderId < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(orderId), $"The value of parameter '{nameof(orderId)}' can't be negative."); 
+                throw new ArgumentOutOfRangeException(nameof(orderId), $"The value of parameter '{nameof(orderId)}' can't be negative.");
             }
 
             #endregion

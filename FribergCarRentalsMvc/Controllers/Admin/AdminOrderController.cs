@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.Sessions;
-using FribergCarRentals.Models.Order;
+using FribergCarRentals.Models.Orders;
 using FribergCarRentalsRazor.Helpers;
 using FribergCarRentals.Models.Other;
 

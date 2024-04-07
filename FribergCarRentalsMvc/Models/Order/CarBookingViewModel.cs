@@ -6,7 +6,7 @@ using FribergCarRentals.DataAccess.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using FribergCarRentals.Models.Other;
 
-namespace FribergCarRentals.Models.Order
+namespace FribergCarRentals.Models.Orders
 {
     /// <summary>
     /// A view model class that handles data relating to car bookings. 

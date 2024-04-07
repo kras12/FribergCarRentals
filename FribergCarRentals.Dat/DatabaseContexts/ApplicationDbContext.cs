@@ -37,6 +37,11 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
         public DbSet<CarBookingEntity> CarBookings { get; set; }
 
         /// <summary>
+        /// The database set for car categories.
+        /// </summary>
+        public DbSet<CarCategoryEntity> CarCategories { get; set; }
+
+        /// <summary>
         /// The database set for car orders.
         /// </summary>
         public DbSet<CarOrderEntity> CarOrders { get; set; }
@@ -147,9 +152,18 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
                 .AutoInclude();
 
             modelBuilder.Entity<CarEntity>()
+                .Navigation(x => x.Category)
+                .AutoInclude();
+
+            modelBuilder.Entity<CarEntity>()
                 .HasMany(x => x.Images)
                 .WithOne(x => x.Car)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CarEntity>()
+                .HasOne(x => x.Category)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
 
             // =====================================
             // CarOrderEntity

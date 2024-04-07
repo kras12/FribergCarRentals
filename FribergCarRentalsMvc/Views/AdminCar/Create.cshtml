@@ -6,6 +6,7 @@
 @using FribergCarRentals.Models.Car
 @using FribergCarRentals.Controllers.Admin
 @using FribergCarRentals.Helpers
+@using FribergCarRentals.Models.CarCategory
 @model CreateCarViewModel
 
 @{
@@ -33,6 +34,11 @@
                     }
                 </select>
                 <span asp-validation-for="RentalStatus" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="SelectedCategoryId" class="control-label">Category</label>
+                <select class="form-input-box form-control" asp-for="SelectedCategoryId" asp-items="@(new SelectList(Model.Categories, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.SelectedCategoryId))"></select>
+                <span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="Brand"></label>

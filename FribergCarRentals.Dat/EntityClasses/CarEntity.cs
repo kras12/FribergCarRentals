@@ -32,6 +32,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         /// A constructor.
         /// </summary>
+        /// <param name="category">The category for the car.</param>
         /// <param name="brand">The brand for the car.</param>
         /// <param name="color">The color for the car.</param>
         /// <param name="model">The model for the car.</param>
@@ -41,10 +42,15 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <param name="rentalStatus">The rental status for the car.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarEntity(string brand, string color, string model, int modelYear, string registrationNumber,
+        public CarEntity(CarCategoryEntity category, string brand, string color, string model, int modelYear, string registrationNumber,
             VehiclePropulsionEntity propulsionSystem, CarRentalStatusEntity rentalStatus, decimal rentalCostPerDay)
         {
             #region Checks
+
+            if (category is null)
+            {
+                throw new ArgumentNullException(nameof(category), $"The value of parameter '{category}' can't be null");
+            }
 
             if (brand is null)
             {
@@ -89,6 +95,7 @@ namespace FribergCarRentals.DataAccess.EntityClasses
 
             #endregion
 
+            Category = category;
             Brand = brand;
             Color = color;
             Model = model;
@@ -107,6 +114,12 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// The brand for the car.
         /// </summary>
         public string Brand { get; set; } = "";
+
+        /// <summary>
+        /// The category for the car. 
+        /// </summary>
+        [Required]
+        public CarCategoryEntity? Category { get; set; }
 
         /// <summary>
         /// The ID for the car.

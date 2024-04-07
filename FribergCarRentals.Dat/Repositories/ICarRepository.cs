@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,12 +50,20 @@ namespace FribergCarRentals.DataAccess.Repositories
         public Task<IEnumerable<ImageEntity>> GetCarImagesAsync(int id);
 
         /// <summary>
-        /// Returns all the cars that are available to be rented out. 
+        /// Retrieves the first car with images in each car category. 
         /// </summary>
-        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
-        /// <returns>A <see cref="Task{TResult}"/> containing a collection of matching cars.</returns>
-        public Task<IEnumerable<CarEntity>> GetRentableCarsAsync();
+        /// <returns>A <see cref="Task{TResult}"/> containing a collection containing the cars found.</returns>
+        public Task<IEnumerable<CarEntity>> GetFirstCarWithImagesByCategory();
 
+        /// <summary>
+        /// Returns all the cars that matches the specified category and that are available to be rented out within the desired timespan. 
+        /// </summary>
+        /// <param name="pickupDateUtc">The pickup date for the car in UTC format.</param>
+        /// /// <param name="returnDateUtc">The return date for the car in UTC format.</param>
+        /// <remarks>Returned cars will not be tracked by EF Core.</remarks>
+        /// <param name="category">The category of the car.</param>
+        /// <returns>A <see cref="Task{TResult}"/> containing a collection of matching cars.</returns>
+        public Task<IEnumerable<CarEntity>> GetRentableCarsAsync(DateTime pickupDateUtc, DateTime returnDateUtc, CarCategoryEntity? category = null);
         #endregion
     }
 }

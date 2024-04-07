@@ -4,6 +4,7 @@ using FribergCarRentals.DataAccess.DatabaseContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FribergCarRentals.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316174800_Added category property to car entity")]
+    partial class Addedcategorypropertytocarentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,7 +124,7 @@ namespace FribergCarRentals.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryCarCategoryId")
+                    b.Property<int?>("CategoryCarCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
@@ -511,9 +514,7 @@ namespace FribergCarRentals.Data.Migrations
                 {
                     b.HasOne("FribergCarRentals.DataAccess.EntityClasses.CarCategory", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryCarCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CategoryCarCategoryId");
 
                     b.HasOne("FribergCarRentals.DataAccess.EntityClasses.VehiclePropulsionEntity", "PropulsionSystem")
                         .WithMany()

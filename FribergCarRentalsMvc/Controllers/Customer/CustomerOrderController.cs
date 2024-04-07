@@ -7,9 +7,8 @@ using System.Linq;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.DataAccess.Types;
-using FribergCarRentals.Models.Order;
+using FribergCarRentals.Models.Orders;
 using FribergCarRentals.Sessions;
-using FribergCarRentals.Controllers.Admin;
 using FribergCarRentalsRazor.Helpers;
 using FribergCarRentals.Models.Other;
 
@@ -40,6 +39,11 @@ namespace FribergCarRentals.Controllers.Customer
         /// </summary>
         public const string IsNewOrderTempDataKey = "CustomerOrderControllerIsNewOrder";
 
+        /// <summary>
+        /// The key for storing the pending order to be confirmed by the customer.
+        /// </summary>
+        public const string PendingOrderTempDataKey = "CustomerOrderPendingOrder";
+
         #endregion
 
         #region Fields
@@ -47,16 +51,19 @@ namespace FribergCarRentals.Controllers.Customer
         private readonly ICarOrderRepository _orderRepository;
         private readonly ICarRepository _carRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly ICarCategoryRepository _carCategoryRepository;
 
         #endregion
 
         #region Constructors
 
-        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository, ICarRepository carRepository)
+        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository, 
+            ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
         {
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
             _carRepository = carRepository;
+            _carCategoryRepository = carCategoryRepository;
         }
 
         #endregion
@@ -64,34 +71,22 @@ namespace FribergCarRentals.Controllers.Customer
         #region Actions
 
         // GET: CustomerOrderController/Book
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Book(int id)
+        [HttpGet]
+        public async Task<IActionResult> Book(int? carCategoryId)
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (carCategoryId < 0)
             {
-                return RedirectToLogin(nameof(Book), id);
+                throw new Exception($"Invalid ID: {carCategoryId}");
             }
 
-            if (id < 0)
+            var viewModel = new BookCarViewModel(availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(), havePerformedCarSearch: false);
+
+            if (carCategoryId != null)
             {
-                throw new Exception($"Invalid ID: {id}");
+                viewModel.SelectedCarCategoryFilter = carCategoryId.Value;
             }
 
-            if (ModelState.Count > 0 && ModelState.IsValid)
-            {
-                var car = await _carRepository.GetByIdAsync(id, CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable));
-                var customer = await _customerRepository.GetByIdAsync(UserSessionHandler.GetUserData(HttpContext.Session).UserId);
-
-                if (car is not null && customer is not null)
-                {
-                    CreateOrderViewModel viewModel = new CreateOrderViewModel(customer.UserId, car, pickupDate: DateTime.Now, returnDate: DateTime.Now.AddDays(1));
-                    return View(viewModel);
-                }
-
-                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
-            }
-
-            throw new Exception($"Failed to present booking form for car with id: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            return View(viewModel);
         }
 
         // POST: CustomerOrderController/Cancel/(5)
@@ -132,31 +127,84 @@ namespace FribergCarRentals.Controllers.Customer
         }
 
         // POST: CustomerOrderController/Book
-        [HttpPost("{id}")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Book(CreateOrderViewModel createOrderViewModel)
+        public async Task<IActionResult> Book(BookCarViewModel bookCarViewModel)
+        {
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                if (bookCarViewModel.PickupDateLocalTime is null || bookCarViewModel.PickupDateLocalTime <= DateTime.Now)
+                {
+                    ModelState.AddModelError($"{nameof(BookCarViewModel.PickupDateLocalTime)}",
+                        "The pickup date must be at least one day into the future.");
+                }
+                else if (bookCarViewModel.ReturnDateLocalTime is null || bookCarViewModel.ReturnDateLocalTime.Value.Date < bookCarViewModel.PickupDateLocalTime.Value.Date)
+                {
+                    ModelState.AddModelError($"{nameof(BookCarViewModel.ReturnDateLocalTime)}",
+                        "The return date can't occur before the pickup date.");
+                }
+                else
+                {
+                    CarCategoryEntity? carCategoryFilter = null;
+
+                    if (bookCarViewModel.SelectedCarCategoryFilter > 0)
+                    {
+                        carCategoryFilter = await _carCategoryRepository.GetByIdAsync(bookCarViewModel.SelectedCarCategoryFilter);
+
+                        if (carCategoryFilter is null)
+                        {
+                            throw new Exception("Failed to find the car category");
+                        }
+                    }
+
+                    var cars = (await _carRepository.GetRentableCarsAsync(bookCarViewModel.PickupDateLocalTime.Value, bookCarViewModel.ReturnDateLocalTime.Value, carCategoryFilter)).ToList();
+
+                    return View(new BookCarViewModel(
+                        availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
+                        havePerformedCarSearch: true,
+                        availableCars: cars,
+                        pickupDateFilter: bookCarViewModel.PickupDateLocalTime,
+                        returnDateFilter: bookCarViewModel.ReturnDateLocalTime,
+                        carCategoryFilter: bookCarViewModel.SelectedCarCategoryFilter));
+                }
+            }
+
+            bookCarViewModel.SetAvailableCarCategoryFilters(await _carCategoryRepository.GetAllAsync());
+            return View(bookCarViewModel);
+        }
+
+        // GET: CustomerOrderController/Confirm
+        [HttpGet]
+        public IActionResult Confirm()
         {
             if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
             {
                 return RedirectToLogin(nameof(Book));
             }
 
-            if (ModelState.Count > 0 && ModelState.IsValid)
+            if (TempDataHelper.TryGet(TempData, PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
             {
-                if (createOrderViewModel.PickupDateLocalTime.Date < DateTime.Now.Date)
-                {
-                    ModelState.AddModelError($"{nameof(CreateOrderViewModel.PickupDateLocalTime)}",
-                        "The pickup date can't be in the past.");
-                    return View(createOrderViewModel);
-                }
-                else if (createOrderViewModel.ReturnDateLocalTime.Date < createOrderViewModel.PickupDateLocalTime.Date)
-                {
-                    ModelState.AddModelError($"{nameof(createOrderViewModel.ReturnDateLocalTime)}",
-                        "The return date can't occur before the pickup date.");
-                    return View(createOrderViewModel);
-                }
+                // Customer may refresh the page, and we need it in order to complete the order.
+                TempDataHelper.Set(TempData, PendingOrderTempDataKey, createOrderViewModel);
 
-                var customer = await _customerRepository.GetByIdAsync(createOrderViewModel.CustomerId);
+                return View(createOrderViewModel);
+            }
+
+            throw new Exception($"Failed to retrieve the pending order from temp storage.");
+        }
+
+        // GET: CustomerOrderController/Create
+        [HttpPost]
+        public async Task<IActionResult> Create()
+        {
+            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            {
+                return RedirectToLogin(nameof(Book));
+            }
+
+            if (TempDataHelper.TryGet(TempData, PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
+            {
+                var customer = await _customerRepository.GetByIdAsync(UserSessionHandler.GetUserData(HttpContext.Session).UserId);
                 var car = await _carRepository.GetByIdAsync(createOrderViewModel.CarId);
 
                 if (customer is not null && car is not null)
@@ -175,7 +223,7 @@ namespace FribergCarRentals.Controllers.Customer
                 throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {createOrderViewModel.CarId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
             }
 
-            throw new Exception($"Failed to create an order for the car with id: {createOrderViewModel.CarId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Failed to retrieve the pending order from temp storage.");
         }
 
         // GET: CustomerOrderController
@@ -237,6 +285,36 @@ namespace FribergCarRentals.Controllers.Customer
 
             SaveRedirectBackInstructionsForCancelOrderAction(nameof(List));
             return View(orderListViewModel);
+        }
+
+
+        // POST: CustomerOrderController/Prepare
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Prepare(CreateOrderViewModel createOrderViewModel)
+        {
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                if (createOrderViewModel.PickupDateLocalTime.Date < DateTime.Now.Date)
+                {
+                    throw new Exception("The pickup date can't be in the past.");
+                }
+                else if (createOrderViewModel.ReturnDateLocalTime.Date < createOrderViewModel.PickupDateLocalTime.Date)
+                {
+                    throw new Exception("The return date can't occur before the pickup date.");
+                }
+
+                TempDataHelper.Set(TempData, PendingOrderTempDataKey, createOrderViewModel);
+
+                if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+                {
+                    return RedirectToLogin(nameof(Confirm));
+                }
+
+                return RedirectToAction(nameof(Confirm));
+            }
+
+            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion

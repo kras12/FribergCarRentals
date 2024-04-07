@@ -1,6 +1,7 @@
 ﻿using FribergCarRentals.Data.SharedClasses;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.Models.CarCategory;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json.Linq;
@@ -26,28 +27,31 @@ namespace FribergCarRentals.Models.Car
         }
 
         /// <summary>
-        /// A constructor.
+        ///  A constructor.
         /// </summary>
-        /// <param name="brand">The brand for the car.</param>
-        /// <param name="color">The color for the car.</param>
-        /// <param name="model">The model for the car.</param>
-        /// <param name="modelYear">The model year for the car.</param>
-        /// <param name="propulsionSystem">The propulsion system for the car.</param>
-        /// <param name="registrationNumber">The registration number for the car.</param>
-        /// <param name="rentalCostPerDay">The rental cost per day.</param>
-        /// <param name="rentalStatus">The rental status for the car.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CreateCarViewModel(string brand, string color, string model, int modelYear, VehiclePropulsionEntity propulsionSystem,
-            string registrationNumber, decimal rentalCostPerDay, CarRentalStatusEntity rentalStatus) 
-            : base(brand, color, model, modelYear, propulsionSystem, registrationNumber, rentalCostPerDay, rentalStatus)
+        /// <param name="categories">A collection of available car categories to choose from.</param>
+        public CreateCarViewModel(IEnumerable<CarCategoryEntity> categories) : base()
         {
-
+            Categories = categories.Select(x => new CarCategoryViewModel(x)).ToList();
+            SelectedCategoryId = Categories.First().CategoryId;
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// A collection of available car categories to choose from.
+        /// </summary>
+        public List<CarCategoryViewModel> Categories { get; set; } = new();
+
+        /// <summary>
+        /// The ID of the selected category.
+        /// </summary>
+        [Required]
+        [Range(1, int.MaxValue)]
+        [DisplayName("Category")]
+        public int SelectedCategoryId { get; set; }
 
         /// <summary>
         /// The images to upload

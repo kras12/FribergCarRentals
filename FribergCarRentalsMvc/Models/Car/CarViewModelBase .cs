@@ -2,6 +2,7 @@
 using FribergCarRentals.Data.SharedClasses;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.Models.CarCategory;
 using FribergCarRentals.Models.Other;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -56,7 +57,7 @@ namespace FribergCarRentals.Models.Car
         protected CarViewModelBase(string brand, string color, string model, int modelYear, VehiclePropulsionEntity propulsionSystem, 
             string registrationNumber, decimal rentalCostPerDay, CarRentalStatusEntity rentalStatus)
         {
-            #region Checks
+            #region Checks            
 
             if (brand is null)
             {
@@ -89,7 +90,7 @@ namespace FribergCarRentals.Models.Car
             }
 
             #endregion
-
+            
             Brand = brand;
             Color = color;
             Model = model;
