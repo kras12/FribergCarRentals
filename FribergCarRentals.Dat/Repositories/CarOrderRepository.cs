@@ -65,7 +65,7 @@ namespace FribergCarRentals.DataAccess.Repositories
 
             if (order is not null)
             {
-                MarkCarsAsRentable(order);
+                MarkCarsAsIdle(order);
                 _databaseContext.CarOrders.Remove(order);
                 await _databaseContext.SaveChangesAsync();
                 return;
@@ -108,7 +108,7 @@ namespace FribergCarRentals.DataAccess.Repositories
 
             if (order is not null && order.OrderStatus!.StatusType == OrderStatus.Created)
             {
-                MarkCarsAsRentable(order);
+                MarkCarsAsIdle(order);
                 SetOrderStatus(order, OrderStatus.Canceled);
                 return await _databaseContext.SaveChangesAsync() > 0;
             }
@@ -129,7 +129,7 @@ namespace FribergCarRentals.DataAccess.Repositories
 
             if (order is not null && order.OrderStatus!.StatusType == OrderStatus.Created)
             {
-                MarkCarsAsRentable(order);
+                MarkCarsAsIdle(order);
                 SetOrderStatus(order, OrderStatus.Completed);
                 return await _databaseContext.SaveChangesAsync() > 0;
             }
@@ -138,17 +138,17 @@ namespace FribergCarRentals.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Marks cars in an order as rentable without saving the changes to the database.
+        /// Marks cars in an order as idle without saving the changes to the database.
         /// </summary>
         /// <param name="order">The order.</param>
-        private void MarkCarsAsRentable(CarOrderEntity order)
+        private void MarkCarsAsIdle(CarOrderEntity order)
         {
             foreach (var booking in order.CarBookings)
             {
-                // If we run the code when the status is already set to rentable, EF Core will start to track another entity with the same ID and throw an error. 
-                if (booking.Car!.RentalStatus!.StatusType != RentalCarStatus.Rentable)
+                // If we run the code when the status is already set to idle, EF Core will start to track another entity with the same ID and throw an error. 
+                if (booking.Car!.RentalStatus!.StatusType != RentalCarStatus.Idle)
                 {
-                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable);
+                    booking.Car!.RentalStatus = CarRentalStatusEntity.CreateFromType(RentalCarStatus.Idle);
                     _databaseContext.CarRentalStatuses.Entry(booking.Car!.RentalStatus).State = EntityState.Unchanged;
                 }
             }

@@ -32,8 +32,8 @@ namespace FribergCarRentals.DataAccess.Types
         [EnumDatabaseValue("None", DescriptionValue = "No status")]
         None = 1,
 
-        [EnumDatabaseValue("Rentable", DescriptionValue = "Available for renting")]
-        Rentable = 2,
+        [EnumDatabaseValue("Idle", DescriptionValue = "Idle")]
+        Idle = 2,
 
         [EnumDatabaseValue("PendingPickup", DescriptionValue = "Pending pickup")]
         PendingPickup = 3,
@@ -41,14 +41,11 @@ namespace FribergCarRentals.DataAccess.Types
         [EnumDatabaseValue("PickedUp", DescriptionValue = "Has been picked up")]
         PickedUp = 4,
 
-        [EnumDatabaseValue("Returned", DescriptionValue = "Has been returned")]
-        Returned = 5,
-
         [EnumDatabaseValue("TemporaryOutOfService", DescriptionValue = "Temporarily out of service")]
-        TemporaryOutOfService = 6,
+        TemporaryOutOfService = 5,
 
         [EnumDatabaseValue("PermanentlyOutOfService", DescriptionValue = "Permanently out of service")]
-        PermanentlyOutOfService = 7
+        PermanentlyOutOfService = 6
     }
 
     /// <summary>
@@ -93,5 +90,3 @@ namespace FribergCarRentals.DataAccess.Types
 
     #endregion
 }
-
-

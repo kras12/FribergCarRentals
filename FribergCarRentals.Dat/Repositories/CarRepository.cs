@@ -129,36 +129,39 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task{TResult}"/> containing a collection of matching cars.</returns>
         public async Task<IEnumerable<CarEntity>> GetRentableCarsAsync(DateTime pickupDateUtc, DateTime returnDateUtc, CarCategoryEntity? category = null)
         {
-            IQueryable<CarEntity> carQuery;
+            List<RentalCarStatus> rentableCarStatusIDs = new()
+            {
+                CarRentalStatusEntity.CreateFromType(RentalCarStatus.Idle).CarRentalStatusId,
+                CarRentalStatusEntity.CreateFromType(RentalCarStatus.PendingPickup).CarRentalStatusId,
+                CarRentalStatusEntity.CreateFromType(RentalCarStatus.PickedUp).CarRentalStatusId
+            };
+
+            IQueryable<CarEntity> carQuery = _databaseContext.Cars.Where(car => rentableCarStatusIDs.Contains(car.RentalStatus!.CarRentalStatusId));
 
             if (category is not null)
             {
-                carQuery = _databaseContext.Cars.Where(car => car.RentalStatus! == CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable) && car.Category == category);
-            }
-            else
-            {
-                carQuery = _databaseContext.Cars.Where(car => car.RentalStatus! == CarRentalStatusEntity.CreateFromType(RentalCarStatus.Rentable));
+                carQuery = carQuery.Where(car => car.Category == category);
             }
 
             return await carQuery
-                .GroupJoin(
-                    _databaseContext.CarBookings.Where(carBooking => carBooking.CarOrder!.OrderStatus! == OrderStatusEntity.CreateFromType(OrderStatus.Created) &&
-                    (
-                        (pickupDateUtc >= carBooking.PickupDateUtc && pickupDateUtc <= carBooking.ReturnDateUtc) ||
-                        (returnDateUtc >= carBooking.PickupDateUtc && returnDateUtc <= carBooking.ReturnDateUtc) ||
-                        (pickupDateUtc < carBooking.PickupDateUtc && returnDateUtc > carBooking.ReturnDateUtc)
-                    )),
-                    car => car.CarId,
-                    carBooking => carBooking.Car!.CarId,
-                    (car, carBookings) => new
-                    {
-                        car,
-                        carBookings
-                    }
-                )
-                .Where(carGroup => !carGroup.carBookings.Any())
-                .Select(orderGroup => orderGroup.car)
-                .ToListAsync();
+            .GroupJoin(
+                _databaseContext.CarBookings.Where(carBooking => carBooking.CarOrder!.OrderStatus! == OrderStatusEntity.CreateFromType(OrderStatus.Created) &&
+                (
+                    (pickupDateUtc >= carBooking.PickupDateUtc && pickupDateUtc <= carBooking.ReturnDateUtc) ||
+                    (returnDateUtc >= carBooking.PickupDateUtc && returnDateUtc <= carBooking.ReturnDateUtc) ||
+                    (pickupDateUtc < carBooking.PickupDateUtc && returnDateUtc > carBooking.ReturnDateUtc)
+                )),
+                car => car.CarId,
+                carBooking => carBooking.Car!.CarId,
+                (car, carBookings) => new
+                {
+                    car,
+                    carBookings
+                }
+            )
+            .Where(carGroup => !carGroup.carBookings.Any())
+            .Select(orderGroup => orderGroup.car)
+            .ToListAsync();
         }
 
         /// <summary>
