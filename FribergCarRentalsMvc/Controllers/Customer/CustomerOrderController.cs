@@ -324,12 +324,12 @@ namespace FribergCarRentals.Controllers.Customer
         /// <summary>
         /// Redirects to the login page and request a redirect back afterwards. 
         /// </summary>
-        /// <param name="action">The action to redirect to.</param>
-        /// <param name="id">An optional ID for the car.</param>
+        /// <param name="action">The controller action to redirect to.</param>
+        /// <param name="orderId">An optional order ID.</param>
         /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string action, int? id = null)
+        private IActionResult RedirectToLogin(string action, int? orderId = null)
         {
-            RouteValueDictionary? routeValues = id is not null ? new RouteValueDictionary(new { id = id }) : null;
+            RouteValueDictionary? routeValues = orderId is not null ? new RouteValueDictionary(new { id = orderId }) : null;
 
             TempDataHelper.Set(TempData, CustomerController.RedirectInstructionsTempDataKey, new RedirectToActionData(
                     action, ControllerHelper.GetControllerName<CustomerOrderController>(), routeValues: routeValues));
