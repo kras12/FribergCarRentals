@@ -1,7 +1,6 @@
-﻿using FribergCarRentals.Attributes;
+﻿using FribergCars.Shared.Attributes;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.Models.Other;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 

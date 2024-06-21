@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace FribergCarRentals.Attributes
+namespace FribergCars.Shared.Attributes
 {
     /// <summary>
     /// A custom attribute class to help perform server side regular expression tests without having 

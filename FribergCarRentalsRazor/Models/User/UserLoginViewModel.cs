@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Attributes;
+﻿using FribergCars.Shared.Attributes;
 using FribergCarRentals.Models.Other;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
