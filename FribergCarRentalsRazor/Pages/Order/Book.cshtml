@@ -1,0 +1,109 @@
+﻿@page
+@using FribergCarRentals.Models.CarCategory
+@using FribergCarRentals.Models.Orders
+@model BookModel
+
+@{
+    ViewData["Title"] = "Order";
+}
+
+<h1>Book Car</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <form method="post" class="vertical-form">
+        <div asp-validation-summary="ModelOnly" class="error-text"></div>
+        <div class="horizontal-flex-container flex-container__align-items-start flex-container__column-gap__0-5-rem">
+            <div class="vertical-flex-container">
+                <label asp-for="BookCarViewModel.SelectedCarCategoryFilter"></label>
+                <select asp-for="BookCarViewModel.SelectedCarCategoryFilter"
+                        asp-items="@(new SelectList(Model.BookCarViewModel.AvailableCarCategoryFilters, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.BookCarViewModel.SelectedCarCategoryFilter))"></select>
+                <span asp-validation-for="BookCarViewModel.SelectedCarCategoryFilter" class="error-text"></span>
+            </div>
+            <div class="vertical-flex-container">
+                <label asp-for="BookCarViewModel.PickupDateLocalTime"></label>
+                <input type="date" asp-for="BookCarViewModel.PickupDateLocalTime" />
+                <span asp-validation-for="BookCarViewModel.PickupDateLocalTime" class="error-text"></span>
+            </div>
+            <div class="vertical-flex-container">
+                <label asp-for="BookCarViewModel.ReturnDateLocalTime"></label>
+                <input type="date" asp-for="BookCarViewModel.ReturnDateLocalTime" />
+                <span asp-validation-for="BookCarViewModel.ReturnDateLocalTime" class="error-text"></span>
+            </div>
+            <div class="vertical-flex-container align-self-end">
+                <button type="submit">Find</button>
+            </div>
+        </div>
+    </form>
+    <div></div>
+    <div class="vertical-flex-container flex-container__row-gap__2-rem">
+        @if (Model.BookCarViewModel.AvailableCars.Count > 0)
+        {
+            @foreach (var car in Model.BookCarViewModel.AvailableCars)
+            {
+                <div class="vertical-flex-container filled-container flex-container__padding__1-rem flex-container__row-gap__1-rem">
+                    <h2>@($"{car.CarInfo}")</h2>
+                    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                        <form asp-page-handler="Prepare" method="post">
+                            <input type="hidden" name="@nameof(CreateOrderViewModel.CarId)" value="@car.CarId" asp-for="@car.CarId" />
+                            <input type="hidden" name="@nameof(CreateOrderViewModel.CarDescription)" value="@car.CarInfo" asp-for="@car.CarInfo" />
+                            <input type="hidden" name="@nameof(CreateOrderViewModel.PickupDateLocalTime)" value="@Model.BookCarViewModel.PickupDateLocalTime" asp-for="@Model.BookCarViewModel.PickupDateLocalTime" />
+                            <input type="hidden" name="@nameof(CreateOrderViewModel.ReturnDateLocalTime)" value="@Model.BookCarViewModel.ReturnDateLocalTime" asp-for="@Model.BookCarViewModel.ReturnDateLocalTime" />
+                            <button class="function-button" type="submit">Book Car</button>
+                        </form>
+                    </div>
+                    <dl>
+                        <dt>
+                            @Html.DisplayNameFor(model => car.Category)
+                        </dt>
+                        <dd>
+                            @car.Category.CategoryName
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => car.Brand)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => car.Brand)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => car.Model)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => car.Model)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => car.ModelYear)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => car.ModelYear)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => car.Color)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => car.Color)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => car.PropulsionSystem)
+                        </dt>
+                        <dd>
+                            @car.PropulsionSystem.PropulsionName
+                        </dd>
+                    </dl>
+                    <div class="tiled-image-gallery">
+                        @foreach (var image in car.Images)
+                        {
+                            <figure>
+                                <div class="vertical-flex-container">
+                                    <img src="@image.Url" />
+                                </div>
+                            </figure>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else if (Model.BookCarViewModel.HavePerformedCarSearch)
+        {
+            <p class="text-align-center">No cars found.</p>
+        }
+    </div>
+</div>

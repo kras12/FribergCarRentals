@@ -1,0 +1,142 @@
+﻿@page "{id}"
+@model FribergCarRentals.Pages.Order.DetailsModel
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+@if( Model.OrderViewModel.IsNewOrder)
+{
+    <h1>Thank you for your order!</h1>
+    <p class="text-align-center">Details of your order can be found below.</p>
+}
+else
+{
+    <h1>@($"Order - #{Model.OrderViewModel.CarOrderId}")</h1>
+}
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-page="./List" class="button navigational-button">View Orders</a>
+        @if (Model.OrderViewModel.IsCancelable)
+        {
+            <form asp-page="./Cancel" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                <input type="hidden" name="id" asp-for="OrderViewModel.CarOrderId" />
+                <button type="submit" class="negative-button">Cancel Order</button>
+            </form>
+        }
+    </div>
+    <partial name="/Pages/Shared/_UserMessages.cshtml" for="OrderViewModel.Messages" />
+    <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+        <div class="vertical-flex-container flex-container__padding__1-rem">
+            <h2>@($"#{Model.OrderViewModel.CarOrderId} - {Model.OrderViewModel.CarBooking.Car.CarInfo}")</h2>
+            <h3>Order Details</h3>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarOrderId)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarOrderId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.OrderDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.OrderDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.OrderStatusName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.OrderStatusName)
+                </dd>                
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.Customer.UserId)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.Customer.UserId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.Customer.FullName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.Customer.FullName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.OrderSum)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.OrderSum)
+                </dd>
+            </dl>
+        </div>
+        <div class="vertical-flex-container flex-container__padding__1-rem">
+            <h3>Booked Car</h3>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.Car.Category.CategoryName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.Car.Category.CategoryName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.Car.Brand)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.Car.Brand)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.Car.Model)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.Car.Model)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.Car.ModelYear)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.Car.ModelYear)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.Car.Color)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.Car.Color)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.Car.PropulsionSystem)
+                </dt>
+                <dd>
+                    @Model.OrderViewModel.CarBooking.Car.PropulsionSystem.PropulsionName
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.Car.RegistrationNumber)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.Car.RegistrationNumber)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.CarPickupDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.CarPickupDate)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrderViewModel.CarBooking.CarReturnDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderViewModel.CarBooking.CarReturnDate)
+                </dd>
+            </dl>
+            <div class="tiled-image-gallery">
+                @foreach (var image in Model.OrderViewModel.CarBooking.Car.Images)
+                {
+                    <figure>
+                        <div class="vertical-flex-container">
+                            <img src="@image.Url" />
+                        </div>
+                    </figure>
+                }
+            </div>
+        </div>
+    </div>
+</div>

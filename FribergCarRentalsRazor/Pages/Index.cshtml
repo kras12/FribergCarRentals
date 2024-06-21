@@ -1,0 +1,23 @@
+﻿@page
+@using FribergCarRentals.Models.Other
+@using FribergCarRentalsRazor.Components
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Browse our cars</h1>
+<div class="vertical-flex-container flex-container__justify-content__center flex-container__align-items-center flex-container__row-gap__1-rem">
+    <div>
+        @if (Model.SlideShowImagesViewModel.Models.Count > 0)
+        {
+            @(await Component.InvokeAsync<ImageSlideShow>(new
+            {
+                images = Model.SlideShowImagesViewModel.Models
+            }))
+        }
+    </div>
+    <p class="text-align-center no-margin">We have a fine selection of cars that you can rent right away.</p>
+    <a class="button" asp-page="Order/Book">Find your car</a>
+</div>

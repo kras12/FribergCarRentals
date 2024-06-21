@@ -1,0 +1,134 @@
+﻿@page "{id}"
+@using FribergCarRentals.DataAccess.Types
+@using FribergCarRentals.DataAccess.EntityClasses
+@using FribergCarRentals.Data.SharedClasses
+@using FribergCarRentals.DataAccess.Attributes
+@using FribergCarRentals.DataAccess.Extensions
+@using FribergCarRentals.Models.Car
+@using FribergCarRentals.Models.CarCategory
+@model FribergCarRentals.Pages.Admin.Car.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+@if(Model.EditCarViewModel.HavePageSubTitle)
+{
+    <h2>@Model.EditCarViewModel.PageSubTitle</h2>
+}
+else
+{
+    <h2>@($"#{Model.EditCarViewModel.CarId} - {Model.EditCarViewModel.CarInfo}")</h2>
+}
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-page="List" class="button navigational-button">View Cars</a>
+        <form asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+            <input type="hidden" name="id" value="@Model.EditCarViewModel.CarId" asp-for="EditCarViewModel.CarId" />
+            <button type="submit" class="negative-button">Delete</button>
+        </form>
+    </div>
+    <partial name="/Pages/Shared/_UserMessages.cshtml" for="EditCarViewModel.Messages" />
+    <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem filled-container flex-container__padding__1-rem full-width">
+        <h2>Details</h2>
+        <form asp-page="Edit" class="vertical-form full-width" enctype="multipart/form-data">
+            <input type="hidden" asp-for="EditCarViewModel.CarId" />
+            <div class="vertical-form-field">
+                <div asp-validation-summary="ModelOnly" class="error-text"></div>
+            </div>            
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.RentalStatus"></label>
+                <select asp-for="EditCarViewModel.RentalStatus">
+                    @foreach (var value in Enum.GetValues<RentalCarStatus>())
+                    {
+                        <!option value="@value" @(value == Model.EditCarViewModel.RentalStatus.StatusType ? "selected" : "")>
+                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        </!option>
+                    }
+                </select>
+                <span asp-validation-for="EditCarViewModel.RentalStatus" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.SelectedCategoryId" class="control-label">Category</label>
+                <select class="form-input-box form-control" asp-for="EditCarViewModel.SelectedCategoryId" asp-items="@(new SelectList(Model.EditCarViewModel.Categories, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.EditCarViewModel.SelectedCategoryId))"></select>
+                <span asp-validation-for="EditCarViewModel.SelectedCategoryId" class="text-danger"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.Brand"></label>
+                <input asp-for="EditCarViewModel.Brand" />
+                <span asp-validation-for="EditCarViewModel.Brand" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.Model"></label>
+                <input asp-for="EditCarViewModel.Model" />
+                <span asp-validation-for="EditCarViewModel.Model" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.ModelYear"></label>
+                <input asp-for="EditCarViewModel.ModelYear" />
+                <span asp-validation-for="EditCarViewModel.ModelYear" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.Color"></label>
+                <input asp-for="EditCarViewModel.Color" />
+                <span asp-validation-for="EditCarViewModel.Color" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.RegistrationNumber"></label>
+                <input asp-for="EditCarViewModel.RegistrationNumber" />
+                <span asp-validation-for="EditCarViewModel.RegistrationNumber" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.PropulsionSystem"></label>
+                <select asp-for="EditCarViewModel.PropulsionSystem">
+                    @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
+                    {
+                        <!option value="@value" @(value == Model.EditCarViewModel.PropulsionSystem.PropulsionType ? "selected" : "")>
+                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        </!option>
+                    }
+                </select>
+                <span asp-validation-for="EditCarViewModel.PropulsionSystem" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.RentalCostPerDay"></label>
+                <input type="number" step="0.01" asp-for="EditCarViewModel.RentalCostPerDay" />
+                <span asp-validation-for="EditCarViewModel.RentalCostPerDay" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="EditCarViewModel.UploadImages"></label>
+                <input asp-for="EditCarViewModel.UploadImages" multiple />
+                <span asp-validation-for="EditCarViewModel.UploadImages" class="error-text"></span>
+            </div>
+            @if (Model.EditCarViewModel.Images.Count > 0)
+            {
+                <h3 class="text-align-center">Existing Images</h3>
+                <div class="tiled-image-gallery tiled-image-gallery__auto-rows tiled-image-gallery__image-size_medium full-width">
+                    @foreach (var imageFile in Model.EditCarViewModel.Images)
+                    {
+                        <div class="vertical-flex-container flex-container__align-items-center">
+                            <figure class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem">
+                                <img src="@(imageFile.Url)" />
+                                <figcaption>@imageFile.FileName</figcaption>
+                                <div class="horizontal-flex-container">
+                                    <input type="checkbox" name="@($"{nameof(EditCarViewModel)}.{nameof(EditCarViewModel.DeleteImages)}")" value="@imageFile.ImageId" />
+                                    <span>Delete</span>
+                                </div>
+                            </figure>
+                        </div>
+                    }
+                </div>
+            }                
+            <div class="vertical-form-field">
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts 
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

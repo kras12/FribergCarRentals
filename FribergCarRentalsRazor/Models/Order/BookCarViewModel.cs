@@ -1,0 +1,130 @@
+﻿using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Models.Car;
+using FribergCarRentals.Models.CarCategory;
+using FribergCarRentals.Models.Other;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing.Drawing2D;
+
+namespace FribergCarRentals.Models.Orders
+{
+    /// <summary>
+    /// A view model class that handles data related to order creation. 
+    /// </summary>
+    public class BookCarViewModel : ViewModelBase
+    {
+        #region Constants
+
+        /// <summary>
+        /// A constant text string to represent all car categories.
+        /// </summary>
+        public const string AllCarCategoriesText = "All";
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        public BookCarViewModel()
+        {
+
+        }
+
+        /// <summary>
+        /// A constructor. 
+        /// </summary>
+        /// <param name="availableCarCategoryFilters">A collection of car categories that can be used as filters when searching for cars to rent.</param>
+        /// <param name="havePerformedCarSearch">True if the user have performed a car search. </param>
+        /// <param name="availableCars">A collection of cars that matches the chosen date filters, or all cars if no filters where chosen.</param>
+        /// <param name="pickupDateFilter">The pickup date filter to use when searching for cars to rent.</param>
+        /// <param name="returnDateFilter">The return date filter to use when searching for cars to rent.</param>
+        /// <param name="carCategoryFilter">The car category filter to use when searching for cars to rent.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public BookCarViewModel(List<CarCategoryEntity> availableCarCategoryFilters, bool havePerformedCarSearch, List<CarEntity>? availableCars = null, 
+            DateTime? pickupDateFilter = null, DateTime? returnDateFilter = null, int? carCategoryFilter = null)
+        {
+            #region Checks
+
+            if (availableCarCategoryFilters is null)
+            {
+                throw new ArgumentNullException(nameof(availableCars), $"The value of parameter '{availableCarCategoryFilters}' can't be null.");
+            }
+
+            #endregion
+
+            AvailableCars = availableCars is not null ? availableCars.Select(x => new CarViewModel(x)).ToList() : new();
+            HavePerformedCarSearch = havePerformedCarSearch;
+            PickupDateLocalTime = pickupDateFilter;
+            ReturnDateLocalTime = returnDateFilter;
+            SelectedCarCategoryFilter = carCategoryFilter is not null ? carCategoryFilter.Value : 0;
+
+            SetAvailableCarCategoryFilters(availableCarCategoryFilters);
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Cars available to rent 
+        /// </summary>
+        [BindNever]
+        public List<CarViewModel> AvailableCars { get; } = new();
+
+        /// <summary>
+        /// A collection of car categories that can be used as filters when searching for cars to rent.
+        /// </summary>
+        [BindNever]
+        public List<CarCategoryViewModel> AvailableCarCategoryFilters { get; set; } = new();
+
+        /// <summary>
+        /// Returns true if the user have performed a car search. 
+        /// </summary>
+        public bool HavePerformedCarSearch { get; }
+
+        /// <summary>
+        /// The car category filter to use when searching for cars. 
+        /// </summary>
+        /// <remarks>
+        /// An ID of zero represents no filter. 
+        /// </remarks>
+        [DisplayName("Category")]
+        [Required]
+        public int SelectedCarCategoryFilter { get; set; }
+
+        /// <summary>
+        /// The pickup date filter to use when searching for cars.
+        /// </summary>
+        [DisplayName("Pickup Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [Required]
+        public DateTime? PickupDateLocalTime { get; set; } = null;
+
+        /// <summary>
+        /// The return date filter to use when searching for cars.
+        /// </summary>
+        [DisplayName("Return Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [Required]
+        public DateTime? ReturnDateLocalTime { get; set; } = null;
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Sets the car category filters that can be used as filters when searching for cars to rent.
+        /// </summary>
+        /// <param name="availableCarCategoryFilters">The categories to set.</param>
+        public void SetAvailableCarCategoryFilters(IEnumerable<CarCategoryEntity> availableCarCategoryFilters)
+        {
+            AvailableCarCategoryFilters = availableCarCategoryFilters.Select(x => new CarCategoryViewModel(x)).Prepend(new CarCategoryViewModel(0, AllCarCategoriesText)).ToList();
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,48 @@
+﻿@page
+@using FribergCarRentals.Pages.Admin.Car
+@model FribergCarRentals.Pages.Admin.CarCategories.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<h2>@($"#{Model.CarCategoryViewModel.CategoryId} - {Model.CarCategoryViewModel.CategoryName}")</h2>
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-page="List" class="button navigational-button">View Categories</a>
+        <a asp-page="Edit" asp-route-id="@Model.CarCategoryViewModel.CategoryId" class="button function-button">Edit</a>
+        <form asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+            <input type="hidden" name="id" value="@Model.CarCategoryViewModel.CategoryId" asp-for="CarCategoryViewModel.CategoryId" />
+            <button type="submit" class="negative-button">Delete</button>
+        </form>
+    </div>
+    <partial name="/Pages/Shared/_UserMessages.cshtml" model="Model.CarCategoryViewModel.Messages" />
+    <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => Model.CarCategoryViewModel.CategoryId)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.CarCategoryViewModel.CategoryId)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.CarCategoryViewModel.CategoryName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.CarCategoryViewModel.CategoryName)
+            </dd>
+            @{
+                if (Model.CarCategoryViewModel.HaveCarCount)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => Model.CarCategoryViewModel.CarCount)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => Model.CarCategoryViewModel.CarCount)
+                    </dd>
+                }
+            }
+        </dl>
+    </div>
+</div>

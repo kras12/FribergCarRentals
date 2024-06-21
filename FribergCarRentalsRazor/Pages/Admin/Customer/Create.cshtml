@@ -1,0 +1,48 @@
+﻿@page
+@model FribergCarRentals.Pages.Admin.Customer.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-page="List" class="button navigational-button">View Customers</a>
+    </div>
+    <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
+        <form asp-page="Create" class="vertical-form">
+            <div class="vertical-form-field">
+                <div asp-validation-summary="ModelOnly" class="error-text"></div>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCustomerViewModel.FirstName"></label>
+                <input asp-for="CreateCustomerViewModel.FirstName" />
+                <span asp-validation-for="CreateCustomerViewModel.FirstName" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCustomerViewModel.LastName"></label>
+                <input asp-for="CreateCustomerViewModel.LastName" />
+                <span asp-validation-for="CreateCustomerViewModel.LastName" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCustomerViewModel.Email"></label>
+                <input asp-for="CreateCustomerViewModel.Email" />
+                <span asp-validation-for="CreateCustomerViewModel.Email" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCustomerViewModel.Password"></label>
+                <input asp-for="CreateCustomerViewModel.Password" />
+                <span asp-validation-for="CreateCustomerViewModel.Password" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <button type="submit">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts 
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

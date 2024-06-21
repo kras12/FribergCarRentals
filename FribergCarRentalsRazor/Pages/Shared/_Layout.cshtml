@@ -1,0 +1,71 @@
+﻿@using FribergCarRentals.Sessions
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - FribergCarRentals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script defer src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script defer src="~/js/responsive-menu.js"></script>
+</head>
+<body>
+    <div id="site-container" class="site-container">
+        <div id="page-container" class="page-container">
+            <!-- The site header -->
+            <header id="site-header" class="header-container">
+                <div class="jump-to-content-container">
+                    <a href="#main">To main content</a>
+                </div>
+                <div class="site-info-container">
+                    <div class="site-logo-container">
+                        <img class="logo-effect" src="/graphics/logo.webp" alt="Site logo.">
+                    </div>
+                    <div class="site-title-container">
+                        <a asp-area="" asp-page="/Index">Friberg Car Rentals</a>
+                    </div>
+                </div>
+                <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
+                    <!-- The primary navigation menu -->
+                    <nav id="primary-navigation-menu" class="horizontal-menu horizontal-menu__align-last-child__right" aria-label="Primary navigation menu">
+                        <ul>
+                            @if (UserSessionHandler.IsAdminLoggedIn(ViewContext.HttpContext.Session))
+                            {
+                                <partial name="_AdminMenuItems.cshtml" />
+                            }
+                            else
+                            {
+                                <partial name="_CustomerMenuItems.cshtml" />
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <!-- The page content -->
+            <div id="page-content-container" class="page-content-container">
+                <!-- The main content -->
+                <main id="main" class="main-content-container">
+                    @RenderBody()
+                </main>
+                <!-- The sidebar -->
+                <aside id="right-sidebar" class="right-sidebar-container" aria-label="sidebar">
+                    @if (IsSectionDefined("RightSidebar"))
+                    {
+                        @RenderSection("RightSidebar")
+                    }
+                </aside>
+            </div>
+            <!-- The site footer -->
+            <footer id="site-footer" class="footer-container">
+                <div class="left-footer-container"></div>
+                <span class="align-self-center">© Copyright 2024- Friberg Car Rentals</span>
+                <div class="right-footer-container">
+                </div>
+            </footer>
+        </div>
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

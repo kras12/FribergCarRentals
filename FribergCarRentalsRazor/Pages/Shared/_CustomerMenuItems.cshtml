@@ -1,0 +1,24 @@
+﻿@using FribergCarRentals.Sessions
+
+
+<li>
+    <a asp-area="" asp-page="/Index">Home</a>
+</li>
+<li>
+    <a asp-area="" asp-page="/Order/Book">Book</a>
+</li>
+@if (UserSessionHandler.IsCustomerLoggedIn(ViewContext.HttpContext.Session))
+{
+    <li>
+        <a asp-area="" asp-page="/Order/List">Orders</a>
+    </li>
+    <li>
+        <a asp-area="" asp-page="/Customer/Logout">Logout</a>
+    </li>
+}
+else
+{
+    <li>
+        <a asp-area="" asp-page="/Customer/Authenticate">Register/Login</a>
+    </li>
+}

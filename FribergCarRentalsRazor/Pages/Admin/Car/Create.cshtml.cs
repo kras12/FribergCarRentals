@@ -1,0 +1,150 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using FribergCarRentals.DataAccess.DatabaseContexts;
+using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data;
+using FribergCarRentals.Helpers;
+using FribergCarRentals.Sessions;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using System.Diagnostics.CodeAnalysis;
+using FribergCarRentalsRazor.Helpers;
+using FribergCarRentals.Models.Car;
+
+namespace FribergCarRentals.Pages.Admin.Car
+{
+    /// <summary>
+    /// A page model for creating cars in the admin back office.
+    /// </summary>
+    public class CreateModel : PageModel
+    {
+        #region Constants
+
+        /// <summary>
+        /// The key for the ID of the car that was created.
+        /// </summary>
+        public const string CreatedCarIdTempDataKey = "AdminCreatedCarId";
+
+        #endregion
+
+        #region Fields
+
+        /// <summary>
+        /// The injected car category repository.
+        /// </summary>
+        private readonly ICarCategoryRepository _carCategoryRepository;
+
+        /// <summary>
+        /// The injected car repository.
+        /// </summary>
+        private readonly ICarRepository _carRepository;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="carRepository">The injected car repository.</param>
+        /// <param name="carCategoryRepository">The injected car category repository.</param>
+        public CreateModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
+        {
+            _carRepository = carRepository;
+            _carCategoryRepository = carCategoryRepository;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The view model used for car creation.
+        /// </summary>
+        [BindProperty]
+        public CreateCarViewModel CreateCarViewModel { get; set; } = new CreateCarViewModel();
+
+        #endregion
+
+        #region HandlerMethods
+
+        /// <summary>
+        /// Handler for GET requests.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> OnGetAsync()
+        {
+            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            {
+                return RedirectToLogin();
+            }
+
+            CreateCarViewModel = new CreateCarViewModel(await _carCategoryRepository.GetAllAsync());
+
+            return Page();
+        }
+
+        /// <summary>
+        /// Handler for POST requests.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            {
+                return RedirectToLogin();
+            }
+
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                if (!DataTransferHelper.TryTransferData(CreateCarViewModel, out CarEntity car))
+                {
+                    throw new Exception("Failed to transfer data from the view model to the entity");
+                }
+
+                var selectedCategory = await _carCategoryRepository.GetByIdAsync(CreateCarViewModel.SelectedCategoryId);
+                car.Category = selectedCategory;
+
+                if (CreateCarViewModel.UploadImages is not null && CreateCarViewModel.UploadImages.Count > 0)
+                {
+                    var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(CreateCarViewModel.UploadImages);
+
+                    foreach (var imageFileName in savedImageFileNames)
+                    {
+                        car.Images.Add(new ImageEntity(imageFileName, car));
+                    }
+                }
+
+                await _carRepository.AddAsync(car);
+                TempDataHelper.Set(TempData, CreatedCarIdTempDataKey, car.CarId);
+                return RedirectToPage("Details", new { id = car.CarId });
+
+            }
+
+            return Page();
+        }
+
+        #endregion
+
+        #region OtherMethods
+
+        /// <summary>
+        /// Redirects to the login page and request a redirect back afterwards. 
+        /// </summary>
+        /// <returns></returns>
+        private IActionResult RedirectToLogin()
+        {
+            TempDataHelper.Set(TempData, LoginModel.RedirectToPageTempDataKey, new RedirectToPageData(
+                    "Car/Create/"));
+
+            return RedirectToPage("../Login");
+        }
+
+        #endregion
+    }
+}

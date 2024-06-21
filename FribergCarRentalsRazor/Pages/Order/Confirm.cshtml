@@ -1,0 +1,42 @@
+﻿@page
+@model ConfirmModel
+
+@{
+    ViewData["Title"] = "Confirm Order";
+}
+
+<h1>Confirm Order</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <h2>@Model.CreateOrderViewModel.CarDescription</h2>
+    <div class="vertical-flex-container flex-container__row-gap__0-5-rem">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateOrderViewModel.CarDescription)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CreateOrderViewModel.CarDescription)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateOrderViewModel.PickupDateLocalTime)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CreateOrderViewModel.PickupDateLocalTime)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateOrderViewModel.ReturnDateLocalTime)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CreateOrderViewModel.ReturnDateLocalTime)
+            </dd>
+        </dl>
+    </div>
+    <form asp-page-handler="Create" class="vertical-form">
+        <div class="vertical-form-field">
+            <div asp-validation-summary="ModelOnly" class="error-text"></div>
+        </div>
+        <input type="hidden" name="confirm" value="true" />
+        <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+            <button type="submit">Confirm</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,98 @@
+﻿@page
+@using FribergCarRentals.DataAccess.Types
+@using FribergCarRentals.DataAccess.EntityClasses
+@using FribergCarRentals.Data.SharedClasses
+@using FribergCarRentals.DataAccess.Attributes
+@using FribergCarRentals.DataAccess.Extensions
+@using FribergCarRentals.Models.CarCategory
+@model FribergCarRentals.Pages.Admin.Car.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Car</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-page="List" class="button navigational-button">View Cars</a>
+    </div>
+    <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
+        <form asp-page="Create" class="vertical-form" enctype="multipart/form-data">
+            <div class="vertical-form-field">
+                <div asp-validation-summary="ModelOnly" class="error-text"></div>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.RentalStatus"></label>
+                <select asp-for="CreateCarViewModel.RentalStatus">
+                    @foreach (var value in Enum.GetValues<RentalCarStatus>())
+                    {
+                        <!option value="@value" @(value == RentalCarStatus.None ? "selected" : "")>
+                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        </!option>
+                    }
+                </select>
+                <span asp-validation-for="CreateCarViewModel.RentalStatus" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.SelectedCategoryId" class="control-label">Category</label>
+                <select class="form-input-box form-control" asp-for="CreateCarViewModel.SelectedCategoryId" asp-items="@(new SelectList(Model.CreateCarViewModel.Categories, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.CreateCarViewModel.SelectedCategoryId))"></select>
+                <span asp-validation-for="CreateCarViewModel.SelectedCategoryId" class="text-danger"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.Brand"></label>
+                <input asp-for="CreateCarViewModel.Brand" />
+                <span asp-validation-for="CreateCarViewModel.Brand" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.Model"></label>
+                <input asp-for="CreateCarViewModel.Model" />
+                <span asp-validation-for="CreateCarViewModel.Model" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.ModelYear"></label>
+                <input asp-for="CreateCarViewModel.ModelYear" />
+                <span asp-validation-for="CreateCarViewModel.ModelYear" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.Color"></label>
+                <input asp-for="CreateCarViewModel.Color" />
+                <span asp-validation-for="CreateCarViewModel.Color" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.RegistrationNumber"></label>
+                <input asp-for="CreateCarViewModel.RegistrationNumber" />
+                <span asp-validation-for="CreateCarViewModel.RegistrationNumber" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.PropulsionSystem"></label>
+                <select asp-for="CreateCarViewModel.PropulsionSystem">
+                    @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
+                    {
+                        <!option value="@value" @(value == VehiclePropulsionType.None ? "selected" : "")>
+                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        </!option>
+                    }
+                </select>
+                <span asp-validation-for="CreateCarViewModel.PropulsionSystem" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.RentalCostPerDay"></label>
+                <input asp-for="CreateCarViewModel.RentalCostPerDay" type="number" step="0.01"/>
+                <span asp-validation-for="CreateCarViewModel.RentalCostPerDay "class="error-text"></span>
+            </div>            
+            <div class="vertical-form-field">
+                <label asp-for="CreateCarViewModel.UploadImages"></label>
+                <input asp-for="CreateCarViewModel.UploadImages" multiple />
+                <span asp-validation-for="CreateCarViewModel.UploadImages" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <button type="submit">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts 
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
