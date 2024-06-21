@@ -5,13 +5,13 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsMvc", "FribergCarRentalsMvc\FribergCarRentalsMvc.csproj", "{C30F1A56-60A7-400F-B48C-76D1D0031658}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCars.Shared", "FribergCars.Shared\FribergCars.Shared.csproj", "{667E77C5-5FDB-4425-80F5-49A80F3B6855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppSettings.Shared", "FribergCars.Shared\AppSettings.Shared.csproj", "{667E77C5-5FDB-4425-80F5-49A80F3B6855}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.DataAccess", "FribergCarRentals.Dat\FribergCarRentals.DataAccess.csproj", "{910687FE-A55D-4D6E-8174-B5C0FBEE90EF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsRazor", "FribergCarRentalsRazor\FribergCarRentalsRazor.csproj", "{24F544E2-6401-4A66-A2B3-73232312E96A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcRazorPages.Shared", "MvcRazorPages.Shared\MvcRazorPages.Shared.csproj", "{7757336C-6369-40ED-91E6-8B163DD012CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcRazorPages.Shared", "MvcRazorPages.Shared\MvcRazorPages.Shared.csproj", "{7757336C-6369-40ED-91E6-8B163DD012CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

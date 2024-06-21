@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FribergCars.Shared\FribergCars.Shared.csproj" />
+    <ProjectReference Include="..\FribergCars.Shared\AppSettings.Shared.csproj" />
   </ItemGroup>
 
 </Project>

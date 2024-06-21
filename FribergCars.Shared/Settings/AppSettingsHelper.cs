@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FribergCars.Shared.Settings
+﻿
+namespace AppSettings.Shared.Settings
 {
     /// <summary>
     /// A helper class that stores the name of the appsettings file (development) and the database connection string. 

@@ -1,4 +1,4 @@
-﻿using FribergCars.Shared.Settings;
+﻿using AppSettings.Shared.Settings;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Types;
 using Microsoft.AspNetCore.Http;
