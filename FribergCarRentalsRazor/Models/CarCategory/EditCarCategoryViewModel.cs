@@ -1,4 +1,4 @@
-﻿using FribergCars.Shared.Attributes;
+﻿using MvcRazorPages.Shared.Attributes;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.Models.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;

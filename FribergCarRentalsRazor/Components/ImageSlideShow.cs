@@ -1,12 +1,5 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using FribergCarRentals.DataAccess.Types;
-using FribergCarRentals.Helpers;
-using FribergCarRentals.Models.Other;
-using FribergCarRentals.Data;
-using Humanizer;
+﻿using FribergCarRentals.Models.Other;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing.Drawing2D;
 using FribergCarRentals.Models.Components;
 
 namespace FribergCarRentalsRazor.Components

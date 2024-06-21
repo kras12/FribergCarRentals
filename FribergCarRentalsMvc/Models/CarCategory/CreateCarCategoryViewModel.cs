@@ -1,7 +1,7 @@
-﻿using FribergCars.Shared.Attributes;
-using FribergCarRentals.Models.Other;
+﻿using FribergCarRentals.Models.Other;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using MvcRazorPages.Shared.Attributes;
 
 namespace FribergCarRentals.Models.CarCategory
 {

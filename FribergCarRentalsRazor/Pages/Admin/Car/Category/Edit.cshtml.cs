@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
-using FribergCarRentals.Data;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Sessions;
 using FribergCarRentalsRazor.Helpers;
-using FribergCarRentals.Models.Car;
-using FribergCarRentals.Models.Other;
 using FribergCarRentalsBravo.Models.CarCategory;
+using MvcRazorPages.Shared.Data;
 
 namespace FribergCarRentals.Pages.Admin.CarCategories
 {

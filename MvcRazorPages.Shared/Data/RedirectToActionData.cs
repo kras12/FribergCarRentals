@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace FribergCars.Shared.Data
+namespace MvcRazorPages.Shared.Data
 {
     public class RedirectToActionData
     {
@@ -15,8 +15,8 @@ namespace FribergCars.Shared.Data
             Action = action;
             Controller = controller;
             RouteValues = routeValues;
-			UrlFragment = urlFragment;
-		}
+            UrlFragment = urlFragment;
+        }
 
         #endregion
 
@@ -28,11 +28,11 @@ namespace FribergCars.Shared.Data
 
         public RouteValueDictionary? RouteValues { get; set; }
 
-		/// <summary>
-		/// An optional URL fragment for targeting regions within a page (#ID).
-		/// </summary>
-		public string? UrlFragment { get; set; }
+        /// <summary>
+        /// An optional URL fragment for targeting regions within a page (#ID).
+        /// </summary>
+        public string? UrlFragment { get; set; }
 
-		#endregion
-	}
+        #endregion
+    }
 }

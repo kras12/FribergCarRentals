@@ -1,4 +1,4 @@
-﻿using FribergCars.Shared.Attributes;
+﻿using MvcRazorPages.Shared.Attributes;
 using FribergCarRentals.Models.Other;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;

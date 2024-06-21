@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Data;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FribergCarRentals.Data.ModelBinders

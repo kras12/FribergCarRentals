@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace FribergCars.Shared.Data
+namespace MvcRazorPages.Shared.Data
 {
     /// <summary>
     /// A class that stores data for redirections to a Razor page. 
@@ -26,14 +26,14 @@ namespace FribergCars.Shared.Data
 
         }
 
-		/// <summary>
-		/// A constructor.
-		/// </summary>
-		/// <param name="pageName">The name of the page to redirect to.</param>
-		/// <param name="routeValues">The route values to send to the page.</param>
-		/// <param name="urlFragment">An optional URL fragment for targeting regions within a page (#ID).</param>
-		/// <exception cref="ArgumentException"></exception>
-		public RedirectToPageData(string pageName, RouteValueDictionary? routeValues = null, string? urlFragment = null)
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="pageName">The name of the page to redirect to.</param>
+        /// <param name="routeValues">The route values to send to the page.</param>
+        /// <param name="urlFragment">An optional URL fragment for targeting regions within a page (#ID).</param>
+        /// <exception cref="ArgumentException"></exception>
+        public RedirectToPageData(string pageName, RouteValueDictionary? routeValues = null, string? urlFragment = null)
         {
             #region Checks
 
@@ -58,9 +58,9 @@ namespace FribergCars.Shared.Data
         /// </summary>
         public string Page
         {
-            get 
-            { 
-                return _page; 
+            get
+            {
+                return _page;
             }
 
             set
@@ -74,7 +74,7 @@ namespace FribergCars.Shared.Data
 
                 #endregion
 
-                _page = value;                
+                _page = value;
             }
         }
 

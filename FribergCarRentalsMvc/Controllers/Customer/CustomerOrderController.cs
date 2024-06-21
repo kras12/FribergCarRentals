@@ -1,9 +1,6 @@
-﻿using FribergCarRentals.Data;
+﻿using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
-using System.Linq;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.DataAccess.Types;

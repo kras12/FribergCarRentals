@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using FribergCarRentals.DataAccess.Repositories;
-using FribergCarRentals.Data;
+using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Sessions;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using FribergCarRentals.Pages.Customer;
 using FribergCarRentalsRazor.Helpers;
 using FribergCarRentals.Models.Orders;

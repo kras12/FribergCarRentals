@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace FribergCars.Shared.Attributes
+namespace MvcRazorPages.Shared.Attributes
 {
     /// <summary>
     /// A custom attribute class to help perform server side regular expression tests without having 

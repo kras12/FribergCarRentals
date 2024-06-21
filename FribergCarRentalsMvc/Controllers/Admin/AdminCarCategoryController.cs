@@ -1,16 +1,13 @@
-﻿using FribergCarRentals.Data;
-using FribergCarRentals.Helpers;
-using Microsoft.AspNetCore.Http;
+﻿using FribergCarRentals.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentalsRazor.Helpers;
 using FribergCarRentals.Sessions;
-using FribergCarRentals.Models.Car;
 using FribergCarRentals.Models.Other;
 using FribergCarRentals.Models.CarCategory;
 using FribergCarRentalsBravo.Models.CarCategory;
+using MvcRazorPages.Shared.Data;
 
 namespace FribergCarRentals.Controllers.Admin
 {

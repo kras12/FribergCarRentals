@@ -1,8 +1,7 @@
-﻿using FribergCarRentals.Data;
-using FribergCarRentals.Models.Other;
+﻿using FribergCarRentals.Models.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MvcRazorPages.Shared.Data;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Models.Components
 {

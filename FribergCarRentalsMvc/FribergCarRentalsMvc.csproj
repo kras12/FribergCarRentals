@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FribergCarRentals.Dat\FribergCarRentals.DataAccess.csproj" />
     <ProjectReference Include="..\FribergCars.Shared\FribergCars.Shared.csproj" />
+    <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

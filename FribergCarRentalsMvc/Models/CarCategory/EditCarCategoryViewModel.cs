@@ -1,8 +1,8 @@
-﻿using FribergCars.Shared.Attributes;
-using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.Models.Other;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using MvcRazorPages.Shared.Attributes;
 
 namespace FribergCarRentalsBravo.Models.CarCategory
 {
