@@ -1,4 +1,6 @@
-﻿namespace FribergCarRentals.Data
+﻿using Microsoft.AspNetCore.Routing;
+
+namespace FribergCars.Shared.Data
 {
     public class RedirectToActionData
     {
