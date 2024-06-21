@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsMvc", "Fri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppSettings.Shared", "FribergCars.Shared\AppSettings.Shared.csproj", "{667E77C5-5FDB-4425-80F5-49A80F3B6855}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.DataAccess", "FribergCarRentals.Dat\FribergCarRentals.DataAccess.csproj", "{910687FE-A55D-4D6E-8174-B5C0FBEE90EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Data", "FribergCarRentals.Data\FribergCarRentals.Data.csproj", "{910687FE-A55D-4D6E-8174-B5C0FBEE90EF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsRazor", "FribergCarRentalsRazor\FribergCarRentalsRazor.csproj", "{24F544E2-6401-4A66-A2B3-73232312E96A}"
 EndProject
