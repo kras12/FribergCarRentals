@@ -1,4 +1,4 @@
-﻿namespace FribergCarRentals.Models.Customer
+﻿namespace MvcRazorPages.Shared.ViewModels.Customer
 {
     public class RegisterOrLoginCustomerViewModel
     {

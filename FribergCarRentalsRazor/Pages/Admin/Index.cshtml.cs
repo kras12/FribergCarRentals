@@ -4,7 +4,7 @@ using FribergCarRentals.DataAccess.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.Sessions;
-using FribergCarRentals.Models.Admin;
+using MvcRazorPages.Shared.ViewModels.Admin;
 
 namespace FribergCarRentals.Pages.Admin
 {

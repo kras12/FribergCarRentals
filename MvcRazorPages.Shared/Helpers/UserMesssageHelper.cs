@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Models.Other;
+﻿using MvcRazorPages.Shared.ViewModels.Message;
 
 namespace MvcRazorPages.Shared.Helpers
 {

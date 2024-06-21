@@ -1,25 +1,25 @@
-﻿@using FribergCarRentals.Models.Components
-@using FribergCarRentals.Models.Other
+﻿@using MvcRazorPages.Shared.ViewModels.Image
+@using MvcRazorPages.Shared.ViewModels.Other
 @model ListViewModel<SlideShowImageViewModel>
 
 <div class="image-slideshow-container">
 	@foreach (var image in Model.Models)
 	{
 		<div class="image-slide image-fade">
-			@if (image.LinksToAction is not null)
+			@if (image.LinksToControllerAction is not null)
 			{
 				Dictionary<string, string> routeDictionary = new Dictionary<string, string>();
-				string? urlFragment = image.LinksToAction.UrlFragment ?? null;
+				string? urlFragment = image.LinksToControllerAction.UrlFragment ?? null;
 
-				if ( image.LinksToAction.RouteValues is not null)
+				if ( image.LinksToControllerAction.RouteValues is not null)
 				{
-					routeDictionary = image.LinksToAction.RouteValues.Select(x => new KeyValuePair<string, string>(x.Key, x.Value?.ToString() ?? "")).ToDictionary();
+					routeDictionary = image.LinksToControllerAction.RouteValues.Select(x => new KeyValuePair<string, string>(x.Key, x.Value?.ToString() ?? "")).ToDictionary();
 				}
 
 				// An empty string or null would have caused a hashtag (#) to be included at the end of the url.
 				if (string.IsNullOrEmpty(urlFragment))
 				{
-					<a asp-action="@image.LinksToAction.Action" asp-controller="@image.LinksToAction.Controller" asp-all-route-data="@routeDictionary">
+					<a asp-action="@image.LinksToControllerAction.Action" asp-controller="@image.LinksToControllerAction.Controller" asp-all-route-data="@routeDictionary">
 						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
 						@if (image.HaveCaption)
 						{
@@ -29,7 +29,7 @@
 				}
 				else
 				{
-					<a asp-action="@image.LinksToAction.Action" asp-controller="@image.LinksToAction.Controller" asp-all-route-data="@routeDictionary" asp-fragment="@urlFragment">
+					<a asp-action="@image.LinksToControllerAction.Action" asp-controller="@image.LinksToControllerAction.Controller" asp-all-route-data="@routeDictionary" asp-fragment="@urlFragment">
 						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
 						@if (image.HaveCaption)
 						{

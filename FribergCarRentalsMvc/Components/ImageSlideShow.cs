@@ -1,6 +1,6 @@
-﻿using FribergCarRentals.Models.Other;
+﻿using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.Models.Components;
+using MvcRazorPages.Shared.ViewModels.Image;
 
 namespace FribergCarRentalsRazor.Components
 {

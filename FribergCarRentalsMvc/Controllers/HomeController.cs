@@ -2,12 +2,11 @@ using MvcRazorPages.Shared.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using FribergCarRentals.DataAccess.Repositories;
-using FribergCarRentals.Models.Other;
-using FribergCarRentals.Models.Components;
+using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Controllers.Customer;
-using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Helpers;
+using MvcRazorPages.Shared.ViewModels.Image;
 
 namespace FribergCarRentals.Controllers
 {
@@ -52,7 +51,7 @@ namespace FribergCarRentals.Controllers
                 images.Add(new SlideShowImageViewModel(
                     ImageHelper.GetImageFileUrl(image), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
-                    linksToAction: new RedirectToActionData(
+                    linksToPage: new RedirectToActionData(
                         action: nameof(CustomerOrderController.Book),
                         controller: ControllerHelper.GetControllerName<CustomerOrderController>(),
                         routeValues: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))));

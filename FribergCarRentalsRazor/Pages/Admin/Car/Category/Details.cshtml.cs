@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.DataAccess.Repositories;
 using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.Helpers;
-using FribergCarRentals.Models.CarCategory;
+using MvcRazorPages.Shared.ViewModels.CarCategory;
 using MvcRazorPages.Shared.Data;
 
 namespace FribergCarRentals.Pages.Admin.CarCategories

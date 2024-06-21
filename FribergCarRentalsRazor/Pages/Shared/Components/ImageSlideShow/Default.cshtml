@@ -1,25 +1,25 @@
-﻿@using FribergCarRentals.Models.Components
-@using FribergCarRentals.Models.Other
+﻿@using MvcRazorPages.Shared.ViewModels.Image
+@using MvcRazorPages.Shared.ViewModels.Other
 @model ListViewModel<SlideShowImageViewModel>
 
 <div class="image-slideshow-container">
 	@foreach (var image in Model.Models)
 	{
 		<div class="image-slide image-fade">
-			@if (image.LinksToPage is not null)
+			@if (image.LinksToRazorPage is not null)
 			{
 				Dictionary<string, string> routeDictionary = new Dictionary<string, string>();
-				string? urlFragment = image.LinksToPage.UrlFragment ?? null;
+				string? urlFragment = image.LinksToRazorPage.UrlFragment ?? null;
 
-				if ( image.LinksToPage.RouteValues is not null)
+				if (image.LinksToRazorPage.RouteValues is not null)
 				{
-					routeDictionary = image.LinksToPage.RouteValues.Select(x => new KeyValuePair<string, string>(x.Key, x.Value?.ToString() ?? "")).ToDictionary();
+					routeDictionary = image.LinksToRazorPage.RouteValues.Select(x => new KeyValuePair<string, string>(x.Key, x.Value?.ToString() ?? "")).ToDictionary();
 				}
 
 				// An empty string or null would have caused a hashtag (#) to be included at the end of the url.
 				if (string.IsNullOrEmpty(urlFragment))
 				{
-					<a asp-page="@image.LinksToPage.Page" asp-all-route-data="@routeDictionary">
+					<a asp-page="@image.LinksToRazorPage.Page" asp-all-route-data="@routeDictionary">
 						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
 						@if (image.HaveCaption)
 						{
@@ -29,7 +29,7 @@
 				}
 				else
 				{
-					<a asp-page="@image.LinksToPage.Page" asp-all-route-data="@routeDictionary" asp-fragment="@urlFragment">
+					<a asp-page="@image.LinksToRazorPage.Page" asp-all-route-data="@routeDictionary" asp-fragment="@urlFragment">
 						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
 						@if (image.HaveCaption)
 						{

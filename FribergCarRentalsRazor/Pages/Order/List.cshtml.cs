@@ -5,8 +5,8 @@ using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Sessions;
 using FribergCarRentals.Pages.Customer;
 using MvcRazorPages.Shared.Helpers;
-using FribergCarRentals.Models.Other;
-using FribergCarRentals.Models.Orders;
+using MvcRazorPages.Shared.ViewModels.Other;
+using MvcRazorPages.Shared.ViewModels.Order;
 
 namespace FribergCarRentals.Pages.Order
 {

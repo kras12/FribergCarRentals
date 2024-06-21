@@ -1,4 +1,4 @@
-using FribergCarRentals.Models.Other;
+using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
