@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.Sessions;
+using MvcRazorPages.Shared.Sessions;
 
 namespace FribergCarRentals.Pages.Customer
 {

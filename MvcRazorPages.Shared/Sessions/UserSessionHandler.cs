@@ -1,8 +1,9 @@
 ﻿using FribergCars.Shared.Settings;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Types;
+using Microsoft.AspNetCore.Http;
 
-namespace FribergCarRentals.Sessions
+namespace MvcRazorPages.Shared.Sessions
 {
     /// <summary>
     /// A helper class to handle user session data. 

@@ -1,6 +1,6 @@
 ﻿using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Sessions
+namespace MvcRazorPages.Shared.Sessions
 {
     /// <summary>
     /// A class that represents stored user session data. 

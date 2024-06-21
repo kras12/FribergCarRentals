@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
-using FribergCarRentals.Sessions;
+using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.Helpers;
 using FribergCarRentalsBravo.Models.CarCategory;
 using MvcRazorPages.Shared.Data;

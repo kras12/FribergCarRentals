@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.Models.Admin;
-using FribergCarRentals.Sessions;
+using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Helpers;
 
 namespace FribergCarRentals.Controllers.Admin

@@ -5,7 +5,7 @@ using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.DataAccess.Types;
 using FribergCarRentals.Models.Orders;
-using FribergCarRentals.Sessions;
+using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Models.Other;
 using FribergCarRentals.Helpers;
