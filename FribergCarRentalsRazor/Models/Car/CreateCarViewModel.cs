@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Data.SharedClasses;
+﻿using FribergCars.Shared.Settings;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Types;
 using FribergCarRentals.Models.CarCategory;

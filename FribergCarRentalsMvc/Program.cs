@@ -3,7 +3,7 @@ using FribergCarRentals.Data;
 using FribergCarRentals.DataAccess.DatabaseContexts;
 using FribergCarRentals.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
-using FribergCarRentals.Data.SharedClasses;
+using FribergCars.Shared.Settings;
 
 namespace FribergCarRentals
 {

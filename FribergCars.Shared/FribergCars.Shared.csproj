@@ -7,4 +7,8 @@
     <Version>1.0.0</Version>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="SharedClasses\" />
+  </ItemGroup>
+
 </Project>
