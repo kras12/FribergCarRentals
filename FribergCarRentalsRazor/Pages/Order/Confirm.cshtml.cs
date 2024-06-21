@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Repositories;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.DataAccess.Types;
-using FribergCarRentals.Helpers;
+using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Sessions;
 using FribergCarRentals.Pages.Customer;
 using FribergCarRentals.Models.Orders;

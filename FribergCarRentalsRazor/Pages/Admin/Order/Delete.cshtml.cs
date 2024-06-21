@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.Sessions;
-using FribergCarRentals.Helpers;
+using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.Data;
 
 namespace FribergCarRentals.Pages.Admin.Order

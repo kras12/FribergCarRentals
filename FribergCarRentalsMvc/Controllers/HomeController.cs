@@ -4,8 +4,10 @@ using System.Diagnostics;
 using FribergCarRentals.DataAccess.Repositories;
 using FribergCarRentals.Models.Other;
 using FribergCarRentals.Models.Components;
-using FribergCarRentals.Helpers;
+using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Controllers.Customer;
+using MvcRazorPages.Shared.Helpers;
+using FribergCarRentals.Helpers;
 
 namespace FribergCarRentals.Controllers
 {
