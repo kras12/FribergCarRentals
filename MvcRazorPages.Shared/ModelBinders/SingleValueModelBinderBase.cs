@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FribergCarRentals.Data.ModelBinders
+namespace MvcRazorPages.Shared.ModelBinders
 {
     /// <summary>
     /// A base class for a model binder. 

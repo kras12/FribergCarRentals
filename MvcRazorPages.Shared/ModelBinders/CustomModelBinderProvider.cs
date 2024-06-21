@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Data.ModelBinders
+namespace MvcRazorPages.Shared.ModelBinders
 {
     /// <summary>
     /// A model binder provider class that provides model binders for the Friberg Car Rentals project. 

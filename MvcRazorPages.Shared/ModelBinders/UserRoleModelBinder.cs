@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FribergCarRentals.DataAccess.EntityClasses;
 
-namespace FribergCarRentals.Data.ModelBinders
+namespace MvcRazorPages.Shared.ModelBinders
 {
     /// <summary>
     /// A model binder class that converts a text string to an instance of class <see cref="UserRoleEntity"/>.

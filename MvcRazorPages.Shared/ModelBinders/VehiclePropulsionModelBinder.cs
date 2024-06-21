@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FribergCarRentals.Data.ModelBinders
+namespace MvcRazorPages.Shared.ModelBinders
 {
     /// <summary>
     /// A model binder class that converts a text string to an instance of class <see cref="VehiclePropulsionEntity"/>.
