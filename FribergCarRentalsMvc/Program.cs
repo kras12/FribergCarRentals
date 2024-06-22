@@ -3,6 +3,10 @@ using FribergCarRentals.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using AppSettings.Shared.Settings;
 using MvcRazorPages.Shared.ModelBinders;
+using FribergFastigheter.Server.AutoMapper;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
 
 namespace FribergCarRentals
 {
@@ -12,30 +16,71 @@ namespace FribergCarRentals
         {
             var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
-
-			// Controllers with model binders
-			builder.Services.AddControllersWithViews(options => options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider()));
+            // Controllers with model binders
+            builder.Services.AddControllersWithViews(options => options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider()));
 
 			// DB Context
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString(AppSettingsHelper.ApplicationDbContextConnectionStringKey)));
 
-			// Repositories
-			builder.Services.AddTransient<ICarRepository, CarRepository>();
+            // ==================================================================================================================
+            // Mapping
+            // ==================================================================================================================
+            builder.Services.AddAutoMapper(typeof(ViewModelToEntityAutoMapperProfile));
+
+            // ==================================================================================================================
+            //  Repositories
+            // ==================================================================================================================
+            builder.Services.AddTransient<ICarRepository, CarRepository>();
             builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
             builder.Services.AddTransient<ICarOrderRepository, CarOrderRepository>();
             builder.Services.AddTransient<IAdminRepository, AdminRepository>();
             builder.Services.AddTransient<ICarCategoryRepository, CarCategoryRepository>();
 
-            // Sessions
-            builder.Services.AddDistributedMemoryCache();
-            builder.Services.AddSession(options =>
+            // ==================================================================================================================
+            //  Sessions
+            // ==================================================================================================================
+            // TODO - Check if safe to remove
+            //builder.Services.AddDistributedMemoryCache();
+            //builder.Services.AddSession(options =>
+            //{
+            //    options.IdleTimeout = TimeSpan.FromMinutes(15);
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.IsEssential = true;
+            //});
+
+            // ==================================================================================================================
+            // Security (authentication, authorization)
+            // ==================================================================================================================
+
+            // Identity
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(15);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
+                options.SignIn.RequireConfirmedAccount = true;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 10;
+            })
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            // Authorization
+            builder.Services.AddAuthorizationCore(options =>
+            {
+                options.AddPolicy(ApplicationUserPolicies.Admin, policy =>
+                    policy.RequireClaim(ApplicationUserClaims.UserRole, ApplicationUserRoles.Admin));
+
+                options.AddPolicy(ApplicationUserPolicies.Customer, policy =>
+                   policy.RequireClaim(ApplicationUserClaims.UserRole, ApplicationUserRoles.Customer));
             });
+
+            // ==================================================================================================================
+            // Build
+            // ==================================================================================================================
 
             var app = builder.Build();
 
