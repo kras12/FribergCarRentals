@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FribergCarRentals.Data.V2\FribergCarRentals.Data.V2.csproj" />
+    <ProjectReference Include="..\FribergCarRentals.Data.V2\FribergCarRentals.Data.csproj" />
     <ProjectReference Include="..\FribergCars.Shared\AppSettings.Shared.csproj" />
     <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
   </ItemGroup>

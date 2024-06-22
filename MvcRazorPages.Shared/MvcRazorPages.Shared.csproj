@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FribergCarRentals.Data.V2\FribergCarRentals.Data.V2.csproj" />
+    <ProjectReference Include="..\FribergCarRentals.Data.V2\FribergCarRentals.Data.csproj" />
   </ItemGroup>
 
 </Project>
