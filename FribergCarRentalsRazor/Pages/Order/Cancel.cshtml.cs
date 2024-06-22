@@ -90,10 +90,10 @@ namespace FribergCarRentals.Pages.Order
                     }
                 }
 
-                throw new Exception($"Failed to cancel order with id: {id} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
+                throw new Exception($"Failed to cancel order with id: {id}");
             }
 
-            throw new Exception($"Model validation failed: CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Model validation failed: UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion

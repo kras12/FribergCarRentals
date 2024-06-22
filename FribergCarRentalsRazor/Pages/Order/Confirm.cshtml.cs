@@ -133,7 +133,7 @@ namespace FribergCarRentals.Pages.Order
                     return RedirectToPage("Details", new { id = order.CarOrderId });
                 }
 
-                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {CreateOrderViewModel.CarId} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
+                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {CreateOrderViewModel.CarId} - UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value}");
             }
 
             throw new Exception($"Failed to retrieve the pending order from temp storage.");

@@ -193,10 +193,10 @@ namespace FribergCarRentals.Controllers.Customer
                     }
                 }
 
-                throw new Exception($"Failed to cancel order with id: {id} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
+                throw new Exception($"Failed to cancel order with id: {id}");
             }
 
-            throw new Exception($"Model validation failed: CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Model validation failed: UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
         // GET: CustomerOrderController/Confirm
         [HttpGet]
@@ -246,7 +246,7 @@ namespace FribergCarRentals.Controllers.Customer
                     return RedirectToAction(nameof(Details), new { id = order.CarOrderId });
                 }
 
-                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {createOrderViewModel.CarId} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
+                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {createOrderViewModel.CarId} - UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value}");
             }
 
             throw new Exception($"Failed to retrieve the pending order from temp storage.");
@@ -284,10 +284,10 @@ namespace FribergCarRentals.Controllers.Customer
                     return View(viewModel);
                 }
 
-                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
+                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id}");
             }
 
-            throw new Exception($"Model validation failed: - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Model validation failed: - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         // GET: CustomerOrderController
@@ -342,7 +342,7 @@ namespace FribergCarRentals.Controllers.Customer
                 return RedirectToAction(nameof(Confirm));
             }
 
-            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion

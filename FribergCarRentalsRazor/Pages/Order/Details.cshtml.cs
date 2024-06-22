@@ -88,10 +88,10 @@ namespace FribergCarRentals.Pages.Order
                     return Page();
                 }
 
-                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
+                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id}");
             }
 
-            throw new Exception($"Model validation failed: - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Model validation failed: - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion

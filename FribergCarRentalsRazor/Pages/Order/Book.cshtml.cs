@@ -99,7 +99,7 @@ namespace FribergCarRentals.Pages.Order
                 return RedirectToPage("Confirm");
             }
 
-            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         /// <summary>
