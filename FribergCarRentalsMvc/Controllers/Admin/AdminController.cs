@@ -59,8 +59,8 @@ namespace FribergCarRentals.Controllers.Admin
                 return RedirectToLogin(nameof(Index));
             }
 
-            var adminId = int.Parse(User.FindFirst(x => x.Type == ApplicationUserClaims.AdminId)!.Value);
-            var admin = await _adminRepository.GetByIdAsync(adminId);
+            var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+            var admin = await _adminRepository.GetByUserIdAsync(userId);
 
             if (admin is not null)
             {

@@ -21,22 +21,22 @@ namespace FribergCarRentals.Pages.Order
         #region Fields
 
         /// <summary>
-        /// The injected order repository.
+        /// The injected customer repository.
         /// </summary>
-        ICarOrderRepository _orderRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         #endregion
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="orderRepository">Injected order repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        public ListModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
+        /// <param name="customerRepository">The injected customer repository.</param>
+        public ListModel(IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, ICustomerRepository customerRepository) : base(authorizationService, signInManager)
         {
-            _orderRepository = orderRepository;
+            _customerRepository = customerRepository;
         }
 
         #region Properties
@@ -61,9 +61,10 @@ namespace FribergCarRentals.Pages.Order
                 return RedirectToLogin("../Order/List");
             }
 
-            var customerId = int.Parse(User.Claims.Single(x => x.Type == ApplicationUserClaims.CustomerId).Value);
+            var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+            var customer = await _customerRepository.GetByUserIdAsync(userId) ?? throw new Exception($"Failed to find customer with user ID: {userId}");
             OrderListViewModel = new ListViewModel<OrderViewModel>(
-                (await _orderRepository.GetAllByCustomer(customerId))
+                customer.Orders
                     .Select(x => new OrderViewModel(x))
                     .OrderByDescending(x => x.CarOrderId));            
 

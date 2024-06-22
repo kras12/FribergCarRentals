@@ -23,6 +23,14 @@ namespace FribergCarRentals.Data.Repositories
         /// <returns>A <see cref="Task"/>.</returns>
         public Task DeleteAsync(int id);
 
+        /// <summary>
+        /// Attempts to fetch a customer by user ID.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <param name="id">The ID of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
+        public Task<CustomerEntity?> GetByUserIdAsync(string userId);
+
         #endregion
     }
 }

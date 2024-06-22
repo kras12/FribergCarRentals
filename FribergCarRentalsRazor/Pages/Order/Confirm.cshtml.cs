@@ -116,8 +116,8 @@ namespace FribergCarRentals.Pages.Order
             if (TempDataHelper.TryGet(TempData, BookModel.PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
             {
                 CreateOrderViewModel = createOrderViewModel;
-                var customerId = int.Parse(User.Claims.Single(x => x.Type == ApplicationUserClaims.CustomerId).Value);                
-                var customer = await _customerRepository.GetByIdAsync(customerId);
+                var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+                var customer = await _customerRepository.GetByUserIdAsync(userId);
                 var car = await _carRepository.GetByIdAsync(CreateOrderViewModel.CarId);
 
                 if (customer is not null && car is not null)

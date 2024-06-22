@@ -17,6 +17,14 @@ namespace FribergCarRentals.Data.Repositories
         /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
         public Task<AdminEntity?> GetByIdAsync(int id);
 
+        /// <summary>
+        /// Attempts to fetch an admin by user ID.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <param name="id">The ID of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
+        public Task<AdminEntity?> GetByUserIdAsync(string userId);
+
         #endregion
     }
 }

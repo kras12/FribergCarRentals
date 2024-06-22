@@ -92,6 +92,17 @@ namespace FribergCarRentals.Data.Repositories
             return await _databaseContext.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.CustomerId == id);
         }
 
+        /// <summary>
+        /// Attempts to fetch a customer by user ID.
+        /// </summary>
+        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
+        /// <param name="id">The ID of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
+        public Task<CustomerEntity?> GetByUserIdAsync(string userId)
+        {
+            return _databaseContext.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.User.Id == userId);
+        }
+
         #endregion
     }
 }

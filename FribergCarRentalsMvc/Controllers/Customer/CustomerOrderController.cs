@@ -229,8 +229,8 @@ namespace FribergCarRentals.Controllers.Customer
 
             if (TempDataHelper.TryGet(TempData, PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
             {
-                var customerId = int.Parse(User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value);
-                var customer = await _customerRepository.GetByIdAsync(customerId);
+                var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+                var customer = await _customerRepository.GetByUserIdAsync(userId);
                 var car = await _carRepository.GetByIdAsync(createOrderViewModel.CarId);
 
                 if (customer is not null && car is not null)
@@ -299,9 +299,10 @@ namespace FribergCarRentals.Controllers.Customer
                 return RedirectToLogin(nameof(List));
             }
 
-            var customerId = int.Parse(User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value);
+            var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+            var customer = await _customerRepository.GetByUserIdAsync(userId) ?? throw new Exception($"Failed to find customer with user ID: {userId}");
             ListViewModel<OrderViewModel> orderListViewModel = new ListViewModel<OrderViewModel>(
-                (await _orderRepository.GetAllByCustomer(customerId))
+                customer.Orders
                     .Select(x => new OrderViewModel(x))
                     .OrderByDescending(x => x.CarOrderId));
 
