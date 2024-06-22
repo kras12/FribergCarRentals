@@ -25,7 +25,7 @@ namespace MvcRazorPages.Shared.ViewModels.Admin
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public AdminViewModel(AdminEntity admin) :
-            base(admin.UserId, admin.FirstName, admin.LastName, admin.Email)
+            base(admin.AdminId, admin.User.FirstName, admin.User.LastName, admin.User.Email!)
         {
 
         }
