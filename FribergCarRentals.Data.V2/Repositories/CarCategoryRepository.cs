@@ -54,7 +54,7 @@ namespace FribergCarRentals.Data.Repositories
         /// Returns the statistics for all car categories.
         /// </summary>
         /// <returns>A <see cref="Task"/> containing a collection of category statistics.</returns>
-        public async Task<List<CarCategoryStatisticsDto>> GetCategoryStatistics()
+        public async Task<List<CarCategoryCountDto>> GetCategoryStatistics()
         {
             return await _databaseContext.CarCategories.AsNoTracking()
                .GroupJoin(
@@ -66,7 +66,7 @@ namespace FribergCarRentals.Data.Repositories
                        category = categoryEntity,
                        carCount = carList.Count()
                    })
-               .Select(categoryGroup => new CarCategoryStatisticsDto(categoryGroup.category, categoryGroup.carCount))
+               .Select(categoryGroup => new CarCategoryCountDto(categoryGroup.category, categoryGroup.carCount))
                .ToListAsync();
         }
 
@@ -75,7 +75,7 @@ namespace FribergCarRentals.Data.Repositories
         /// </summary>
         /// <param name="id">The ID of the category to fetch statistics for.</param>
         /// <returns>A <see cref="Task"/> containing the statistics for the category.</returns>
-        public async Task<CarCategoryStatisticsDto> GetCategoryStatisticsById(int id)
+        public async Task<CarCategoryCountDto> GetCategoryStatisticsById(int id)
         {
             return await _databaseContext.CarCategories.AsNoTracking().Where(x => x.CarCategoryId == id)
                 .GroupJoin(
@@ -87,7 +87,7 @@ namespace FribergCarRentals.Data.Repositories
                         category = categoryEntity,
                         carCount = carList.Count()
                     })
-                .Select(categoryGroup => new CarCategoryStatisticsDto(categoryGroup.category, categoryGroup.carCount))
+                .Select(categoryGroup => new CarCategoryCountDto(categoryGroup.category, categoryGroup.carCount))
                 .FirstAsync();
         }
 

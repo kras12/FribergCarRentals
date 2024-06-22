@@ -21,14 +21,14 @@ namespace FribergCarRentals.Data.Repositories
         /// Returns the statistics for all car categories.
         /// </summary>
         /// <returns>A <see cref="Task"/> containing a collection of category statistics.</returns>
-        public Task<List<CarCategoryStatisticsDto>> GetCategoryStatistics();
+        public Task<List<CarCategoryCountDto>> GetCategoryStatistics();
 
         /// <summary>
         /// Returns the statistics for the category that matches the ID. 
         /// </summary>
         /// <param name="id">The ID of the category to fetch statistics for.</param>
         /// <returns>A <see cref="Task"/> containing the statistics for the category.</returns>
-        public Task<CarCategoryStatisticsDto> GetCategoryStatisticsById(int id);
+        public Task<CarCategoryCountDto> GetCategoryStatisticsById(int id);
 
         #endregion
     }

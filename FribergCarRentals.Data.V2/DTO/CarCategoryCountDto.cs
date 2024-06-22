@@ -2,12 +2,10 @@
 
 namespace MvcRazorPages.Shared.DTO
 {
-    // TODO - Remove
-
     /// <summary>
-    /// A DTO class storing car category statistics.
+    /// A DTO class storing the number of cars found for a specific car category.
     /// </summary>
-    public class CarCategoryStatisticsDto
+    public class CarCategoryCountDto
     {
 
         #region Constructors
@@ -19,7 +17,7 @@ namespace MvcRazorPages.Shared.DTO
         /// <param name="carCount">The number of cars using this category.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public CarCategoryStatisticsDto(CarCategoryEntity carCategoryEntity, int carCount)
+        public CarCategoryCountDto(CarCategoryEntity carCategoryEntity, int carCount)
         {
             #region Checks
 
