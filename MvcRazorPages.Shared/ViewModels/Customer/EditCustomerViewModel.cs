@@ -28,7 +28,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public EditCustomerViewModel(CustomerEntity customer) :
-            this(customer.UserId, customer.FirstName, customer.LastName, customer.Email)
+            this(customer.CustomerId, customer.User.FirstName!, customer.User.LastName, customer.User.Email!)
         {
 
         }
