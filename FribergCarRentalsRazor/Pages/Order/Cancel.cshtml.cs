@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Pages.Admin;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
 
 namespace FribergCarRentals.Pages.Order
 {
     /// <summary>
     /// Page model for cancelling an order in the customer back office. 
     /// </summary>
-    public class CancelModel : PageModel
+    public class CancelModel : PageModelBase
     {
         #region Constants
 
@@ -42,7 +45,10 @@ namespace FribergCarRentals.Pages.Order
         /// A constructor.
         /// </summary>
         /// <param name="orderRepository">Injected order repository.</param>
-        public CancelModel(ICarOrderRepository orderRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public CancelModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
         }
@@ -58,7 +64,7 @@ namespace FribergCarRentals.Pages.Order
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -84,10 +90,10 @@ namespace FribergCarRentals.Pages.Order
                     }
                 }
 
-                throw new Exception($"Failed to cancel order with id: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
+                throw new Exception($"Failed to cancel order with id: {id} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
             }
 
-            throw new Exception($"Model validation failed: CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Model validation failed: CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion

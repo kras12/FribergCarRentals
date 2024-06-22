@@ -12,13 +12,13 @@
 }
 else
 {
-    <h2>@($"#{Model.EditCustomerViewModel.UserId} - {Model.EditCustomerViewModel.FullName}")</h2>
+    <h2>@($"#{Model.EditCustomerViewModel.AccountId} - {Model.EditCustomerViewModel.FullName}")</h2>
 }
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
         <a asp-page="List" class="button navigational-button">View Customers</a>
         <form asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this customer?');">
-            <input type="hidden" name="id" value="@Model.EditCustomerViewModel.UserId" asp-for="EditCustomerViewModel.UserId" />
+            <input type="hidden" name="id" value="@Model.EditCustomerViewModel.AccountId" asp-for="EditCustomerViewModel.AccountId" />
             <button type="submit" class="negative-button">Delete</button>
         </form>
     </div>
@@ -28,7 +28,7 @@ else
             <div class="vertical-form-field">
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>
-            <input type="hidden" asp-for="EditCustomerViewModel.UserId" />
+            <input type="hidden" asp-for="EditCustomerViewModel.AccountId" />
             <div class="vertical-form-field">
                 <label asp-for="EditCustomerViewModel.FirstName"></label>
                 <input asp-for="EditCustomerViewModel.FirstName" />
@@ -45,9 +45,9 @@ else
                 <span asp-validation-for="EditCustomerViewModel.Email" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="EditCustomerViewModel.Password"></label>
-                <input asp-for="EditCustomerViewModel.Password" />
-                <span asp-validation-for="EditCustomerViewModel.Password" class="error-text"></span>
+                <label asp-for="EditCustomerViewModel.NewPassword"></label>
+                <input asp-for="EditCustomerViewModel.NewPassword" />
+                <span asp-validation-for="EditCustomerViewModel.NewPassword" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <button type="submit">Save</button>

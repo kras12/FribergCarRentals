@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Pages.Admin.Order
 {
     /// <summary>
     /// Page model for completing a customer order in the admin back office. 
     /// </summary>
-    public class CompleteModel : PageModel
+    public class CompleteModel : PageModelBase
     {
         #region Constants
 
@@ -41,7 +43,10 @@ namespace FribergCarRentals.Pages.Admin.Order
         /// A constructor.
         /// </summary>
         /// <param name="orderRepository">Injected order repository.</param>
-        public CompleteModel(ICarOrderRepository orderRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public CompleteModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
         {
             _orderRepository = orderRepository;
         }
@@ -57,7 +62,7 @@ namespace FribergCarRentals.Pages.Admin.Order
         /// <returns>A <see cref="Task{TResult}"/> containing <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin();
             }

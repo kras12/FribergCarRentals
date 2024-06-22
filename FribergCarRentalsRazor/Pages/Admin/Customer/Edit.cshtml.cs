@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Customer;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace FribergCarRentals.Pages.Admin.Customer
 {
     /// <summary>
     /// Page model for editing a customer in the admin back offcie. 
     /// </summary>
-    public class EditModel : PageModel
+    public class EditModel : PageModelBase
     {
         #region Constants
 
@@ -30,6 +33,12 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// </summary>
         private readonly ICustomerRepository _customerRepository;
 
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
+
         #endregion
 
         #region Constructors
@@ -38,9 +47,16 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// A constructor. 
         /// </summary>
         /// <param name="customerRepository">Injected customer repository.</param>
-        public EditModel(ICustomerRepository customerRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="userManager">The injected user manager.</param>
+        public EditModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, UserManager<ApplicationUser> userManager) : base(authorizationService, signInManager)
         {
             _customerRepository = customerRepository;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
         #endregion
@@ -64,7 +80,7 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -96,33 +112,39 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(id);
             }
 
-            if (id <= 0 || id != EditCustomerViewModel.UserId)
+            if (id <= 0 || id != EditCustomerViewModel.AccountId)
             {
-                throw new Exception($"Invalid ID or ID mismatch - QueryParameter: {id} - ViewModel: {EditCustomerViewModel.UserId}");
+                throw new Exception($"Invalid ID or ID mismatch - QueryParameter: {id} - ViewModel: {EditCustomerViewModel.AccountId}");
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (DataTransferHelper.TryTransferData(EditCustomerViewModel, out CustomerEntity customer))
-                {
-                    if (string.IsNullOrEmpty(EditCustomerViewModel.Password))
-                    {
-                        await _customerRepository.UpdateExcludePasswordAsync(customer);
-                    }
-                    else
-                    {
-                        await _customerRepository.UpdateAsync(customer);
-                    }
+                var customer = await _customerRepository.GetByIdAsync(EditCustomerViewModel.AccountId);
 
-                    EditCustomerViewModel = new EditCustomerViewModel(customer);
-                    EditCustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
-                    return Page();
+                if (customer == null)
+                {
+                    return NotFound();
                 }
+
+                customer = _mapper.Map(EditCustomerViewModel, customer);
+                customer.User = _mapper.Map(EditCustomerViewModel, customer.User);
+
+                if (string.IsNullOrEmpty(EditCustomerViewModel.NewPassword))
+                {
+                    await _userManager.RemovePasswordAsync(customer.User);
+                    await _userManager.AddPasswordAsync(customer.User, EditCustomerViewModel.NewPassword!);
+                }
+
+                await _customerRepository.UpdateAsync(customer);
+                EditCustomerViewModel = new EditCustomerViewModel(customer);
+                EditCustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
+
+                return Page();
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))

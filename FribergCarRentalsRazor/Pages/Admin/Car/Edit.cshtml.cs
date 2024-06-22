@@ -1,19 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Car;
 using MvcRazorPages.Shared.ViewModels.Image;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace FribergCarRentals.Pages.Admin.Car
 {
     /// <summary>
     /// Page model class for editing a car in the admin back office. 
     /// </summary>
-    public class EditModel : PageModel
+    public class EditModel : PageModelBase
     {
         #region Constants
 
@@ -36,6 +39,9 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
         #endregion
 
         #region Constructors
@@ -45,10 +51,15 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         /// <param name="carRepository">The injected car repository.</param>
         /// <param name="carCategoryRepository">The injected car category repository.</param>
-        public EditModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        public EditModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
+            _mapper = mapper;
         }
 
         #endregion
@@ -72,7 +83,7 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -105,7 +116,7 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -120,36 +131,33 @@ namespace FribergCarRentals.Pages.Admin.Car
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (DataTransferHelper.TryTransferData(EditCarViewModel, out CarEntity car))
+                var car = _mapper.Map<CarEntity>(EditCarViewModel);
+                car.Category = await _carCategoryRepository.GetByIdAsync(EditCarViewModel.SelectedCategoryId);
+                car.Images.AddRange(carImages);
+
+                if (EditCarViewModel.UploadImages is not null && EditCarViewModel.UploadImages.Count > 0)
                 {
-                    car.Category = await _carCategoryRepository.GetByIdAsync(EditCarViewModel.SelectedCategoryId);
-                    car.Images.AddRange(carImages);
-
-                    if (EditCarViewModel.UploadImages is not null && EditCarViewModel.UploadImages.Count > 0)
-                    {
-                        var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(EditCarViewModel.UploadImages!);
-                        car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
-                    }
-
-                    if (EditCarViewModel.DeleteImages is not null && EditCarViewModel.DeleteImages.Count > 0)
-                    {
-                        var imagesToDelete = car.Images.IntersectBy(EditCarViewModel.DeleteImages, x => x.ImageId).ToList();
-
-                        if (imagesToDelete.Count > 0)
-                        {
-                            ImageHelper.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
-                            imagesToDelete.ForEach(x => car.Images.Remove(x));
-                        }
-                    }
-
-                    await _carRepository.UpdateAsync(car);
-                    var carCategories = await _carCategoryRepository.GetAllAsync();
-                    EditCarViewModel = new EditCarViewModel(car, carCategories);
-                    EditCarViewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
-                    return Page();
+                    var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(EditCarViewModel.UploadImages!);
+                    car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
 
-                throw new Exception("Failed to transfer data from view model to entity.");
+                if (EditCarViewModel.DeleteImages is not null && EditCarViewModel.DeleteImages.Count > 0)
+                {
+                    var imagesToDelete = car.Images.IntersectBy(EditCarViewModel.DeleteImages, x => x.ImageId).ToList();
+
+                    if (imagesToDelete.Count > 0)
+                    {
+                        ImageHelper.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
+                        imagesToDelete.ForEach(x => car.Images.Remove(x));
+                    }
+                }
+
+                await _carRepository.UpdateAsync(car);
+                var carCategories = await _carCategoryRepository.GetAllAsync();
+                EditCarViewModel = new EditCarViewModel(car, carCategories);
+                EditCarViewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
+
+                return Page();
             }
 
             EditCarViewModel.Images = carImages.Select(x => new ImageViewModel(x)).ToList();

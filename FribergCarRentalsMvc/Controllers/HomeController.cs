@@ -1,12 +1,15 @@
 using MvcRazorPages.Shared.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Controllers.Customer;
 using FribergCarRentals.Helpers;
 using MvcRazorPages.Shared.ViewModels.Image;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Controllers
 {
@@ -28,7 +31,10 @@ namespace FribergCarRentals.Controllers
         /// A constructor.
         /// </summary>
         /// <param name="carRepository">Injected car repository.</param>
-        public HomeController(ICarRepository carRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public HomeController(ICarRepository carRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
         }

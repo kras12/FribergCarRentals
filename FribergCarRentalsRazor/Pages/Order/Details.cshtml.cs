@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Sessions;
 using FribergCarRentals.Pages.Customer;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Order;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
 
 namespace FribergCarRentals.Pages.Order
 {
     /// <summary>
     /// Page model for showing order details in the customer back office. 
     /// </summary>
-    public class DetailsModel : PageModel
+    public class DetailsModel : PageModelBase
     {
         #region Fields
 
@@ -29,7 +32,10 @@ namespace FribergCarRentals.Pages.Order
         /// A constructor. 
         /// </summary>
         /// <param name="orderRepository">Injected order repository.</param>
-        public DetailsModel(ICarOrderRepository orderRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
         {
             _orderRepository = orderRepository;
         }
@@ -54,7 +60,7 @@ namespace FribergCarRentals.Pages.Order
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -82,10 +88,10 @@ namespace FribergCarRentals.Pages.Order
                     return Page();
                 }
 
-                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
+                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id} - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value}");
             }
 
-            throw new Exception($"Model validation failed: - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Model validation failed: - CustomerID: {User.FindFirst(x => x.Type == ApplicationUserClaims.CustomerId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion

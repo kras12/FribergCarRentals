@@ -1,11 +1,15 @@
 ﻿using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using MvcRazorPages.Shared.ViewModels.Admin;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.ViewModels.Customer;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -22,13 +26,23 @@ namespace FribergCarRentals.Controllers.Admin
 
         #region Fields
 
+        /// <summary>
+        /// The injected admin repository.
+        /// </summary>
         private readonly IAdminRepository _adminRepository;
 
         #endregion
 
         #region Constructors
 
-        public AdminController(IAdminRepository _adminRepository)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="_adminRepository">The injected admin repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public AdminController(IAdminRepository _adminRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             this._adminRepository = _adminRepository;
         }
@@ -40,13 +54,13 @@ namespace FribergCarRentals.Controllers.Admin
         // GET: AdminController
         public async Task<IActionResult> Index()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Index));
             }
 
-            var userData = UserSessionHandler.GetUserData(HttpContext.Session);
-            var admin = await _adminRepository.GetByIdAsync(userData.UserId);
+            var adminId = int.Parse(User.FindFirst(x => x.Type == ApplicationUserClaims.AdminId)!.Value);
+            var admin = await _adminRepository.GetByIdAsync(adminId);
 
             if (admin is not null)
             {
@@ -58,14 +72,13 @@ namespace FribergCarRentals.Controllers.Admin
         }
 
         // GET: AdminController
-        public ActionResult Login()
+        public async Task<IActionResult> Login()
         {
-            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (await IsCustomerLoggedIn())
             {
-                UserSessionHandler.RemoveUserData(HttpContext.Session);
+                await _signInManager.SignOutAsync();
             }
-
-            if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            else if (await IsAdminLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
@@ -79,24 +92,23 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginAdminViewModel loginAdminViewModel)
         {
-            if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (await IsAdminLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var admin = await _adminRepository.GetMatchingAdminAsync(loginAdminViewModel.Email, loginAdminViewModel.Password);
+                var result = await _signInManager.PasswordSignInAsync(loginAdminViewModel.Email, loginAdminViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (admin is null)
+                if (result.Succeeded)
                 {
-                    ModelState.AddModelError("", "No account matched the entered email/password.");
-                    return View(loginAdminViewModel);
+                    return TempDataOrHomeRedirect();
                 }
                 else
                 {
-                    LoginAdmin(admin);
-                    return TempDataOrHomeRedirect();
+                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
+                    ModelState.AddModelError(nameof(LoginAdminViewModel), "No account matched the entered email/password.");
                 }
             }
 
@@ -104,30 +116,15 @@ namespace FribergCarRentals.Controllers.Admin
         }
 
         // GET: AdminController
-        public ActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
-            {
-                UserSessionHandler.RemoveUserData(HttpContext.Session);
-            }
-
+            await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), ControllerHelper.GetControllerName<HomeController>());
         }
 
         #endregion
 
-        #region Methods       
-
-        /// <summary>
-        /// Saves the admin user data in the session storage. 
-        /// </summary>
-        /// <param name="admin">The admin to login.</param>
-        [NonAction]
-        private void LoginAdmin(AdminEntity admin)
-        {
-            UserSessionHandler.SetUserData(HttpContext.Session,
-                    new UserSessionData(admin.UserId, admin.Email, admin.UserRole));
-        }
+        #region Methods
 
         /// <summary>
         /// Redirects the admin to the page stored in the temp storage if such data exists, else redirects the admin to the homepage. 

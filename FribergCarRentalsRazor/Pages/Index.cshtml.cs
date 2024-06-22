@@ -1,5 +1,5 @@
 using MvcRazorPages.Shared.Data;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Image;
 using MvcRazorPages.Shared.ViewModels.Other;

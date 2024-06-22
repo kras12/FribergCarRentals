@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.ViewModels.Admin;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
 
 namespace FribergCarRentals.Pages.Admin
 {
     /// <summary>
     /// Page model for the main page in the admin back office.
     /// </summary>
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
         #region Fields
 
@@ -28,7 +31,10 @@ namespace FribergCarRentals.Pages.Admin
         /// A constructor.
         /// </summary>
         /// <param name="adminRepository">Injected admin repository.</param>
-        public IndexModel(IAdminRepository adminRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public IndexModel(IAdminRepository adminRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             _adminRepository = adminRepository;
         }
@@ -52,13 +58,13 @@ namespace FribergCarRentals.Pages.Admin
         /// <returns></returns>
         public async Task<IActionResult> OnGetAsync()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin();                
             }
 
-            var userData = UserSessionHandler.GetUserData(HttpContext.Session);
-            var admin = await _adminRepository.GetByIdAsync(userData.UserId);
+            var adminId = int.Parse(User.FindFirst(x => x.Type == ApplicationUserClaims.AdminId)!.Value);
+            var admin = await _adminRepository.GetByIdAsync(adminId);
 
             if (admin is not null)
             {

@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Pages.Admin.Customer
 {
     /// <summary>
     /// Page model for deleting a customer in the admin back office. 
     /// </summary>
-    public class DeleteModel : PageModel
+    public class DeleteModel : PageModelBase
     {
         #region Constants
 
@@ -31,6 +33,7 @@ namespace FribergCarRentals.Pages.Admin.Customer
 
 
         #endregion
+
         #region Fields
 
         /// <summary>
@@ -46,7 +49,10 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// A constructor.
         /// </summary>
         /// <param name="customerRepository">Injected customer repository.</param>
-        public DeleteModel(ICustomerRepository customerRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public DeleteModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
         {
             _customerRepository = customerRepository;
         }
@@ -62,7 +68,7 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// <returns>A <see cref="Task{TResult}"/> containing <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -87,7 +93,7 @@ namespace FribergCarRentals.Pages.Admin.Customer
                 }
             }
 
-            throw new Exception($"Failed to delete the customer with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid} - IsAdminLoggedIn: {UserSessionHandler.IsAdminLoggedIn(HttpContext.Session)}");
+            throw new Exception($"Failed to delete the customer with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion

@@ -12,13 +12,13 @@
 }
 else
 {
-    <h2>@($"#{Model.UserId} - {Model.FullName}")</h2>
+    <h2>@($"#{Model.AccountId} - {Model.FullName}")</h2>
 }
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
         <a asp-action="List" class="button navigational-button">View Customers</a>
         <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this customer?');">
-            <input type="hidden" name="id" value="@Model.UserId" asp-for="UserId" />
+            <input type="hidden" name="id" value="@Model.AccountId" asp-for="AccountId" />
             <button type="submit" class="negative-button">Delete</button>
         </form>
     </div>
@@ -28,7 +28,7 @@ else
             <div class="vertical-form-field">
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>
-            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="AccountId" />
             <div class="vertical-form-field">
                 <label asp-for="FirstName"></label>
                 <input asp-for="FirstName" />
@@ -45,9 +45,9 @@ else
                 <span asp-validation-for="Email" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" />
-                <span asp-validation-for="Password" class="error-text"></span>
+                <labNewPasswordor="Password"></label>
+                <inpNewPasswordor="Password" />
+                <span asp-valiNewPasswordor="Password" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <button type="submit">Save</button>

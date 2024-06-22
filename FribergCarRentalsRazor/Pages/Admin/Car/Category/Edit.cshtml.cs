@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.CarCategory;
 using MvcRazorPages.Shared.Data;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace FribergCarRentals.Pages.Admin.CarCategories
 {
     /// <summary>
     /// Page model class for editing a car category in the admin back office. 
     /// </summary>
-    public class EditModel : PageModel
+    public class EditModel : PageModelBase
     {
         #region Constants
 
@@ -30,6 +32,9 @@ namespace FribergCarRentals.Pages.Admin.CarCategories
         /// </summary>
         private readonly ICarCategoryRepository _carCategoryRepository;
 
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
         #endregion
 
         #region Constructors
@@ -38,9 +43,14 @@ namespace FribergCarRentals.Pages.Admin.CarCategories
         /// A constructor. 
         /// </summary>
         /// <param name="carCategoryRepository">The injected car category repository.</param>
-        public EditModel(ICarCategoryRepository carCategoryRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        public EditModel(ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
         {
             _carCategoryRepository = carCategoryRepository;
+            _mapper = mapper;
         }
 
         #endregion
@@ -64,7 +74,7 @@ namespace FribergCarRentals.Pages.Admin.CarCategories
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -96,7 +106,7 @@ namespace FribergCarRentals.Pages.Admin.CarCategories
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(id);
             }
@@ -108,13 +118,11 @@ namespace FribergCarRentals.Pages.Admin.CarCategories
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (DataTransferHelper.TryTransferData(EditCarCategoryViewModel, out CarCategoryEntity category))
-                {
-                    await _carCategoryRepository.UpdateAsync(category);
-                    EditCarCategoryViewModel = new EditCarCategoryViewModel(category);
-                    EditCarCategoryViewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
-                    return Page();
-                }
+                var category = _mapper.Map<CarCategoryEntity>(EditCarCategoryViewModel);
+                await _carCategoryRepository.UpdateAsync(category);
+                EditCarCategoryViewModel = new EditCarCategoryViewModel(category);
+                EditCarCategoryViewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
+                return Page();
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempDataKey, out string? pageSubTitle))

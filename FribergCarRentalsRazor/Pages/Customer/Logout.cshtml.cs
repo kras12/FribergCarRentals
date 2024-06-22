@@ -1,27 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using MvcRazorPages.Shared.Sessions;
+﻿using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Pages.Customer
 {
     /// <summary>
     /// Page model for logging out a customer. 
     /// </summary>
-    public class LogoutModel : PageModel
+    public class LogoutModel : PageModelBase
     {
+        #region Constructors
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public LogoutModel(IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
+        {
+
+        }
+
+        #endregion
+
         #region HandlerMethods
 
         /// <summary>
         /// Handler for Get requests.
         /// </summary>
         /// <returns><see cref="IActionResult"/>.</returns>
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
-            {
-                UserSessionHandler.RemoveUserData(HttpContext.Session);
-            }
-
+            await _signInManager.SignOutAsync();
             return RedirectToPage("/Index");
         }
 

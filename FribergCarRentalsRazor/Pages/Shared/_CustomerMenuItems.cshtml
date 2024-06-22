@@ -1,5 +1,6 @@
-﻿@using MvcRazorPages.Shared.Sessions
-
+﻿@using Microsoft.AspNetCore.Authorization
+@using FribergFastigheter.Shared.Constants
+@inject IAuthorizationService AuthorizationService
 
 <li>
     <a asp-area="" asp-page="/Index">Home</a>
@@ -7,7 +8,7 @@
 <li>
     <a asp-area="" asp-page="/Order/Book">Book</a>
 </li>
-@if (UserSessionHandler.IsCustomerLoggedIn(ViewContext.HttpContext.Session))
+@if ((await AuthorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Customer)).Succeeded)
 {
     <li>
         <a asp-area="" asp-page="/Order/List">Orders</a>

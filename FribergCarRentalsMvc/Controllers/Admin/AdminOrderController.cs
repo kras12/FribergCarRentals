@@ -1,11 +1,13 @@
 ﻿using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.ViewModels.Order;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -43,13 +45,23 @@ namespace FribergCarRentals.Controllers.Admin
 
         #region Fields
 
+        /// <summary>
+        /// The injected order repository.
+        /// </summary>
         private readonly ICarOrderRepository _orderRepository;
 
         #endregion
 
         #region Constructors
 
-        public AdminOrderController(ICarOrderRepository orderRepository)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="orderRepository">The injected order repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public AdminOrderController(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
         }
@@ -64,7 +76,7 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Complete(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Complete));
             }
@@ -100,7 +112,7 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Delete), id);
             }
@@ -125,14 +137,14 @@ namespace FribergCarRentals.Controllers.Admin
                 }
             }
 
-            throw new Exception($"Failed to delete the order with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid} - IsAdminLoggedIn: {UserSessionHandler.IsAdminLoggedIn(HttpContext.Session)}");
+            throw new Exception($"Failed to delete the order with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         // GET: AdminOrder/Details/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Details), id);
             }
@@ -166,7 +178,7 @@ namespace FribergCarRentals.Controllers.Admin
         // GET: AdminOrder
         public async Task<IActionResult> List()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(List));
             }

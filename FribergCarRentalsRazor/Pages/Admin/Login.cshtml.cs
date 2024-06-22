@@ -1,18 +1,20 @@
 ﻿using MvcRazorPages.Shared.Data;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Sessions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MvcRazorPages.Shared.ViewModels.Admin;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Pages.Admin
 {
     /// <summary>
     /// Page model for admin login.
     /// </summary>
-    public class LoginModel : PageModel
+    public class LoginModel : PageModelBase
     {
         #region Constants
 
@@ -33,12 +35,15 @@ namespace FribergCarRentals.Pages.Admin
         #endregion
 
         #region Constructors
-        
+
         /// <summary>
         /// A constructor.
         /// </summary>
         /// <param name="adminRepository">Injected admin repository.</param>
-        public LoginModel(IAdminRepository adminRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public LoginModel(IAdminRepository adminRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             _adminRepository = adminRepository;
         }
@@ -61,14 +66,13 @@ namespace FribergCarRentals.Pages.Admin
         /// The handler for Get requests.
         /// </summary>
         /// <returns></returns>
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (await IsCustomerLoggedIn())
             {
-                UserSessionHandler.RemoveUserData(HttpContext.Session);
+                await _signInManager.SignOutAsync();
             }
-
-            if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            else if (await IsAdminLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
@@ -83,25 +87,23 @@ namespace FribergCarRentals.Pages.Admin
         /// <returns></returns>
         public async Task<IActionResult> OnPostAsync()
         {
-            if (UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (await IsAdminLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
+                var result = await _signInManager.PasswordSignInAsync(AdminLoginViewModel.Email, AdminLoginViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                var admin = await _adminRepository.GetMatchingAdminAsync(AdminLoginViewModel.Email, AdminLoginViewModel.Password);
-
-                if (admin is null)
+                if (result.Succeeded)
                 {
-                    ModelState.AddModelError("", "No account matched the entered email/password.");
-                    return Page();
+                    return TempDataOrHomeRedirect();
                 }
                 else
                 {
-                    LoginAdmin(admin);
-                    return TempDataOrHomeRedirect();
+                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
+                    ModelState.AddModelError(nameof(AdminLoginViewModel), "No account matched the entered email/password.");
                 }
             }
 
@@ -111,17 +113,6 @@ namespace FribergCarRentals.Pages.Admin
         #endregion
 
         #region OtherMethods
-
-        /// <summary>
-        /// Saves the admin user data in the session storage. 
-        /// </summary>
-        /// <param name="admin">The admin to login.</param>
-        [NonAction]
-        private void LoginAdmin(AdminEntity admin)
-        {
-            UserSessionHandler.SetUserData(HttpContext.Session,
-                    new UserSessionData(admin.UserId, admin.Email, admin.UserRole));
-        }
 
         /// <summary>
         /// Redirects the admin to the page stored in the temp storage if such data exists, else redirects the admin to the homepage. 

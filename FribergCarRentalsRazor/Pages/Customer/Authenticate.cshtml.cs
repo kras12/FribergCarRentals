@@ -18,7 +18,7 @@ namespace FribergCarRentals.Pages.Customer
     /// <summary>
     /// Page model for customer registration and login.
     /// </summary>
-    public class AuthenticateModel : PageModel
+    public class AuthenticateModel : PageModelBase
     {
         #region Constants
 
@@ -31,26 +31,14 @@ namespace FribergCarRentals.Pages.Customer
 
         #region Fields
 
-        // The injected authorization service.
-        private readonly IAuthorizationService _authorizationService;
-
         // The injected customer repository.
         private readonly ICustomerRepository _customerRepository;
-
-        // The injected email store.
-        private readonly IUserEmailStore<ApplicationUser> _emailStore;
 
         // The injected Auto Mapper.
         private readonly IMapper _mapper;
 
-        // The injected signin manager.
-        private readonly SignInManager<ApplicationUser> _signInManager;
-
         // The injected user manager.
         private readonly UserManager<ApplicationUser> _userManager;
-
-        // The injected user store.
-        private readonly IUserStore<ApplicationUser> _userStore;
 
         #endregion
 
@@ -63,19 +51,12 @@ namespace FribergCarRentals.Pages.Customer
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="userManager">The injected user manager.</param>
-        /// <param name="userStore">The injected user store.</param>
-        /// <param name="emailStore">The injected email store.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
         public AuthenticateModel(ICustomerRepository customerRepository, SignInManager<ApplicationUser> signInManager,
-            IAuthorizationService authorizationService, UserManager<ApplicationUser> userManager, IUserStore<ApplicationUser> userStore,
-            IUserEmailStore<ApplicationUser> emailStore, IMapper mapper)
+            IAuthorizationService authorizationService, UserManager<ApplicationUser> userManager, IMapper mapper) : base(authorizationService, signInManager)
         {
             _customerRepository = customerRepository;
-            _signInManager = signInManager;
-            _authorizationService = authorizationService;
             _userManager = userManager;
-            _userStore = userStore;
-            _emailStore = emailStore;
             _mapper = mapper;
         }
 
@@ -134,9 +115,6 @@ namespace FribergCarRentals.Pages.Customer
                 }
                 else
                 {
-                    await _userStore.SetUserNameAsync(user, user.Email, CancellationToken.None);
-                    await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
-
                     var createUserResult = await _userManager.CreateAsync(user, registerCustomerViewModel.Password);
                     IdentityResult? addRoleResult = null;
 
@@ -222,25 +200,6 @@ namespace FribergCarRentals.Pages.Customer
         #endregion
 
         #region OtherMethods
-
-        /// <summary>
-        /// Checks whether the current user is a logged in customer. 
-        /// </summary>
-        /// <returns>True if the user is a logged in customer.</returns>
-        private async Task<bool> IsCustomerLoggedIn()
-        {
-            if (_signInManager.IsSignedIn(User))
-            {
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Customer);
-
-                if (authorizationResult.Succeeded)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Redirects the user to the page stored in the temp storage if such data exists, else redirects the user to the homepage. 

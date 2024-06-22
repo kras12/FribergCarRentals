@@ -1,12 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MvcRazorPages.Shared.Helpers;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using MvcRazorPages.Shared.ViewModels.Customer;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using FribergFastigheter.Shared.Constants;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -45,15 +52,38 @@ namespace FribergCarRentals.Controllers.Admin
 
         #region Fields
 
+        /// <summary>
+        /// The injected customer repository.
+        /// </summary>
         private readonly ICustomerRepository _customerRepository;
+
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
 
         #endregion
 
         #region Constructors
 
-        public AdminCustomerController(ICustomerRepository customerRepository)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="customerRepository">The injected customer repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="userManager">The injected user manager.</param>
+        /// <param name="userStore">The injected user store.</param>
+        /// <param name="emailStore">The injected email store.</param>
+        public AdminCustomerController(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, UserManager<ApplicationUser> userManager) : base(authorizationService, signInManager)
         {
             _customerRepository = customerRepository;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
         #endregion
@@ -61,9 +91,9 @@ namespace FribergCarRentals.Controllers.Admin
         #region Actions        
 
         // GET: AdminCustomerController/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Create));
             }
@@ -76,27 +106,70 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RegisterCustomerViewModel registerCustomerViewModel)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Create));
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (!DataTransferHelper.TryTransferData(registerCustomerViewModel, out CustomerEntity customer))
-                {
-                    throw new Exception("Failed to transfer data from the view model to the entity");
-                }
+                ApplicationUser user = _mapper.Map<ApplicationUser>(registerCustomerViewModel);
 
-                if (await _customerRepository.CustomerExists(customer.Email))
+                if (await _customerRepository.CustomerExists(user.Email!))
                 {
                     ModelState.AddModelError("", "A customer already exists with that email.");
                     return View(registerCustomerViewModel);
                 }
+                else
+                {
+                    var createUserResult = await _userManager.CreateAsync(user, registerCustomerViewModel.Password);
+                    IdentityResult? addRoleResult = null;
 
-                await _customerRepository.AddAsync(customer);
-                TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.UserId);
-                return RedirectToAction(nameof(Details), new { id = customer.UserId });
+                    if (createUserResult.Succeeded)
+                    {
+                        addRoleResult = await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
+
+                        if (addRoleResult.Succeeded)
+                        {
+                            var userId = await _userManager.GetUserIdAsync(user);
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                            {
+                                // TODO - Create page to fake email confirmation
+                                await _userManager.ConfirmEmailAsync(user, code);
+                                // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                            }
+                            else
+                            {
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                            }
+
+                            string createdUserId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+                            var createdUser = await _userManager.FindByIdAsync(createdUserId);
+
+                            var customer = new CustomerEntity(createdUser!);
+                            await _customerRepository.AddAsync(customer);
+                            TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
+
+                            return RedirectToAction(nameof(Details), new { id = customer.CustomerId });
+                        }
+                    }
+
+                    foreach (var error in createUserResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    if (addRoleResult != null)
+                    {
+                        foreach (var error in addRoleResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
             }
 
             return View(registerCustomerViewModel);
@@ -108,7 +181,7 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Delete), id);
             }
@@ -133,14 +206,14 @@ namespace FribergCarRentals.Controllers.Admin
                 }
             }
 
-            throw new Exception($"Failed to delete the customer with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid} - IsAdminLoggedIn: {UserSessionHandler.IsAdminLoggedIn(HttpContext.Session)}");
+            throw new Exception($"Failed to delete the customer with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         // GET: AdminCustomerController/Details/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Details), id);
             }
@@ -174,7 +247,7 @@ namespace FribergCarRentals.Controllers.Admin
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Edit), id);
             }
@@ -204,33 +277,39 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditCustomerViewModel editCustomerViewModel)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Edit), id);
             }
 
-            if (id <= 0 || id != editCustomerViewModel.UserId)
+            if (id <= 0 || id != editCustomerViewModel.AccountId)
             {
-                throw new Exception($"Invalid ID or ID mismatch - QueryParameter: {id} - ViewModel: {editCustomerViewModel.UserId}");
+                throw new Exception($"Invalid ID or ID mismatch - QueryParameter: {id} - ViewModel: {editCustomerViewModel.AccountId}");
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (DataTransferHelper.TryTransferData(editCustomerViewModel, out CustomerEntity customer))
-                {
-                    if (string.IsNullOrEmpty(editCustomerViewModel.Password))
-                    {
-                        await _customerRepository.UpdateExcludePasswordAsync(customer);
-                    }
-                    else
-                    {
-                        await _customerRepository.UpdateAsync(customer);
-                    }
+                var customer = await _customerRepository.GetByIdAsync(editCustomerViewModel.AccountId);
 
-                    EditCustomerViewModel viewModel = new EditCustomerViewModel(customer);
-                    viewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
-                    return View(viewModel);
+                if (customer == null)
+                {
+                    return NotFound();
                 }
+
+                customer = _mapper.Map(editCustomerViewModel, customer);
+                customer.User = _mapper.Map(editCustomerViewModel, customer.User);
+
+                if (string.IsNullOrEmpty(editCustomerViewModel.NewPassword))
+                {
+                    await _userManager.RemovePasswordAsync(customer.User);
+                    await _userManager.AddPasswordAsync(customer.User, editCustomerViewModel.NewPassword!);
+                }
+
+                await _customerRepository.UpdateAsync(customer);
+                EditCustomerViewModel viewModel = new EditCustomerViewModel(customer);
+                viewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
+
+                return View(viewModel);
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))
@@ -246,7 +325,7 @@ namespace FribergCarRentals.Controllers.Admin
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(List));
             }

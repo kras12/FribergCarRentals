@@ -43,7 +43,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         public EditCustomerViewModel(int userId, string firstName, string lastName, string email) :
             base(userId, firstName, lastName, email)
         {
-            PageSubTitle = $"#{UserId} - {FullName}";
+            PageSubTitle = $"#{AccountId} - {FullName}";
         }
 
         #endregion

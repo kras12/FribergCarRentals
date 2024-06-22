@@ -1,13 +1,16 @@
 ﻿using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using MvcRazorPages.Shared.ViewModels.Car;
 using MvcRazorPages.Shared.ViewModels.Image;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -55,6 +58,9 @@ namespace FribergCarRentals.Controllers.Admin
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
         #endregion
 
         #region Constructors
@@ -64,10 +70,15 @@ namespace FribergCarRentals.Controllers.Admin
         /// </summary>
         /// <param name="carRepository">The injected car repository.</param>
         /// <param name="carCategoryRepository">The injected car category repository.</param>
-        public AdminCarController(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        public AdminCarController(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository,
+            IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
+            _mapper = mapper;
         }
 
         #endregion
@@ -78,7 +89,7 @@ namespace FribergCarRentals.Controllers.Admin
         // GET: AdminCarController/Create
         public async Task<IActionResult> Create()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Create));
             }
@@ -93,18 +104,14 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCarViewModel createCarViewModel)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Create));
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (!DataTransferHelper.TryTransferData(createCarViewModel, out CarEntity car))
-                {
-                    throw new Exception("Failed to transfer data from the view model to the entity");
-                }
-
+                var car = _mapper.Map<CarEntity>(createCarViewModel);
                 var selectedCategory = await _carCategoryRepository.GetByIdAsync(createCarViewModel.SelectedCategoryId);
                 car.Category = selectedCategory;
 
@@ -132,7 +139,7 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Delete), id);
             }
@@ -164,14 +171,14 @@ namespace FribergCarRentals.Controllers.Admin
                 }
             }
 
-            throw new Exception($"Failed to delete the car with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid} - IsAdminLoggedIn: {UserSessionHandler.IsAdminLoggedIn(HttpContext.Session)}");
+            throw new Exception($"Failed to delete the car with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         // GET: AdminCarController/Details/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Details), id);
             }
@@ -205,7 +212,7 @@ namespace FribergCarRentals.Controllers.Admin
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Edit), id);
             }
@@ -236,7 +243,7 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditCarViewModel editCarViewModel)
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(Edit), id);
             }
@@ -251,34 +258,32 @@ namespace FribergCarRentals.Controllers.Admin
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (DataTransferHelper.TryTransferData(editCarViewModel, out CarEntity car))
+                var car = _mapper.Map<CarEntity>(editCarViewModel);
+                car.Category = await _carCategoryRepository.GetByIdAsync(editCarViewModel.SelectedCategoryId);
+                car.Images.AddRange(carImages);
+
+                if (editCarViewModel.UploadImages is not null && editCarViewModel.UploadImages.Count > 0)
                 {
-                    car.Category = await _carCategoryRepository.GetByIdAsync(editCarViewModel.SelectedCategoryId);
-                    car.Images.AddRange(carImages);
-
-                    if (editCarViewModel.UploadImages is not null && editCarViewModel.UploadImages.Count > 0)
-                    {
-                        var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(editCarViewModel.UploadImages!);
-                        car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
-                    }
-
-                    if (editCarViewModel.DeleteImages is not null && editCarViewModel.DeleteImages.Count > 0)
-                    {
-                        var imagesToDelete = car.Images.IntersectBy(editCarViewModel.DeleteImages, x => x.ImageId).ToList();
-
-                        if (imagesToDelete.Count > 0)
-                        {
-                            ImageHelper.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
-                            imagesToDelete.ForEach(x => car.Images.Remove(x));
-                        }
-                    }
-
-                    await _carRepository.UpdateAsync(car);
-                    var carCategories = await _carCategoryRepository.GetAllAsync();
-                    EditCarViewModel viewModel = new EditCarViewModel(car, carCategories);
-                    viewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
-                    return View(viewModel);
+                    var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(editCarViewModel.UploadImages!);
+                    car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
+
+                if (editCarViewModel.DeleteImages is not null && editCarViewModel.DeleteImages.Count > 0)
+                {
+                    var imagesToDelete = car.Images.IntersectBy(editCarViewModel.DeleteImages, x => x.ImageId).ToList();
+
+                    if (imagesToDelete.Count > 0)
+                    {
+                        ImageHelper.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
+                        imagesToDelete.ForEach(x => car.Images.Remove(x));
+                    }
+                }
+
+                await _carRepository.UpdateAsync(car);
+                var carCategories = await _carCategoryRepository.GetAllAsync();
+                EditCarViewModel viewModel = new EditCarViewModel(car, carCategories);
+                viewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
+                return View(viewModel);
 
                 throw new Exception("Failed to transfer data from view model to entity.");
             }
@@ -297,7 +302,7 @@ namespace FribergCarRentals.Controllers.Admin
         // GET: AdminCarController/List
         public async Task<IActionResult> List()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin(nameof(List));
             }

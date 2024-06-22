@@ -1,4 +1,7 @@
-﻿@using MvcRazorPages.Shared.Sessions
+﻿@using Microsoft.AspNetCore.Authorization
+@using FribergFastigheter.Shared.Constants
+@inject IAuthorizationService AuthorizationService
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +34,7 @@
                     <!-- The primary navigation menu -->
                     <nav id="primary-navigation-menu" class="horizontal-menu horizontal-menu__align-last-child__right" aria-label="Primary navigation menu">
                         <ul>
-                            @if (UserSessionHandler.IsAdminLoggedIn(ViewContext.HttpContext.Session))
+                            @if ((await AuthorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Admin)).Succeeded)
                             {
                                 <partial name="_AdminMenuItems.cshtml" />
                             }

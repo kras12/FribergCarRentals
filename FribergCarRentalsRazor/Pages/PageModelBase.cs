@@ -1,13 +1,15 @@
-﻿using AutoMapper;
-using FribergFastigheter.Server.Data.Entities;
+﻿using FribergFastigheter.Server.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FribergCarRentals.Controllers
+namespace FribergCarRentals.Pages
 {
-    public abstract class ViewControllerBase : Controller
+    /// <summary>
+    /// Base class for page models. 
+    /// </summary>
+    public class PageModelBase : PageModel
     {
         #region Fields
 
@@ -26,7 +28,7 @@ namespace FribergCarRentals.Controllers
         /// </summary>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        public ViewControllerBase(IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager)
+        public PageModelBase(IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager)
         {
             _authorizationService = authorizationService;
             _signInManager = signInManager;
@@ -72,18 +74,6 @@ namespace FribergCarRentals.Controllers
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Returns true if the request was from another controller.
-        /// </summary>
-        /// <param name="currentControllerRoutePart"></param>
-        /// <returns>True if the request was from another controller.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        protected bool IsRequestFromAnotherController(string currentControllerRoutePart)
-        {
-            var refererUri = Request.GetTypedHeaders().Referer ?? throw new InvalidOperationException("Failed to retrieve the referer URI");
-            return !refererUri.AbsolutePath.Contains(currentControllerRoutePart);
         }
 
         #endregion

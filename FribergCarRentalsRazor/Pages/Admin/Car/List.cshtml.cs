@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.ViewModels.Car;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Pages.Admin.Car
 {
     /// <summary>
     /// Page model class for listing cars in the admin back office.
     /// </summary>
-    public class ListModel : PageModel
+    public class ListModel : PageModelBase
     {
         #region Fields
 
@@ -29,7 +31,10 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// A constructor.
         /// </summary>
         /// <param name="carRepository">Injected car repository.</param>
-        public ListModel(ICarRepository carRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public ListModel(ICarRepository carRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
         {
             _carRepository = carRepository;
         }
@@ -53,7 +58,7 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <returns><see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnGetAsync()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin();
             }

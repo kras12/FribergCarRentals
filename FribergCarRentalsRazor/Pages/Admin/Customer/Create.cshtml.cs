@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Customer;
 using MvcRazorPages.Shared.Data;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace FribergCarRentals.Pages.Admin.Customer
 {
     /// <summary>
     /// Page model class for creating customers in the admin back office. 
     /// </summary>
-    public class CreateModel : PageModel
+    public class CreateModel : PageModelBase
     {
         #region Constants
 
@@ -30,6 +33,9 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// </summary>
         private readonly ICustomerRepository _customerRepository;
 
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
         #endregion
 
         #region Constructors
@@ -38,9 +44,14 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// A constructor.
         /// </summary>
         /// <param name="customerRepository">Injected customer repository.</param>
-        public CreateModel(ICustomerRepository customerRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        public CreateModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
         {
             _customerRepository = customerRepository;
+            _mapper = mapper;
         }
 
         #endregion
@@ -61,9 +72,9 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// Handler for GET requests. 
         /// </summary>
         /// <returns></returns>
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin();
             }
@@ -77,27 +88,24 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// <returns></returns>
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin();
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (!DataTransferHelper.TryTransferData(CreateCustomerViewModel, out CustomerEntity customer))
-                {
-                    throw new Exception("Failed to transfer data from the view model to the entity");
-                }
+                var customer = _mapper.Map<CustomerEntity>(CreateCustomerViewModel);
 
-                if (await _customerRepository.CustomerExists(customer.Email))
+                if (await _customerRepository.CustomerExists(customer.User.Email))
                 {
                     ModelState.AddModelError("", "A customer already exists with that email.");
                     return Page();
                 }
 
                 await _customerRepository.AddAsync(customer);
-                TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.UserId);
-                return RedirectToPage("Details", new { id = customer.UserId }); 
+                TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
+                return RedirectToPage("Details", new { id = customer.CustomerId }); 
             }
 
             return Page();

@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using MvcRazorPages.Shared.Sessions;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.ViewModels.Car;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace FribergCarRentals.Pages.Admin.Car
 {
     /// <summary>
     /// A page model for creating cars in the admin back office.
     /// </summary>
-    public class CreateModel : PageModel
+    public class CreateModel : PageModelBase
     {
         #region Constants
 
@@ -35,6 +38,9 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
         #endregion
 
         #region Constructors
@@ -44,10 +50,15 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         /// <param name="carRepository">The injected car repository.</param>
         /// <param name="carCategoryRepository">The injected car category repository.</param>
-        public CreateModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        public CreateModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
+            _mapper = mapper;
         }
 
         #endregion
@@ -70,7 +81,7 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <returns></returns>
         public async Task<IActionResult> OnGetAsync()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin();
             }
@@ -86,18 +97,14 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <returns></returns>
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!UserSessionHandler.IsAdminLoggedIn(HttpContext.Session))
+            if (!await IsAdminLoggedIn())
             {
                 return RedirectToLogin();
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (!DataTransferHelper.TryTransferData(CreateCarViewModel, out CarEntity car))
-                {
-                    throw new Exception("Failed to transfer data from the view model to the entity");
-                }
-
+                var car = _mapper.Map<CarEntity>(CreateCarViewModel);
                 var selectedCategory = await _carCategoryRepository.GetByIdAsync(CreateCarViewModel.SelectedCategoryId);
                 car.Category = selectedCategory;
 
