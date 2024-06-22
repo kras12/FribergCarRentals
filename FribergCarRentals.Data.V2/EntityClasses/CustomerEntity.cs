@@ -1,20 +1,19 @@
-﻿using FribergCarRentals.DataAccess.Types;
+﻿using FribergFastigheter.Server.Data.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// An entity class that represents a customer.
     /// </summary>
-    public class CustomerEntity : UserEntity
+    public class CustomerEntity
     {
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        public CustomerEntity() : base(UserRoleEntity.CreateFromType(UserRoleType.Customer))
+        public CustomerEntity()
         {
 
         }
@@ -22,17 +21,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         ///  A constructor.
         /// </summary>
-        /// <param name="userId">The ID for the user.</param>
-        /// <param name="firstName">The first name for the user.</param>
-        /// <param name="lastName">The last name for the user.</param>
-        /// <param name="email">The email address for the user.</param>
-        /// <param name="hashedPassword">The hashed password for the user.</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        public CustomerEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateFromType(UserRoleType.Customer))
+        /// <param name="user"><summary>
+		/// The user associated with the admin.</param>
+        public CustomerEntity(ApplicationUser user)
         {
-
+            User = user;
         }
 
         #endregion
@@ -40,31 +33,21 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #region Properties
 
         /// <summary>
+		/// The ID of the customer.
+		/// </summary>
+		[Key]
+        public int CustomerId { get; set; }
+
+        /// <summary>
         /// A collection of orders for the customer. 
         /// </summary>
         public List<CarOrderEntity> Orders { get; } = new();
 
         /// <summary>
-        /// The user role for the customer.
-        /// </summary>
-        public override UserRoleEntity UserRole
-        {
-            get
-            {
-                return base.UserRole;
-            }
-
-            set
-            {
-                // Safe guard against invalid model bindings.
-                if (value.UserRoleType != UserRoleType.Customer)
-                {
-                    throw new ArgumentException("Invalid user role assignment.");
-                }
-
-                base.UserRole = value;
-            }
-        }
+		/// The user associated with the admin.
+		/// </summary>
+		[Required]
+        public ApplicationUser User { get; set; }
 
         #endregion
     }

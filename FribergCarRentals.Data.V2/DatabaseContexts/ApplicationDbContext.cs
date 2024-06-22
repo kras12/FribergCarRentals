@@ -1,15 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Identity.Client;
 using FribergCarRentals.DataAccess.EntityClasses;
 using FribergCarRentals.DataAccess.Types;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
 
 namespace FribergCarRentals.DataAccess.DatabaseContexts
 {
     /// <summary>
     /// The database context for the application.
     /// </summary>
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         #region Constructors
 
@@ -117,13 +119,6 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
             base.OnModelCreating(modelBuilder);
 
             // =====================================
-            // AdminEntity
-            // =====================================
-            modelBuilder.Entity<AdminEntity>()
-                .HasIndex(x => x.Email)
-                .IsUnique();
-
-            // =====================================
             // CarBookingEntity
             // =====================================
 
@@ -200,10 +195,6 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
             // =====================================
 
             modelBuilder.Entity<CustomerEntity>()
-                .HasIndex(x => x.Email)
-                .IsUnique();
-
-            modelBuilder.Entity<CustomerEntity>()
                 .Navigation(x => x.Orders)
                 .AutoInclude();
 
@@ -222,15 +213,6 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
                .HasConversion<int>();
 
             // =====================================
-            // UserRoleEntity
-            // =====================================
-            modelBuilder.Entity<UserRoleEntity>()
-                .HasData(
-                    Enum.GetValues(typeof(UserRoleType))
-                    .Cast<UserRoleType>()
-                    .Select(x => UserRoleEntity.CreateFromType(x)));
-
-            // =====================================
             // VehiclePropulsionEntity
             // =====================================
 
@@ -242,7 +224,34 @@ namespace FribergCarRentals.DataAccess.DatabaseContexts
 
             modelBuilder.Entity<VehiclePropulsionEntity>()
                 .Property(x => x.VehiclePropulsionId)
-                .HasConversion<int>();            
+                .HasConversion<int>();
+
+            // =====================================
+            // Other
+            // =====================================
+            SeedIdentityRoles(modelBuilder);
+        }
+
+        /// <summary>
+        /// Adds the application user roles to the model creation seeding. 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        private void SeedIdentityRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityRole>()
+            .HasData(
+                new IdentityRole
+                {
+                    Id = "7e648d4e-a530-4cd4-b8d7-8be891780f71",
+                    Name = ApplicationUserRoles.Admin,
+                    NormalizedName = ApplicationUserRoles.Admin.ToUpper(),
+                },
+                new IdentityRole
+                {
+                    Id = "bcd2b11c-e243-4310-a9c3-3180c1b743ea",
+                    Name = ApplicationUserRoles.Customer,
+                    NormalizedName = ApplicationUserRoles.Customer.ToUpper(),
+                });
         }
 
         #endregion

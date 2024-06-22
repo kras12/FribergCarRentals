@@ -8,14 +8,14 @@
         #region Constants
 
         /// <summary>
-        /// The broker admin role. 
+        /// The admin role. 
         /// </summary>
         public const string Admin = "Admin";
 
         /// <summary>
-        /// The broker role.
+        /// The customer role.
         /// </summary>
-        public const string Member = "Member";
+        public const string Customer = "Customer";
 
         #endregion
     }

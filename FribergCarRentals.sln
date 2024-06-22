@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcRazorPages.Shared", "Mvc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Data.V2", "FribergCarRentals.Data.V2\FribergCarRentals.Data.V2.csproj", "{27C1F33B-ACE7-4F27-A8D4-051D7CD8770F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Shared", "FribergCarRentals.Shared\FribergCarRentals.Shared.csproj", "{C5F358A7-3FA3-420C-9725-4CC0E3035F10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{27C1F33B-ACE7-4F27-A8D4-051D7CD8770F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27C1F33B-ACE7-4F27-A8D4-051D7CD8770F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27C1F33B-ACE7-4F27-A8D4-051D7CD8770F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5F358A7-3FA3-420C-9725-4CC0E3035F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5F358A7-3FA3-420C-9725-4CC0E3035F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5F358A7-3FA3-420C-9725-4CC0E3035F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5F358A7-3FA3-420C-9725-4CC0E3035F10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,24 +1,19 @@
-﻿using FribergCarRentals.DataAccess.Types;
-using System;
-using System.Collections.Generic;
+﻿using FribergFastigheter.Server.Data.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FribergCarRentals.DataAccess.EntityClasses
 {
     /// <summary>
     /// An entity class that represents an admin. 
     /// </summary>
-    public class AdminEntity : UserEntity
+    public class AdminEntity
     {
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        public AdminEntity() : base(UserRoleEntity.CreateFromType(UserRoleType.Admin))
+        public AdminEntity()
         {
 
         }
@@ -26,17 +21,11 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         /// <summary>
         ///  A constructor.
         /// </summary>
-        /// <param name="userId">The ID for the user. Can't be negative.</param>
-        /// <param name="firstName">The first name for the user.</param>
-        /// <param name="lastName">The last name for the user.</param>
-        /// <param name="email">The email address for the user.</param>
-        /// <param name="hashedPassword">The hashed password for the user.</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        public AdminEntity(int userId, string firstName, string lastName, string email, string hashedPassword) :
-            base(userId, firstName, lastName, email, hashedPassword, UserRoleEntity.CreateFromType(UserRoleType.Admin))
+        /// <param name="user"><summary>
+		/// The user associated with the admin.</param>
+        public AdminEntity(ApplicationUser user)
         {
-
+            User = user;
         }
 
         #endregion
@@ -44,26 +33,16 @@ namespace FribergCarRentals.DataAccess.EntityClasses
         #region Properties
 
         /// <summary>
-        /// The user role.
-        /// </summary>
-        public override UserRoleEntity UserRole
-        {
-            get
-            {
-                return base.UserRole;
-            }
+		/// The ID of the admin.
+		/// </summary>
+		[Key]
+        public int AdminId { get; set; }
 
-            set
-            {
-                // Safe guard against invalid model bindings.
-                if (value.UserRoleType != UserRoleType.Admin)
-                {
-                    throw new ArgumentException("Invalid user role assignment.");
-                }
-
-                base.UserRole = value;
-            }
-        }
+        /// <summary>
+		/// The user associated with the admin.
+		/// </summary>
+		[Required]
+        public ApplicationUser User { get; set; }
 
         #endregion
     }

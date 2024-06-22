@@ -49,19 +49,6 @@ namespace FribergCarRentals.DataAccess.Types
     }
 
     /// <summary>
-    /// User roles.
-    /// </summary>
-    public enum UserRoleType
-    {
-        [EnumDatabaseValue("None", DescriptionValue = "No role.")]
-        None = 0,
-        [EnumDatabaseValue("Admin", DescriptionValue = "Admin role.")]
-        Admin,
-        [EnumDatabaseValue("Customer", DescriptionValue = "Customer role.")]
-        Customer,
-    }
-
-    /// <summary>
     /// Propulsion types for a vehicle.
     /// </summary>
     public enum VehiclePropulsionType
