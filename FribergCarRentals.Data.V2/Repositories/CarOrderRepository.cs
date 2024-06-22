@@ -74,7 +74,7 @@ namespace FribergCarRentals.Data.Repositories
         /// </summary>
         /// <param name="customerId">The ID of the customer to fetch the orders for.</param>
         /// <returns>A <see cref="Task{TResult}"/> containing the orders found.</returns>
-        public async Task<IEnumerable<CarOrderEntity>> GetAllByCustomer(int customerId)
+        public async Task<IEnumerable<CarOrderEntity>> GetOrdersByCustomerId(int customerId)
         {
             return await _databaseContext.CarOrders.AsNoTracking().Where(x => x.Customer.CustomerId == customerId).ToListAsync();
         }
