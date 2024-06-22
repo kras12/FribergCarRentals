@@ -9,7 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
@@ -21,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FribergCarRentals.Data\FribergCarRentals.Data.csproj" />
+    <ProjectReference Include="..\FribergCarRentals.Data.V2\FribergCarRentals.Data.V2.csproj" />
     <ProjectReference Include="..\FribergCars.Shared\AppSettings.Shared.csproj" />
     <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
   </ItemGroup>

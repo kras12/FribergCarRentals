@@ -1,11 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using MvcRazorPages.Shared.Sessions;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.ViewModels.Customer;
+using AutoMapper;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace FribergCarRentals.Pages.Customer
 {
@@ -25,22 +31,52 @@ namespace FribergCarRentals.Pages.Customer
 
         #region Fields
 
-        /// <summary>
-        /// The injected customer repository.
-        /// </summary>
+        // The injected authorization service.
+        private readonly IAuthorizationService _authorizationService;
+
+        // The injected customer repository.
         private readonly ICustomerRepository _customerRepository;
+
+        // The injected email store.
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
+
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
+
+        // The injected signin manager.
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        // The injected user store.
+        private readonly IUserStore<ApplicationUser> _userStore;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// A constructor. 
+        /// A constructor.
         /// </summary>
-        /// <param name="customerRepository">Injected customer repository.</param>
-        public AuthenticateModel(ICustomerRepository customerRepository)
+        /// <param name="customerRepository">The injected customer repository.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="userManager">The injected user manager.</param>
+        /// <param name="userStore">The injected user store.</param>
+        /// <param name="emailStore">The injected email store.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        public AuthenticateModel(ICustomerRepository customerRepository, SignInManager<ApplicationUser> signInManager,
+            IAuthorizationService authorizationService, UserManager<ApplicationUser> userManager, IUserStore<ApplicationUser> userStore,
+            IUserEmailStore<ApplicationUser> emailStore, IMapper mapper)
         {
             _customerRepository = customerRepository;
+            _signInManager = signInManager;
+            _authorizationService = authorizationService;
+            _userManager = userManager;
+            _userStore = userStore;
+            _emailStore = emailStore;
+            _mapper = mapper;
         }
 
         #endregion
@@ -65,9 +101,9 @@ namespace FribergCarRentals.Pages.Customer
         /// Handler for GET requests.
         /// </summary>
         /// <returns><see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (await IsCustomerLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
@@ -82,28 +118,72 @@ namespace FribergCarRentals.Pages.Customer
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostCreateAsync(RegisterCustomerViewModel registerCustomerViewModel)
         {
-            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (await IsCustomerLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (!DataTransferHelper.TryTransferData(registerCustomerViewModel, out CustomerEntity customer))
-                {
-                    throw new Exception("Failed to transfer data from the view model to the entity.");
-                }
+                ApplicationUser user = _mapper.Map<ApplicationUser>(registerCustomerViewModel);
 
-                if (await _customerRepository.CustomerExists(customer.Email))
+                if (await _customerRepository.CustomerExists(user.Email!))
                 {
                     // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
                     ModelState.AddModelError(nameof(RegisterCustomerViewModel), "An account already exists with that email.");
-                    return Page();
                 }
+                else
+                {
+                    await _userStore.SetUserNameAsync(user, user.Email, CancellationToken.None);
+                    await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
 
-                await _customerRepository.AddAsync(customer);
-                LoginCustomer(customer);
-                return TempDataOrHomeRedirect();
+                    var createUserResult = await _userManager.CreateAsync(user, registerCustomerViewModel.Password);
+                    IdentityResult? addRoleResult = null;
+
+                    if (createUserResult.Succeeded)
+                    {
+                        addRoleResult = await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
+
+                        if (addRoleResult.Succeeded)
+                        {
+                            var userId = await _userManager.GetUserIdAsync(user);
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                            {
+                                // TODO - Create page to fake email confirmation
+                                await _userManager.ConfirmEmailAsync(user, code);
+                                // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                            }
+                            else
+                            {
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                            }
+
+                            string createdUserId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+                            var createdUser = await _userManager.FindByIdAsync(createdUserId);
+
+                            var customer = new CustomerEntity(createdUser!);
+                            await _customerRepository.AddAsync(customer);
+
+                            return TempDataOrHomeRedirect();
+                        }
+                    }
+
+                    foreach (var error in createUserResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    if (addRoleResult != null)
+                    {
+                        foreach (var error in addRoleResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
             }
 
             return Page();
@@ -116,25 +196,23 @@ namespace FribergCarRentals.Pages.Customer
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostLoginAsync(LoginCustomerViewModel loginCustomerViewModel)
         {
-            if (UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (await IsCustomerLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var customer = await _customerRepository.GetMatchingCustomerAsync(loginCustomerViewModel.Email, loginCustomerViewModel.Password);
+                var result = await _signInManager.PasswordSignInAsync(loginCustomerViewModel.Email, loginCustomerViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (customer is null)
+                if (result.Succeeded)
                 {
-                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
-                    ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
-                    return Page();
+                    return TempDataOrHomeRedirect();
                 }
                 else
                 {
-                    LoginCustomer(customer);
-                    return TempDataOrHomeRedirect();
+                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
+                    ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
                 }
             }
 
@@ -146,14 +224,22 @@ namespace FribergCarRentals.Pages.Customer
         #region OtherMethods
 
         /// <summary>
-        /// Saves the customer user data in the session storage. 
+        /// Checks whether the current user is a logged in customer. 
         /// </summary>
-        /// <param name="customer">The customer to login.</param>
-        [NonAction]
-        private void LoginCustomer(CustomerEntity customer)
+        /// <returns>True if the user is a logged in customer.</returns>
+        private async Task<bool> IsCustomerLoggedIn()
         {
-            UserSessionHandler.SetUserData(HttpContext.Session,
-                    new UserSessionData(customer.UserId, customer.Email, customer.UserRole));
+            if (_signInManager.IsSignedIn(User))
+            {
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Customer);
+
+                if (authorizationResult.Succeeded)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
