@@ -1,6 +1,4 @@
-﻿using FribergCarRentals.DataAccess.Attributes;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using FribergCarRentals.Data.Attributes;
 
 namespace FribergCarRentals.Data.Types
 {
