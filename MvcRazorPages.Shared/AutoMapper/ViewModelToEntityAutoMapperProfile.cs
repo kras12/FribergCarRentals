@@ -16,12 +16,25 @@ namespace FribergFastigheter.Server.AutoMapper
 		/// </summary>
 		public ViewModelToEntityAutoMapperProfile()
 		{
-			CreateMap<RegisterCustomerViewModel, ApplicationUser>();
             CreateMap<CreateCarCategoryViewModel, CarCategoryEntity>();
             CreateMap<EditCarCategoryViewModel, CarCategoryEntity>();
 			CreateMap<CreateCarViewModel, CarEntity>();
 			CreateMap<EditCustomerViewModel, CustomerEntity>();
+            CreateMap<RegisterCustomerViewModel, ApplicationUser>();
             CreateMap<EditCustomerViewModel, ApplicationUser>();
+
+            // TODO - Remove later if not needed
+            //CreateMap<RegisterCustomerViewModel, ApplicationUser>()
+            //    .ConstructUsing((x, context) =>
+            //    {
+            //        return new ApplicationUser(x.FirstName, x.LastName, x.Email, x.Email, phoneNumber: "");
+            //    });
+
+            //CreateMap<EditCustomerViewModel, ApplicationUser>()
+            //    .ConstructUsing((x, context) =>
+            //    {
+            //        return new ApplicationUser(x.FirstName, x.LastName, x.Email, x.Email, phoneNumber: "");
+            //    });
         }
 	}
 }
