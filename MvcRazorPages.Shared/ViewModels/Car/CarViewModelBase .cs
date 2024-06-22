@@ -1,11 +1,10 @@
 ﻿using MvcRazorPages.Shared.Attributes;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.Data.EntityClasses;
 using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using MvcRazorPages.Shared.ViewModels.Other;
+using FribergCarRentals.Data.Types;
 
 namespace MvcRazorPages.Shared.ViewModels.Car
 {

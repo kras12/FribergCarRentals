@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 
 namespace MvcRazorPages.Shared.ModelBinders
 {
@@ -35,10 +35,6 @@ namespace MvcRazorPages.Shared.ModelBinders
             else if (context.Metadata.ModelType == typeof(CarRentalStatusEntity))
             {
                 return new BinderTypeModelBinder(typeof(CarRentalStatusModelBinder));
-            }
-            else if (context.Metadata.ModelType == typeof(UserRoleEntity))
-            {
-                return new BinderTypeModelBinder(typeof(UserRoleModelBinder));
             }
             else if (context.Metadata.ModelType == typeof(List<ImageEntity>))
             {

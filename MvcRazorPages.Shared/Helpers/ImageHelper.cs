@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Http;
 
 namespace MvcRazorPages.Shared.Helpers

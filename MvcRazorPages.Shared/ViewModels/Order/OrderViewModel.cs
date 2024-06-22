@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using MvcRazorPages.Shared.ViewModels.Customer;
 using MvcRazorPages.Shared.ViewModels.Other;
 
@@ -59,7 +59,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         {
             get
             {
-                return OrderStatus.StatusType == FribergCarRentals.DataAccess.Types.OrderStatus.Created;
+                return OrderStatus.StatusType == FribergCarRentals.Data.Types.OrderStatus.Created;
             }
         }
 
@@ -95,7 +95,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         {
             get
             {
-                return OrderStatus.StatusType == FribergCarRentals.DataAccess.Types.OrderStatus.Created && CarBooking.CarPickupDate.Date > DateTime.UtcNow.Date;
+                return OrderStatus.StatusType == FribergCarRentals.Data.Types.OrderStatus.Created && CarBooking.CarPickupDate.Date > DateTime.UtcNow.Date;
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using MvcRazorPages.Shared.ViewModels.User;
 
 namespace MvcRazorPages.Shared.ViewModels.Customer

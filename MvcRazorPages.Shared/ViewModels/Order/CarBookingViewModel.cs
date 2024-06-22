@@ -1,7 +1,7 @@
 ﻿using MvcRazorPages.Shared.ViewModels.Car;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.Other;
 
