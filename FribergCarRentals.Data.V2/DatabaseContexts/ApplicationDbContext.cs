@@ -119,6 +119,14 @@ namespace FribergCarRentals.Data.DatabaseContexts
             base.OnModelCreating(modelBuilder);
 
             // =====================================
+            // AdminEntity
+            // =====================================
+
+            modelBuilder.Entity<AdminEntity>()
+                .Navigation(x => x.User)
+                .AutoInclude();
+
+            // =====================================
             // CarBookingEntity
             // =====================================
 
@@ -196,6 +204,10 @@ namespace FribergCarRentals.Data.DatabaseContexts
 
             modelBuilder.Entity<CustomerEntity>()
                 .Navigation(x => x.Orders)
+                .AutoInclude();
+
+            modelBuilder.Entity<CustomerEntity>()
+                .Navigation(x => x.User)
                 .AutoInclude();
 
             // =====================================
