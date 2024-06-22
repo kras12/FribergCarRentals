@@ -128,7 +128,7 @@ namespace FribergCarRentals
 
         private static async Task SeedAdmins(UserManager<ApplicationUser> userManager, ICustomerRepository customerRepository)
         {
-            var user = new ApplicationUser("Adam", "Friberg", "admin@rental", "admin@rental", "070-123456789", emailConfirmed: true);
+            var user = new ApplicationUser("Adam", "Friberg", "admin@rental.com", "admin@rental.com", "070-123456789", emailConfirmed: true);
             var createUserResult = await userManager.CreateAsync(user, "Aa1!123456789");
             IdentityResult? addRoleResult = null;
 
