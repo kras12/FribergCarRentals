@@ -47,6 +47,15 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Returns true if there is any records in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any records in the database.</returns>
+        public Task<bool> AnyAsync()
+        {
+            return _databaseContext.Set<T>().AnyAsync();
+        }
+
+        /// <summary>
         /// Deletes an entity from the database.
         /// </summary>
         /// <param name="entity">The entity to delete.</param>

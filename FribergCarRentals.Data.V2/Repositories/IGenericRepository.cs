@@ -21,6 +21,12 @@ namespace FribergCarRentals.Data.Repositories
         public Task AddAsync(T entity);
 
         /// <summary>
+        /// Returns true if there is any records in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any records in the database.</returns>
+        public Task<bool> AnyAsync();
+
+        /// <summary>
         /// Deletes an entity from the database.
         /// </summary>
         /// <param name="entity">The entity to delete.</param>
