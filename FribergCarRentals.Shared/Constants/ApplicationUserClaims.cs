@@ -8,16 +8,6 @@
         #region Constants
 
         /// <summary>
-        /// The admin ID claim.
-        /// </summary>
-        public const string AdminId = "AdminId";
-
-        /// <summary>
-        /// The customer ID claim.
-        /// </summary>
-        public const string CustomerId = "CustomerId";
-
-        /// <summary>
         /// The user email claim. 
         /// </summary>
         public const string Email = "email";
