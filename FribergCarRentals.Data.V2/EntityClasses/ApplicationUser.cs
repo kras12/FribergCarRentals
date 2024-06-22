@@ -25,10 +25,9 @@ namespace FribergFastigheter.Server.Data.Entities
         /// <param name="userName">The user name of the user.</param>
         /// <param name="email">The email of the user.</param>
         /// <param name="phoneNumber">The phonenumber of the user.</param>
-        /// <param name="password">The password of the user.</param>param
         /// <exception cref="ArgumentException"></exception>
         /// <param name="emailConfirmed">True to set email as confirmed.</param>
-        public ApplicationUser(string firstName, string lastName, string userName, string email, string phoneNumber, string password, bool emailConfirmed = false)
+        public ApplicationUser(string firstName, string lastName, string userName, string email, string phoneNumber, bool emailConfirmed = false)
         {
             #region Checks
 
@@ -56,14 +55,18 @@ namespace FribergFastigheter.Server.Data.Entities
 
             FirstName = firstName;
             LastName = lastName;
-            UserName = userName;
-            NormalizedUserName = userName.ToUpper();
+            UserName = userName;            
             Email = email;            
-            NormalizedEmail = email.ToUpper();
             EmailConfirmed = emailConfirmed;
-            PhoneNumber = phoneNumber;                        
-            var hasher = new PasswordHasher<ApplicationUser>();
-            PasswordHash = hasher.HashPassword(null!, password);
+            PhoneNumber = phoneNumber;
+
+            // TODO - Remove later. Framework does this when creating/updating
+            //NormalizedUserName = userName.ToUpper();
+            //NormalizedEmail = email.ToUpper();
+
+            // TODO - Remove later
+            //var hasher = new PasswordHasher<ApplicationUser>();
+            //PasswordHash = hasher.HashPassword(null!, password);
         }
 
         #endregion
