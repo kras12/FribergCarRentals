@@ -134,7 +134,7 @@ namespace FribergCarRentals
 
             if (createUserResult.Succeeded)
             {
-                addRoleResult = await userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
+                addRoleResult = await userManager.AddToRoleAsync(user, ApplicationUserRoles.Admin);
 
                 if (addRoleResult.Succeeded)
                 {
