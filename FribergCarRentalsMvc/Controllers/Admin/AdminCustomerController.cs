@@ -296,8 +296,11 @@ namespace FribergCarRentals.Controllers.Admin
                     return NotFound();
                 }
 
-                customer = _mapper.Map(editCustomerViewModel, customer);
-                customer.User = _mapper.Map(editCustomerViewModel, customer.User);
+                // TODO - Check if this is correct mapping
+                _mapper.Map(editCustomerViewModel, customer);
+                _mapper.Map(editCustomerViewModel, customer.User);
+
+                await _userManager.UpdateAsync(customer.User);
 
                 if (string.IsNullOrEmpty(editCustomerViewModel.NewPassword))
                 {
