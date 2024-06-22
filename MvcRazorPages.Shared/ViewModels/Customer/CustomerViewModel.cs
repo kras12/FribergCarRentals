@@ -21,7 +21,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CustomerViewModel(CustomerEntity customer) :
-            base(customer.UserId, customer.FirstName, customer.LastName, customer.Email)
+            base(customer.CustomerId, customer.User.FirstName!, customer.User.LastName, customer.User.Email!)
         {
             OrderCount = customer.Orders.Count();
         }
