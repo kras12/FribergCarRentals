@@ -1,15 +1,8 @@
-﻿using FribergCarRentals.DataAccess.Crypto;
-using FribergCarRentals.DataAccess.DatabaseContexts;
-using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.DatabaseContexts;
+using FribergCarRentals.Data.EntityClasses;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A repository class to handle the admin entity.
@@ -49,27 +42,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
         public Task<AdminEntity?> GetByIdAsync(int id)
         {
-            return _databaseContext.Admins.Where(x => x.UserId == id).AsNoTracking().SingleOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Attempts to fetch an admin with matching email and password.
-        /// </summary>
-        /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
-        /// <param name="email">The email for the admin.</param>
-        /// <param name="password">The password for the admin.</param>
-        /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
-        public async Task<AdminEntity?> GetMatchingAdminAsync(string email, string password)
-        {
-            var admin = await _databaseContext.Admins.AsNoTracking().SingleOrDefaultAsync(x => x.Email == email);
-
-            if (admin is not null && PasswordHelper.VerifyAgainstHashedPassword(admin.Password, password))
-            {
-                admin.Password = "";
-                return admin;
-            }
-
-            return null;
+            return _databaseContext.Admins.Where(x => x.AdminId == id).AsNoTracking().SingleOrDefaultAsync();
         }
 
         #endregion

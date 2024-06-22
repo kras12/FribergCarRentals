@@ -1,14 +1,7 @@
-﻿using FribergCarRentals.DataAccess.DataTransferObjects;
-using FribergCarRentals.DataAccess.EntityClasses;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FribergCarRentals.Data.EntityClasses;
+using MvcRazorPages.Shared.DTO;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// An interface for a car category repository.

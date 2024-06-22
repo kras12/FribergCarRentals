@@ -1,7 +1,7 @@
 ﻿using FribergFastigheter.Server.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Data.EntityClasses
 {
     /// <summary>
     /// An entity class that represents an admin. 

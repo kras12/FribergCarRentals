@@ -1,6 +1,5 @@
 ﻿using FribergCarRentals.DataAccess.DataTransferObjects;
 using FribergCarRentals.DataAccess.EntityClasses;
-using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.Other;
 using System.ComponentModel;

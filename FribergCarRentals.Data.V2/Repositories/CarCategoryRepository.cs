@@ -1,19 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.DatabaseContexts;
-using FribergCarRentals.DataAccess.Types;
-using static System.Net.Mime.MediaTypeNames;
-using System.Threading.Channels;
-using System.Runtime.ConstrainedExecution;
-using FribergCarRentals.DataAccess.DataTransferObjects;
-using Microsoft.Identity.Client;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.DatabaseContexts;
+using MvcRazorPages.Shared.DTO;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A repository class that handles the car category entity.

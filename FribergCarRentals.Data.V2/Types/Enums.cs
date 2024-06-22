@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergCarRentals.DataAccess.Types
+namespace FribergCarRentals.Data.Types
 {
     #region Enums
 

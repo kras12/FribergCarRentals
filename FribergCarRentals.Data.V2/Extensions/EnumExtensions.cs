@@ -7,7 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.Extensions
+namespace FribergCarRentals.Data.Extensions
 {
     /// <summary>
     /// An enum extension class that supports the retrieval of attributes. 

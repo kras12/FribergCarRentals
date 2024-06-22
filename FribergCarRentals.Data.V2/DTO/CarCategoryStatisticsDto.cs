@@ -1,7 +1,9 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 
 namespace MvcRazorPages.Shared.DTO
 {
+    // TODO - Remove
+
     /// <summary>
     /// A DTO class storing car category statistics.
     /// </summary>

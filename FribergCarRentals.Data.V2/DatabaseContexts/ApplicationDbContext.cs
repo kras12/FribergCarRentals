@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Types;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
 
-namespace FribergCarRentals.DataAccess.DatabaseContexts
+namespace FribergCarRentals.Data.DatabaseContexts
 {
     /// <summary>
     /// The database context for the application.

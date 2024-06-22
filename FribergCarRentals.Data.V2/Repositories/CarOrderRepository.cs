@@ -1,14 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.DatabaseContexts;
-using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.DatabaseContexts;
+using FribergCarRentals.Data.Types;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A repository class that handles the car entity.
@@ -81,7 +76,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task{TResult}"/> containing the orders found.</returns>
         public async Task<IEnumerable<CarOrderEntity>> GetAllByCustomer(int customerId)
         {
-            return await _databaseContext.CarOrders.AsNoTracking().Where(x => x.Customer.UserId == customerId).ToListAsync();
+            return await _databaseContext.CarOrders.AsNoTracking().Where(x => x.Customer.CustomerId == customerId).ToListAsync();
         }
 
         /// <summary>
