@@ -46,7 +46,7 @@ namespace FribergCarRentals.Pages
         {
             if (_signInManager.IsSignedIn(User))
             {
-                var authorizationResult = await _authorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Customer);
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Admin);
 
                 if (authorizationResult.Succeeded)
                 {
