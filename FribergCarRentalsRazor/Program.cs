@@ -7,6 +7,7 @@ using FribergFastigheter.Server.AutoMapper;
 using FribergFastigheter.Server.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
+using FribergCarRentals.Data.EntityClasses;
 
 namespace FribergCarRentals
 {
@@ -99,18 +100,52 @@ namespace FribergCarRentals
 
             app.UseAuthorization();
 
-            app.UseSession();
+            //app.UseSession();
 
             app.MapRazorPages();
+
+            // ==================================================================================================================
+            // Migration
+            // ==================================================================================================================
 
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
+
+                var customerRepository = services.GetRequiredService<ICustomerRepository>();
+
+                if (!customerRepository.AnyAsync().Result)
+                {
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    SeedAdmins(userManager, customerRepository).Wait();
+                }
             }
 
             app.Run();
+        }
+
+        private static async Task SeedAdmins(UserManager<ApplicationUser> userManager, ICustomerRepository customerRepository)
+        {
+            var user = new ApplicationUser("Adam", "Friberg", "admin@rental", "admin@rental", "070-123456789", emailConfirmed: true);
+            var createUserResult = await userManager.CreateAsync(user, "Aa1!123456789");
+            IdentityResult? addRoleResult = null;
+
+            if (createUserResult.Succeeded)
+            {
+                addRoleResult = await userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
+
+                if (addRoleResult.Succeeded)
+                {
+                    var userId = await userManager.GetUserIdAsync(user);
+                    var customer = new CustomerEntity(user!);
+                    await customerRepository.AddAsync(customer);
+                    return;
+                }
+            }
+
+            throw new Exception("Failed to seed admins");
         }
     }
 }
