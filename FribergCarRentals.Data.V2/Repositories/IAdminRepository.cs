@@ -10,6 +10,19 @@ namespace FribergCarRentals.Data.Repositories
         #region Methods
 
         /// <summary>
+        /// Adds a new admin.
+        /// </summary>
+        /// <param name="entity">The admin to add.</param>
+        /// <returns>A <see cref="Task"/> object containing the added admin.</returns>
+        public Task<AdminEntity> AddAsync(AdminEntity entity);
+
+        /// <summary>
+        /// Returns true if there is any admins in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any admins in the database.</returns>
+        public Task<bool> AnyAsync();
+
+        /// <summary>
         /// Attempts to fetch an admin by ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>

@@ -116,19 +116,19 @@ namespace FribergCarRentals
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
 
-                var customerRepository = services.GetRequiredService<ICustomerRepository>();
+                var adminRepository = services.GetRequiredService<IAdminRepository>();
 
-                if (!customerRepository.AnyAsync().Result)
+                if (!adminRepository.AnyAsync().Result)
                 {
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    SeedAdmins(userManager, customerRepository).Wait();
+                    SeedAdmins(userManager, adminRepository).Wait();
                 }                
             }
 
             app.Run();
         }
 
-        private static async Task SeedAdmins(UserManager<ApplicationUser> userManager, ICustomerRepository customerRepository)
+        private static async Task SeedAdmins(UserManager<ApplicationUser> userManager, IAdminRepository adminRepository)
         {
             var user = new ApplicationUser("Adam", "Friberg", "admin@rental.com", "admin@rental.com", "070-123456789", emailConfirmed: true);
             var createUserResult = await userManager.CreateAsync(user, "Aa1!123456789");
@@ -141,8 +141,9 @@ namespace FribergCarRentals
                 if (addRoleResult.Succeeded)
                 {
                     var userId = await userManager.GetUserIdAsync(user); 
-                    var customer = new CustomerEntity(user!);
-                    await customerRepository.AddAsync(customer);
+                    var admin = new AdminEntity(user!);
+                    await adminRepository.AddAsync(admin);
+
                     return;
                 }
             }

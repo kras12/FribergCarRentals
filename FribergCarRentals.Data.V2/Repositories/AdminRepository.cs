@@ -34,6 +34,27 @@ namespace FribergCarRentals.Data.Repositories
 
         #region Methods
 
+        // <summary>
+        /// Adds a new admin.
+        /// </summary>
+        /// <param name="entity">The admin to add.</param>
+        /// <returns>A <see cref="Task"/> object containing the added admin.</returns>
+        public async Task<AdminEntity> AddAsync(AdminEntity entity)
+        {
+            await _databaseContext.Admins.AddAsync(entity);
+            await _databaseContext.SaveChangesAsync();
+            return entity;
+        }
+
+        /// <summary>
+        /// Returns true if there is any admins in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any admins in the database.</returns>
+        public Task<bool> AnyAsync()
+        {
+            return _databaseContext.Admins.AnyAsync();
+        }
+
         /// <summary>
         /// Attempts to fetch an admin by ID.
         /// </summary>
