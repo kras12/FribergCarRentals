@@ -9,6 +9,9 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using FribergFastigheter.Shared.Constants;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace FribergCarRentals.Pages.Admin.Customer
 {
@@ -36,6 +39,9 @@ namespace FribergCarRentals.Pages.Admin.Customer
         // The injected Auto Mapper.
         private readonly IMapper _mapper;
 
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
+
         #endregion
 
         #region Constructors
@@ -47,11 +53,13 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="userManager"> The injected user manager.</param>
         public CreateModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, UserManager<ApplicationUser> userManager) : base(authorizationService, signInManager)
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         #endregion
@@ -95,17 +103,60 @@ namespace FribergCarRentals.Pages.Admin.Customer
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var customer = _mapper.Map<CustomerEntity>(CreateCustomerViewModel);
+                ApplicationUser user = _mapper.Map<ApplicationUser>(CreateCustomerViewModel);
 
-                if (await _customerRepository.CustomerExists(customer.User.Email))
+                if (await _customerRepository.CustomerExists(user.Email!))
                 {
                     ModelState.AddModelError("", "A customer already exists with that email.");
                     return Page();
                 }
+                else
+                {
+                    var createUserResult = await _userManager.CreateAsync(user, CreateCustomerViewModel.Password);
+                    IdentityResult? addRoleResult = null;
 
-                await _customerRepository.AddAsync(customer);
-                TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
-                return RedirectToPage("Details", new { id = customer.CustomerId }); 
+                    if (createUserResult.Succeeded)
+                    {
+                        addRoleResult = await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
+
+                        if (addRoleResult.Succeeded)
+                        {
+                            var userId = await _userManager.GetUserIdAsync(user);
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                            {
+                                // TODO - Create page to fake email confirmation
+                                await _userManager.ConfirmEmailAsync(user, code);
+                                // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                            }
+                            else
+                            {
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                            }
+
+                            var customer = new CustomerEntity(user!);
+                            await _customerRepository.AddAsync(customer);
+                            TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
+
+                            return RedirectToPage("Details", new { id = customer.CustomerId });
+                        }
+                    }
+
+                    foreach (var error in createUserResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    if (addRoleResult != null)
+                    {
+                        foreach (var error in addRoleResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                } 
             }
 
             return Page();
