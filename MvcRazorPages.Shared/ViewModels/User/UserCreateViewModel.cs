@@ -54,6 +54,19 @@ namespace MvcRazorPages.Shared.ViewModels.User
         [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
         public string Password { get; set; } = "";
 
+        /// <summary>
+        /// The username for the user.
+        /// </summary>
+        [BindNever]
+        [DisplayName("Username")]
+        public string UserName
+        {
+            get
+            {
+                return Email;
+            }
+        }
+
         #endregion
     }
 }
