@@ -22,6 +22,7 @@ namespace FribergFastigheter.Server.AutoMapper
 			CreateMap<EditCustomerViewModel, CustomerEntity>();
             CreateMap<RegisterCustomerViewModel, ApplicationUser>();
             CreateMap<EditCustomerViewModel, ApplicationUser>();
+            CreateMap<EditCarViewModel, CarEntity>();
 
             // TODO - Remove later if not needed
             //CreateMap<RegisterCustomerViewModel, ApplicationUser>()
