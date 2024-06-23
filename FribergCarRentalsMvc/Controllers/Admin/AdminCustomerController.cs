@@ -286,26 +286,22 @@ namespace FribergCarRentals.Controllers.Admin
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var customer = await _customerRepository.GetByIdAsync(editCustomerViewModel.AccountId);
+                var userId = await _customerRepository.GetUserId(editCustomerViewModel.AccountId) ?? throw new Exception($"Failed to find customer with ID: {editCustomerViewModel.AccountId}");
 
-                if (customer == null)
+                // Must fetch the user this way instead of fetching the customer entity and use the included user entity there.
+                // This is to avoid tracking conflicts with EF Core that occurs despite the fact that the customer retrieval is done as no tracking. 
+                var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception($"Failed to find user with ID: {userId}"); 
+
+                _mapper.Map(editCustomerViewModel, user);
+                await _userManager.UpdateAsync(user);
+
+                if (!string.IsNullOrEmpty(editCustomerViewModel.NewPassword))
                 {
-                    return NotFound();
+                    await _userManager.RemovePasswordAsync(user);
+                    await _userManager.AddPasswordAsync(user, editCustomerViewModel.NewPassword!);
                 }
 
-                // TODO - Check if this is correct mapping
-                _mapper.Map(editCustomerViewModel, customer);
-                _mapper.Map(editCustomerViewModel, customer.User);
-
-                await _userManager.UpdateAsync(customer.User);
-
-                if (string.IsNullOrEmpty(editCustomerViewModel.NewPassword))
-                {
-                    await _userManager.RemovePasswordAsync(customer.User);
-                    await _userManager.AddPasswordAsync(customer.User, editCustomerViewModel.NewPassword!);
-                }
-
-                await _customerRepository.UpdateAsync(customer);
+                var customer = await _customerRepository.GetByUserIdAsync(user.Id) ?? throw new Exception($"Failed to find customer with ID: {editCustomerViewModel.AccountId}");
                 EditCustomerViewModel viewModel = new EditCustomerViewModel(customer);
                 viewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
 
