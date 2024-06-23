@@ -146,10 +146,7 @@ namespace FribergCarRentals.Controllers.Admin
                                 await _signInManager.SignInAsync(user, isPersistent: false);
                             }
 
-                            string createdUserId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
-                            var createdUser = await _userManager.FindByIdAsync(createdUserId);
-
-                            var customer = new CustomerEntity(createdUser!);
+                            var customer = new CustomerEntity(user!);
                             await _customerRepository.AddAsync(customer);
                             TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
 
