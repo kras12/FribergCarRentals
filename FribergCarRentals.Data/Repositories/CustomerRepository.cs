@@ -103,6 +103,16 @@ namespace FribergCarRentals.Data.Repositories
             return _databaseContext.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.User.Id == userId);
         }
 
+        /// <summary>
+        /// Attempts to fetch the user ID for the customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>A <see cref="Task"/> object containing the user ID if found or null if not found.</returns>
+        public Task<string?> GetUserId(int id)
+        {
+            return _databaseContext.Customers.AsNoTracking().Where(x => x.CustomerId == id).Select(x => x.User.Id).SingleOrDefaultAsync();
+        }
+
         #endregion
     }
 }

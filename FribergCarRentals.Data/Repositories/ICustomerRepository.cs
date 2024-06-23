@@ -31,6 +31,13 @@ namespace FribergCarRentals.Data.Repositories
         /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
         public Task<CustomerEntity?> GetByUserIdAsync(string userId);
 
+        /// <summary>
+        /// Attempts to fetch the user ID for the customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>A <see cref="Task"/> object containing the user ID if found or null if not found.</returns>
+        public Task<string?> GetUserId(int id);
+
         #endregion
     }
 }
