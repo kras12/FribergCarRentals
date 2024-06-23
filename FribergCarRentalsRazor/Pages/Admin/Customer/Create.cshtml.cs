@@ -123,12 +123,18 @@ namespace FribergCarRentals.Pages.Admin.Customer
                         {
                             var userId = await _userManager.GetUserIdAsync(user);
                             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
                             if (_userManager.Options.SignIn.RequireConfirmedAccount)
                             {
                                 // TODO - Create page to fake email confirmation
-                                await _userManager.ConfirmEmailAsync(user, code);
+                                // code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)); // Used for links
+                                var confirmPasswordResult = await _userManager.ConfirmEmailAsync(user, code);
+
+                                if (!confirmPasswordResult.Succeeded)
+                                {
+                                    throw new Exception("Password confirmation failed");
+                                }
+
                                 // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                             }
                             else
