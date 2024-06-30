@@ -30,4 +30,31 @@
     <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="MockData\CarImages\tesla-model-3-1.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MockData\CarImages\tesla-model-3-2.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MockData\CarImages\tesla-model-s-1.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MockData\CarImages\tesla-model-s-2.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MockData\CarImages\tesla-model-x-1.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MockData\CarImages\tesla-model-x-2.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MockData\CarImages\tesla-model-y-1.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MockData\CarImages\tesla-model-y-2.webp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

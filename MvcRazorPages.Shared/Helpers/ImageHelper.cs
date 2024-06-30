@@ -55,6 +55,17 @@ namespace MvcRazorPages.Shared.Helpers
         #region Methods
 
         /// <summary>
+        /// Deletes all image files from the disk. 
+        /// </summary>
+        public static void ClearAllImagesFromDisk()
+        {
+            foreach (var image in Directory.EnumerateFiles(LocalDiskImageFolderPath))
+            {
+                File.Delete(image);
+            }
+        }
+
+        /// <summary>
         /// Deletes the image file from the local disk. 
         /// </summary>
         /// <param name="imageFileName">The name of the image to delete.</param>

@@ -33,6 +33,7 @@ namespace FribergCarRentals.Data.Repositories
         /// <returns></returns>
         public async override Task AddAsync(CarEntity entity)
         {
+            _databaseContext.ChangeTracker.Clear();
             await _databaseContext.Set<CarEntity>().AddAsync(entity);
             SetSubPropertiesTrackingStateUnchanged(entity);
             await _databaseContext.SaveChangesAsync();
