@@ -21,13 +21,13 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// <param name="email">The email address for the user.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserViewModel(int userId, string firstName, string lastName, string email) : base(firstName, lastName, email)
+        protected UserViewModel(string userId, string firstName, string lastName, string email) : base(firstName, lastName, email)
         {
             #region Checks
 
-            if (userId < 0)
+            if (string.IsNullOrEmpty(userId))
             {
-                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{userId}' can't be negative.");
+                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{userId}' can't be null or empty.");
             }
 
             #endregion
@@ -42,9 +42,9 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// <summary>
         /// The ID for the user.
         /// </summary>
-        [DisplayName("ID")]
+        [DisplayName("User ID")]
         [BindNever]
-        public virtual int UserId { get; }
+        public string UserId { get; }
 
         #endregion
     }

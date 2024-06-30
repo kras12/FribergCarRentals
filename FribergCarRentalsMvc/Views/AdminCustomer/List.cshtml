@@ -22,7 +22,7 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Models[0].UserId)
+                        @Html.DisplayNameFor(model => model.Models[0].CustomerId)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Models[0].FirstName)
@@ -46,7 +46,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.UserId)
+                            @Html.DisplayFor(modelItem => item.CustomerId)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.FirstName)
@@ -62,10 +62,10 @@
                         </td>
                         <td>
                             <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
-                                <a asp-action="Details" asp-route-id="@item.UserId" class="button navigational-button">Details</a>
-                                <a asp-action="Edit" asp-route-id="@item.UserId" class="button function-button">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.CustomerId" class="button navigational-button">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.CustomerId" class="button function-button">Edit</a>
                                 <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this customer?');">
-                                    <input type="hidden" name="id" value="@item.UserId" asp-for="@item.UserId" />
+                                    <input type="hidden" name="id" value="@item.CustomerId" asp-for="@item.CustomerId" />
                                     <button type="submit" class="negative-button">Delete</button>
                                 </form>
                             </div>

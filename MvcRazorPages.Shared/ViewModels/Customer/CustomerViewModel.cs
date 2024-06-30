@@ -21,7 +21,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CustomerViewModel(CustomerEntity customer) :
-            base(customer.CustomerId, customer.User.FirstName!, customer.User.LastName, customer.User.Email!)
+            this(customer.User.Id, customer.CustomerId, customer.User.FirstName!, customer.User.LastName, customer.User.Email!, customer.Orders.Count())
         {
             OrderCount = customer.Orders.Count();
         }
@@ -29,20 +29,43 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         /// <summary>
         ///  A constructor.
         /// </summary>
-        /// <param name="userId">The ID for the user.</param>
+        /// <param name="userId">The user ID.</param>
+        /// <param name="userId">The customer ID.</param>
         /// <param name="firstName">The first name for the user.</param>
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
+        /// <param name="orderCount">The number of orders the customer has.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected CustomerViewModel(int userId, string firstName, string lastName, string email) : base(userId, firstName, lastName, email)
-        {
+        protected CustomerViewModel(string userId, int customerId, string firstName, string lastName, string email, int orderCount) 
+            #region Checks
 
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{userId}' can't null or empty.");
+            }
+
+            if (customerId <= 0)
+        {
+                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{customerId}' must be larger than zero.");
+            }
+
+            #endregion
+
+            CustomerId = customerId;
+            OrderCount = orderCount;
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// The ID for the customer.
+        /// </summary>
+        [DisplayName("Customer ID")]
+        [BindNever]
+        public int CustomerId { get; }
 
         /// <summary>
         /// The full name for the customer.
@@ -64,19 +87,6 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         [BindNever]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DefaultIntegerNumberOutputFormatString )]
         public int OrderCount { get; }
-
-        /// <summary>
-        /// The ID for the customer.
-        /// </summary>
-        [DisplayName("Customer ID")]
-        [BindNever]
-        public override int UserId
-        {
-            get
-            {
-                return base.UserId;
-            }
-        }
 
         #endregion
     }

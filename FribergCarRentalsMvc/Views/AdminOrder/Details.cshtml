@@ -10,7 +10,7 @@
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem flex-container__row-gap__0-5-rem flex-container__wrap">
         <a asp-action="List" class="button navigational-button">View Orders</a>
-        <a asp-action="Details" asp-controller="AdminCustomer" asp-route-id="@Model.Customer.UserId" class="button navigational-button">View customer</a>
+        <a asp-action="Details" asp-controller="AdminCustomer" asp-route-id="@Model.Customer.CustomerId" class="button navigational-button">View customer</a>
         <a asp-action="Details" asp-controller="AdminCar" asp-route-id="@Model.CarBooking.Car.CarId" class="button navigational-button">View car</a>
         @if (Model.CanBeCompleted)
         {
@@ -83,10 +83,10 @@
             <h2>Customer</h2>
             <dl>
                 <dt>
-                    @Html.DisplayNameFor(model => model.Customer.UserId)
+                    @Html.DisplayNameFor(model => model.Customer.CustomerId)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.Customer.UserId)
+                    @Html.DisplayFor(model => model.Customer.CustomerId)
                 </dd>
                 <dt>
                     @Html.DisplayNameFor(model => model.Customer.FullName)

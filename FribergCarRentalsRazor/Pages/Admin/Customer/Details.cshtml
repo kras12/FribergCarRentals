@@ -5,14 +5,14 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>@($"Customer - #{Model.CustomerViewModel.UserId}")</h1>
-<h2>@($"#{Model!.CustomerViewModel.UserId} - {Model!.CustomerViewModel.FullName}")</h2>
+<h1>@($"Customer - #{Model.CustomerViewModel.CustomerId}")</h1>
+<h2>@($"#{Model!.CustomerViewModel.CustomerId} - {Model!.CustomerViewModel.FullName}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
         <a asp-page="List" class="button navigational-button">View Customers</a>
-        <a asp-page="Edit" asp-route-id="@Model.CustomerViewModel.UserId" class="button function-button">Edit</a>
+        <a asp-page="Edit" asp-route-id="@Model.CustomerViewModel.CustomerId" class="button function-button">Edit</a>
         <form asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this customer?');">
-            <input type="hidden" name="id" value="@Model.CustomerViewModel.UserId" asp-for="CustomerViewModel.UserId" />
+            <input type="hidden" name="id" value="@Model.CustomerViewModel.CustomerId" asp-for="CustomerViewModel.CustomerId" />
             <button type="submit" class="negative-button">Delete</button>
         </form>
     </div>
@@ -20,10 +20,10 @@
     <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
         <dl>
             <dt>
-                @Html.DisplayNameFor(model => model.CustomerViewModel.UserId)
+                @Html.DisplayNameFor(model => model.CustomerViewModel.CustomerId)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.CustomerViewModel.UserId)
+                @Html.DisplayFor(model => model.CustomerViewModel.CustomerId)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.CustomerViewModel.FirstName)

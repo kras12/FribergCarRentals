@@ -13,7 +13,7 @@ namespace MvcRazorPages.Shared.ViewModels.Admin
         /// <summary>
         /// A constructor.
         /// </summary>
-        public AdminViewModel() : base(0, "", "", "")
+        public AdminViewModel() : base("", "", "", "")
         {
 
         }
@@ -25,10 +25,21 @@ namespace MvcRazorPages.Shared.ViewModels.Admin
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public AdminViewModel(AdminEntity admin) :
-            base(admin.AdminId, admin.User.FirstName, admin.User.LastName, admin.User.Email!)
+            base(admin.User.Id, admin.User.FirstName, admin.User.LastName, admin.User.Email!)
         {
-
+            AdminId = admin.AdminId;
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The ID for the Admin.
+        /// </summary>
+        [DisplayName("Admin ID")]
+        [BindNever]
+        public int AdminId { get; }
 
         #endregion
     }
