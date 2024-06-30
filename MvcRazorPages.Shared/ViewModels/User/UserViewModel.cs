@@ -19,9 +19,10 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// <param name="firstName">The first name for the user.</param>
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
+        /// <param name="isEmailConfirmed">Set to true if the email address is confirmed.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserViewModel(string userId, string firstName, string lastName, string email) : base(firstName, lastName, email)
+        protected UserViewModel(string userId, string firstName, string lastName, string email, bool isEmailConfirmed) : base(firstName, lastName, email)
         {
             #region Checks
 
@@ -33,11 +34,17 @@ namespace MvcRazorPages.Shared.ViewModels.User
             #endregion
 
             UserId = userId;
+            IsEmailConfirmed = isEmailConfirmed;
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Returns true if the email address is confirmed.
+        /// </summary>
+        public bool IsEmailConfirmed { get; }
 
         /// <summary>
         /// The ID for the user.

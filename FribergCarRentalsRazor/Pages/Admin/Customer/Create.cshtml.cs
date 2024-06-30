@@ -70,7 +70,7 @@ namespace FribergCarRentals.Pages.Admin.Customer
         /// The view model used when creating a customer. 
         /// </summary>
         [BindProperty]
-        public RegisterCustomerViewModel CreateCustomerViewModel { get; set; } = new RegisterCustomerViewModel();
+        public RegisterCustomerViewModel RegisterCustomerViewModel { get; set; } = new RegisterCustomerViewModel();
 
         #endregion
 
@@ -103,16 +103,15 @@ namespace FribergCarRentals.Pages.Admin.Customer
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                ApplicationUser user = _mapper.Map<ApplicationUser>(CreateCustomerViewModel);
+                ApplicationUser user = _mapper.Map<ApplicationUser>(RegisterCustomerViewModel);
 
                 if (await _customerRepository.CustomerExists(user.Email!))
                 {
-                    ModelState.AddModelError("", "A customer already exists with that email.");
-                    return Page();
+                    ModelState.AddModelError("", "An account already exists with that email.");
                 }
                 else
                 {
-                    var createUserResult = await _userManager.CreateAsync(user, CreateCustomerViewModel.Password);
+                    var createUserResult = await _userManager.CreateAsync(user, RegisterCustomerViewModel.Password);
                     IdentityResult? addRoleResult = null;
 
                     if (createUserResult.Succeeded)
@@ -121,27 +120,6 @@ namespace FribergCarRentals.Pages.Admin.Customer
 
                         if (addRoleResult.Succeeded)
                         {
-                            var userId = await _userManager.GetUserIdAsync(user);
-                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                            {
-                                // TODO - Create page to fake email confirmation
-                                // code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)); // Used for links
-                                var confirmPasswordResult = await _userManager.ConfirmEmailAsync(user, code);
-
-                                if (!confirmPasswordResult.Succeeded)
-                                {
-                                    throw new Exception("Password confirmation failed");
-                                }
-
-                                // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                            }
-                            else
-                            {
-                                await _signInManager.SignInAsync(user, isPersistent: false);
-                            }
-
                             var customer = new CustomerEntity(user!);
                             await _customerRepository.AddAsync(customer);
                             TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);

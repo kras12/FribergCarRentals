@@ -11,6 +11,13 @@
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
         <a asp-action="List" class="button navigational-button">View Customers</a>
         <a asp-action="Edit" asp-route-id="@Model.CustomerId" class="button function-button">Edit</a>
+        @if (!Model.IsEmailConfirmed)
+        {
+            <form asp-action="ResendConfirmEmailLink" onsubmit="return confirm('Are you sure you want to send a new confirm email link?');">
+                <input type="hidden" name="id" value="@Model.CustomerId" asp-for="CustomerId" />
+                <button type="submit" class="function-button">Resend Confirm Email Link</button>
+            </form>
+        }
         <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this customer?');">
             <input type="hidden" name="id" value="@Model.CustomerId" asp-for="CustomerId" />
             <button type="submit" class="negative-button">Delete</button>

@@ -23,12 +23,13 @@ namespace FribergCarRentals.Controllers
         /// <summary>
         /// The key used by other classes for storing redirect instructions to apply after the user have logged in.
         /// </summary>
-        public const string RedirectInstructionsTempDataKey = "CustomerLoginRedirectToPage";
+        public const string RedirectInstructionsTempDataKey = "CustomerControllerLoginRedirectToPage";
 
         /// <summary>
         /// The route part for this controller.
         /// </summary>
         private const string CurrentControllerRoutePart = "Customer";
+
         #endregion
 
         #region Fields
@@ -67,7 +68,6 @@ namespace FribergCarRentals.Controllers
 
         #region Actions
 
-        // GET: CustomerController
         [HttpGet]
         public async Task<IActionResult> Authenticate()
         {
@@ -79,7 +79,22 @@ namespace FribergCarRentals.Controllers
             return View(new RegisterOrLoginCustomerViewModel());
         }
 
-        // POST: CustomerController/Create
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception($"Failed to find user with ID: {userId}");
+            string decodedCode = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var confirmResult = await _userManager.ConfirmEmailAsync(user, decodedCode);
+
+            if (confirmResult.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return TempDataOrHomeRedirect();
+            }
+
+            throw new Exception($"Failed to confirm email for user with ID: {userId}");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RegisterCustomerViewModel registerCustomerViewModel)
@@ -109,25 +124,19 @@ namespace FribergCarRentals.Controllers
 
                         if (addRoleResult.Succeeded)
                         {
-                            var userId = await _userManager.GetUserIdAsync(user);
-                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));                            
+                            var customer = new CustomerEntity(user!);
+                            await _customerRepository.AddAsync(customer);
 
                             if (_userManager.Options.SignIn.RequireConfirmedAccount)
                             {
-                                // TODO - Create page to fake email confirmation
-                                await _userManager.ConfirmEmailAsync(user, code);
-                               // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                                TempDataHelper.TryRenew<RedirectToActionData>(TempData, RedirectInstructionsTempDataKey);
+                                return RedirectToAction(nameof(RegistrationConfirmation), new { userId = user.Id });
                             }
                             else
                             {
                                 await _signInManager.SignInAsync(user, isPersistent: false);
+                                return TempDataOrHomeRedirect();
                             }
-
-                            var customer = new CustomerEntity(user!);
-                            await _customerRepository.AddAsync(customer);
-
-                            return TempDataOrHomeRedirect();
                         }
                     }
 
@@ -149,7 +158,6 @@ namespace FribergCarRentals.Controllers
             return View(nameof(Authenticate), new RegisterOrLoginCustomerViewModel() { RegisterCustomerViewModel = registerCustomerViewModel });
         }
 
-        // Post: CustomerController
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginCustomerViewModel loginCustomerViewModel)
@@ -170,20 +178,31 @@ namespace FribergCarRentals.Controllers
                 else
                 {
                     // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
-                    ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");                    
+                    ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
                 }
             }
 
             return View(nameof(Authenticate), new RegisterOrLoginCustomerViewModel() { LoginCustomerViewModel = loginCustomerViewModel });
         }
 
-        // GET: CustomerController
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Index), ControllerHelper.GetControllerName<HomeController>());
         }
 
+        [HttpGet]
+        public async Task<IActionResult> RegistrationConfirmation(string userId)
+        {
+            TempDataHelper.TryRenew<RedirectToActionData>(TempData, RedirectInstructionsTempDataKey);
+
+            var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception($"Failed to find user with ID: {userId}");
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            string? confirmEmailLink = Url.Action(nameof(ConfirmEmail), new { userId = userId, code = code });
+
+            return View(new ConfirmCustomerRegistrationViewModel(confirmEmailLink));
+        }
         #endregion
 
         #region Methods        

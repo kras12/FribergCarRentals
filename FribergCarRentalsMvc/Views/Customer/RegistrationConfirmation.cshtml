@@ -1,0 +1,23 @@
+﻿@using MvcRazorPages.Shared.ViewModels.Customer
+@model ConfirmCustomerRegistrationViewModel
+
+@{
+    ViewData["Title"] = "Registration successful";
+}
+
+<div class="vertical-flex-container flex-container__align-items-center filled-container flex-container__padding__1-rem filled-box">
+    <h1>Registration successful</h1>
+    @if (@Model.HaveConfirmEmailLink)
+    {
+        <p>
+            This app does not currently have a real email sender registered. 
+            Normally this would be emailed: <a id="confirm-link" href="@Model.ConfirmEmailLink">Click here to confirm your account</a>
+        </p>
+    }
+    else
+    {
+        <p>
+            Please check your email to confirm your account.
+        </p>
+    }
+</div>

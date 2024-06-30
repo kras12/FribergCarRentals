@@ -124,25 +124,19 @@ namespace FribergCarRentals.Pages.Customer
 
                         if (addRoleResult.Succeeded)
                         {
-                            var userId = await _userManager.GetUserIdAsync(user);
-                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                            var customer = new CustomerEntity(user!);
+                            await _customerRepository.AddAsync(customer);
 
                             if (_userManager.Options.SignIn.RequireConfirmedAccount)
                             {
-                                // TODO - Create page to fake email confirmation
-                                await _userManager.ConfirmEmailAsync(user, code);
-                                // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                                TempDataHelper.TryRenew<RedirectToPageData>(TempData, RedirectInstructionsTempDataKey);
+                                return RedirectToPage("RegistrationConfirmation", new { userId = user.Id });
                             }
                             else
                             {
                                 await _signInManager.SignInAsync(user, isPersistent: false);
+                                return TempDataOrHomeRedirect();
                             }
-
-                            var customer = new CustomerEntity(user!);
-                            await _customerRepository.AddAsync(customer);
-
-                            return TempDataOrHomeRedirect();
                         }
                     }
 

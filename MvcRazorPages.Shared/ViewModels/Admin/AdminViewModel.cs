@@ -1,5 +1,7 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.User;
+using System.ComponentModel;
 
 namespace MvcRazorPages.Shared.ViewModels.Admin
 {
@@ -13,7 +15,7 @@ namespace MvcRazorPages.Shared.ViewModels.Admin
         /// <summary>
         /// A constructor.
         /// </summary>
-        public AdminViewModel() : base("", "", "", "")
+        public AdminViewModel() : base("0", "", "", "", isEmailConfirmed: false)
         {
 
         }
@@ -25,7 +27,7 @@ namespace MvcRazorPages.Shared.ViewModels.Admin
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public AdminViewModel(AdminEntity admin) :
-            base(admin.User.Id, admin.User.FirstName, admin.User.LastName, admin.User.Email!)
+            base(admin.User.Id, admin.User.FirstName, admin.User.LastName, admin.User.Email!, admin.User.EmailConfirmed)
         {
             AdminId = admin.AdminId;
         }

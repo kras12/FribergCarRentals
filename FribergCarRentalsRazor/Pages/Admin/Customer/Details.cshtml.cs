@@ -15,6 +15,7 @@ namespace FribergCarRentals.Pages.Admin.Customer
     /// </summary>
     public class DetailsModel : PageModelBase
     {
+
         #region Fields
 
         /// <summary>
@@ -79,6 +80,11 @@ namespace FribergCarRentals.Pages.Admin.Customer
                     if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCustomerIdTempDataKey, out int createdCustomerId))
                     {
                         CustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
+                    }
+
+                    if (TempDataHelper.TryGet(TempData, ResendConfirmEmailLinkModel.ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
+                    {
+                        CustomerViewModel.Messages.Add(UserMesssageHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
                     }
 
                     return Page();

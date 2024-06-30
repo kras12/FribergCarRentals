@@ -12,6 +12,26 @@ namespace MvcRazorPages.Shared.Helpers
         #region Methods
 
         /// <summary>
+        /// Removes data from a temp dictionary.
+        /// </summary>
+        /// <param name="tempData">The temp data dictionary to remove the data from.</param>
+        /// <param name="key">The key for the data to remove.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void Remove(ITempDataDictionary tempData, string key)
+        {
+            #region Checks
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException($"The value of parameter '{nameof(key)}' can't be empty");
+            }
+
+            #endregion
+
+            tempData.Remove(key);
+        }
+
+        /// <summary>
         /// Stores data in a temp data dictionary. 
         /// </summary>
         /// <typeparam name="T">The type of data to store.</typeparam>
@@ -32,8 +52,9 @@ namespace MvcRazorPages.Shared.Helpers
 
             tempData[key] = JsonConvert.SerializeObject(value);
         }
+
         /// <summary>
-        /// Retrieves data from a temp data dictionary.
+        /// Attempts to retrieve data from a temp data dictionary.
         /// </summary>
         /// <typeparam name="T">The type of data to retrieve.</typeparam>
         /// <param name="tempData">The temp data dictionary to retrieve the data from.</param>
@@ -65,25 +86,22 @@ namespace MvcRazorPages.Shared.Helpers
         }
 
         /// <summary>
-        /// Removes data from a temp dictionary.
+        /// Attempts to renew the data stored under a key.
         /// </summary>
-        /// <param name="tempData">The temp data dictionary to remove the data from.</param>
-        /// <param name="key">The key for the data to remove.</param>
-        /// <exception cref="ArgumentException"></exception>
-        public static void Remove(ITempDataDictionary tempData, string key)
+        /// <typeparam name="T">The type of data to renew.</typeparam>
+        /// <param name="tempData">The temp data dictionary that stores the data.</param>
+        /// <param name="key">The key for the data.</param>
+        /// <returns>True if the operation was successful. False if the operation failed.</returns>
+        public static bool TryRenew<T>(ITempDataDictionary tempData, string key)
         {
-            #region Checks
-
-            if (string.IsNullOrEmpty(key))
+            if (TryGet(tempData, key, out T? value))
             {
-                throw new ArgumentException($"The value of parameter '{nameof(key)}' can't be empty");
+                Set(tempData, key, value); 
+                return true;
             }
 
-            #endregion
-
-            tempData.Remove(key);
+            return false;
         }
-
         #endregion
     }
 }

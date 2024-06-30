@@ -11,9 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergFastigheter.Shared.Constants;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -29,24 +26,29 @@ namespace FribergCarRentals.Controllers.Admin
         public const string CreatedCustomerIdTempDataKey = "AdminCreatedCustomerId";
 
         /// <summary>
-        /// The route part for the controller.
-        /// </summary>
-        private const string CurrentControllerRoutePart = "Admin/Customers";
-
-        /// <summary>
         /// The key for the ID of the customer that was deleted. 
         /// </summary>
         public const string DeletedCustomerIdTempDataKey = "AdminDeletedCustomerId";
 
         /// <summary>
-        /// The key to use when storing page sub titles in temporary storage.
-        /// </summary>
-        private const string PageSubTitleTempStorageKey = "AdminCustomerEditPageSubTitleTempStorageKey";
-
-        /// <summary>
         /// The key for the deleted car redirect data stored in temp storage.
         /// </summary>
         public const string RedirectToPageAfterDeleteTempDataKey = "AdminDeletedCustomerRedirectToPage";
+
+        /// <summary>
+        /// The key for the ID of the user that got a new confirm email link sent to their email. 
+        /// </summary>
+        public const string ResentConfirmEmailLinkForCustomerIdTempDataKey = "ResentConfirmEmailLinkForCustomerIdTempDataKey";
+
+        /// <summary>
+        /// The route part for the controller.
+        /// </summary>
+        private const string CurrentControllerRoutePart = "Admin/Customers";
+
+        /// <summary>
+        /// The key to use when storing page sub titles in temporary storage.
+        /// </summary>
+        private const string PageSubTitleTempStorageKey = "AdminCustomerEditPageSubTitleTempStorageKey";
 
         #endregion
 
@@ -74,7 +76,6 @@ namespace FribergCarRentals.Controllers.Admin
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="userManager">The injected user manager.</param>
         /// <param name="userStore">The injected user store.</param>
         /// <param name="emailStore">The injected email store.</param>
@@ -117,8 +118,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (await _customerRepository.CustomerExists(user.Email!))
                 {
-                    ModelState.AddModelError("", "A customer already exists with that email.");
-                    return View(registerCustomerViewModel);
+                    ModelState.AddModelError("", "An account already exists with that email.");
                 }
                 else
                 {
@@ -131,27 +131,6 @@ namespace FribergCarRentals.Controllers.Admin
 
                         if (addRoleResult.Succeeded)
                         {
-                            var userId = await _userManager.GetUserIdAsync(user);
-                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);                            
-
-                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                            {
-                                // TODO - Create page to fake email confirmation
-                                // code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)); // Used for links
-                                var confirmPasswordResult = await _userManager.ConfirmEmailAsync(user, code);
-
-                                if (!confirmPasswordResult.Succeeded)
-                                {
-                                    throw new Exception("Password confirmation failed");
-                                }
-
-                                // return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                            }
-                            else
-                            {
-                                await _signInManager.SignInAsync(user, isPersistent: false);
-                            }
-
                             var customer = new CustomerEntity(user!);
                             await _customerRepository.AddAsync(customer);
                             TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
@@ -232,11 +211,16 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (customer is not null)
                 {
-                    CustomerViewModel viewModel = new (customer);
+                    CustomerViewModel viewModel = new(customer);
 
                     if (TempDataHelper.TryGet(TempData, CreatedCustomerIdTempDataKey, out int createdCustomerId))
                     {
                         viewModel.Messages.Add(UserMesssageHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
+                    }
+
+                    if (TempDataHelper.TryGet(TempData, ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
+                    {
+                        viewModel.Messages.Add(UserMesssageHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
                     }
 
                     return View(viewModel);
@@ -296,7 +280,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 // Must fetch the user this way instead of fetching the customer entity and use the included user entity there.
                 // This is to avoid tracking conflicts with EF Core that occurs despite the fact that the customer retrieval is done as no tracking. 
-                var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception($"Failed to find user with ID: {userId}"); 
+                var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception($"Failed to find user with ID: {userId}");
 
                 _mapper.Map(editCustomerViewModel, user);
                 await _userManager.UpdateAsync(user);
@@ -343,6 +327,25 @@ namespace FribergCarRentals.Controllers.Admin
             return View(viewModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ResendConfirmEmailLink(int id)
+        {
+            // Since we haven't implemented code for sending emails to the customer, 
+            // we will manually confirm the emails ourselves for now. 
+
+            var customer = await _customerRepository.GetByIdAsync(id) ?? throw new Exception($"Failed to fetch customer with ID: {id}");
+            var user = await _userManager.FindByIdAsync(customer.User.Id) ?? throw new Exception($"Failed to find user with ID: {customer.User.Id}");
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmResult = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (confirmResult.Succeeded)
+            {
+                TempDataHelper.Set(TempData, ResentConfirmEmailLinkForCustomerIdTempDataKey, customer.CustomerId);
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+
+            throw new Exception($"Failed to confirm email for user with ID: {id}");
+        }
         #endregion
 
         #region OtherMethods
