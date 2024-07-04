@@ -1,0 +1,74 @@
+﻿using FribergCarRentals.Data.EntityClasses;
+using FribergFastigheter.Server.Data.Entities;
+
+namespace FribergCarRentals.Shared.Services
+{
+    /// <summary>
+    /// Interface for a service that seeds data to the database. 
+    /// </summary>
+    public interface IMockDataSeeder
+    {
+        #region MockDataMethods
+
+        /// <summary>
+        /// Returns the default admin users.
+        /// </summary>
+        /// <returns>A collection of <see cref="ApplicationUser"/>.</returns>
+        public List<ApplicationUser> GetDefaultAdminUsers();
+
+        /// <summary>
+        /// Returns the default cars and car categories.
+        /// </summary>
+        /// <returns>A tuple containing collections of <see cref="CarEntity"/> and <see cref="CarCategoryEntity"/>.</returns>
+        public (List<CarCategoryEntity> CarCategories, List<CarEntity> Cars) GetDefaultCarsAndCategories();
+
+        /// <summary>
+        /// Returns the default customer users.
+        /// </summary>
+        /// <returns>A collection of <see cref="ApplicationUser"/>.</returns>
+        public List<ApplicationUser> GetDefaultCustomerUsers();
+
+        #endregion
+
+        #region SeedMethods
+
+        /// <summary>
+        /// Seeds admins into the database.
+        /// </summary>
+        /// <param name="adminUsers">A collection of application users for the admins to be created.</param>
+        /// <param name="overridePassword">The password to override the default password for the new admins.</param>
+        /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public Task SeedAdmins(List<ApplicationUser> adminUsers, string? overridePassword = null);
+
+        /// <summary>
+        /// Seeds cars and car categories into the database.
+        /// </summary>
+        /// <param name="input">A tuple containing collections of <see cref="CarEntity"/> and <see cref="CarCategoryEntity"/>.</param>
+        /// <param name="overrideDefaultMockDataImageFolderPath">The folder path to override the default path for the folder where the mock car images can be found.</param>
+        /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public Task SeedCarsAndCategories((List<CarCategoryEntity> CarCategories, List<CarEntity> Cars) input, string? overrideDefaultMockDataImageFolderPath = null);
+
+        /// <summary>
+        /// Seeds cars and car categories into the database.
+        /// </summary>
+        /// <param name="carCategories">A collection of car categories to add.</param>
+        /// <param name="cars">A collection of cars to add.</param>
+        /// <param name="overrideDefaultMockDataImageFolderPath">The folder path to override the default path for the folder where the mock car images can be found.</param>
+        /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public Task SeedCarsAndCategories(List<CarCategoryEntity> carCategories, List<CarEntity> cars, string? overrideDefaultMockDataImageFolderPath = null);
+
+        /// <summary>
+        /// Seeds customers into the database.
+        /// </summary>
+        /// <param name="customerUsers">A collection of application users for the customers to be created.</param>
+        /// <param name="overridePassword">The password to override the default password for the new customers.</param>
+        /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public Task SeedCustomers(List<ApplicationUser> customerUsers, string? overridePassword = null);
+
+        #endregion
+    }
+}
