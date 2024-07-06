@@ -115,7 +115,7 @@ namespace MvcRazorPages.Shared.Services
         /// <returns>The url of the image.</returns>
         public string GetImageUrl(ImageEntity image)
         {
-            return $"/{_imageUploadsRoute}/{image.FileName}";
+            return $"{_imageUploadsRoute}/{image.FileName}";
         }
 
         /// <summary>
