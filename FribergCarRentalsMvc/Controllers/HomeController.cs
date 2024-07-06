@@ -64,10 +64,11 @@ namespace FribergCarRentals.Controllers
                 images.Add(new SlideShowImageViewModel(
                     _imageUploadService.GetImageUrl(image), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
-                    linksToPage: new RedirectToActionData(
+                    linksToPage: Url.Action(
                         action: nameof(CustomerOrderController.Book),
                         controller: ControllerHelper.GetControllerName<CustomerOrderController>(),
-                        routeValues: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))));
+                        values: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))
+                    ));
             }
 
             return View(new ListViewModel<SlideShowImageViewModel>(images));

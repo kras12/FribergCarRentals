@@ -69,9 +69,10 @@ namespace FribergCarRentals.Pages
                 images.Add(new SlideShowImageViewModel(
                     _imageUploadService.GetImageUrl(image), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
-                    linksToPage: new RedirectToPageData(
+                    linksToPage: Url.Page(
                         pageName: "Order/Book",
-                        routeValues: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))));
+                        values: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))
+                    ));
             }
 
             SlideShowImagesViewModel = new ListViewModel<SlideShowImageViewModel>(images);
