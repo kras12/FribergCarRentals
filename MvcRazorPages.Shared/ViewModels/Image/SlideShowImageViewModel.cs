@@ -26,6 +26,7 @@ namespace MvcRazorPages.Shared.ViewModels.Image
             Url = url;
             ImageId = imageId;
             ImageCaption = imageCaption;
+            Link = linksToPage;
         }
 
         #endregion
