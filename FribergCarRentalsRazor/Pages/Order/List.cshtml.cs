@@ -10,6 +10,7 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -25,6 +26,11 @@ namespace FribergCarRentals.Pages.Order
         /// </summary>
         private readonly ICustomerRepository _customerRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         /// <summary>
@@ -33,10 +39,12 @@ namespace FribergCarRentals.Pages.Order
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="customerRepository">The injected customer repository.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public ListModel(IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, ICustomerRepository customerRepository) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, ICustomerRepository customerRepository, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _customerRepository = customerRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #region Properties
@@ -65,7 +73,7 @@ namespace FribergCarRentals.Pages.Order
             var customer = await _customerRepository.GetByUserIdAsync(userId) ?? throw new Exception($"Failed to find customer with user ID: {userId}");
             OrderListViewModel = new ListViewModel<OrderViewModel>(
                 customer.Orders
-                    .Select(x => new OrderViewModel(x))
+                    .Select(x => new OrderViewModel(x, _imageUploadService))
                     .OrderByDescending(x => x.CarOrderId));            
 
             if (TempDataHelper.TryGet(TempData, CancelModel.CanceledOrderIdTempDataKey, out int canceledOrderId))

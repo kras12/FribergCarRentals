@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
@@ -9,6 +8,7 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Admin.Car
 {
@@ -38,6 +38,11 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         // The injected Auto Mapper.
         private readonly IMapper _mapper;
 
@@ -53,12 +58,14 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public CreateModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
             _mapper = mapper;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -110,7 +117,7 @@ namespace FribergCarRentals.Pages.Admin.Car
 
                 if (CreateCarViewModel.UploadImages is not null && CreateCarViewModel.UploadImages.Count > 0)
                 {
-                    var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(CreateCarViewModel.UploadImages);
+                    var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(CreateCarViewModel.UploadImages);
 
                     foreach (var imageFileName in savedImageFileNames)
                     {

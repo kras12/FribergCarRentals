@@ -11,6 +11,7 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -58,6 +59,11 @@ namespace FribergCarRentals.Controllers.Admin
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         // The injected Auto Mapper.
         private readonly IMapper _mapper;
 
@@ -73,18 +79,20 @@ namespace FribergCarRentals.Controllers.Admin
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageUploadService">The injected image upload service</param>
         public AdminCarController(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository,
-            IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+            IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService) 
+            : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
             _mapper = mapper;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
 
         #region Actions
-
 
         // GET: AdminCarController/Create
         public async Task<IActionResult> Create()
@@ -117,7 +125,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (createCarViewModel.UploadImages is not null && createCarViewModel.UploadImages.Count > 0)
                 {
-                    var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(createCarViewModel.UploadImages);
+                    var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(createCarViewModel.UploadImages);
 
                     foreach (var imageFileName in savedImageFileNames)
                     {
@@ -155,7 +163,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (car!.Images.Count > 0)
                 {
-                    ImageHelper.DeleteImagesFromDisk(car!.Images.Select(x => x.FileName));
+                    _imageUploadService.DeleteImagesFromDisk(car!.Images.Select(x => x.FileName));
                 }
 
                 await _carRepository.DeleteAsync(id);
@@ -194,7 +202,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (car is not null)
                 {
-                    CarViewModel viewModel = new CarViewModel(car);
+                    CarViewModel viewModel = new CarViewModel(car, _imageUploadService);
 
                     if (TempDataHelper.TryGet(TempData, CreatedCarIdTempDataKey, out int carId))
                     {
@@ -229,7 +237,7 @@ namespace FribergCarRentals.Controllers.Admin
                 if (car is not null)
                 {
                     var carCategories = await _carCategoryRepository.GetAllAsync();
-                    EditCarViewModel viewModel = new EditCarViewModel(car, carCategories);
+                    EditCarViewModel viewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
                     TempDataHelper.Set(TempData, PageSubTitleTempDataKey, viewModel.PageSubTitle!);
                     return View(viewModel);
                 }
@@ -264,7 +272,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (editCarViewModel.UploadImages is not null && editCarViewModel.UploadImages.Count > 0)
                 {
-                    var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(editCarViewModel.UploadImages!);
+                    var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(editCarViewModel.UploadImages!);
                     car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
 
@@ -274,21 +282,21 @@ namespace FribergCarRentals.Controllers.Admin
 
                     if (imagesToDelete.Count > 0)
                     {
-                        ImageHelper.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
+                        _imageUploadService.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
                         imagesToDelete.ForEach(x => car.Images.Remove(x));
                     }
                 }
 
                 await _carRepository.UpdateAsync(car);
                 var carCategories = await _carCategoryRepository.GetAllAsync();
-                EditCarViewModel viewModel = new EditCarViewModel(car, carCategories);
+                EditCarViewModel viewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
                 viewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
                 return View(viewModel);
 
                 throw new Exception("Failed to transfer data from view model to entity.");
             }
 
-            editCarViewModel.Images = carImages.Select(x => new ImageViewModel(x)).ToList();
+            editCarViewModel.Images = carImages.Select(x => new ImageViewModel(_imageUploadService.GetImageUrl(x))).ToList();
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempDataKey, out string? pageSubTitle))
             {
@@ -307,7 +315,7 @@ namespace FribergCarRentals.Controllers.Admin
                 return RedirectToLogin(nameof(List));
             }
 
-            ListViewModel<CarViewModel> carListViewModel = new ((await _carRepository.GetAllAsync()).Select(x => new CarViewModel(x)));
+            ListViewModel<CarViewModel> carListViewModel = new ((await _carRepository.GetAllAsync()).Select(x => new CarViewModel(x, _imageUploadService)));
             SaveRedirectBackInstructionsForDeleteCarAction(nameof(List));
 
             if (TempDataHelper.TryGet(TempData, DeletedCarIdTempDataKey, out int deletedCarId))

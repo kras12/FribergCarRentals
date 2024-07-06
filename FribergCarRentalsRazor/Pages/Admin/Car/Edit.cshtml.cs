@@ -10,6 +10,8 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using MvcRazorPages.Shared.Services;
+using System.Linq;
 
 namespace FribergCarRentals.Pages.Admin.Car
 {
@@ -39,6 +41,11 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         // The injected Auto Mapper.
         private readonly IMapper _mapper;
 
@@ -54,12 +61,14 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public EditModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
             _mapper = mapper;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -100,7 +109,7 @@ namespace FribergCarRentals.Pages.Admin.Car
                 if (car is not null)
                 {
                     var carCategories = await _carCategoryRepository.GetAllAsync();
-                    EditCarViewModel = new EditCarViewModel(car, carCategories);
+                    EditCarViewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
                     TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCarViewModel.PageSubTitle!);
                     return Page();
                 }
@@ -137,7 +146,7 @@ namespace FribergCarRentals.Pages.Admin.Car
 
                 if (EditCarViewModel.UploadImages is not null && EditCarViewModel.UploadImages.Count > 0)
                 {
-                    var savedImageFileNames = await ImageHelper.SaveUploadedImagesToDisk(EditCarViewModel.UploadImages!);
+                    var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(EditCarViewModel.UploadImages!);
                     car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
 
@@ -147,20 +156,20 @@ namespace FribergCarRentals.Pages.Admin.Car
 
                     if (imagesToDelete.Count > 0)
                     {
-                        ImageHelper.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
+                        _imageUploadService.DeleteImagesFromDisk(imagesToDelete.Select(x => x.FileName));
                         imagesToDelete.ForEach(x => car.Images.Remove(x));
                     }
                 }
 
                 await _carRepository.UpdateAsync(car);
                 var carCategories = await _carCategoryRepository.GetAllAsync();
-                EditCarViewModel = new EditCarViewModel(car, carCategories);
+                EditCarViewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
                 EditCarViewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
 
                 return Page();
             }
 
-            EditCarViewModel.Images = carImages.Select(x => new ImageViewModel(x)).ToList();
+            EditCarViewModel.Images = carImages.Select(x => new ImageViewModel(_imageUploadService.GetImageUrl(x))).ToList();
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))
             {

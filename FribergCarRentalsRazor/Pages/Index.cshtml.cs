@@ -1,10 +1,10 @@
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Image;
 using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages
 {
@@ -20,6 +20,11 @@ namespace FribergCarRentals.Pages
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -28,9 +33,11 @@ namespace FribergCarRentals.Pages
         /// A constructor.
         /// </summary>
         /// <param name="carRepository">Injected car repository.</param>
-        public IndexModel(ICarRepository carRepository)
+        /// <param name="imageUploadService"> The injected image upload service</param>
+        public IndexModel(ICarRepository carRepository, IImageUploadService imageUploadService)
         {
             _carRepository = carRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -60,7 +67,7 @@ namespace FribergCarRentals.Pages
                 var image = car.Images.First();
 
                 images.Add(new SlideShowImageViewModel(
-                    ImageHelper.GetImageFileUrl(image), image.FileName, image.ImageId,
+                    _imageUploadService.GetImageUrl(image), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
                     linksToPage: new RedirectToPageData(
                         pageName: "Order/Book",

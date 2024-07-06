@@ -1,5 +1,6 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MvcRazorPages.Shared.Services;
 using MvcRazorPages.Shared.ViewModels.CarCategory;
 using MvcRazorPages.Shared.ViewModels.Image;
 using System.ComponentModel;
@@ -12,14 +13,14 @@ namespace MvcRazorPages.Shared.ViewModels.Car
     /// </summary>
     public class CarViewModel : CarViewModelBase
     {
-
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
         /// <param name="car">The car to model.</param>
-        public CarViewModel(CarEntity car) 
+        /// <param name="imageUploadService">The image upload service used for creating the image urls.</param>
+        public CarViewModel(CarEntity car, IImageUploadService imageUploadService) 
             : base(car.Brand, car.Color, car.Model, car.ModelYear, car.PropulsionSystem!, car.RegistrationNumber, car.RentalCostPerDay, car.RentalStatus!)
         {
             #region Checks
@@ -43,7 +44,7 @@ namespace MvcRazorPages.Shared.ViewModels.Car
 
             CarId = car.CarId;
             Category = new CarCategoryViewModel(car.Category);
-            Images = car.Images.Select(x => new ImageViewModel(x)).ToList();
+            Images = car.Images.Select(x => new ImageViewModel(imageUploadService.GetImageUrl(x))).ToList();
         }
 
         #endregion

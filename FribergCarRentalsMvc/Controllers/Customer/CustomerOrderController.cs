@@ -11,6 +11,8 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.ViewModels.Car;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Controllers.Customer
 {
@@ -63,6 +65,11 @@ namespace FribergCarRentals.Controllers.Customer
         private readonly ICustomerRepository _customerRepository;
 
         /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
+        /// <summary>
         /// The injected order repository.
         /// </summary>
         private readonly ICarOrderRepository _orderRepository;
@@ -82,14 +89,16 @@ namespace FribergCarRentals.Controllers.Customer
         /// <param name="signInManager"></param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository, 
+        /// <param name="imageUploadService">The injected image upload service.</param>
+        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository,
             ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -151,7 +160,7 @@ namespace FribergCarRentals.Controllers.Customer
                     return View(new BookCarViewModel(
                         availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
                         havePerformedCarSearch: true,
-                        availableCars: cars,
+                        availableCars: cars.Select(x => new CarViewModel(x, _imageUploadService)).ToList(),
                         pickupDateFilter: bookCarViewModel.PickupDateLocalTime,
                         returnDateFilter: bookCarViewModel.ReturnDateLocalTime,
                         carCategoryFilter: bookCarViewModel.SelectedCarCategoryFilter));
@@ -273,7 +282,7 @@ namespace FribergCarRentals.Controllers.Customer
                 if (order is not null)
                 {
                     TempDataHelper.TryGet(TempData, IsNewOrderTempDataKey, out bool orderWasCreated);
-                    OrderViewModel viewModel = new OrderViewModel(order, isNewOrder: orderWasCreated);
+                    OrderViewModel viewModel = new OrderViewModel(order, _imageUploadService, isNewOrder: orderWasCreated);
                     SaveRedirectBackInstructionsForCancelOrderAction(nameof(Details), id);
 
                     if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))
@@ -303,7 +312,7 @@ namespace FribergCarRentals.Controllers.Customer
             var customer = await _customerRepository.GetByUserIdAsync(userId) ?? throw new Exception($"Failed to find customer with user ID: {userId}");
             ListViewModel<OrderViewModel> orderListViewModel = new ListViewModel<OrderViewModel>(
                 customer.Orders
-                    .Select(x => new OrderViewModel(x))
+                    .Select(x => new OrderViewModel(x, _imageUploadService))
                     .OrderByDescending(x => x.CarOrderId));
 
             if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))

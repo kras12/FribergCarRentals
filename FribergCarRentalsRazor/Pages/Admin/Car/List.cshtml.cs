@@ -8,6 +8,7 @@ using MvcRazorPages.Shared.ViewModels.Car;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Admin.Car
 {
@@ -23,6 +24,11 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -33,10 +39,12 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <param name="carRepository">Injected car repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public ListModel(ICarRepository carRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -63,7 +71,7 @@ namespace FribergCarRentals.Pages.Admin.Car
                 return RedirectToLogin();
             }
 
-            CarListViewModel = new ListViewModel<CarViewModel>((await _carRepository.GetAllAsync()).Select(x => new CarViewModel(x)));
+            CarListViewModel = new ListViewModel<CarViewModel>((await _carRepository.GetAllAsync()).Select(x => new CarViewModel(x, _imageUploadService)));
             SaveRedirectBackInstructionsForDeleteCarAction();
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedCarIdTempDataKey, out int deletedCarId))

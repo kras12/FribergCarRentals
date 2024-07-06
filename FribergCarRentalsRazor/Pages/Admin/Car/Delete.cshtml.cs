@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Admin.Car
 {
@@ -35,6 +35,11 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -45,10 +50,12 @@ namespace FribergCarRentals.Pages.Admin.Car
         /// <param name="carRepository">Injected car repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public DeleteModel(ICarRepository carRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -78,7 +85,7 @@ namespace FribergCarRentals.Pages.Admin.Car
 
                 if (car!.Images.Count > 0)
                 {
-                    ImageHelper.DeleteImagesFromDisk(car!.Images.Select(x => x.FileName));
+                    _imageUploadService.DeleteImagesFromDisk(car!.Images.Select(x => x.FileName));
                 }
 
                 await _carRepository.DeleteAsync(id);

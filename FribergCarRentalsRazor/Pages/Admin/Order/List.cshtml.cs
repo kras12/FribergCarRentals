@@ -8,6 +8,7 @@ using MvcRazorPages.Shared.ViewModels.Order;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Admin.Order
 {
@@ -23,6 +24,11 @@ namespace FribergCarRentals.Pages.Admin.Order
         /// </summary>
         private readonly ICarOrderRepository _orderRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -33,10 +39,12 @@ namespace FribergCarRentals.Pages.Admin.Order
         /// <param name="orderRepository">Injected order repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public ListModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -63,7 +71,7 @@ namespace FribergCarRentals.Pages.Admin.Order
                 return RedirectToLogin();
             }
 
-            OrderListViewModel = new ListViewModel<OrderViewModel>((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x)).OrderByDescending(x => x.CarOrderId));
+            OrderListViewModel = new ListViewModel<OrderViewModel>((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x, _imageUploadService)).OrderByDescending(x => x.CarOrderId));
             SaveRedirectToPageDataRelativeToCompleteOrderPage();
             SaveRedirectToPageDataRelativeToDeleteOrderPage();
 

@@ -5,7 +5,7 @@ using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using MvcRazorPages.Shared.Helpers;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Shared.Services
 {
@@ -60,6 +60,11 @@ namespace FribergCarRentals.Shared.Services
         private readonly ICustomerRepository _customerRepository;
 
         /// <summary>
+        /// The injected image upload service
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
+        /// <summary>
         /// The injected user manager.
         /// </summary>
         private readonly UserManager<ApplicationUser> _userManager;
@@ -77,8 +82,9 @@ namespace FribergCarRentals.Shared.Services
         /// <param name="customerRepository">The injected customer repository.</param>
         /// <param name="userManager">The injected user manager.</param>
         /// <param name="configuration">The injected application configuration.</param>
+        /// <param name="imageUploadService">The injected image upload service</param>
         public MockDataSeeder(IAdminRepository adminRepository, ICarCategoryRepository carCategoryRepository, ICarRepository carRepository,
-            ICustomerRepository customerRepository, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+            ICustomerRepository customerRepository, UserManager<ApplicationUser> userManager, IConfiguration configuration, IImageUploadService imageUploadService)
         {
             _adminRepository = adminRepository;
             _carCategoryRepository = carCategoryRepository;
@@ -86,6 +92,7 @@ namespace FribergCarRentals.Shared.Services
             _customerRepository = customerRepository;
             _userManager = userManager;
             _configuration = configuration;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -288,7 +295,7 @@ namespace FribergCarRentals.Shared.Services
                 //=====================================================
                 // Cleanup
                 //=====================================================
-                ImageHelper.ClearAllImagesFromDisk();
+                _imageUploadService.ClearAllImagesFromDisk();
 
                 //=====================================================
                 // Categories
@@ -313,7 +320,7 @@ namespace FribergCarRentals.Shared.Services
 
                     if (formFiles.Count > 0)
                     {
-                        var imageNames = await ImageHelper.SaveUploadedImagesToDisk(formFiles);
+                        var imageNames = await _imageUploadService.SaveImagesToDisk(formFiles);
                         car.Images = imageNames.Select(x => new ImageEntity(x)).ToList();
                     }
 

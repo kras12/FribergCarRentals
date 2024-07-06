@@ -9,6 +9,7 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -24,6 +25,11 @@ namespace FribergCarRentals.Pages.Order
         /// </summary>
         private readonly ICarOrderRepository _orderRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -34,10 +40,12 @@ namespace FribergCarRentals.Pages.Order
         /// <param name="orderRepository">Injected order repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -77,7 +85,7 @@ namespace FribergCarRentals.Pages.Order
                 if (order is not null)
                 {
                     TempDataHelper.TryGet(TempData, BookModel.IsNewOrderTempDataKey, out bool orderWasCreated);
-                    OrderViewModel = new OrderViewModel(order, isNewOrder: orderWasCreated);
+                    OrderViewModel = new OrderViewModel(order, _imageUploadService, isNewOrder: orderWasCreated);
                     SaveRedirectToPageDataRelativeToCancelOrderPage(id);
 
                     if (TempDataHelper.TryGet(TempData, CancelModel.CanceledOrderIdTempDataKey, out int canceledOrderId))

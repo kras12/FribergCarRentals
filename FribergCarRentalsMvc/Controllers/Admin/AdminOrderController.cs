@@ -8,6 +8,7 @@ using FribergCarRentals.Helpers;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -50,6 +51,11 @@ namespace FribergCarRentals.Controllers.Admin
         /// </summary>
         private readonly ICarOrderRepository _orderRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -60,10 +66,12 @@ namespace FribergCarRentals.Controllers.Admin
         /// <param name="orderRepository">The injected order repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public AdminOrderController(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -160,7 +168,7 @@ namespace FribergCarRentals.Controllers.Admin
 
                 if (order is not null)
                 {
-                    OrderViewModel viewModel = new OrderViewModel(order);
+                    OrderViewModel viewModel = new OrderViewModel(order, _imageUploadService);
                     SaveRedirectBackInstructionsForCompleteOrderAction(nameof(Details), id);
 
                     if (TempDataHelper.TryGet(TempData, CompletedOrderIdTempDataKey, out int completedOrderId))
@@ -183,7 +191,7 @@ namespace FribergCarRentals.Controllers.Admin
                 return RedirectToLogin(nameof(List));
             }
 
-            ListViewModel<OrderViewModel> viewModel = new ((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x)).OrderByDescending(x => x.CarOrderId));
+            ListViewModel<OrderViewModel> viewModel = new ((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x, _imageUploadService)).OrderByDescending(x => x.CarOrderId));
             SaveRedirectBackInstructionsForCompleteOrderAction(nameof(List));
             SaveRedirectBackInstructionsForDeleteOrderAction(nameof(List));
 

@@ -43,7 +43,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// <param name="carCategoryFilter">The car category filter to use when searching for cars to rent.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public BookCarViewModel(List<CarCategoryEntity> availableCarCategoryFilters, bool havePerformedCarSearch, List<CarEntity>? availableCars = null, 
+        public BookCarViewModel(List<CarCategoryEntity> availableCarCategoryFilters, bool havePerformedCarSearch, List<CarViewModel>? availableCars = null, 
             DateTime? pickupDateFilter = null, DateTime? returnDateFilter = null, int? carCategoryFilter = null)
         {
             #region Checks
@@ -55,7 +55,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
 
             #endregion
 
-            AvailableCars = availableCars is not null ? availableCars.Select(x => new CarViewModel(x)).ToList() : new();
+            AvailableCars = availableCars is not null ? availableCars : new();
             HavePerformedCarSearch = havePerformedCarSearch;
             PickupDateLocalTime = pickupDateFilter;
             ReturnDateLocalTime = returnDateFilter;

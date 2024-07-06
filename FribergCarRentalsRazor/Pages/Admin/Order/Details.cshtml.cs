@@ -7,6 +7,7 @@ using MvcRazorPages.Shared.ViewModels.Order;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Admin.Order
 {
@@ -22,6 +23,11 @@ namespace FribergCarRentals.Pages.Admin.Order
         /// </summary>
         private readonly ICarOrderRepository _orderRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -32,10 +38,12 @@ namespace FribergCarRentals.Pages.Admin.Order
         /// <param name="orderRepository">Injected order repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -74,7 +82,7 @@ namespace FribergCarRentals.Pages.Admin.Order
 
                 if (order is not null)
                 {
-                    OrderViewModel = new OrderViewModel(order);
+                    OrderViewModel = new OrderViewModel(order, _imageUploadService);
                     SaveRedirectToPageDataRelativeToCompleteOrderPage(id);
 
                     if (TempDataHelper.TryGet(TempData, CompleteModel.CompletedOrderIdTempDataKey, out int completedOrderId))

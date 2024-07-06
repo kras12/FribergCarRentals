@@ -10,6 +10,8 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.ViewModels.Car;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -44,6 +46,11 @@ namespace FribergCarRentals.Pages.Order
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -55,11 +62,13 @@ namespace FribergCarRentals.Pages.Order
         /// <param name="carCategoryRepository">Injected car category repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service</param>
         public BookModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -160,7 +169,7 @@ namespace FribergCarRentals.Pages.Order
                     BookCarViewModel = new BookCarViewModel(
                         availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
                         havePerformedCarSearch: true,
-                        availableCars: cars,
+                        availableCars: cars.Select(x => new CarViewModel(x, _imageUploadService)).ToList(),
                         pickupDateFilter: BookCarViewModel.PickupDateLocalTime,
                         returnDateFilter: BookCarViewModel.ReturnDateLocalTime,
                         carCategoryFilter: BookCarViewModel.SelectedCarCategoryFilter);
