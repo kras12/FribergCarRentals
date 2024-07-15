@@ -1,10 +1,12 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Data.Repositories;
 using FribergFastigheter.Server.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Shared.Services
@@ -173,18 +175,18 @@ namespace FribergCarRentals.Shared.Services
         }
 
         /// <summary>
-        /// Returns the default customer users.
+        /// Returns the customers.
         /// </summary>
-        /// <returns>A collection of <see cref="ApplicationUser"/>.</returns>
-        public List<ApplicationUser> GetDefaultCustomerUsers()
+        /// <returns>A collection of <see cref="CustomerEntity"/>.</returns>
+        public List<CustomerEntity> GetDefaultCustomers()
         {
-            List<ApplicationUser> users = new()
+            List<CustomerEntity> customers = new()
             {
-                new ApplicationUser("Kalle", "Anka", "kalle@ankeborg.com", "kalle@ankeborg.com", "070-123456789", emailConfirmed: true),
-                new ApplicationUser("Kajsa", "Anka", "kajsa@ankeborg.com", "kajsa@ankeborg.com", "070-123456789", emailConfirmed: true),
+                new CustomerEntity(new ApplicationUser("Kalle", "Anka", "kalle@ankeborg.com", "kalle@ankeborg.com", "070-123456789", emailConfirmed: true)),
+                new CustomerEntity(new ApplicationUser("Kajsa", "Anka", "kajsa@ankeborg.com", "kajsa@ankeborg.com", "070-123456789", emailConfirmed: true)),
             };
 
-            return users;
+            return customers;
         }
 
         #endregion
@@ -332,17 +334,17 @@ namespace FribergCarRentals.Shared.Services
         /// <summary>
         /// Seeds customers into the database.
         /// </summary>
-        /// <param name="customerUsers">A collection of application users for the customers to be created.</param>
+        /// <param name="customers">A collection of new customers to be created.</param>
         /// <param name="overridePassword">The password to override the default password for the new customers.</param>
         /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task SeedCustomers(List<ApplicationUser> customerUsers, string? overridePassword = null)
+        public async Task SeedCustomers(List<CustomerEntity> customers, string? overridePassword = null)
         {
             #region Checks
 
-            if (customerUsers == null || customerUsers.Count == 0)
+            if (customers == null || customers.Count == 0)
             {
-                throw new ArgumentException("The list of customer users can't be empty", nameof(customerUsers));
+                throw new ArgumentException("The list of customers can't be empty", nameof(customers));
             }
 
             if (overridePassword != null && overridePassword == "")
@@ -356,23 +358,9 @@ namespace FribergCarRentals.Shared.Services
             {
                 string password = overridePassword != null ? overridePassword : _configuration[DefaultUserPasswordConfigEntryKey]!;
 
-                foreach (var user in customerUsers)
+                foreach (var customer in customers)
                 {
-                    var createUserResult = await _userManager.CreateAsync(user, password);
-                    IdentityResult? addRoleResult = null;
-
-                    if (createUserResult.Succeeded)
-                    {
-                        addRoleResult = await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
-
-                        if (addRoleResult.Succeeded)
-                        {
-                            var admin = new CustomerEntity(user!);
-                            await _customerRepository.AddAsync(admin);
-
-                            return;
-                        }
-                    }
+                    await _customerRepository.AddAsync(customer);
                 }
             }
         }

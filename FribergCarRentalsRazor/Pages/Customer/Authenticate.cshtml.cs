@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
@@ -9,9 +8,7 @@ using AutoMapper;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
+using FribergCarRentals.Data.Exceptions;
 
 namespace FribergCarRentals.Pages.Customer
 {
@@ -106,51 +103,33 @@ namespace FribergCarRentals.Pages.Customer
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                ApplicationUser user = _mapper.Map<ApplicationUser>(registerCustomerViewModel);
+                var customer = new CustomerEntity(_mapper.Map<ApplicationUser>(registerCustomerViewModel));
 
-                if (await _customerRepository.CustomerExists(user.Email!))
+                if (await _customerRepository.CustomerExists(customer.User.Email!))
                 {
                     // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
                     ModelState.AddModelError(nameof(RegisterCustomerViewModel), "An account already exists with that email.");
                 }
                 else
                 {
-                    var createUserResult = await _userManager.CreateAsync(user, registerCustomerViewModel.Password);
-                    IdentityResult? addRoleResult = null;
-
-                    if (createUserResult.Succeeded)
+                    try
                     {
-                        addRoleResult = await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
+                        await _customerRepository.AddAsync(customer);
 
-                        if (addRoleResult.Succeeded)
+                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            var customer = new CustomerEntity(user!);
-                            await _customerRepository.AddAsync(customer);
-
-                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                            {
-                                TempDataHelper.TryRenew<RedirectToPageData>(TempData, RedirectInstructionsTempDataKey);
-                                return RedirectToPage("RegistrationConfirmation", new { userId = user.Id });
-                            }
-                            else
-                            {
-                                await _signInManager.SignInAsync(user, isPersistent: false);
-                                return TempDataOrHomeRedirect();
-                            }
+                            TempDataHelper.TryRenew<RedirectToPageData>(TempData, RedirectInstructionsTempDataKey);
+                            return RedirectToPage("RegistrationConfirmation", new { userId = customer.User.Id });
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(customer.User, isPersistent: false);
+                            return TempDataOrHomeRedirect();
                         }
                     }
-
-                    foreach (var error in createUserResult.Errors)
+                    catch (CreateUserException ex)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-
-                    if (addRoleResult != null)
-                    {
-                        foreach (var error in addRoleResult.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
+                        ModelState.AddModelError(string.Empty, ex.Message);
                     }
                 }
             }

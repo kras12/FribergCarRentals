@@ -131,7 +131,7 @@ namespace FribergCarRentals
 
                 var mockDataSeeder = services.GetRequiredService<IMockDataSeeder>();
                 mockDataSeeder.SeedAdmins(mockDataSeeder.GetDefaultAdminUsers()).Wait();
-                mockDataSeeder.SeedCustomers(mockDataSeeder.GetDefaultCustomerUsers()).Wait();
+                mockDataSeeder.SeedCustomers(mockDataSeeder.GetDefaultCustomers()).Wait();
                 mockDataSeeder.SeedCarsAndCategories(mockDataSeeder.GetDefaultCarsAndCategories()).Wait();
             }
 

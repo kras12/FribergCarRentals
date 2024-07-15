@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FribergFastigheter.Server.Data.Entities
 {
@@ -76,12 +77,18 @@ namespace FribergFastigheter.Server.Data.Entities
         /// <summary>
         /// The first name of the user.
         /// </summary>
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = "";
 
         /// <summary>
         /// The last name of the user.
         /// </summary>
-        public string LastName { get; set; }
+        public string LastName { get; set; } = "";
+
+        /// <summary>
+        /// The password to use when creating or updating users.
+        /// </summary>
+        [NotMapped]
+        public string? Password { get; set; } = null;
 
         #endregion
 

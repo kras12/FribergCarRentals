@@ -23,10 +23,10 @@ namespace FribergCarRentals.Shared.Services
         public (List<CarCategoryEntity> CarCategories, List<CarEntity> Cars) GetDefaultCarsAndCategories();
 
         /// <summary>
-        /// Returns the default customer users.
+        /// Returns the customers.
         /// </summary>
-        /// <returns>A collection of <see cref="ApplicationUser"/>.</returns>
-        public List<ApplicationUser> GetDefaultCustomerUsers();
+        /// <returns>A collection of <see cref="CustomerEntity"/>.</returns>
+        public List<CustomerEntity> GetDefaultCustomers();
 
         #endregion
 
@@ -63,11 +63,11 @@ namespace FribergCarRentals.Shared.Services
         /// <summary>
         /// Seeds customers into the database.
         /// </summary>
-        /// <param name="customerUsers">A collection of application users for the customers to be created.</param>
+        /// <param name="customers">A collection of new customers to be created.</param>
         /// <param name="overridePassword">The password to override the default password for the new customers.</param>
         /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public Task SeedCustomers(List<ApplicationUser> customerUsers, string? overridePassword = null);
+        public Task SeedCustomers(List<CustomerEntity> customers, string? overridePassword = null);
 
         #endregion
     }

@@ -10,7 +10,7 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Data.Exceptions;
 
 namespace FribergCarRentals.Controllers.Admin
 {
@@ -114,42 +114,24 @@ namespace FribergCarRentals.Controllers.Admin
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                ApplicationUser user = _mapper.Map<ApplicationUser>(registerCustomerViewModel);
+                var customer = new CustomerEntity(_mapper.Map<ApplicationUser>(registerCustomerViewModel));
 
-                if (await _customerRepository.CustomerExists(user.Email!))
+                if (await _customerRepository.CustomerExists(customer.User.Email!))
                 {
                     ModelState.AddModelError("", "An account already exists with that email.");
                 }
                 else
                 {
-                    var createUserResult = await _userManager.CreateAsync(user, registerCustomerViewModel.Password);
-                    IdentityResult? addRoleResult = null;
-
-                    if (createUserResult.Succeeded)
+                    try
                     {
-                        addRoleResult = await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Customer);
+                        await _customerRepository.AddAsync(customer);
+                        TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
 
-                        if (addRoleResult.Succeeded)
-                        {
-                            var customer = new CustomerEntity(user!);
-                            await _customerRepository.AddAsync(customer);
-                            TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
-
-                            return RedirectToAction(nameof(Details), new { id = customer.CustomerId });
-                        }
+                        return RedirectToAction(nameof(Details), new { id = customer.CustomerId });
                     }
-
-                    foreach (var error in createUserResult.Errors)
+                    catch (CreateUserException ex)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-
-                    if (addRoleResult != null)
-                    {
-                        foreach (var error in addRoleResult.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
+                        ModelState.AddModelError(string.Empty, ex.Message);
                     }
                 }
             }

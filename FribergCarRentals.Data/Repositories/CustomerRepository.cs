@@ -2,6 +2,10 @@
 using System.Linq.Expressions;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Data.Exceptions;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -11,20 +15,74 @@ namespace FribergCarRentals.Data.Repositories
     /// <remarks>This repository class works on detached entities. All fetched entities will not be tracked by EF Core.</remarks>
     public class CustomerRepository : GenericRepository<CustomerEntity>, ICustomerRepository
     {
+        #region Fields
+
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
         /// <param name="databaseContext">The database context to use.</param>
-        public CustomerRepository(ApplicationDbContext databaseContext) : base(databaseContext)
+        /// <param name="userManager">The injected user manager.</param>
+        public CustomerRepository(ApplicationDbContext databaseContext, UserManager<ApplicationUser> userManager) : base(databaseContext)
         {
-
+            _userManager = userManager;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Adds a customer to the database.
+        /// </summary>
+        /// <param name="customer">The customer to add.</param>
+        /// <returns>A <see cref="Task"/> object.</returns>
+        /// <exception cref="CreateUserException"></exception>
+        public async override Task AddAsync(CustomerEntity customer)
+        {
+            #region Checks
+
+            if (customer.User == null)
+            {
+                throw new ArgumentNullException(nameof(customer.User), "The identity user can't be null.");
+            }
+
+            #endregion
+
+            // Create user
+            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.Password!);
+            IdentityResult? addRoleResult = null;
+
+            if (!createUserResult.Succeeded)
+            {
+                List<string> creationErrors = new(createUserResult.Errors.Select(x => x.Description));
+                string creationErrorString = string.Join(Environment.NewLine, creationErrors);
+                throw new CreateUserException(creationErrorString);
+            }
+
+            // Add user role
+            addRoleResult = await _userManager.AddToRoleAsync(customer.User, ApplicationUserRoles.Customer);
+
+            if (!addRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(customer.User);
+
+                List<string> addRoleErrors = new(addRoleResult.Errors.Select(x => x.Description));
+                string addRoleErrorString = string.Join(Environment.NewLine, addRoleErrors);
+                throw new CreateUserException(addRoleErrorString);
+            }
+
+            // Create customer
+            _databaseContext.Entry(customer.User).State = EntityState.Unchanged;
+            _databaseContext.Customers.Add(customer);
+            await _databaseContext.SaveChangesAsync();
+        }
 
         /// <summary>
         /// Checks whether a customer with the specified email exists. 

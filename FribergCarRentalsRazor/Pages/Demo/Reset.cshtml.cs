@@ -54,7 +54,7 @@ namespace FribergCarRentals.Pages.Demo
             await _context.Database.MigrateAsync();
 
             await _mockDataSeeder.SeedAdmins(_mockDataSeeder.GetDefaultAdminUsers());
-            await _mockDataSeeder.SeedCustomers(_mockDataSeeder.GetDefaultCustomerUsers());
+            await _mockDataSeeder.SeedCustomers(_mockDataSeeder.GetDefaultCustomers());
             await _mockDataSeeder.SeedCarsAndCategories(_mockDataSeeder.GetDefaultCarsAndCategories());
 
             return Page();
