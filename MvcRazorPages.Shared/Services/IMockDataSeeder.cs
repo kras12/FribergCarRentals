@@ -11,10 +11,10 @@ namespace FribergCarRentals.Shared.Services
         #region MockDataMethods
 
         /// <summary>
-        /// Returns the default admin users.
+        /// Returns the default admins.
         /// </summary>
-        /// <returns>A collection of <see cref="ApplicationUser"/>.</returns>
-        public List<ApplicationUser> GetDefaultAdminUsers();
+        /// <returns>A collection of <see cref="AdminEntity"/>.</returns>
+        public List<AdminEntity> GetDefaultAdmins();
 
         /// <summary>
         /// Returns the default cars and car categories.
@@ -35,11 +35,11 @@ namespace FribergCarRentals.Shared.Services
         /// <summary>
         /// Seeds admins into the database.
         /// </summary>
-        /// <param name="adminUsers">A collection of application users for the admins to be created.</param>
+        /// <param name="admins">A collection of admins to be created.</param>
         /// <param name="overridePassword">The password to override the default password for the new admins.</param>
         /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public Task SeedAdmins(List<ApplicationUser> adminUsers, string? overridePassword = null);
+        public Task SeedAdmins(List<AdminEntity> admins, string? overridePassword = null);
 
         /// <summary>
         /// Seeds cars and car categories into the database.

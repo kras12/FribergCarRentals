@@ -1,5 +1,9 @@
 ﻿using FribergCarRentals.Data.DatabaseContexts;
 using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Exceptions;
+using FribergFastigheter.Server.Data.Entities;
+using FribergFastigheter.Shared.Constants;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FribergCarRentals.Data.Repositories
@@ -17,6 +21,9 @@ namespace FribergCarRentals.Data.Repositories
         /// </summary>
         private readonly ApplicationDbContext _databaseContext;
 
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
+
         #endregion
 
         #region Constructors
@@ -25,25 +32,61 @@ namespace FribergCarRentals.Data.Repositories
         /// A constructor.
         /// </summary>
         /// <param name="databaseContext">The database context to use.</param>
-        public AdminRepository(ApplicationDbContext databaseContext)
+        /// <param name="userManager">The injected user manager.</param>
+        public AdminRepository(ApplicationDbContext databaseContext, UserManager<ApplicationUser> userManager)
         {
             _databaseContext = databaseContext;
+            _userManager = userManager;
         }
 
         #endregion
 
         #region Methods
 
-        // <summary>
+        /// <summary>
         /// Adds a new admin.
         /// </summary>
-        /// <param name="entity">The admin to add.</param>
+        /// <param name="admin">The admin to add.</param>
         /// <returns>A <see cref="Task"/> object containing the added admin.</returns>
-        public async Task<AdminEntity> AddAsync(AdminEntity entity)
+        public async Task<AdminEntity> AddAsync(AdminEntity admin)
         {
-            await _databaseContext.Admins.AddAsync(entity);
+            #region Checks
+
+            if (admin.User == null)
+            {
+                throw new ArgumentNullException(nameof(admin.User), "The identity user can't be null.");
+            }
+
+            #endregion
+
+            // Create user
+            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.Password!);
+            IdentityResult? addRoleResult = null;
+
+            if (!createUserResult.Succeeded)
+            {
+                List<string> creationErrors = new(createUserResult.Errors.Select(x => x.Description));
+                string creationErrorString = string.Join(Environment.NewLine, creationErrors);
+                throw new CreateUserException(creationErrorString);
+            }
+
+            // Add user role
+            addRoleResult = await _userManager.AddToRoleAsync(admin.User, ApplicationUserRoles.Admin);
+
+            if (!addRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(admin.User);
+
+                List<string> addRoleErrors = new(addRoleResult.Errors.Select(x => x.Description));
+                string addRoleErrorString = string.Join(Environment.NewLine, addRoleErrors);
+                throw new CreateUserException(addRoleErrorString);
+            }
+
+            // Create admin
+            _databaseContext.Entry(admin.User).State = EntityState.Unchanged;
+            _databaseContext.Admins.Add(admin);
             await _databaseContext.SaveChangesAsync();
-            return entity;
+            return admin;
         }
 
         /// <summary>

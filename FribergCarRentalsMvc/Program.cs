@@ -133,7 +133,7 @@ namespace FribergCarRentals
                 context.Database.Migrate();
 
                 var mockDataSeeder = services.GetRequiredService<IMockDataSeeder>();
-                mockDataSeeder.SeedAdmins(mockDataSeeder.GetDefaultAdminUsers()).Wait();
+                mockDataSeeder.SeedAdmins(mockDataSeeder.GetDefaultAdmins()).Wait();
                 mockDataSeeder.SeedCustomers(mockDataSeeder.GetDefaultCustomers()).Wait();
                 mockDataSeeder.SeedCarsAndCategories(mockDataSeeder.GetDefaultCarsAndCategories()).Wait();
             }

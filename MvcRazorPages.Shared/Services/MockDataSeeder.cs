@@ -102,17 +102,17 @@ namespace FribergCarRentals.Shared.Services
         #region MockDataMethods
 
         /// <summary>
-        /// Returns the default admin users.
+        /// Returns the default admins.
         /// </summary>
-        /// <returns>A collection of <see cref="ApplicationUser"/>.</returns>
-        public List<ApplicationUser> GetDefaultAdminUsers()
+        /// <returns>A collection of <see cref="AdminEntity"/>.</returns>
+        public List<AdminEntity> GetDefaultAdmins()
         {
-            List<ApplicationUser> users = new()
+            List<AdminEntity> admins = new()
             {
-                new ApplicationUser("Adam", "Friberg", "admin@rental.com", "admin@rental.com", "070-123456789", emailConfirmed: true)
+                new AdminEntity(new ApplicationUser("Adam", "Friberg", "admin@rental.com", "admin@rental.com", "070-123456789", emailConfirmed: true))
             };
 
-            return users;
+            return admins;
         }
 
         /// <summary>
@@ -196,17 +196,17 @@ namespace FribergCarRentals.Shared.Services
         /// <summary>
         /// Seeds admins into the database.
         /// </summary>
-        /// <param name="adminUsers">A collection of application users for the admins to be created.</param>
+        /// <param name="admins">A collection of admins to be created.</param>
         /// <param name="overridePassword">The password to override the default password for the new admins.</param>
         /// <returns>A <see cref="Task>"/> representing an asynchronous operation.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task SeedAdmins(List<ApplicationUser> adminUsers, string? overridePassword = null)
+        public async Task SeedAdmins(List<AdminEntity> admins, string? overridePassword = null)
         {
             #region Checks
 
-            if (adminUsers == null || adminUsers.Count == 0)
+            if (admins == null || admins.Count == 0)
             {
-                throw new ArgumentException("The list of admin users can't be empty", nameof(adminUsers));
+                throw new ArgumentException("The list of admins can't be empty", nameof(admins));
             }
 
             if (overridePassword != null && overridePassword == "")
@@ -220,25 +220,9 @@ namespace FribergCarRentals.Shared.Services
             {
                 string password = overridePassword != null ? overridePassword : _configuration[DefaultUserPasswordConfigEntryKey]!;
 
-                foreach (var user in adminUsers)
+                foreach (var admin in admins)
                 {
-                    var createUserResult = await _userManager.CreateAsync(user, password);
-                    IdentityResult? addRoleResult = null;
-
-                    if (createUserResult.Succeeded)
-                    {
-                        addRoleResult = await _userManager.AddToRoleAsync(user, ApplicationUserRoles.Admin);
-
-                        if (addRoleResult.Succeeded)
-                        {
-                            var admin = new AdminEntity(user!);
-                            await _adminRepository.AddAsync(admin);
-
-                            return;
-                        }
-                    }
-
-                    throw new Exception("Failed to seed admins");
+                    await _adminRepository.AddAsync(admin);
                 }               
             }
         }
