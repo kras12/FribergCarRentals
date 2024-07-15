@@ -27,17 +27,6 @@ namespace FribergCarRentals.Data.Repositories
         #region Methods
 
         /// <summary>
-        /// Adds a customer to the database.
-        /// </summary>
-        /// <param name="entity">The customer to add.</param>
-        /// <returns>A <see cref="Task"/> object.</returns>
-        public async override Task AddAsync(CustomerEntity entity)
-        {
-            await _databaseContext.Set<CustomerEntity>().AddAsync(entity);
-            await _databaseContext.SaveChangesAsync();
-        }
-
-        /// <summary>
         /// Checks whether a customer with the specified email exists. 
         /// </summary>
         /// <param name="email">The email for the customer.</param>
@@ -59,7 +48,6 @@ namespace FribergCarRentals.Data.Repositories
             return _databaseContext.SaveChangesAsync();
         }
 
-
         /// <summary>
         /// Performs a search in the database.
         /// </summary>
@@ -69,16 +57,6 @@ namespace FribergCarRentals.Data.Repositories
         public override Task<IEnumerable<CustomerEntity>> FindAsync(Expression<Func<CustomerEntity, bool>> predicate)
         {
             return base.FindAsync(predicate);
-        }
-
-        /// <summary>
-        /// Gets all customers from the database.
-        /// </summary>
-        /// <remarks>The resulting entities is not tracked by EF Core.</remarks>
-        /// <returns>A <see cref="Task"/> object containg a collection of all customers found.</returns>
-        public async override Task<IEnumerable<CustomerEntity>> GetAllAsync()
-        {
-            return (await base.GetAllAsync()).ToList();
         }
 
         /// <summary>
