@@ -120,7 +120,7 @@ namespace FribergCarRentals.Controllers.Admin
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
                 var car = _mapper.Map<CarEntity>(createCarViewModel);
-                var selectedCategory = await _carCategoryRepository.GetByIdAsync(createCarViewModel.SelectedCategoryId);
+                var selectedCategory = await _carCategoryRepository.GetByIdAsync(createCarViewModel.SelectedCategoryId!.Value);
                 car.Category = selectedCategory;
 
                 if (createCarViewModel.UploadImages is not null && createCarViewModel.UploadImages.Count > 0)

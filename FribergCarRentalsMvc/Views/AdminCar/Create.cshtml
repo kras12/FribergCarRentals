@@ -19,7 +19,9 @@
         <a asp-action="List" class="button navigational-button">View Cars</a>
     </div>
     <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
-        <form asp-action="Create" class="vertical-form" enctype="multipart/form-data">
+        @if (Model.HaveCategories)
+        {
+            <form asp-action="Create" class="vertical-form" enctype="multipart/form-data">
             <div class="vertical-form-field">
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>
@@ -90,7 +92,17 @@
             <div class="vertical-form-field">
                 <button type="submit">Create</button>
             </div>
-        </form>
+            </form>
+        }
+        else
+        {
+            <div class="vertical-flex-container">
+                <p>No car categories were found. Create a category first.</p>
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a asp-controller="AdminCarCategory" asp-action="Create" class="button function-button">Create Category</a>
+                </div>                
+            </div>
+        }
     </div>
 </div>
 

@@ -29,7 +29,7 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         public CreateCarViewModel(IEnumerable<CarCategoryEntity> categories) : base()
         {
             Categories = categories.Select(x => new CarCategoryViewModel(x)).ToList();
-            SelectedCategoryId = Categories.First().CategoryId;
+            SelectedCategoryId = Categories.FirstOrDefault()?.CategoryId;
         }
 
         #endregion
@@ -42,12 +42,23 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         public List<CarCategoryViewModel> Categories { get; set; } = new();
 
         /// <summary>
+        /// Returns true if any car categories was found.
+        /// </summary>
+        public bool HaveCategories
+        {
+            get
+            {
+                return Categories.Count > 0;
+            }
+        }
+
+        /// <summary>
         /// The ID of the selected category.
         /// </summary>
         [Required]
         [Range(1, int.MaxValue)]
         [DisplayName("Category")]
-        public int SelectedCategoryId { get; set; }
+        public int? SelectedCategoryId { get; set; }
 
         /// <summary>
         /// The images to upload
