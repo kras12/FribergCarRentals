@@ -81,7 +81,12 @@ namespace FribergCarRentals.Pages.Customer
         /// <returns><see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnGet()
         {
-            if (await IsCustomerLoggedIn())
+            if (await IsAdminLoggedIn())
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToPage("Authenticate");
+            }
+            else if (await IsCustomerLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }

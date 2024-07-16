@@ -71,7 +71,12 @@ namespace FribergCarRentals.Controllers
         [HttpGet]
         public async Task<IActionResult> Authenticate()
         {
-            if (await IsCustomerLoggedIn())
+            if (await IsAdminLoggedIn())
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction(nameof(Authenticate));
+            }
+            else if (await IsCustomerLoggedIn())
             {
                 return TempDataOrHomeRedirect();
             }
