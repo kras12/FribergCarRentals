@@ -28,7 +28,8 @@ namespace FribergFastigheter.Server.Data.Entities
         /// <param name="phoneNumber">The phonenumber of the user.</param>
         /// <exception cref="ArgumentException"></exception>
         /// <param name="emailConfirmed">True to set email as confirmed.</param>
-        public ApplicationUser(string firstName, string lastName, string userName, string email, string phoneNumber, bool emailConfirmed = false)
+        /// <param name="password">The password to use when creating users.</param>
+        public ApplicationUser(string firstName, string lastName, string userName, string email, string phoneNumber, bool emailConfirmed = false, string? password = null)
         {
             #region Checks
 
@@ -60,6 +61,7 @@ namespace FribergFastigheter.Server.Data.Entities
             Email = email;            
             EmailConfirmed = emailConfirmed;
             PhoneNumber = phoneNumber;
+            Password = password;
 
             // TODO - Remove later. Framework does this when creating/updating
             //NormalizedUserName = userName.ToUpper();

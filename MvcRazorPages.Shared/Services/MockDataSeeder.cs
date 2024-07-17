@@ -109,7 +109,7 @@ namespace FribergCarRentals.Shared.Services
         {
             List<AdminEntity> admins = new()
             {
-                new AdminEntity(new ApplicationUser("Adam", "Friberg", "admin@rental.com", "admin@rental.com", "070-123456789", emailConfirmed: true))
+                new AdminEntity(new ApplicationUser("Adam", "Friberg", "admin@rental.com", "admin@rental.com", "070-123456789", emailConfirmed: true, password: _configuration[DefaultUserPasswordConfigEntryKey]!))
             };
 
             return admins;
@@ -182,8 +182,8 @@ namespace FribergCarRentals.Shared.Services
         {
             List<CustomerEntity> customers = new()
             {
-                new CustomerEntity(new ApplicationUser("Kalle", "Anka", "kalle@ankeborg.com", "kalle@ankeborg.com", "070-123456789", emailConfirmed: true)),
-                new CustomerEntity(new ApplicationUser("Kajsa", "Anka", "kajsa@ankeborg.com", "kajsa@ankeborg.com", "070-123456789", emailConfirmed: true)),
+                new CustomerEntity(new ApplicationUser("Kalle", "Anka", "kalle@ankeborg.com", "kalle@ankeborg.com", "070-123456789", emailConfirmed: true, password: _configuration[DefaultUserPasswordConfigEntryKey]!)),
+                new CustomerEntity(new ApplicationUser("Kajsa", "Anka", "kajsa@ankeborg.com", "kajsa@ankeborg.com", "070-123456789", emailConfirmed: true, password : _configuration[DefaultUserPasswordConfigEntryKey] !)),
             };
 
             return customers;
@@ -218,10 +218,13 @@ namespace FribergCarRentals.Shared.Services
 
             if (await _adminRepository.AnyAsync() == false)
             {
-                string password = overridePassword != null ? overridePassword : _configuration[DefaultUserPasswordConfigEntryKey]!;
-
                 foreach (var admin in admins)
                 {
+                    if (overridePassword != null)
+                    {
+                        admin.User.Password = overridePassword;
+                    }
+                    
                     await _adminRepository.AddAsync(admin);
                 }               
             }
