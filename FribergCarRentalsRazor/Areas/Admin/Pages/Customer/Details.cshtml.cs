@@ -1,0 +1,111 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using FribergCarRentals.Data.Repositories;
+using MvcRazorPages.Shared.Data;
+using MvcRazorPages.Shared.Helpers;
+using MvcRazorPages.Shared.ViewModels.Customer;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
+namespace FribergCarRentals.Areas.Admin.Pages.Customer
+{
+    /// <summary>
+    /// Page model for showing details about customer in the admin back office. 
+    /// </summary>
+    public class DetailsModel : AdminPageModelBase
+    {
+        #region Constants
+
+        /// <summary>
+        /// The key for the ID of the customer that was created.
+        /// </summary>
+        public const string CreatedCustomerIdTempDataKey = "AdminCreatedCustomerId";
+
+        /// <summary>
+        /// The page URL relative to the login page
+        /// </summary>
+        public const string PageUrlRelativeToLoginPage = "Customer/Details";
+
+        #endregion
+
+        #region Fields
+
+        /// <summary>
+        /// The injected customer repository. 
+        /// </summary>
+        private readonly ICustomerRepository _customerRepository;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="customerRepository">Injected customer repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public DetailsModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
+        {
+            _customerRepository = customerRepository;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The view model used for presenting customer details. 
+        /// </summary>
+        public CustomerViewModel CustomerViewModel { get; set; } = default!;
+
+        #endregion
+
+        #region HandlerMethods       
+
+        /// <summary>
+        /// Handler for GET requests. 
+        /// </summary>
+        /// <param name="id">The customer ID.</param>
+        /// <returns>A <see cref="Task{TResult}"/> containing <see cref="IActionResult"/>.</returns>
+        public async Task<IActionResult> OnGetAsync(int id)
+        {            
+            if (!await IsAdminLoggedIn())
+            {
+                return RedirectToLogin(new RedirectToPageData(PageUrlRelativeToLoginPage, new RouteValueDictionary(new { id = id }), area: Area));
+            }
+
+            if (id < 0)
+            {
+                throw new Exception($"Invalid ID: {id}");
+            }
+
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                var customer = await _customerRepository.GetByIdAsync(id);
+
+                if (customer is not null)
+                {
+                    CustomerViewModel = new CustomerViewModel(customer);
+
+                    if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCustomerIdTempDataKey, out int createdCustomerId))
+                    {
+                        CustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
+                    }
+
+                    if (TempDataHelper.TryGet(TempData, ResendConfirmEmailLinkModel.ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
+                    {
+                        CustomerViewModel.Messages.Add(UserMesssageHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
+                    }
+
+                    return Page();
+                }
+            }
+
+            throw new Exception($"Failed to show the customer with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+        }
+
+        #endregion
+    }
+}

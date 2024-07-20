@@ -1,19 +1,20 @@
-﻿
+﻿@using FribergCarRentals.Areas.Admin.Pages
+
 <li>
-    <a asp-area="" asp-page="/Admin/Index">Home</a>
+    <a asp-area="@AdminPageModelBase.Area" asp-page="/Index">Home</a>
 </li>
 <li>
-    <a asp-area="" asp-page="/Admin/Car/Category/List">Car Categories</a>
+    <a asp-area="@AdminPageModelBase.Area" asp-page="/Car/Category/List">Car Categories</a>
 </li>
 <li>
-    <a asp-area="" asp-page="/Admin/Car/List">Cars</a>
+    <a asp-area="@AdminPageModelBase.Area" asp-page="/Car/List">Cars</a>
 </li>
 <li>
-    <a asp-area="" asp-page="/Admin/Customer/List">Customers</a>
+    <a asp-area="@AdminPageModelBase.Area" asp-page="/Customer/List">Customers</a>
 </li>
 <li>
-    <a asp-area="" asp-page="/Admin/Order/List">Orders</a>
+    <a asp-area="@AdminPageModelBase.Area" asp-page="/Order/List">Orders</a>
 </li>
 <li>
-    <a asp-area="" asp-page="/Admin/Logout">Logout</a>
+    <a asp-area="@AdminPageModelBase.Area" asp-page="/Logout">Logout</a>
 </li>

@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using FribergCarRentals.Pages.Admin;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Pages.Customer;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -107,7 +106,7 @@ namespace FribergCarRentals.Pages.Order
         /// <returns>An <see cref="IActionResult"/>.</returns>
         private IActionResult RedirectToLogin(int id)
         {
-            TempDataHelper.Set(TempData, LoginModel.RedirectToPageTempDataKey, new RedirectToPageData(
+            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(
                         "Order/Details",
                         new RouteValueDictionary(new { id = id })));
 

@@ -1,0 +1,41 @@
+﻿@page
+@model FribergCarRentals.Areas.Admin.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1>Admin Panel</h1>
+<p></p>
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    <div class="vertical-flex-container flex-container__padding__1-rem flex-container__row-gap__1-rem">
+        <div class="vertical-flex-container flex-container__padding__1-rem filled-container ">
+            <h2>@(Model.AdminViewModel.FullName)</h2>
+            <p class="font-size_large text-align-center">Welcome to the admin panel. Your information can be seen below.</p>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.AdminViewModel.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.AdminViewModel.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.AdminViewModel.LastName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.AdminViewModel.LastName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.AdminViewModel.Email)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.AdminViewModel.Email)
+                </dd>
+            </dl>
+        </div>
+        <div class="vertical-flex-container flex-container__padding__1-rem filled-container ">
+            <h2>Navigation</h2>
+            <p class="text-align-center">You can use the navigation at the top of the page to browse your cars, customers and orders. More actions can be found in respective section.</p>
+        </div>
+    </div>
+</div>
