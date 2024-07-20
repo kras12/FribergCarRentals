@@ -1,20 +1,42 @@
 ﻿@using FribergCarRentals.Areas.Admin.Pages
+@using Microsoft.AspNetCore.Authorization
+@using FribergFastigheter.Shared.Constants
+@inject IAuthorizationService AuthorizationService
 
-<li>
-    <a asp-area="@AdminPageModelBase.Area" asp-page="/Index">Home</a>
-</li>
-<li>
-    <a asp-area="@AdminPageModelBase.Area" asp-page="/Car/Category/List">Car Categories</a>
-</li>
-<li>
-    <a asp-area="@AdminPageModelBase.Area" asp-page="/Car/List">Cars</a>
-</li>
-<li>
-    <a asp-area="@AdminPageModelBase.Area" asp-page="/Customer/List">Customers</a>
-</li>
-<li>
-    <a asp-area="@AdminPageModelBase.Area" asp-page="/Order/List">Orders</a>
-</li>
-<li>
-    <a asp-area="@AdminPageModelBase.Area" asp-page="/Logout">Logout</a>
-</li>
+@if ((await AuthorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Admin)).Succeeded)
+{
+    @if ((string)ViewContext.RouteData.Values["area"]! == AdminPageModelBase.Area)
+    {
+        <li>
+            <a asp-area="@AdminPageModelBase.Area" asp-page="/Index">Home</a>
+        </li>
+        <li>
+            <a asp-area="@AdminPageModelBase.Area" asp-page="/Car/Category/List">Car Categories</a>
+        </li>
+        <li>
+            <a asp-area="@AdminPageModelBase.Area" asp-page="/Car/List">Cars</a>
+        </li>
+        <li>
+            <a asp-area="@AdminPageModelBase.Area" asp-page="/Customer/List">Customers</a>
+        </li>
+        <li>
+            <a asp-area="@AdminPageModelBase.Area" asp-page="/Order/List">Orders</a>
+        </li>
+    }
+    else
+    {
+        <partial name="_CustomerMenuItems.cshtml" />
+    }
+
+    <div class="menu-group right-aligned">
+        @if ((string)ViewContext.RouteData.Values["area"]! != AdminPageModelBase.Area)
+        {
+            <li>
+                <a asp-area="@AdminPageModelBase.Area" asp-page="Index">Account</a>
+            </li>
+        }
+        <li>
+            <a asp-area="@AdminPageModelBase.Area" asp-page="/Logout">Logout</a>
+        </li>
+    </div>
+}

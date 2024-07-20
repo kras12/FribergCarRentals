@@ -13,13 +13,19 @@
     <li>
         <a asp-area="" asp-page="/Order/List">Orders</a>
     </li>
-    <li>
-        <a asp-area="" asp-page="/Customer/Logout">Logout</a>
-    </li>
 }
-else
-{
-    <li>
-        <a asp-area="" asp-page="/Customer/Authenticate">Register/Login</a>
-    </li>
-}
+
+<div class="menu-group right-aligned">
+    @if ((await AuthorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Customer)).Succeeded)
+    {
+        <li>
+            <a asp-area="" asp-page="/Customer/Logout">Logout</a>
+        </li>
+    }
+    else if (!User.Identities.First().IsAuthenticated)
+    {
+        <li>
+            <a asp-area="" asp-page="/Customer/Authenticate">Register/Login</a>
+        </li>
+    }
+</div>
