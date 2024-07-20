@@ -11,6 +11,15 @@ namespace FribergCarRentals.Pages
     /// </summary>
     public class PageModelBase : PageModel
     {
+        #region Constants
+
+        /// <summary>
+        /// The key for the redirection data for the page to redirect to after logins. 
+        /// </summary>
+        public const string LoginRedirectToPageTempDataKey = "LoginRedirectToPage";
+
+        #endregion
+
         #region Fields
 
         // The injected authorization service.
@@ -74,7 +83,7 @@ namespace FribergCarRentals.Pages
             }
 
             return false;
-        }
+        }        
 
         #endregion
     }

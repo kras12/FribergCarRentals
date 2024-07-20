@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Pages.Customer;
@@ -8,7 +7,6 @@ using MvcRazorPages.Shared.ViewModels.Order;
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
 using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Order
@@ -16,7 +14,7 @@ namespace FribergCarRentals.Pages.Order
     /// <summary>
     /// Page model for showing order details in the customer back office. 
     /// </summary>
-    public class DetailsModel : PageModelBase
+    public class DetailsModel : CustomerPageModelBase
     {
         #region Fields
 
@@ -70,7 +68,9 @@ namespace FribergCarRentals.Pages.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(id);
+                return RedirectToLogin(new RedirectToPageData(
+                        "../Order/Details",
+                        new RouteValueDictionary(new { id = id })));
             }
 
             if (id < 0)
@@ -86,7 +86,10 @@ namespace FribergCarRentals.Pages.Order
                 {
                     TempDataHelper.TryGet(TempData, BookModel.IsNewOrderTempDataKey, out bool orderWasCreated);
                     OrderViewModel = new OrderViewModel(order, _imageUploadService, isNewOrder: orderWasCreated);
-                    SaveRedirectToPageDataRelativeToCancelOrderPage(id);
+
+                    TempDataHelper.Set(TempData, CancelModel.CanceledOrderRedirectToPageTempDataKey, new RedirectToPageData(
+                        "Details",
+                        new RouteValueDictionary(new { id = id })));
 
                     if (TempDataHelper.TryGet(TempData, CancelModel.CanceledOrderIdTempDataKey, out int canceledOrderId))
                     {
@@ -100,35 +103,6 @@ namespace FribergCarRentals.Pages.Order
             }
 
             throw new Exception($"Model validation failed: - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect back afterwards. 
-        /// </summary>
-        /// <param name="id">The ID of the order to view.</param>
-        /// <returns>A <see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(int id)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(
-                        "../Order/Details",
-                        new RouteValueDictionary(new { id = id })));
-
-            return RedirectToPage("/Customer/Authenticate");
-        }
-
-        /// <summary>
-        /// Saves redirect data for this page relative to the cancel order page.
-        /// </summary>
-        /// <param name="id">The ID of the order to view.</param>
-        private void SaveRedirectToPageDataRelativeToCancelOrderPage(int id)
-        {
-            TempDataHelper.Set(TempData, CancelModel.CanceledOrderRedirectToPageTempDataKey, new RedirectToPageData(
-                        "Details",
-                        new RouteValueDictionary(new { id = id })));
         }
 
         #endregion

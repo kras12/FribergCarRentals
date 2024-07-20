@@ -1,11 +1,8 @@
 using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Customer;
@@ -13,7 +10,7 @@ using System.Text;
 
 namespace FribergCarRentals.Pages.Customer
 {
-    public class RegistrationConfirmationModel : PageModelBase
+    public class RegistrationConfirmationModel : CustomerPageModelBase
     {
         #region fields
 
@@ -57,7 +54,7 @@ namespace FribergCarRentals.Pages.Customer
         /// <exception cref="Exception"></exception>
         public async Task<IActionResult> OnGet(string userId)
         {
-            TempDataHelper.TryRenew<RedirectToPageData>(TempData, AuthenticateModel.RedirectInstructionsTempDataKey);
+            TempDataHelper.TryRenew<RedirectToPageData>(TempData, LoginRedirectToPageTempDataKey);
 
             string? confirmEmailLink = null;
             bool showConfirmEmailLink = true;

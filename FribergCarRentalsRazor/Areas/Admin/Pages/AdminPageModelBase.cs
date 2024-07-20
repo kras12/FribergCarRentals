@@ -20,11 +20,6 @@ namespace FribergCarRentals.Areas.Admin.Pages
         /// </summary>
         public const string Area = "Admin";
 
-        /// <summary>
-        /// The key for the redirection data for the page to redirect to after logins. 
-        /// </summary>
-        public const string LoginRedirectToPageTempDataKey = "AdminLoginRedirectToPage";
-
         #endregion
 
         #region Constructors

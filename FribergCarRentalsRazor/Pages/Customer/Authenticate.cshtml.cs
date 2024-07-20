@@ -15,17 +15,8 @@ namespace FribergCarRentals.Pages.Customer
     /// <summary>
     /// Page model for customer registration and login.
     /// </summary>
-    public class AuthenticateModel : PageModelBase
+    public class AuthenticateModel : CustomerPageModelBase
     {
-        #region Constants
-
-        /// <summary>
-        /// The key used by other classes for storing redirect instructions to apply after the user have logged in.
-        /// </summary>
-        public const string RedirectInstructionsTempDataKey = "CustomerLoginRedirectToPage";
-
-        #endregion
-
         #region Fields
 
         // The injected customer repository.
@@ -123,7 +114,7 @@ namespace FribergCarRentals.Pages.Customer
 
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            TempDataHelper.TryRenew<RedirectToPageData>(TempData, RedirectInstructionsTempDataKey);
+                            TempDataHelper.TryRenew<RedirectToPageData>(TempData, LoginRedirectToPageTempDataKey);
                             return RedirectToPage("RegistrationConfirmation", new { userId = customer.User.Id });
                         }
                         else
@@ -183,7 +174,7 @@ namespace FribergCarRentals.Pages.Customer
         [NonAction]
         private ActionResult TempDataOrHomeRedirect()
         {
-            if (TempDataHelper.TryGet<RedirectToPageData>(TempData, RedirectInstructionsTempDataKey, out var data))
+            if (TempDataHelper.TryGet<RedirectToPageData>(TempData, LoginRedirectToPageTempDataKey, out var data))
             {
                 return RedirectToPage(data.Page, data.RouteValues);
             }

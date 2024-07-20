@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Pages.Customer;
@@ -17,7 +16,7 @@ namespace FribergCarRentals.Pages.Order
     /// <summary>
     /// Page model for listing orders in the customer back office.
     /// </summary>
-    public class ListModel : PageModelBase
+    public class ListModel : CustomerPageModelBase
     {
         #region Fields
 
@@ -66,7 +65,7 @@ namespace FribergCarRentals.Pages.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin("../Order/List");
+                return RedirectToLogin(new RedirectToPageData("../Order/List"));
             }
 
             var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
@@ -81,34 +80,12 @@ namespace FribergCarRentals.Pages.Order
                 OrderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
             }
 
-            SaveRedirectToPageDataRelativeToCancelOrderPage();
+            TempDataHelper.Set(TempData, CancelModel.CanceledOrderRedirectToPageTempDataKey, new RedirectToPageData(
+                    "List"));
+
             return Page();
         }
 
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect afterwards. 
-        /// </summary>
-        /// <param name="page">The page to redirect to.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string page)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(page));
-            return RedirectToPage("../Customer/Authenticate");
-        }
-
-        /// <summary>
-        /// Saves redirect data for this page relative to the cancel order page.
-        /// </summary>
-        private void SaveRedirectToPageDataRelativeToCancelOrderPage()
-        {
-            TempDataHelper.Set(TempData, CancelModel.CanceledOrderRedirectToPageTempDataKey, new RedirectToPageData(
-                    "List"));
-        }
 
         #endregion
     }

@@ -17,7 +17,7 @@ namespace FribergCarRentals.Pages.Order
     /// <summary>
     /// Page model for booking a car and creating an order. 
     /// </summary>
-    public class ConfirmModel : PageModelBase
+    public class ConfirmModel : CustomerPageModelBase
     {
         #region Constants
 
@@ -88,7 +88,7 @@ namespace FribergCarRentals.Pages.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin("../Order/Confirm");
+                return RedirectToLogin(new RedirectToPageData("../Order/Confirm"));
             }
 
             if (TempDataHelper.TryGet(TempData, BookModel.PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
@@ -110,7 +110,7 @@ namespace FribergCarRentals.Pages.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin("../Order/Confirm");
+                return RedirectToLogin(new RedirectToPageData("../Order/Confirm"));
             }
 
             if (TempDataHelper.TryGet(TempData, BookModel.PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
@@ -137,21 +137,6 @@ namespace FribergCarRentals.Pages.Order
             }
 
             throw new Exception($"Failed to retrieve the pending order from temp storage.");
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect afterwards. 
-        /// </summary>
-        /// <param name="page">The page to redirect to.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string page)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(page));
-            return RedirectToPage("../Customer/Authenticate");
         }
 
         #endregion

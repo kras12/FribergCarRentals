@@ -18,7 +18,7 @@ namespace FribergCarRentals.Pages.Order
     /// <summary>
     /// Page model for booking a car and creating an order. 
     /// </summary>
-    public class BookModel : PageModelBase
+    public class BookModel : CustomerPageModelBase
     {
         #region Constants
 
@@ -102,7 +102,7 @@ namespace FribergCarRentals.Pages.Order
 
                 if (!await IsCustomerLoggedIn())
                 {
-                    return RedirectToLogin(page: "../Order/Confirm");
+                    return RedirectToLogin(new RedirectToPageData("../Order/Confirm"));
                 }
 
                 return RedirectToPage("Confirm");
@@ -180,21 +180,6 @@ namespace FribergCarRentals.Pages.Order
 
             BookCarViewModel.SetAvailableCarCategoryFilters(await _carCategoryRepository.GetAllAsync());
             return Page();
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect afterwards. 
-        /// </summary>
-        /// <param name="page">The page to redirect to.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string page)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(page));
-            return RedirectToPage("../Customer/Authenticate");
         }
 
         #endregion

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace FribergCarRentals.Pages.Customer
 {
-    public class ConfirmEmailModel : PageModelBase
+    public class ConfirmEmailModel : CustomerPageModelBase
     {
         #region fields
 
@@ -70,7 +70,7 @@ namespace FribergCarRentals.Pages.Customer
         [NonAction]
         private ActionResult TempDataOrHomeRedirect()
         {
-            if (TempDataHelper.TryGet<RedirectToPageData>(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, out var data))
+            if (TempDataHelper.TryGet<RedirectToPageData>(TempData, LoginRedirectToPageTempDataKey, out var data))
             {
                 return RedirectToPage(data.Page, data.RouteValues);
             }

@@ -8,7 +8,7 @@ namespace FribergCarRentals.Pages.Customer
     /// <summary>
     /// Page model for logging out a customer. 
     /// </summary>
-    public class LogoutModel : PageModelBase
+    public class LogoutModel : CustomerPageModelBase
     {
         #region Constructors
 

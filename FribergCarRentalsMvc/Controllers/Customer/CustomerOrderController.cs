@@ -17,7 +17,7 @@ using MvcRazorPages.Shared.Services;
 namespace FribergCarRentals.Controllers.Customer
 {
     [Route($"{CurrentControllerRoutePart}/[action]")]
-    public class CustomerOrderController : ViewControllerBase
+    public class CustomerOrderController : CustomerControllerBase
     {
         #region Constants
 
@@ -178,7 +178,7 @@ namespace FribergCarRentals.Controllers.Customer
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(Cancel), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Cancel), ControllerHelper.GetControllerName<CustomerOrderController>(), new RouteValueDictionary(new { id })));
             }
 
             if (id < 0)
@@ -213,7 +213,7 @@ namespace FribergCarRentals.Controllers.Customer
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(Book));
+                return RedirectToLogin(new RedirectToActionData(nameof(Book), ControllerHelper.GetControllerName<CustomerOrderController>()));
             }
 
             if (TempDataHelper.TryGet(TempData, PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
@@ -233,7 +233,7 @@ namespace FribergCarRentals.Controllers.Customer
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(Book));
+                return RedirectToLogin(new RedirectToActionData(nameof(Book), ControllerHelper.GetControllerName<CustomerOrderController>()));
             }
 
             if (TempDataHelper.TryGet(TempData, PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
@@ -267,7 +267,7 @@ namespace FribergCarRentals.Controllers.Customer
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(Details), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Details), ControllerHelper.GetControllerName<CustomerOrderController>(), new RouteValueDictionary(new { id })));
             }
 
             if (id < 0)
@@ -305,7 +305,7 @@ namespace FribergCarRentals.Controllers.Customer
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(List));
+                return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<CustomerOrderController>()));
             }
 
             var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
@@ -345,7 +345,7 @@ namespace FribergCarRentals.Controllers.Customer
 
                 if (!await IsCustomerLoggedIn())
                 {
-                    return RedirectToLogin(nameof(Confirm));
+                    return RedirectToLogin(new RedirectToActionData(nameof(Confirm), ControllerHelper.GetControllerName<CustomerOrderController>()));
                 }
 
                 return RedirectToAction(nameof(Confirm));
@@ -357,22 +357,6 @@ namespace FribergCarRentals.Controllers.Customer
         #endregion
 
         #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect back afterwards. 
-        /// </summary>
-        /// <param name="action">The controller action to redirect to.</param>
-        /// <param name="orderId">An optional order ID.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string action, int? orderId = null)
-        {
-            RouteValueDictionary? routeValues = orderId is not null ? new RouteValueDictionary(new { id = orderId }) : null;
-
-            TempDataHelper.Set(TempData, CustomerController.RedirectInstructionsTempDataKey, new RedirectToActionData(
-                    action, ControllerHelper.GetControllerName<CustomerOrderController>(), routeValues: routeValues));
-
-            return RedirectToAction(nameof(CustomerController.Authenticate), ControllerHelper.GetControllerName<CustomerController>());
-        }
 
         /// <summary>
         /// Saves data for redirecting back to an action after an order has been cancelled.

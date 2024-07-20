@@ -12,18 +12,14 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
+using FribergCarRentals.Controllers.Customer;
 
 namespace FribergCarRentals.Controllers
 {
     [Route($"{CurrentControllerRoutePart}/[action]")]
-    public class CustomerController : ViewControllerBase
+    public class CustomerController : CustomerControllerBase
     {
         #region Constants
-
-        /// <summary>
-        /// The key used by other classes for storing redirect instructions to apply after the user have logged in.
-        /// </summary>
-        public const string RedirectInstructionsTempDataKey = "CustomerControllerLoginRedirectToPage";
 
         /// <summary>
         /// The route part for this controller.
@@ -71,14 +67,14 @@ namespace FribergCarRentals.Controllers
         [HttpGet]
         public async Task<IActionResult> Authenticate()
         {
-            if (await IsAdminLoggedIn())
+            if (await IsCustomerLoggedIn())
+            {
+                return TempDataOrHomeRedirect();
+            }
+            else if (_signInManager.IsSignedIn(User))
             {
                 await _signInManager.SignOutAsync();
                 return RedirectToAction(nameof(Authenticate));
-            }
-            else if (await IsCustomerLoggedIn())
-            {
-                return TempDataOrHomeRedirect();
             }
 
             return View(new RegisterOrLoginCustomerViewModel());
@@ -126,7 +122,7 @@ namespace FribergCarRentals.Controllers
 
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            TempDataHelper.TryRenew<RedirectToActionData>(TempData, RedirectInstructionsTempDataKey);
+                            TempDataHelper.TryRenew<RedirectToActionData>(TempData, LoginRedirectToPageTempDataKey);
                             return RedirectToAction(nameof(RegistrationConfirmation), new { userId = customer.User.Id });
                         }
                         else
@@ -181,7 +177,7 @@ namespace FribergCarRentals.Controllers
         [HttpGet]
         public async Task<IActionResult> RegistrationConfirmation(string userId)
         {
-            TempDataHelper.TryRenew<RedirectToActionData>(TempData, RedirectInstructionsTempDataKey);
+            TempDataHelper.TryRenew<RedirectToActionData>(TempData, LoginRedirectToPageTempDataKey);
 
             var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception($"Failed to find user with ID: {userId}");
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -201,7 +197,7 @@ namespace FribergCarRentals.Controllers
         [NonAction]
         private ActionResult TempDataOrHomeRedirect()
         {
-            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, RedirectInstructionsTempDataKey, out var data))
+            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, LoginRedirectToPageTempDataKey, out var data))
             {
                 return RedirectToAction(data.Action, data.Controller, data.RouteValues);
             }

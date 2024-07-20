@@ -6,14 +6,13 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
-using FribergCarRentals.Pages.Customer;
 
 namespace FribergCarRentals.Pages.Order
 {
     /// <summary>
     /// Page model for cancelling an order in the customer back office. 
     /// </summary>
-    public class CancelModel : PageModelBase
+    public class CancelModel : CustomerPageModelBase
     {
         #region Constants
 
@@ -65,7 +64,9 @@ namespace FribergCarRentals.Pages.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(id);
+                return RedirectToLogin(new RedirectToPageData(
+                        "Order/Details",
+                        new RouteValueDictionary(new { id = id })));
             }
 
             if (id < 0)
@@ -93,24 +94,6 @@ namespace FribergCarRentals.Pages.Order
             }
 
             throw new Exception($"Model validation failed: UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect to the order details page.
-        /// </summary>
-        /// <param name="id">The ID of the order to cancel.</param>
-        /// <returns>An <see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(int id)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(
-                        "Order/Details",
-                        new RouteValueDictionary(new { id = id })));
-
-            return RedirectToPage("../Login");
         }
 
         #endregion
