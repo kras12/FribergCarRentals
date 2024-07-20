@@ -1,19 +1,20 @@
-﻿
+﻿@using FribergCarRentals.Areas.Admin.Controllers
+
 <li>
-    <a asp-area="" asp-controller="Admin" asp-action="Index">Home</a>
+    <a asp-area="@AdminControllerBase.Area" asp-controller="AdminHome" asp-action="Index">Home</a>
 </li>
 <li>
-    <a asp-area="" asp-controller="AdminCarCategory" asp-action="List">Car Categories</a>
+    <a asp-area="@AdminControllerBase.Area" asp-controller="AdminCarCategory" asp-action="List">Car Categories</a>
 </li>
 <li>
-    <a asp-area="" asp-controller="AdminCar" asp-action="List">Cars</a>
+    <a asp-area="@AdminControllerBase.Area" asp-controller="AdminCar" asp-action="List">Cars</a>
 </li>
 <li>
-    <a asp-area="" asp-controller="AdminCustomer" asp-action="List">Customers</a>
+    <a asp-area="@AdminControllerBase.Area" asp-controller="AdminCustomer" asp-action="List">Customers</a>
 </li>
 <li>
-    <a asp-area="" asp-controller="AdminOrder" asp-action="List">Orders</a>
+    <a asp-area="@AdminControllerBase.Area" asp-controller="AdminOrder" asp-action="List">Orders</a>
 </li>
 <li>
-    <a asp-area="" asp-controller="Admin" asp-action="Logout">Logout</a>
+    <a asp-area="@AdminControllerBase.Area" asp-controller="AdminHome" asp-action="Logout">Logout</a>
 </li>

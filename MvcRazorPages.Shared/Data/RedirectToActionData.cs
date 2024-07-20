@@ -10,12 +10,24 @@ namespace MvcRazorPages.Shared.Data
         {
         }
 
-        public RedirectToActionData(string action, string controller, RouteValueDictionary? routeValues = null, string? urlFragment = null)
+        public RedirectToActionData(string action, string controller, RouteValueDictionary? routeValues = null, string? urlFragment = null, string? area = null)
         {
             Action = action;
             Controller = controller;
             RouteValues = routeValues;
             UrlFragment = urlFragment;
+
+            if (!string.IsNullOrEmpty(area))
+            {
+                if (RouteValues != null)
+                {
+                    RouteValues.TryAdd("Area", area);
+                }
+                else
+                {
+                    RouteValues = new RouteValueDictionary(new { Area = area });
+                }
+            }
         }
 
         #endregion

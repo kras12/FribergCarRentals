@@ -4,7 +4,7 @@
 @using FribergCarRentals.Data.Attributes
 @using FribergCarRentals.Data.Extensions
 @using MvcRazorPages.Shared.ViewModels.Car
-@using FribergCarRentals.Controllers.Admin
+@using FribergCarRentals.Areas.Admin.Controllers
 @using FribergCarRentals.Helpers
 @using MvcRazorPages.Shared.ViewModels.CarCategory
 @model CreateCarViewModel
@@ -16,12 +16,12 @@
 <h1>Create Car</h1>
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <a asp-action="List" class="button navigational-button">View Cars</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="List" class="button navigational-button">View Cars</a>
     </div>
     <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
         @if (Model.HaveCategories)
         {
-            <form asp-action="Create" class="vertical-form" enctype="multipart/form-data">
+            <form asp-area="@AdminControllerBase.Area" asp-action="Create" class="vertical-form" enctype="multipart/form-data">
             <div class="vertical-form-field">
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>
@@ -99,7 +99,7 @@
             <div class="vertical-flex-container">
                 <p>No car categories were found. Create a category first.</p>
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <a asp-controller="AdminCarCategory" asp-action="Create" class="button function-button">Create Category</a>
+                    <a asp-area="@AdminControllerBase.Area" asp-controller="AdminCarCategory" asp-action="Create" class="button function-button">Create Category</a>
                 </div>                
             </div>
         }

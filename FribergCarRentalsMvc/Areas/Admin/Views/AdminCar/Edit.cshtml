@@ -1,4 +1,4 @@
-﻿@using FribergCarRentals.Controllers.Admin
+﻿@using FribergCarRentals.Areas.Admin.Controllers
 @using FribergCarRentals.Data.Types
 @using FribergCarRentals.Data.EntityClasses
 @using AppSettings.Shared.Settings;
@@ -24,7 +24,7 @@ else
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
         <a asp-action="List" class="button navigational-button">View Cars</a>
-        <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+        <form asp-area="@AdminControllerBase.Area" asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
             <input type="hidden" name="id" value="@Model.CarId" asp-for="CarId" />
             <button type="submit" class="negative-button">Delete</button>
         </form>
@@ -32,7 +32,7 @@ else
     <partial name="/Views/Shared/_UserMessages.cshtml" for="Messages" />
     <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem filled-container flex-container__padding__1-rem full-width">
         <h2>Details</h2>
-        <form asp-action="Edit" class="vertical-form full-width" enctype="multipart/form-data">
+        <form asp-area="@AdminControllerBase.Area" asp-action="Edit" class="vertical-form full-width" enctype="multipart/form-data">
             <input type="hidden" asp-for="CarId" />
             <div class="vertical-form-field">
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>

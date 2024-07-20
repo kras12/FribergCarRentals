@@ -1,4 +1,5 @@
-﻿@using MvcRazorPages.Shared.ViewModels.Order
+﻿@using FribergCarRentals.Areas.Admin.Controllers
+@using MvcRazorPages.Shared.ViewModels.Order
 @model OrderViewModel
 
 @{
@@ -9,17 +10,17 @@
 <h2>@($"{Model.Customer.FullName} - {Model.CarBooking.Car.CarInfo}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem flex-container__row-gap__0-5-rem flex-container__wrap">
-        <a asp-action="List" class="button navigational-button">View Orders</a>
-        <a asp-action="Details" asp-controller="AdminCustomer" asp-route-id="@Model.Customer.CustomerId" class="button navigational-button">View customer</a>
-        <a asp-action="Details" asp-controller="AdminCar" asp-route-id="@Model.CarBooking.Car.CarId" class="button navigational-button">View car</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="List" class="button navigational-button">View Orders</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="Details" asp-controller="AdminCustomer" asp-route-id="@Model.Customer.CustomerId" class="button navigational-button">View customer</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="Details" asp-controller="AdminCar" asp-route-id="@Model.CarBooking.Car.CarId" class="button navigational-button">View car</a>
         @if (Model.CanBeCompleted)
         {
-            <form asp-action="Complete" onsubmit="return confirm('Are you sure you want to complete this order?');">
+            <form asp-area="@AdminControllerBase.Area" asp-action="Complete" onsubmit="return confirm('Are you sure you want to complete this order?');">
                 <input type="hidden" name="id" value="@Model.CarOrderId" asp-for="@Model.CarOrderId" />
                 <button type="submit" class="positive-button">Complete</button>
             </form>
         }
-        <form asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this order?');">
+        <form asp-area="@AdminControllerBase.Area" asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this order?');">
             <input type="hidden" name="id" value="@Model.CarOrderId" asp-for="CarOrderId" />
             <button type="submit" class="negative-button full-height">Delete</button>
         </form>

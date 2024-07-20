@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MvcRazorPages.Shared.Services;
 
-namespace FribergCarRentals.Controllers.Admin
+namespace FribergCarRentals.Areas.Admin.Controllers
 {
-    [Route($"{CurrentControllerRoutePart}/[action]")]
-    public class AdminOrderController : ViewControllerBase
+    [Route($"{Area}/{CurrentControllerRoutePart}/[action]")]
+    [Area(Area)]
+    public class AdminOrderController : AdminControllerBase
     {
         #region Constants
 
@@ -25,7 +26,7 @@ namespace FribergCarRentals.Controllers.Admin
         /// <summary>
         /// The route part for the controller.
         /// </summary>
-        private const string CurrentControllerRoutePart = "Admin/Orders";
+        private const string CurrentControllerRoutePart = "Orders";
 
         /// <summary>
         /// The key for the ID of the order that was deleted. 
@@ -86,7 +87,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Complete));
+                return RedirectToLogin(new RedirectToActionData(nameof(Complete), ControllerHelper.GetControllerName<AdminOrderController>(), area: Area));
             }
 
             if (id < 0)
@@ -106,7 +107,7 @@ namespace FribergCarRentals.Controllers.Admin
                     }
                     else
                     {
-                        return RedirectToAction(nameof(Details), new { id = id });
+                        return RedirectToActionInArea(nameof(Details), new RouteValueDictionary(new { id }));
                     }
                 }
             }
@@ -122,7 +123,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Delete), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Delete), ControllerHelper.GetControllerName<AdminOrderController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -141,7 +142,7 @@ namespace FribergCarRentals.Controllers.Admin
                 }
                 else
                 {
-                    return RedirectToAction(nameof(List));
+                    return RedirectToActionInArea(nameof(List));
                 }
             }
 
@@ -154,7 +155,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Details), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Details), ControllerHelper.GetControllerName<AdminOrderController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -169,8 +170,16 @@ namespace FribergCarRentals.Controllers.Admin
                 if (order is not null)
                 {
                     OrderViewModel viewModel = new OrderViewModel(order, _imageUploadService);
-                    SaveRedirectBackInstructionsForCompleteOrderAction(nameof(Details), id);
 
+                    // ============================================================================================================
+                    // Set redirect back to action data for order manipulation
+                    // ============================================================================================================
+                    TempDataHelper.Set(TempData, RedirectToPageAfterOrderCompletionTempDataKey,
+                        new RedirectToActionData(nameof(Details), ControllerHelper.GetControllerName<AdminOrderController>(), routeValues: new RouteValueDictionary(new { id }), area: Area));
+
+                    // ============================================================================================================
+                    // Check for manipulated orders and create user messages
+                    // ============================================================================================================
                     if (TempDataHelper.TryGet(TempData, CompletedOrderIdTempDataKey, out int completedOrderId))
                     {
                         viewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
@@ -188,13 +197,23 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(List));
+                return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminOrderController>(), area: Area));
             }
 
-            ListViewModel<OrderViewModel> viewModel = new ((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x, _imageUploadService)).OrderByDescending(x => x.CarOrderId));
-            SaveRedirectBackInstructionsForCompleteOrderAction(nameof(List));
-            SaveRedirectBackInstructionsForDeleteOrderAction(nameof(List));
+            ListViewModel<OrderViewModel> viewModel = new((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x, _imageUploadService)).OrderByDescending(x => x.CarOrderId));
 
+            // ============================================================================================================
+            // Set redirect back to action data for order manipulation
+            // ============================================================================================================
+            TempDataHelper.Set(TempData, RedirectToPageAfterOrderCompletionTempDataKey,
+                new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminOrderController>(), area: Area));
+
+            TempDataHelper.Set(TempData, RedirectToPageAfterOrderDeletionTempDataKey,
+                new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminOrderController>(), area: Area));
+
+            // ============================================================================================================
+            // Check for manipulated orders and create user messages
+            // ============================================================================================================
             if (TempDataHelper.TryGet(TempData, CompletedOrderIdTempDataKey, out int completedOrderId))
             {
                 viewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
@@ -206,48 +225,6 @@ namespace FribergCarRentals.Controllers.Admin
             }
 
             return View(viewModel);
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect back afterwards. 
-        /// </summary>
-        /// <param name="action">The action to redirect to.</param>
-        /// <param name="id">An optional ID for the order.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string action, int? id = null)
-        {
-            RouteValueDictionary? routeValues = id is not null ? new RouteValueDictionary(new { id = id }) : null;
-
-            TempDataHelper.Set(TempData, AdminController.RedirectToPageTempDataKey, new RedirectToActionData(
-                    action, ControllerHelper.GetControllerName<AdminOrderController>(), routeValues: routeValues));
-
-            return RedirectToAction(nameof(AdminController.Login), ControllerHelper.GetControllerName<AdminController>());
-        }
-
-        /// <summary>
-        /// Saves data for redirecting back to an action after an order has been completed.
-        /// </summary>
-        /// <param name="redirectToAction">The action to redirect to.</param>
-        /// <param name="id">An optional ID for the order.</param>
-        private void SaveRedirectBackInstructionsForCompleteOrderAction(string redirectToAction, int? id = null)
-        {
-            RouteValueDictionary? routeValues = id is not null ? new RouteValueDictionary(new { id = id }) : null;
-            TempDataHelper.Set(TempData, RedirectToPageAfterOrderCompletionTempDataKey, new RedirectToActionData(
-                    redirectToAction, ControllerHelper.GetControllerName<AdminOrderController>(), routeValues: routeValues));
-        }
-
-        /// <summary>
-        /// Saves data for redirecting back to an action after an order has been deleted. 
-        /// </summary>
-        /// <param name="redirectToAction">The action to redirect to.</param>
-        private void SaveRedirectBackInstructionsForDeleteOrderAction(string redirectToAction)
-        {
-            TempDataHelper.Set(TempData, RedirectToPageAfterOrderDeletionTempDataKey, new RedirectToActionData(
-                    redirectToAction, ControllerHelper.GetControllerName<AdminOrderController>()));
         }
 
         #endregion

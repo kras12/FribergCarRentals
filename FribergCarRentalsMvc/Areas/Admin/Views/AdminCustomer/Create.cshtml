@@ -1,4 +1,4 @@
-﻿@using FribergCarRentals.Controllers.Admin
+﻿@using FribergCarRentals.Areas.Admin.Controllers
 @using MvcRazorPages.Shared.ViewModels.Customer
 @model RegisterCustomerViewModel
 
@@ -9,10 +9,10 @@
 <h1>Create</h1>
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <a asp-action="List" class="button navigational-button">View Customers</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="List" class="button navigational-button">View Customers</a>
     </div>
     <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
-        <form asp-action="Create" class="vertical-form">
+        <form asp-area="@AdminControllerBase.Area" asp-action="Create" class="vertical-form">
             <div class="vertical-form-field">
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>

@@ -12,11 +12,12 @@ using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
 
-namespace FribergCarRentals.Controllers.Admin
+namespace FribergCarRentals.Areas.Admin.Controllers
 {
 
-    [Route($"{CurrentControllerRoutePart}/[action]")]
-    public class AdminCustomerController : ViewControllerBase
+    [Route($"{Area}/{CurrentControllerRoutePart}/[action]")]
+    [Area(Area)]
+    public class AdminCustomerController : AdminControllerBase
     {
         #region Constants
 
@@ -43,7 +44,7 @@ namespace FribergCarRentals.Controllers.Admin
         /// <summary>
         /// The route part for the controller.
         /// </summary>
-        private const string CurrentControllerRoutePart = "Admin/Customers";
+        private const string CurrentControllerRoutePart = "Customers";
 
         /// <summary>
         /// The key to use when storing page sub titles in temporary storage.
@@ -96,10 +97,10 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Create));
+                return RedirectToLogin(new RedirectToActionData(nameof(Create), ControllerHelper.GetControllerName<AdminCustomerController>(), area: Area));
             }
 
-            return View();            
+            return View();
         }
 
         // POST: AdminCustomerController/Create
@@ -109,7 +110,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Create));
+                return RedirectToLogin(new RedirectToActionData(nameof(Create), ControllerHelper.GetControllerName<AdminCustomerController>(), area: Area));
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
@@ -127,7 +128,7 @@ namespace FribergCarRentals.Controllers.Admin
                         await _customerRepository.AddAsync(customer);
                         TempDataHelper.Set(TempData, CreatedCustomerIdTempDataKey, customer.CustomerId);
 
-                        return RedirectToAction(nameof(Details), new { id = customer.CustomerId });
+                        return RedirectToActionInArea(nameof(Details), new RouteValueDictionary(new { id = customer.CustomerId }));
                     }
                     catch (CreateUserException ex)
                     {
@@ -147,7 +148,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Delete), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Delete), ControllerHelper.GetControllerName<AdminCustomerController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -166,7 +167,7 @@ namespace FribergCarRentals.Controllers.Admin
                 }
                 else
                 {
-                    return RedirectToAction(nameof(List));
+                    return RedirectToActionInArea(nameof(List));
                 }
             }
 
@@ -179,7 +180,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Details), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Details), ControllerHelper.GetControllerName<AdminCustomerController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -218,7 +219,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Edit), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Edit), ControllerHelper.GetControllerName<AdminCustomerController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -248,7 +249,7 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Edit), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Edit), ControllerHelper.GetControllerName<AdminCustomerController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id <= 0 || id != editCustomerViewModel.AccountId)
@@ -295,11 +296,12 @@ namespace FribergCarRentals.Controllers.Admin
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(List));
+                return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCustomerController>(), area: Area));
             }
 
             ListViewModel<CustomerViewModel> viewModel = new ListViewModel<CustomerViewModel>((await _customerRepository.GetAllAsync()).Select(x => new CustomerViewModel(x)));
-            SaveRedirectBackInstructionsForDeleteCustomerAction(nameof(List));
+            TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey,
+                new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCustomerController>(), area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeletedCustomerIdTempDataKey, out int deletedCustomerId))
             {
@@ -323,39 +325,10 @@ namespace FribergCarRentals.Controllers.Admin
             if (confirmResult.Succeeded)
             {
                 TempDataHelper.Set(TempData, ResentConfirmEmailLinkForCustomerIdTempDataKey, customer.CustomerId);
-                return RedirectToAction(nameof(Details), new { id = id });
+                return RedirectToActionInArea(nameof(Details), new RouteValueDictionary(new { id }));
             }
 
             throw new Exception($"Failed to confirm email for user with ID: {id}");
-        }
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect back afterwards. 
-        /// </summary>
-        /// <param name="action">The action to redirect to.</param>
-        /// <param name="id">An optional ID for the customer.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string action, int? id = null)
-        {
-            RouteValueDictionary? routeValues = id is not null ? new RouteValueDictionary(new { id = id }) : null;
-
-            TempDataHelper.Set(TempData, AdminController.RedirectToPageTempDataKey, new RedirectToActionData(
-                    action, ControllerHelper.GetControllerName<AdminCustomerController>(), routeValues: routeValues));
-
-            return RedirectToAction(nameof(AdminController.Login), ControllerHelper.GetControllerName<AdminController>());
-        }
-
-        /// <summary>
-        /// Saves data for redirecting back to an action after a customer has been deleted. 
-        /// </summary>
-        /// <param name="redirectToAction">The action to redirect to.</param>
-        private void SaveRedirectBackInstructionsForDeleteCustomerAction(string redirectToAction)
-        {
-            TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, new RedirectToActionData(
-                    redirectToAction, ControllerHelper.GetControllerName<AdminCustomerController>()));
         }
 
         #endregion

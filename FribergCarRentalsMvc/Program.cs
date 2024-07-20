@@ -54,18 +54,6 @@ namespace FribergCarRentals
             builder.Services.AddTransient<IMockDataSeeder, MockDataSeeder>();
 
             // ==================================================================================================================
-            //  Sessions
-            // ==================================================================================================================
-            // TODO - Check if safe to remove
-            //builder.Services.AddDistributedMemoryCache();
-            //builder.Services.AddSession(options =>
-            //{
-            //    options.IdleTimeout = TimeSpan.FromMinutes(15);
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.IsEssential = true;
-            //});
-
-            // ==================================================================================================================
             // Security (authentication, authorization)
             // ==================================================================================================================
 
@@ -114,8 +102,6 @@ namespace FribergCarRentals
             app.UseRouting();
 
             app.UseAuthorization();
-
-            //app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",

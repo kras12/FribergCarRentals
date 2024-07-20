@@ -26,7 +26,7 @@ namespace FribergCarRentals.Controllers
         /// </summary>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        public ViewControllerBase(IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager)
+        protected ViewControllerBase(IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager)
         {
             _authorizationService = authorizationService;
             _signInManager = signInManager;

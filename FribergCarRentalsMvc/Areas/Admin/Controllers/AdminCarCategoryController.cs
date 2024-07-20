@@ -11,10 +11,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 
-namespace FribergCarRentals.Controllers.Admin
+namespace FribergCarRentals.Areas.Admin.Controllers
 {
-    [Route($"{CurrentControllerRoutePart}/[action]")]
-    public class AdminCarCategoryController : ViewControllerBase
+    /// <summary>
+    /// Controller for car categories.
+    /// </summary>
+    [Route($"{Area}/{CurrentControllerRoutePart}/[action]")]
+    [Area(Area)]
+    public class AdminCarCategoryController : AdminControllerBase
     {
         #region Constants
 
@@ -26,7 +30,7 @@ namespace FribergCarRentals.Controllers.Admin
         /// <summary>
         /// The route part for the controller.
         /// </summary>
-        private const string CurrentControllerRoutePart = "Admin/Cars/Categories";
+        private const string CurrentControllerRoutePart = "Cars/Categories";
 
         /// <summary>
         /// The key for the ID of the car category that was deleted. 
@@ -77,13 +81,12 @@ namespace FribergCarRentals.Controllers.Admin
 
         #region Actions
 
-
         // GET: AdminCarCategoryController/Create
         public async Task<IActionResult> Create()
         {
-            if (!(await IsAdminLoggedIn()))
+            if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Create));
+                return RedirectToLogin(new RedirectToActionData(nameof(Create), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
             }
 
             return View();
@@ -94,9 +97,9 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCarCategoryViewModel createCarCategoryViewModel)
         {
-            if (!(await IsAdminLoggedIn()))
+            if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Create));
+                return RedirectToLogin(new RedirectToActionData(nameof(Create), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
             }
 
             if (ModelState.Count > 0 && ModelState.IsValid)
@@ -104,7 +107,7 @@ namespace FribergCarRentals.Controllers.Admin
                 var category = _mapper.Map<CarCategoryEntity>(createCarCategoryViewModel);
                 await _carCategoryRepository.AddAsync(category);
                 TempDataHelper.Set(TempData, CreatedCarCategoryIdTempDataKey, category.CarCategoryId);
-                return RedirectToAction(nameof(Details), new { id = category.CarCategoryId });
+                return RedirectToActionInArea(nameof(Details), new RouteValueDictionary(new { id = category.CarCategoryId }));
             }
 
             return View();
@@ -116,9 +119,9 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!(await IsAdminLoggedIn()))
+            if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Delete), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Delete), ControllerHelper.GetControllerName<AdminCarCategoryController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -137,7 +140,7 @@ namespace FribergCarRentals.Controllers.Admin
                 }
                 else
                 {
-                    return RedirectToAction(nameof(List));
+                    return RedirectToActionInArea(nameof(List));
                 }
             }
 
@@ -148,9 +151,9 @@ namespace FribergCarRentals.Controllers.Admin
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            if (!(await IsAdminLoggedIn()))
+            if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Details), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Details), ControllerHelper.GetControllerName<AdminCarCategoryController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -182,9 +185,9 @@ namespace FribergCarRentals.Controllers.Admin
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!(await IsAdminLoggedIn()))
+            if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Edit), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Edit), ControllerHelper.GetControllerName<AdminCarCategoryController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id < 0)
@@ -212,9 +215,9 @@ namespace FribergCarRentals.Controllers.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditCarCategoryViewModel editCarCategoryViewModel)
         {
-            if (!(await IsAdminLoggedIn()))
+            if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Edit), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Edit), ControllerHelper.GetControllerName<AdminCarCategoryController>(), new RouteValueDictionary(new { id }), area: Area));
             }
 
             if (id <= 0 || id != editCarCategoryViewModel.CarCategoryId)
@@ -243,13 +246,14 @@ namespace FribergCarRentals.Controllers.Admin
         // GET: AdminCarCategoryController/List
         public async Task<IActionResult> List()
         {
-            if (!(await IsAdminLoggedIn()))
+            if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(List));
+                return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
             }
 
-            ListViewModel<CarCategoryViewModel> viewModel = new ((await _carCategoryRepository.GetCategoryStatistics()).Select(x => new CarCategoryViewModel(x)));
-            SaveRedirectBackInstructionsForDeleteCarCategoryAction(nameof(List));
+            ListViewModel<CarCategoryViewModel> viewModel = new((await _carCategoryRepository.GetCategoryStatistics()).Select(x => new CarCategoryViewModel(x)));
+            TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
+                new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeletedCarCategoryIdTempDataKey, out int deletedCarCategoryId))
             {
@@ -257,35 +261,6 @@ namespace FribergCarRentals.Controllers.Admin
             }
 
             return View(viewModel);
-        }
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect back afterwards. 
-        /// </summary>
-        /// <param name="action">The action to redirect to.</param>
-        /// <param name="id">An optional ID for the car category.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string action, int? id = null)
-        {
-            RouteValueDictionary? routeValues = id is not null ? new RouteValueDictionary(new { id = id }) : null;
-
-            TempDataHelper.Set(TempData, AdminController.RedirectToPageTempDataKey, new RedirectToActionData(
-                    action, ControllerHelper.GetControllerName<AdminCarCategoryController>(), routeValues: routeValues));
-
-            return RedirectToAction(nameof(AdminController.Login), ControllerHelper.GetControllerName<AdminController>());
-        }
-
-        /// <summary>
-        /// Saves data for redirecting back to an action after a car category has been deleted. 
-        /// </summary>
-        /// <param name="redirectToAction">The action to redirect to.</param>
-        private void SaveRedirectBackInstructionsForDeleteCarCategoryAction(string redirectToAction)
-        {
-            TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, new RedirectToActionData(
-                    redirectToAction, ControllerHelper.GetControllerName<AdminCarCategoryController>()));
         }
 
         #endregion

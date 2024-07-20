@@ -1,6 +1,5 @@
 ﻿using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
@@ -9,18 +8,22 @@ using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
-using MvcRazorPages.Shared.ViewModels.Customer;
 
-namespace FribergCarRentals.Controllers.Admin
+namespace FribergCarRentals.Areas.Admin.Controllers
 {
-    public class AdminController : ViewControllerBase
+    /// <summary>
+    /// Main controller for the admin back office. 
+    /// </summary>
+    [Area(Area)]
+    [Route($"[area]")]
+    public class AdminHomeController : AdminControllerBase
     {
         #region Constants
 
         /// <summary>
-        /// The key for the redirection data for the page to redirect to after logins. 
+        /// The route part for the controller.
         /// </summary>
-        public const string RedirectToPageTempDataKey = "AdminLoginRedirectToPage";
+        private const string CurrentControllerRoutePart = "Home";
 
         #endregion
 
@@ -41,7 +44,7 @@ namespace FribergCarRentals.Controllers.Admin
         /// <param name="_adminRepository">The injected admin repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        public AdminController(IAdminRepository _adminRepository, IAuthorizationService authorizationService,
+        public AdminHomeController(IAdminRepository _adminRepository, IAuthorizationService authorizationService,
             SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             this._adminRepository = _adminRepository;
@@ -51,12 +54,18 @@ namespace FribergCarRentals.Controllers.Admin
 
         #region Actions
 
-        // GET: AdminController
+        /// <summary>
+        /// Serves the admin home page.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> containing a <see cref="IActionResult"/>.</returns>
+        /// <exception cref="Exception"></exception>
+        [HttpGet]
+        [Route($"/{Area}")]
         public async Task<IActionResult> Index()
         {
             if (!await IsAdminLoggedIn())
             {
-                return RedirectToLogin(nameof(Index));
+                return RedirectToLogin(new RedirectToActionData(nameof(Index), ControllerHelper.GetControllerName<AdminHomeController>(), area: Area));
             }
 
             var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
@@ -71,7 +80,12 @@ namespace FribergCarRentals.Controllers.Admin
             throw new Exception("Failed to find the admin in the database.");
         }
 
-        // GET: AdminController
+        /// <summary>
+        /// Serves the admin login page.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> containing a <see cref="IActionResult"/>.</returns>
+        [HttpGet]
+        [Route($"{nameof(Login)}")]
         public async Task<IActionResult> Login()
         {
             if (await IsCustomerLoggedIn())
@@ -87,8 +101,13 @@ namespace FribergCarRentals.Controllers.Admin
             return View(viewModel);
         }
 
-        // Post: AdminController
+        /// <summary>
+        /// Handles the admin login process.
+        /// </summary>
+        /// <param name="loginAdminViewModel"></param>
+        /// <returns>A <see cref="Task"/> containing a <see cref="IActionResult"/>.</returns>
         [HttpPost]
+        [Route($"{nameof(Login)}")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginAdminViewModel loginAdminViewModel)
         {
@@ -115,11 +134,11 @@ namespace FribergCarRentals.Controllers.Admin
             return View(loginAdminViewModel);
         }
 
-        // GET: AdminController
+        [Route($"{nameof(Logout)}")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(HomeController.Index), ControllerHelper.GetControllerName<HomeController>());
+            return RedirectToActionInArea(nameof(FribergCarRentals.Controllers.HomeController.Index), ControllerHelper.GetControllerName<FribergCarRentals.Controllers.HomeController>());
         }
 
         #endregion
@@ -133,29 +152,12 @@ namespace FribergCarRentals.Controllers.Admin
         [NonAction]
         private ActionResult TempDataOrHomeRedirect()
         {
-            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, RedirectToPageTempDataKey, out var data))
+            if (TempDataHelper.TryGet<RedirectToActionData>(TempData, LoginRedirectToPageTempDataKey, out var data))
             {
                 return RedirectToAction(data.Action, data.Controller, data.RouteValues);
             }
 
-            return RedirectToAction(nameof(Index));
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect back afterwards. 
-        /// </summary>
-        /// <param name="action">The action to redirect to.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string action)
-        {
-            TempDataHelper.Set(TempData, RedirectToPageTempDataKey, new RedirectToActionData(
-                    action, ControllerHelper.GetControllerName<AdminController>()));
-
-            return RedirectToAction(nameof(Login), ControllerHelper.GetControllerName<AdminController>());
+            return RedirectToActionInArea(nameof(Index));
         }
 
         #endregion
