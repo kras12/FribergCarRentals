@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Data.EntityClasses
 {
     /// <summary>
     /// A an entity class that represents a car.

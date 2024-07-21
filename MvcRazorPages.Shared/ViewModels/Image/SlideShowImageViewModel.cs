@@ -12,34 +12,6 @@ namespace MvcRazorPages.Shared.ViewModels.Image
     {
         #region Constructors
 
-		/// <summary>
-		/// A constructor
-		/// </summary>
-		/// <param name="url">The url for the image.</param>
-		/// <param name="fileName">The filename for the image.</param>
-		/// <param name="imageId">The ID for the image.</param>
-		/// <param name="linksToPage">An optional link to another action.</param>
-		/// <param name="imageCaption">An optional image caption.</param>
-		public SlideShowImageViewModel(string url, string fileName = "", int? imageId = null, string? imageCaption = null, RedirectToPageData? linksToPage = null) 
-            : this(url, fileName, imageId, imageCaption)
-        {
-            LinksToRazorPage = linksToPage;
-        }
-
-        /// <summary>
-		/// A constructor
-		/// </summary>
-		/// <param name="url">The url for the image.</param>
-		/// <param name="fileName">The filename for the image.</param>
-		/// <param name="imageId">The ID for the image.</param>
-		/// <param name="linksToPage">An optional link to another action.</param>
-		/// <param name="imageCaption">An optional image caption.</param>
-		public SlideShowImageViewModel(string url, string fileName = "", int? imageId = null, string? imageCaption = null, RedirectToActionData? linksToPage = null)
-            : this(url, fileName, imageId, imageCaption)
-        {
-            LinksToControllerAction = linksToPage;
-        }
-
         /// <summary>
 		/// A constructor
 		/// </summary>
@@ -47,12 +19,14 @@ namespace MvcRazorPages.Shared.ViewModels.Image
 		/// <param name="fileName">The filename for the image.</param>
 		/// <param name="imageId">The ID for the image.</param>
 		/// <param name="imageCaption">An optional image caption.</param>
-		private SlideShowImageViewModel(string url, string fileName = "", int? imageId = null, string? imageCaption = null)
+        /// <param name="linksToPage">An optional link to another page.</param>
+		public SlideShowImageViewModel(string url, string fileName = "", int? imageId = null, string? imageCaption = null, string? linksToPage = null)
         {
             FileName = fileName;
             Url = url;
             ImageId = imageId;
             ImageCaption = imageCaption;
+            Link = linksToPage;
         }
 
         #endregion
@@ -67,11 +41,6 @@ namespace MvcRazorPages.Shared.ViewModels.Image
         public string FileName { get; } = "";
 
         /// <summary>
-        /// An optional image caption. 
-        /// </summary>
-        public string? ImageCaption { get; set; } = null;
-
-        /// <summary>
         /// Returns true if there is an image caption.
         /// </summary>
         public bool HaveCaption
@@ -83,6 +52,10 @@ namespace MvcRazorPages.Shared.ViewModels.Image
         }
 
         /// <summary>
+        /// An optional image caption. 
+        /// </summary>
+        public string? ImageCaption { get; set; } = null;
+        /// <summary>
         /// The ID for the image.
         /// </summary>
         [DisplayName("Image ID")]
@@ -90,18 +63,9 @@ namespace MvcRazorPages.Shared.ViewModels.Image
         public int? ImageId { get; }
 
         /// <summary>
-        /// An optional link to another page in form of an controller action.
+        /// An optional link to another page. 
         /// </summary>
-        [DisplayName("Link")]
-        [BindNever]
-        public RedirectToActionData? LinksToControllerAction { get; set; }
-
-        /// <summary>
-		/// An optional link to another page in form of a Razor Page.
-		/// </summary>
-		[DisplayName("Link")]
-        [BindNever]
-        public RedirectToPageData? LinksToRazorPage { get; set; }
+        public string? Link { get; set; } = null;
 
         /// <summary>
         /// The url for the image.
@@ -109,7 +73,6 @@ namespace MvcRazorPages.Shared.ViewModels.Image
         [DisplayName("Url")]
         [BindNever]
         public string Url { get; } = "";
-
 
         #endregion
     }

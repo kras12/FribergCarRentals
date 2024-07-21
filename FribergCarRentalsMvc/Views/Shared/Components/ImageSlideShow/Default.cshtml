@@ -6,41 +6,23 @@
 	@foreach (var image in Model.Models)
 	{
 		<div class="image-slide image-fade">
-			@if (image.LinksToControllerAction is not null)
+			@if (image.Link is not null)
 			{
-				Dictionary<string, string> routeDictionary = new Dictionary<string, string>();
-				string? urlFragment = image.LinksToControllerAction.UrlFragment ?? null;
-
-				if ( image.LinksToControllerAction.RouteValues is not null)
-				{
-					routeDictionary = image.LinksToControllerAction.RouteValues.Select(x => new KeyValuePair<string, string>(x.Key, x.Value?.ToString() ?? "")).ToDictionary();
-				}
-
-				// An empty string or null would have caused a hashtag (#) to be included at the end of the url.
-				if (string.IsNullOrEmpty(urlFragment))
-				{
-					<a asp-action="@image.LinksToControllerAction.Action" asp-controller="@image.LinksToControllerAction.Controller" asp-all-route-data="@routeDictionary">
-						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
-						@if (image.HaveCaption)
-						{
-							<div class="image-slide-caption">@image.ImageCaption</div>
-						}
-					</a>
-				}
-				else
-				{
-					<a asp-action="@image.LinksToControllerAction.Action" asp-controller="@image.LinksToControllerAction.Controller" asp-all-route-data="@routeDictionary" asp-fragment="@urlFragment">
-						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
-						@if (image.HaveCaption)
-						{
-							<div class="image-slide-caption">@image.ImageCaption</div>
-						}
-					</a>
-				}				
+				<a href="@image.Link">
+					<img src="@image.Url" class="full-width max-height__50vh cover-image" />
+					@if (image.HaveCaption)
+					{
+						<div class="image-slide-caption">@image.ImageCaption</div>
+					}
+				</a>				
 			}
 			else
 			{
 				<img src="@image.Url" class="full-width max-height__50vh cover-image" />
+				@if (image.HaveCaption)
+				{
+					<div class="image-slide-caption">@image.ImageCaption</div>
+				}
 			}
 		</div>
 	}
@@ -105,7 +87,5 @@
 
 		imageSlides[imageSlideIndex].classList.add("active");
 		navigationDots[imageSlideIndex].classList.add("active");
-
-		console.log(navigationDots[imageSlideIndex]);
 	}
 </script>

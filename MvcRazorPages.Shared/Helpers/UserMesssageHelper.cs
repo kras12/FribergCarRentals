@@ -146,6 +146,16 @@ namespace MvcRazorPages.Shared.Helpers
             return new MessageViewModel(MessageType.Success, $"Customer #{customerId} was updated successfully.", "Saved");
         }
 
+        /// <summary>
+        /// Creates a resent confirm email link to customer success message.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer that was created.</param>
+        /// <returns>A <see cref="MessageViewModel"/>.</returns>
+        public static MessageViewModel CreateResentConfirmEmailLinkToCustomerMessage(int customerId)
+        {
+            return new MessageViewModel(MessageType.Success, $"An email should have been sent to customer #{customerId}. But since this app does not currently have a real email sender registered, the email address was automatically confirmed. ", "Email Sent");
+        }
+
         #endregion
 
         #region Orders

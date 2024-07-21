@@ -1,4 +1,5 @@
-﻿@using MvcRazorPages.Shared.ViewModels.Order
+﻿@using FribergCarRentals.Areas.Admin.Controllers
+@using MvcRazorPages.Shared.ViewModels.Order
 @model OrderViewModel
 
 @{
@@ -50,10 +51,10 @@ else
                     @Html.DisplayFor(model => model.OrderStatusName)
                 </dd>
                 <dt>
-                    @Html.DisplayNameFor(model => model.Customer.UserId)
+                    @Html.DisplayNameFor(model => model.Customer.CustomerId)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.Customer.UserId)
+                    @Html.DisplayFor(model => model.Customer.CustomerId)
                 </dd>
                 <dt>
                     @Html.DisplayNameFor(model => model.Customer.FullName)

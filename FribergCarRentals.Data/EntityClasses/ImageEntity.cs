@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing.Drawing2D;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Data.EntityClasses
 {
     /// <summary>
     /// An entity class that represents an image.

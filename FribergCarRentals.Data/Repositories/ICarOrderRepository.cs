@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     #region Interfaces
 
@@ -28,7 +23,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// </summary>
         /// <param name="customerId">The ID of the customer to fetch the orders for.</param>
         /// <returns>A <see cref="Task{TResult}"/> containing the orders found.</returns>
-        public Task<IEnumerable<CarOrderEntity>> GetAllByCustomer(int customerId);
+        public Task<IEnumerable<CarOrderEntity>> GetOrdersByCustomerId(int customerId);
 
         /// <summary>
         /// Attempts to cancel a car order. The order can only be canceled if the status is 'Created'.

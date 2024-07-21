@@ -1,12 +1,15 @@
 using MvcRazorPages.Shared.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.ViewModels.Other;
-using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Controllers.Customer;
 using FribergCarRentals.Helpers;
 using MvcRazorPages.Shared.ViewModels.Image;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Controllers
 {
@@ -20,6 +23,11 @@ namespace FribergCarRentals.Controllers
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructor
@@ -28,9 +36,14 @@ namespace FribergCarRentals.Controllers
         /// A constructor.
         /// </summary>
         /// <param name="carRepository">Injected car repository.</param>
-        public HomeController(ICarRepository carRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service</param>
+        public HomeController(ICarRepository carRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -49,12 +62,13 @@ namespace FribergCarRentals.Controllers
                 var image = car.Images.First();
 
                 images.Add(new SlideShowImageViewModel(
-                    ImageHelper.GetImageFileUrl(image), image.FileName, image.ImageId,
+                    _imageUploadService.GetImageUrl(image), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
-                    linksToPage: new RedirectToActionData(
+                    linksToPage: Url.Action(
                         action: nameof(CustomerOrderController.Book),
                         controller: ControllerHelper.GetControllerName<CustomerOrderController>(),
-                        routeValues: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))));
+                        values: new RouteValueDictionary(new { CarCategoryId = car.Category!.CarCategoryId }))
+                    ));
             }
 
             return View(new ListViewModel<SlideShowImageViewModel>(images));

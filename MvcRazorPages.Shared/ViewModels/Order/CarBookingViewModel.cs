@@ -1,9 +1,10 @@
 ﻿using MvcRazorPages.Shared.ViewModels.Car;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.Other;
+using MvcRazorPages.Shared.Services;
 
 namespace MvcRazorPages.Shared.ViewModels.Order
 {
@@ -18,8 +19,9 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// A constructor.
         /// </summary>
         /// <param name="carBooking">The car booking to copy data from.</param>
+        /// <param name="imageUploadService">The image upload service used for creating the image urls.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public CarBookingViewModel(CarBookingEntity carBooking)
+        public CarBookingViewModel(CarBookingEntity carBooking, IImageUploadService imageUploadService)
         {
             #region Checks
 
@@ -32,7 +34,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
 
             CarBookingId = carBooking.CarBookingId;
             CarOrder = carBooking.CarOrder!;
-            Car = new CarViewModel(carBooking.Car);
+            Car = new CarViewModel(carBooking.Car, imageUploadService);
             RentalCostPerDay = carBooking.RentalCostPerDay;
             CarPickupDate = carBooking.PickupDateUtc.Date;
             CarReturnDate = carBooking.ReturnDateUtc.Date;

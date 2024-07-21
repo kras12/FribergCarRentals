@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using AppSettings.Shared.Settings;
 
-namespace FribergCarRentals.DataAccess.DatabaseContexts
+namespace FribergCarRentals.Data.DatabaseContexts
 {
     /// <summary>
     /// A design time database context needed to support scaffolding when the database context class resides in a standalone project.

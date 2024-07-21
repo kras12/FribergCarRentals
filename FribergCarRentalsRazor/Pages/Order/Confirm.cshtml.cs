@@ -1,20 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
-using FribergCarRentals.DataAccess.Types;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Sessions;
 using FribergCarRentals.Pages.Customer;
 using MvcRazorPages.Shared.ViewModels.Order;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Data.Types;
 
 namespace FribergCarRentals.Pages.Order
 {
     /// <summary>
     /// Page model for booking a car and creating an order. 
     /// </summary>
-    public class ConfirmModel : PageModel
+    public class ConfirmModel : CustomerPageModelBase
     {
         #region Constants
 
@@ -53,7 +56,10 @@ namespace FribergCarRentals.Pages.Order
         /// <param name="carRepository">Injected car repository. </param>
         /// <param name="customerRepository">Injected customer repository. </param>
         /// <param name="orderRepository">Injected order repository. </param>
-        public ConfirmModel(ICarRepository carRepository, ICustomerRepository customerRepository, ICarOrderRepository orderRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        public ConfirmModel(ICarRepository carRepository, ICustomerRepository customerRepository, ICarOrderRepository orderRepository, 
+            IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _customerRepository = customerRepository;
@@ -78,11 +84,11 @@ namespace FribergCarRentals.Pages.Order
         /// Handler for POST requests. 
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin("../Order/Confirm");
+                return RedirectToLogin(new RedirectToPageData("../Order/Confirm"));
             }
 
             if (TempDataHelper.TryGet(TempData, BookModel.PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
@@ -102,15 +108,16 @@ namespace FribergCarRentals.Pages.Order
         /// <returns>A <see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnPostCreateAsync()
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin("../Order/Confirm");
+                return RedirectToLogin(new RedirectToPageData("../Order/Confirm"));
             }
 
             if (TempDataHelper.TryGet(TempData, BookModel.PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
             {
                 CreateOrderViewModel = createOrderViewModel;
-                var customer = await _customerRepository.GetByIdAsync(UserSessionHandler.GetUserData(HttpContext.Session).UserId);
+                var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+                var customer = await _customerRepository.GetByUserIdAsync(userId);
                 var car = await _carRepository.GetByIdAsync(CreateOrderViewModel.CarId);
 
                 if (customer is not null && car is not null)
@@ -126,25 +133,10 @@ namespace FribergCarRentals.Pages.Order
                     return RedirectToPage("Details", new { id = order.CarOrderId });
                 }
 
-                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {CreateOrderViewModel.CarId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
+                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {CreateOrderViewModel.CarId} - UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value}");
             }
 
             throw new Exception($"Failed to retrieve the pending order from temp storage.");
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect afterwards. 
-        /// </summary>
-        /// <param name="page">The page to redirect to.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string page)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(page));
-            return RedirectToPage("../Customer/Authenticate");
         }
 
         #endregion

@@ -1,0 +1,95 @@
+﻿@page
+@model FribergCarRentals.Areas.Admin.Pages.Car.ListModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Cars</h1>
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    @if (Model.CarListViewModel.Count <= 0)
+    {
+        <p class="text-align-center">No cars found.</p>
+    }
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-area="@AdminPageModelBase.Area" asp-page="Create" class="button function-button">Create Car</a>
+    </div>
+    <partial name="/Pages/Shared/_UserMessages.cshtml" for="CarListViewModel.Messages" />
+    @if (Model.CarListViewModel.Count > 0)
+    {
+        <table class="colored-table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].CarId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].RentalStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].Category.CategoryName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].Brand)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].Model)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].ModelYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].PropulsionSystem)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CarListViewModel.Models[0].RentalCostPerDay)
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CarListViewModel.Models)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CarId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RentalStatus.StatusDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Brand)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Model)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModelYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PropulsionSystem.PropulsionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RentalCostPerDay)
+                        </td>
+                        <td>
+                            <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                <a asp-area="@AdminPageModelBase.Area" asp-page="Details" asp-route-id="@item.CarId" class="button navigational-button">Details</a>
+                                <a asp-area="@AdminPageModelBase.Area" asp-page="Edit" asp-route-id="@item.CarId" class="button function-button">Edit</a>
+                                <form asp-area="@AdminPageModelBase.Area" asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+                                    <input type="hidden" name="id" value="@item.CarId" asp-for="@item.CarId" />
+                                    <button type="submit" class="negative-button">Delete</button>
+                                </form>
+                            </div>                
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

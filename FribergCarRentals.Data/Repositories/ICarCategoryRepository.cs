@@ -1,14 +1,7 @@
-﻿using FribergCarRentals.DataAccess.DataTransferObjects;
-using FribergCarRentals.DataAccess.EntityClasses;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FribergCarRentals.Data.EntityClasses;
+using MvcRazorPages.Shared.DTO;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// An interface for a car category repository.
@@ -28,14 +21,14 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// Returns the statistics for all car categories.
         /// </summary>
         /// <returns>A <see cref="Task"/> containing a collection of category statistics.</returns>
-        public Task<List<CarCategoryStatisticsDto>> GetCategoryStatistics();
+        public Task<List<CarCategoryCountDto>> GetCategoryStatistics();
 
         /// <summary>
         /// Returns the statistics for the category that matches the ID. 
         /// </summary>
         /// <param name="id">The ID of the category to fetch statistics for.</param>
         /// <returns>A <see cref="Task"/> containing the statistics for the category.</returns>
-        public Task<CarCategoryStatisticsDto> GetCategoryStatisticsById(int id);
+        public Task<CarCategoryCountDto> GetCategoryStatisticsById(int id);
 
         #endregion
     }

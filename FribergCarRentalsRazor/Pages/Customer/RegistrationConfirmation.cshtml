@@ -1,0 +1,23 @@
+﻿@page
+@model FribergCarRentals.Pages.Customer.RegistrationConfirmationModel
+
+@{
+    ViewData["Title"] = "Registration successful";
+}
+
+<div class="vertical-flex-container flex-container__align-items-center filled-container flex-container__padding__1-rem filled-box">
+    <h1>Registration successful</h1>
+    @if (@Model.ConfirmCustomerRegistrationViewModel.HaveConfirmEmailLink)
+    {
+        <p>
+            This app does not currently have a real email sender registered.
+            Normally this would be emailed: <a id="confirm-link" href="@Model.ConfirmCustomerRegistrationViewModel.ConfirmEmailLink">Click here to confirm your account</a>
+        </p>
+    }
+    else
+    {
+        <p>
+            Please check your email to confirm your account.
+        </p>
+    }
+</div>

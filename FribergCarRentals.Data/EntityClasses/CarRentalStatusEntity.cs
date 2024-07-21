@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using FribergCarRentals.DataAccess.Types;
-using FribergCarRentals.DataAccess.Attributes;
-using FribergCarRentals.DataAccess.Extensions;
+using FribergCarRentals.Data.Types;
+using FribergCarRentals.Data.Attributes;
+using FribergCarRentals.Data.Extensions;
 
-namespace FribergCarRentals.DataAccess.EntityClasses
+namespace FribergCarRentals.Data.EntityClasses
 {
     /// <summary>
     /// An entity class that represents rental statuses for a car.

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// An interface for an admin repository.
@@ -13,6 +8,19 @@ namespace FribergCarRentals.DataAccess.Repositories
     public interface IAdminRepository
     {
         #region Methods
+
+        /// <summary>
+        /// Adds a new admin.
+        /// </summary>
+        /// <param name="entity">The admin to add.</param>
+        /// <returns>A <see cref="Task"/> object containing the added admin.</returns>
+        public Task<AdminEntity> AddAsync(AdminEntity entity);
+
+        /// <summary>
+        /// Returns true if there is any admins in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any admins in the database.</returns>
+        public Task<bool> AnyAsync();
 
         /// <summary>
         /// Attempts to fetch an admin by ID.
@@ -23,13 +31,12 @@ namespace FribergCarRentals.DataAccess.Repositories
         public Task<AdminEntity?> GetByIdAsync(int id);
 
         /// <summary>
-        /// Attempts to fetch an admin with matching email and password.
+        /// Attempts to fetch an admin by user ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
-        /// <param name="email">The email for the admin.</param>
-        /// <param name="password">The password for the admin.</param>
+        /// <param name="id">The ID of the admin.</param>
         /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
-        public Task<AdminEntity?> GetMatchingAdminAsync(string email, string password);
+        public Task<AdminEntity?> GetByUserIdAsync(string userId);
 
         #endregion
     }

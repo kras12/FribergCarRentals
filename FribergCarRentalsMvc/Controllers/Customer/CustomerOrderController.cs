@@ -1,18 +1,23 @@
 ﻿using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
-using FribergCarRentals.DataAccess.Types;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
+using FribergCarRentals.Data.Types;
 using MvcRazorPages.Shared.ViewModels.Order;
-using MvcRazorPages.Shared.Sessions;
 using MvcRazorPages.Shared.ViewModels.Other;
 using FribergCarRentals.Helpers;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.ViewModels.Car;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Controllers.Customer
 {
     [Route($"{CurrentControllerRoutePart}/[action]")]
-    public class CustomerOrderController : ViewControllerBase
+    public class CustomerOrderController : CustomerControllerBase
     {
         #region Constants
 
@@ -27,11 +32,6 @@ namespace FribergCarRentals.Controllers.Customer
         public const string CanceledOrderRedirectToPageTempDataKey = "CustomerCanceledOrderRedirectToPage";
 
         /// <summary>
-        /// The route part for this controller.
-        /// </summary>
-        private const string CurrentControllerRoutePart = "Order";
-
-        /// <summary>
         /// The key for the created order flag stored in temp storage.
         /// </summary>
         public const string IsNewOrderTempDataKey = "CustomerOrderControllerIsNewOrder";
@@ -41,26 +41,64 @@ namespace FribergCarRentals.Controllers.Customer
         /// </summary>
         public const string PendingOrderTempDataKey = "CustomerOrderPendingOrder";
 
+        /// <summary>
+        /// The route part for this controller.
+        /// </summary>
+        private const string CurrentControllerRoutePart = "Order";
         #endregion
 
         #region Fields
 
-        private readonly ICarOrderRepository _orderRepository;
-        private readonly ICarRepository _carRepository;
-        private readonly ICustomerRepository _customerRepository;
+        /// <summary>
+        /// The injected car category repository.
+        /// </summary>
         private readonly ICarCategoryRepository _carCategoryRepository;
+
+        /// <summary>
+        /// The injected car repository.
+        /// </summary>
+        private readonly ICarRepository _carRepository;
+
+        /// <summary>
+        /// The injected customer repository.
+        /// </summary>
+        private readonly ICustomerRepository _customerRepository;
+
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
+        /// <summary>
+        /// The injected order repository.
+        /// </summary>
+        private readonly ICarOrderRepository _orderRepository;
 
         #endregion
 
         #region Constructors
 
-        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository, 
-            ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="orderRepository">The injected order repository.</param>
+        /// <param name="customerRepository">The injected customer repository.</param>
+        /// <param name="carRepository">The injected car repository.</param>
+        /// <param name="carCategoryRepository">The injected car category repository.</param>
+        /// <param name="authorizationService"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
+        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository,
+            ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -84,43 +122,6 @@ namespace FribergCarRentals.Controllers.Customer
             }
 
             return View(viewModel);
-        }
-
-        // POST: CustomerOrderController/Cancel/(5)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Cancel(int id)
-        {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
-            {
-                return RedirectToLogin(nameof(Cancel), id);
-            }
-
-            if (id < 0)
-            {
-                throw new Exception($"Invalid ID: {id}");
-            }
-
-            if (ModelState.Count > 0 && ModelState.IsValid)
-            {
-                if (await _orderRepository.TryCancelOrderAsync(id))
-                {
-                    TempDataHelper.Set(TempData, CanceledOrderIdTempDataKey, id);
-
-                    if (TempDataHelper.TryGet(TempData, CanceledOrderRedirectToPageTempDataKey, out RedirectToActionData? data))
-                    {
-                        return RedirectToAction(data.Action, data.Controller, data.RouteValues);
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Details), new { id = id });
-                    }
-                }
-
-                throw new Exception($"Failed to cancel order with id: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
-            }
-
-            throw new Exception($"Model validation failed: CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         // POST: CustomerOrderController/Book
@@ -159,7 +160,7 @@ namespace FribergCarRentals.Controllers.Customer
                     return View(new BookCarViewModel(
                         availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
                         havePerformedCarSearch: true,
-                        availableCars: cars,
+                        availableCars: cars.Select(x => new CarViewModel(x, _imageUploadService)).ToList(),
                         pickupDateFilter: bookCarViewModel.PickupDateLocalTime,
                         returnDateFilter: bookCarViewModel.ReturnDateLocalTime,
                         carCategoryFilter: bookCarViewModel.SelectedCarCategoryFilter));
@@ -170,13 +171,49 @@ namespace FribergCarRentals.Controllers.Customer
             return View(bookCarViewModel);
         }
 
+        // POST: CustomerOrderController/Cancel/(5)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            if (!await IsCustomerLoggedIn())
+            {
+                return RedirectToLogin(new RedirectToActionData(nameof(Cancel), ControllerHelper.GetControllerName<CustomerOrderController>(), new RouteValueDictionary(new { id })));
+            }
+
+            if (id < 0)
+            {
+                throw new Exception($"Invalid ID: {id}");
+            }
+
+            if (ModelState.Count > 0 && ModelState.IsValid)
+            {
+                if (await _orderRepository.TryCancelOrderAsync(id))
+                {
+                    TempDataHelper.Set(TempData, CanceledOrderIdTempDataKey, id);
+
+                    if (TempDataHelper.TryGet(TempData, CanceledOrderRedirectToPageTempDataKey, out RedirectToActionData? data))
+                    {
+                        return RedirectToAction(data.Action, data.Controller, data.RouteValues);
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Details), new { id = id });
+                    }
+                }
+
+                throw new Exception($"Failed to cancel order with id: {id}");
+            }
+
+            throw new Exception($"Model validation failed: UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+        }
         // GET: CustomerOrderController/Confirm
         [HttpGet]
-        public IActionResult Confirm()
+        public async Task<IActionResult> Confirm()
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(Book));
+                return RedirectToLogin(new RedirectToActionData(nameof(Book), ControllerHelper.GetControllerName<CustomerOrderController>()));
             }
 
             if (TempDataHelper.TryGet(TempData, PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
@@ -194,14 +231,15 @@ namespace FribergCarRentals.Controllers.Customer
         [HttpPost]
         public async Task<IActionResult> Create()
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(Book));
+                return RedirectToLogin(new RedirectToActionData(nameof(Book), ControllerHelper.GetControllerName<CustomerOrderController>()));
             }
 
             if (TempDataHelper.TryGet(TempData, PendingOrderTempDataKey, out CreateOrderViewModel? createOrderViewModel))
             {
-                var customer = await _customerRepository.GetByIdAsync(UserSessionHandler.GetUserData(HttpContext.Session).UserId);
+                var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+                var customer = await _customerRepository.GetByUserIdAsync(userId);
                 var car = await _carRepository.GetByIdAsync(createOrderViewModel.CarId);
 
                 if (customer is not null && car is not null)
@@ -217,7 +255,7 @@ namespace FribergCarRentals.Controllers.Customer
                     return RedirectToAction(nameof(Details), new { id = order.CarOrderId });
                 }
 
-                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {createOrderViewModel.CarId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
+                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {createOrderViewModel.CarId} - UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value}");
             }
 
             throw new Exception($"Failed to retrieve the pending order from temp storage.");
@@ -227,9 +265,9 @@ namespace FribergCarRentals.Controllers.Customer
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(Details), id);
+                return RedirectToLogin(new RedirectToActionData(nameof(Details), ControllerHelper.GetControllerName<CustomerOrderController>(), new RouteValueDictionary(new { id })));
             }
 
             if (id < 0)
@@ -244,7 +282,7 @@ namespace FribergCarRentals.Controllers.Customer
                 if (order is not null)
                 {
                     TempDataHelper.TryGet(TempData, IsNewOrderTempDataKey, out bool orderWasCreated);
-                    OrderViewModel viewModel = new OrderViewModel(order, isNewOrder: orderWasCreated);
+                    OrderViewModel viewModel = new OrderViewModel(order, _imageUploadService, isNewOrder: orderWasCreated);
                     SaveRedirectBackInstructionsForCancelOrderAction(nameof(Details), id);
 
                     if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))
@@ -255,24 +293,26 @@ namespace FribergCarRentals.Controllers.Customer
                     return View(viewModel);
                 }
 
-                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId}");
+                throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id}");
             }
 
-            throw new Exception($"Model validation failed: - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Model validation failed: - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         // GET: CustomerOrderController
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin(nameof(List));
+                return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<CustomerOrderController>()));
             }
 
+            var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+            var customer = await _customerRepository.GetByUserIdAsync(userId) ?? throw new Exception($"Failed to find customer with user ID: {userId}");
             ListViewModel<OrderViewModel> orderListViewModel = new ListViewModel<OrderViewModel>(
-                (await _orderRepository.GetAllByCustomer(UserSessionHandler.GetUserData(HttpContext.Session).UserId))
-                    .Select(x => new OrderViewModel(x))
+                customer.Orders
+                    .Select(x => new OrderViewModel(x, _imageUploadService))
                     .OrderByDescending(x => x.CarOrderId));
 
             if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))
@@ -288,7 +328,7 @@ namespace FribergCarRentals.Controllers.Customer
         // POST: CustomerOrderController/Prepare
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Prepare(CreateOrderViewModel createOrderViewModel)
+        public async Task<IActionResult> Prepare(CreateOrderViewModel createOrderViewModel)
         {
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
@@ -303,36 +343,20 @@ namespace FribergCarRentals.Controllers.Customer
 
                 TempDataHelper.Set(TempData, PendingOrderTempDataKey, createOrderViewModel);
 
-                if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+                if (!await IsCustomerLoggedIn())
                 {
-                    return RedirectToLogin(nameof(Confirm));
+                    return RedirectToLogin(new RedirectToActionData(nameof(Confirm), ControllerHelper.GetControllerName<CustomerOrderController>()));
                 }
 
                 return RedirectToAction(nameof(Confirm));
             }
 
-            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         #endregion
 
         #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect back afterwards. 
-        /// </summary>
-        /// <param name="action">The controller action to redirect to.</param>
-        /// <param name="orderId">An optional order ID.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string action, int? orderId = null)
-        {
-            RouteValueDictionary? routeValues = orderId is not null ? new RouteValueDictionary(new { id = orderId }) : null;
-
-            TempDataHelper.Set(TempData, CustomerController.RedirectInstructionsTempDataKey, new RedirectToActionData(
-                    action, ControllerHelper.GetControllerName<CustomerOrderController>(), routeValues: routeValues));
-
-            return RedirectToAction(nameof(CustomerController.Authenticate), ControllerHelper.GetControllerName<CustomerController>());
-        }
 
         /// <summary>
         /// Saves data for redirecting back to an action after an order has been cancelled.

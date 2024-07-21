@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using MvcRazorPages.Shared.ViewModels.User;
 
 namespace MvcRazorPages.Shared.ViewModels.Customer
@@ -28,7 +28,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public EditCustomerViewModel(CustomerEntity customer) :
-            this(customer.UserId, customer.FirstName, customer.LastName, customer.Email)
+            this(customer.CustomerId, customer.User.FirstName!, customer.User.LastName, customer.User.Email!)
         {
 
         }
@@ -43,7 +43,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         public EditCustomerViewModel(int userId, string firstName, string lastName, string email) :
             base(userId, firstName, lastName, email)
         {
-            PageSubTitle = $"#{UserId} - {FullName}";
+            PageSubTitle = $"#{AccountId} - {FullName}";
         }
 
         #endregion

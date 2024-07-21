@@ -32,8 +32,9 @@ namespace MvcRazorPages.Shared.Data
         /// <param name="pageName">The name of the page to redirect to.</param>
         /// <param name="routeValues">The route values to send to the page.</param>
         /// <param name="urlFragment">An optional URL fragment for targeting regions within a page (#ID).</param>
+        /// <param name="area">An optional area that will get merged with the route values.</param>
         /// <exception cref="ArgumentException"></exception>
-        public RedirectToPageData(string pageName, RouteValueDictionary? routeValues = null, string? urlFragment = null)
+        public RedirectToPageData(string pageName, RouteValueDictionary? routeValues = null, string? urlFragment = null, string? area = null)
         {
             #region Checks
 
@@ -47,6 +48,18 @@ namespace MvcRazorPages.Shared.Data
             Page = pageName;
             RouteValues = routeValues;
             UrlFragment = urlFragment;
+
+            if (!string.IsNullOrEmpty(area))
+            {
+                if (RouteValues != null)
+                {
+                    RouteValues.TryAdd("Area", area);
+                }
+                else
+                {
+                    RouteValues = new RouteValueDictionary(new { Area = area });
+                }
+            }
         }
 
         #endregion

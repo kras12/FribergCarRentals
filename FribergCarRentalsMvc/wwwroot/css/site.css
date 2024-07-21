@@ -1363,7 +1363,10 @@ img.cover-image
 /* Dropdown menu */
 .dropdown-menu
 {
-  height: var(--horizontal-menu-item-height);
+    display: flex;
+    flex-direction: row;
+    height: var(--horizontal-menu-item-height);
+    justify-content: center;
 }
 
 /* Dropdown menu - Button 
@@ -1389,6 +1392,12 @@ img.cover-image
   color: var(--action-element-focus-text-color);
   background-color: var(--action-element-focus-background-color);
   box-shadow: var(--box-shadow-focus);
+}
+
+/* Dropdown menu group */
+.dropdown-menu .menu-group {
+    display: flex;
+    flex-direction: column;
 }
 
 /* Dropdown menu - Hover */
@@ -1496,22 +1505,12 @@ img.cover-image
 .horizontal-menu
 {
   align-self: center;
+  display: flex;
+  flex-direction: row;
   height: 100%;  
   max-width: var(--max-content-width);
   padding-left: 0.1rem;
   padding-right: 0.1rem;
-}
-
-/* Horizontal menu - Align last child right */
-.horizontal-menu.horizontal-menu__align-last-child__right
-{
-    width: 100%
-}
-
-/* Horizontal menu - Align last child right - <li> */
-.horizontal-menu.horizontal-menu__align-last-child__right ul li:last-of-type
-{
-    margin-left: auto;
 }
 
 /* Horizontal menu - Container */
@@ -1535,6 +1534,17 @@ img.cover-image
   box-shadow: var(--box-shadow-focus);  
 }
 
+/* Horizontal menu group */
+.horizontal-menu .menu-group {
+    display: flex;
+    flex-direction: row
+}
+
+/* Horizontal menu group - Right aligned */
+.horizontal-menu .menu-group.right-aligned {
+    margin-left: auto;
+}
+
 /* Horizontal menu - Hover */
 :is(.horizontal-menu ul li a):hover
 {
@@ -1547,6 +1557,7 @@ img.cover-image
 .horizontal-menu ul
 {
   display: flex;
+  flex-grow: 1;
   flex-wrap: wrap;
   height: 100%;
 	list-style-type: none;

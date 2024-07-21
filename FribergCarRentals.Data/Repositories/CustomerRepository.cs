@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.DatabaseContexts;
-using FribergCarRentals.DataAccess.Crypto;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.DatabaseContexts;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Data.Exceptions;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A repository class that handles the customer entity.
@@ -17,15 +15,23 @@ namespace FribergCarRentals.DataAccess.Repositories
     /// <remarks>This repository class works on detached entities. All fetched entities will not be tracked by EF Core.</remarks>
     public class CustomerRepository : GenericRepository<CustomerEntity>, ICustomerRepository
     {
+        #region Fields
+
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
         /// A constructor.
         /// </summary>
         /// <param name="databaseContext">The database context to use.</param>
-        public CustomerRepository(ApplicationDbContext databaseContext) : base(databaseContext)
+        /// <param name="userManager">The injected user manager.</param>
+        public CustomerRepository(ApplicationDbContext databaseContext, UserManager<ApplicationUser> userManager) : base(databaseContext)
         {
-
+            _userManager = userManager;
         }
 
         #endregion
@@ -35,13 +41,46 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <summary>
         /// Adds a customer to the database.
         /// </summary>
-        /// <param name="entity">The customer to add.</param>
+        /// <param name="customer">The customer to add.</param>
         /// <returns>A <see cref="Task"/> object.</returns>
-        public async override Task AddAsync(CustomerEntity entity)
+        /// <exception cref="CreateUserException"></exception>
+        public async override Task AddAsync(CustomerEntity customer)
         {
-            entity.Password = PasswordHelper.HashPassword(entity.Password);
-            await _databaseContext.Set<CustomerEntity>().AddAsync(entity);
-            _databaseContext.Entry(entity.UserRole).State = EntityState.Unchanged;
+            #region Checks
+
+            if (customer.User == null)
+            {
+                throw new ArgumentNullException(nameof(customer.User), "The identity user can't be null.");
+            }
+
+            #endregion
+
+            // Create user
+            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.Password!);
+            IdentityResult? addRoleResult = null;
+
+            if (!createUserResult.Succeeded)
+            {
+                List<string> creationErrors = new(createUserResult.Errors.Select(x => x.Description));
+                string creationErrorString = string.Join(Environment.NewLine, creationErrors);
+                throw new CreateUserException(creationErrorString);
+            }
+
+            // Add user role
+            addRoleResult = await _userManager.AddToRoleAsync(customer.User, ApplicationUserRoles.Customer);
+
+            if (!addRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(customer.User);
+
+                List<string> addRoleErrors = new(addRoleResult.Errors.Select(x => x.Description));
+                string addRoleErrorString = string.Join(Environment.NewLine, addRoleErrors);
+                throw new CreateUserException(addRoleErrorString);
+            }
+
+            // Create customer
+            _databaseContext.Entry(customer.User).State = EntityState.Unchanged;
+            _databaseContext.Customers.Add(customer);
             await _databaseContext.SaveChangesAsync();
         }
 
@@ -52,7 +91,7 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task"/> object containing true if there was a matching customer.</returns>
         public Task<bool> CustomerExists(string email)
         {
-            return _databaseContext.Customers.AnyAsync(x => x.Email == email);
+            return _databaseContext.Customers.AnyAsync(x => x.User.Email == email);
         }
 
         /// <summary>
@@ -62,11 +101,10 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task"/>.</returns>
         public Task DeleteAsync(int id)
         {
-            var entity = new CustomerEntity() { UserId = id };
+            var entity = new CustomerEntity() { CustomerId = id };
             _databaseContext.Customers.Remove(entity);
             return _databaseContext.SaveChangesAsync();
         }
-
 
         /// <summary>
         /// Performs a search in the database.
@@ -80,23 +118,6 @@ namespace FribergCarRentals.DataAccess.Repositories
         }
 
         /// <summary>
-        /// Gets all customers from the database.
-        /// </summary>
-        /// <remarks>The resulting entities is not tracked by EF Core.</remarks>
-        /// <returns>A <see cref="Task"/> object containg a collection of all customers found.</returns>
-        public async override Task<IEnumerable<CustomerEntity>> GetAllAsync()
-        {
-            var customers = (await base.GetAllAsync()).ToList();
-
-            foreach (var customer in customers)
-            {
-                customer.Password = "";
-            }
-
-            return customers;
-        }
-
-        /// <summary>
         /// Gets a customer by ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
@@ -104,60 +125,28 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task"/> object containg the customer.</returns>
         public async override Task<CustomerEntity?> GetByIdAsync(int id)
         {
-            var customer = await _databaseContext.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == id);
-
-            if (customer is not null)
-            {
-                customer.Password = "";
-            }
-
-            return customer;
+            return await _databaseContext.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.CustomerId == id);
         }
 
         /// <summary>
-        /// Attempts to fetch a customer with matching email and password.
+        /// Attempts to fetch a customer by user ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
-        /// <param name="email">The email for the customer.</param>
-        /// <param name="password">The password for the customer.</param>
-        /// <returns>A <see cref="Task"/> object containing the customer if found or null if not found.</returns>
-        public async Task<CustomerEntity?> GetMatchingCustomerAsync(string email, string password)
+        /// <param name="id">The ID of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
+        public Task<CustomerEntity?> GetByUserIdAsync(string userId)
         {
-            var customer = await _databaseContext.Customers.AsNoTracking().Where(x => x.Email == email).SingleOrDefaultAsync();
-
-            if (customer is not null && PasswordHelper.VerifyAgainstHashedPassword(customer.Password, password))
-            {
-                customer.Password = "";
-                return customer;
-            }
-
-            return null;
+            return _databaseContext.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.User.Id == userId);
         }
 
         /// <summary>
-        /// Updates a customer in the database.
+        /// Attempts to fetch the user ID for the customer.
         /// </summary>
-        /// <param name="entity">The customer to update.</param>
-        /// <returns>A <see cref="Task"/> object.</returns>
-        public override Task UpdateAsync(CustomerEntity entity)
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>A <see cref="Task"/> object containing the user ID if found or null if not found.</returns>
+        public Task<string?> GetUserId(int id)
         {
-            if (!string.IsNullOrEmpty(entity.Password))
-            {
-                entity.Password = PasswordHelper.HashPassword(entity.Password);
-            }
-
-            return base.UpdateAsync(entity);
-        }
-
-        /// <summary>
-        /// Updates a customer in the database without updating the password.
-        /// </summary>
-        /// <param name="entity">The customer to update.</param>
-        /// <returns>A <see cref="Task"/> object.</returns>
-        public async Task UpdateExcludePasswordAsync(CustomerEntity entity)
-        {
-            entity.Password = await _databaseContext.Customers.Where(x => x.UserId == entity.UserId).Select(x => x.Password).SingleAsync();
-            await base.UpdateAsync(entity);
+            return _databaseContext.Customers.AsNoTracking().Where(x => x.CustomerId == id).Select(x => x.User.Id).SingleOrDefaultAsync();
         }
 
         #endregion

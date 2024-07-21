@@ -1,8 +1,6 @@
-﻿using FribergCarRentals.DataAccess.Attributes;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using FribergCarRentals.Data.Attributes;
 
-namespace FribergCarRentals.DataAccess.Types
+namespace FribergCarRentals.Data.Types
 {
     #region Enums
 
@@ -46,19 +44,6 @@ namespace FribergCarRentals.DataAccess.Types
 
         [EnumDatabaseValue("PermanentlyOutOfService", DescriptionValue = "Permanently out of service")]
         PermanentlyOutOfService = 6
-    }
-
-    /// <summary>
-    /// User roles.
-    /// </summary>
-    public enum UserRoleType
-    {
-        [EnumDatabaseValue("None", DescriptionValue = "No role.")]
-        None = 0,
-        [EnumDatabaseValue("Admin", DescriptionValue = "Admin role.")]
-        Admin,
-        [EnumDatabaseValue("Customer", DescriptionValue = "Customer role.")]
-        Customer,
     }
 
     /// <summary>

@@ -1,15 +1,12 @@
-﻿using FribergCarRentals.DataAccess.Crypto;
-using FribergCarRentals.DataAccess.DatabaseContexts;
-using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.DatabaseContexts;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Exceptions;
+using FribergFastigheter.Server.Data.Entities;
+using FribergFastigheter.Shared.Constants;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A repository class to handle the admin entity.
@@ -24,6 +21,9 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// </summary>
         private readonly ApplicationDbContext _databaseContext;
 
+        // The injected user manager.
+        private readonly UserManager<ApplicationUser> _userManager;
+
         #endregion
 
         #region Constructors
@@ -32,14 +32,71 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// A constructor.
         /// </summary>
         /// <param name="databaseContext">The database context to use.</param>
-        public AdminRepository(ApplicationDbContext databaseContext)
+        /// <param name="userManager">The injected user manager.</param>
+        public AdminRepository(ApplicationDbContext databaseContext, UserManager<ApplicationUser> userManager)
         {
             _databaseContext = databaseContext;
+            _userManager = userManager;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Adds a new admin.
+        /// </summary>
+        /// <param name="admin">The admin to add.</param>
+        /// <returns>A <see cref="Task"/> object containing the added admin.</returns>
+        public async Task<AdminEntity> AddAsync(AdminEntity admin)
+        {
+            #region Checks
+
+            if (admin.User == null)
+            {
+                throw new ArgumentNullException(nameof(admin.User), "The identity user can't be null.");
+            }
+
+            #endregion
+
+            // Create user
+            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.Password!);
+            IdentityResult? addRoleResult = null;
+
+            if (!createUserResult.Succeeded)
+            {
+                List<string> creationErrors = new(createUserResult.Errors.Select(x => x.Description));
+                string creationErrorString = string.Join(Environment.NewLine, creationErrors);
+                throw new CreateUserException(creationErrorString);
+            }
+
+            // Add user role
+            addRoleResult = await _userManager.AddToRoleAsync(admin.User, ApplicationUserRoles.Admin);
+
+            if (!addRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(admin.User);
+
+                List<string> addRoleErrors = new(addRoleResult.Errors.Select(x => x.Description));
+                string addRoleErrorString = string.Join(Environment.NewLine, addRoleErrors);
+                throw new CreateUserException(addRoleErrorString);
+            }
+
+            // Create admin
+            _databaseContext.Entry(admin.User).State = EntityState.Unchanged;
+            _databaseContext.Admins.Add(admin);
+            await _databaseContext.SaveChangesAsync();
+            return admin;
+        }
+
+        /// <summary>
+        /// Returns true if there is any admins in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any admins in the database.</returns>
+        public Task<bool> AnyAsync()
+        {
+            return _databaseContext.Admins.AnyAsync();
+        }
 
         /// <summary>
         /// Attempts to fetch an admin by ID.
@@ -49,27 +106,18 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
         public Task<AdminEntity?> GetByIdAsync(int id)
         {
-            return _databaseContext.Admins.Where(x => x.UserId == id).AsNoTracking().SingleOrDefaultAsync();
+            return _databaseContext.Admins.Where(x => x.AdminId == id).AsNoTracking().SingleOrDefaultAsync();
         }
 
         /// <summary>
-        /// Attempts to fetch an admin with matching email and password.
+        /// Attempts to fetch an admin by user ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
-        /// <param name="email">The email for the admin.</param>
-        /// <param name="password">The password for the admin.</param>
+        /// <param name="id">The ID of the admin.</param>
         /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
-        public async Task<AdminEntity?> GetMatchingAdminAsync(string email, string password)
+        public Task<AdminEntity?> GetByUserIdAsync(string userId)
         {
-            var admin = await _databaseContext.Admins.AsNoTracking().SingleOrDefaultAsync(x => x.Email == email);
-
-            if (admin is not null && PasswordHelper.VerifyAgainstHashedPassword(admin.Password, password))
-            {
-                admin.Password = "";
-                return admin;
-            }
-
-            return null;
+            return _databaseContext.Admins.Where(x => x.User.Id == userId).AsNoTracking().SingleOrDefaultAsync();
         }
 
         #endregion

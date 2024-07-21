@@ -1,19 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.EntityClasses;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Sessions;
 using FribergCarRentals.Pages.Customer;
 using MvcRazorPages.Shared.ViewModels.Order;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.ViewModels.Car;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Order
 {
     /// <summary>
     /// Page model for booking a car and creating an order. 
     /// </summary>
-    public class BookModel : PageModel
+    public class BookModel : CustomerPageModelBase
     {
         #region Constants
 
@@ -41,6 +46,11 @@ namespace FribergCarRentals.Pages.Order
         /// </summary>
         private readonly ICarRepository _carRepository;
 
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
         #endregion
 
         #region Constructors
@@ -50,10 +60,15 @@ namespace FribergCarRentals.Pages.Order
         /// </summary>
         /// <param name="carRepository">Injected car repository. </param>
         /// <param name="carCategoryRepository">Injected car category repository.</param>
-        public BookModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service</param>
+        public BookModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -70,7 +85,7 @@ namespace FribergCarRentals.Pages.Order
 
         #region HandlerMethods
 
-        public IActionResult OnPostPrepare(CreateOrderViewModel createOrderViewModel)
+        public async Task<IActionResult> OnPostPrepare(CreateOrderViewModel createOrderViewModel)
         {
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
@@ -85,15 +100,15 @@ namespace FribergCarRentals.Pages.Order
 
                 TempDataHelper.Set(TempData, PendingOrderTempDataKey, createOrderViewModel);
 
-                if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+                if (!await IsCustomerLoggedIn())
                 {
-                    return RedirectToLogin(page: "../Order/Confirm");
+                    return RedirectToLogin(new RedirectToPageData("../Order/Confirm"));
                 }
 
                 return RedirectToPage("Confirm");
             }
 
-            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - CustomerID: {UserSessionHandler.GetUserData(HttpContext.Session).UserId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
+            throw new Exception($"Failed to prepare order for the car with id: {createOrderViewModel.CarId} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
         /// <summary>
@@ -154,7 +169,7 @@ namespace FribergCarRentals.Pages.Order
                     BookCarViewModel = new BookCarViewModel(
                         availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
                         havePerformedCarSearch: true,
-                        availableCars: cars,
+                        availableCars: cars.Select(x => new CarViewModel(x, _imageUploadService)).ToList(),
                         pickupDateFilter: BookCarViewModel.PickupDateLocalTime,
                         returnDateFilter: BookCarViewModel.ReturnDateLocalTime,
                         carCategoryFilter: BookCarViewModel.SelectedCarCategoryFilter);
@@ -165,21 +180,6 @@ namespace FribergCarRentals.Pages.Order
 
             BookCarViewModel.SetAvailableCarCategoryFilters(await _carCategoryRepository.GetAllAsync());
             return Page();
-        }
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect afterwards. 
-        /// </summary>
-        /// <param name="page">The page to redirect to.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string page)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(page));
-            return RedirectToPage("../Customer/Authenticate");
         }
 
         #endregion

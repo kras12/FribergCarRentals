@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using MvcRazorPages.Shared.ViewModels.Customer;
 using MvcRazorPages.Shared.ViewModels.Other;
+using MvcRazorPages.Shared.Services;
 
 namespace MvcRazorPages.Shared.ViewModels.Order
 {
@@ -19,8 +20,9 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// </summary>
         /// <param name="carOrder">The car order to model.</param>
         /// <param name="isNewOrder">True if the order was just created.</param>
+        /// <param name="imageUploadService">The image upload service used for creating the image urls.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public OrderViewModel(CarOrderEntity carOrder, bool isNewOrder = false)
+        public OrderViewModel(CarOrderEntity carOrder, IImageUploadService imageUploadService, bool isNewOrder = false)
         {
             #region Checks
 
@@ -41,7 +43,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
             Customer = new CustomerViewModel(carOrder.Customer);
             Payments = carOrder.Payments;
             OrderStatus = carOrder.OrderStatus!;
-            CarBooking = carOrder.CarBookings.Count > 0 ? new CarBookingViewModel(carOrder.CarBookings.First())
+            CarBooking = carOrder.CarBookings.Count > 0 ? new CarBookingViewModel(carOrder.CarBookings.First(), imageUploadService)
                 : throw new InvalidOperationException("Could not find a car booking");
             IsNewOrder = isNewOrder;
         }
@@ -59,7 +61,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         {
             get
             {
-                return OrderStatus.StatusType == FribergCarRentals.DataAccess.Types.OrderStatus.Created;
+                return OrderStatus.StatusType == FribergCarRentals.Data.Types.OrderStatus.Created;
             }
         }
 
@@ -95,7 +97,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         {
             get
             {
-                return OrderStatus.StatusType == FribergCarRentals.DataAccess.Types.OrderStatus.Created && CarBooking.CarPickupDate.Date > DateTime.UtcNow.Date;
+                return OrderStatus.StatusType == FribergCarRentals.Data.Types.OrderStatus.Created && CarBooking.CarPickupDate.Date > DateTime.UtcNow.Date;
             }
         }
 

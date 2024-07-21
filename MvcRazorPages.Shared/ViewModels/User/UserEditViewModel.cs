@@ -31,7 +31,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
 
             #endregion
 
-            UserId = userId;
+            AccountId = userId;
         }
 
         #endregion
@@ -44,14 +44,15 @@ namespace MvcRazorPages.Shared.ViewModels.User
         [DisplayName("New Password")]
         [DataType(DataType.Password)]
         [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
-        public string? Password { get; set; }
+        public string? NewPassword { get; set; }
 
+        // TODO - Give better name?
         /// <summary>
-        /// The ID for the user.
+        /// The ID for the admin/customer account.
         /// </summary>
         [DisplayName("ID")]
         [Range(1, int.MaxValue, ErrorMessage = "The value must be a positive number larger than 1.")]
-        public int UserId { get; set; }
+        public int AccountId { get; set; }
 
         #endregion
     }

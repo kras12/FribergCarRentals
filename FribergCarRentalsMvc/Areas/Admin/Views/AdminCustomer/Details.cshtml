@@ -1,0 +1,62 @@
+﻿@using FribergCarRentals.Areas.Admin.Controllers
+@using MvcRazorPages.Shared.ViewModels.Customer
+@model CustomerViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@($"Customer - #{Model.CustomerId}")</h1>
+<h2>@($"#{Model.CustomerId} - {Model.FullName}")</h2>
+<div class="vertical-flex-container flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-area="@AdminControllerBase.Area" asp-action="List" class="button navigational-button">View Customers</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="Edit" asp-route-id="@Model.CustomerId" class="button function-button">Edit</a>
+        @if (!Model.IsEmailConfirmed)
+        {
+            <form asp-area="@AdminControllerBase.Area" asp-action="ResendConfirmEmailLink" onsubmit="return confirm('Are you sure you want to send a new confirm email link?');">
+                <input type="hidden" name="id" value="@Model.CustomerId" asp-for="CustomerId" />
+                <button type="submit" class="function-button">Resend Confirm Email Link</button>
+            </form>
+        }
+        <form asp-area="@AdminControllerBase.Area" asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this customer?');">
+            <input type="hidden" name="id" value="@Model.CustomerId" asp-for="CustomerId" />
+            <button type="submit" class="negative-button">Delete</button>
+        </form>
+    </div>
+    <partial name="/Views/Shared/_UserMessages.cshtml" for="Messages" />
+    <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CustomerId)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.LastName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.OrderCount)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.OrderCount)
+            </dd>
+        </dl>
+    </div>
+</div>

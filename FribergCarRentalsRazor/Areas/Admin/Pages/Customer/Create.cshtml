@@ -1,0 +1,48 @@
+﻿@page
+@model FribergCarRentals.Areas.Admin.Pages.Customer.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-area="@AdminPageModelBase.Area" asp-page="List" class="button navigational-button">View Customers</a>
+    </div>
+    <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
+        <form asp-area="@AdminPageModelBase.Area" asp-page="Create" class="vertical-form">
+            <div class="vertical-form-field">
+                <div asp-validation-summary="ModelOnly" class="error-text"></div>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="RegisterCustomerViewModel.FirstName"></label>
+                <input asp-for="RegisterCustomerViewModel.FirstName" />
+                <span asp-validation-for="RegisterCustomerViewModel.FirstName" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="RegisterCustomerViewModel.LastName"></label>
+                <input asp-for="RegisterCustomerViewModel.LastName" />
+                <span asp-validation-for="RegisterCustomerViewModel.LastName" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="RegisterCustomerViewModel.Email"></label>
+                <input asp-for="RegisterCustomerViewModel.Email" />
+                <span asp-validation-for="RegisterCustomerViewModel.Email" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <label asp-for="RegisterCustomerViewModel.Password"></label>
+                <input asp-for="RegisterCustomerViewModel.Password" />
+                <span asp-validation-for="RegisterCustomerViewModel.Password" class="error-text"></span>
+            </div>
+            <div class="vertical-form-field">
+                <button type="submit">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts 
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

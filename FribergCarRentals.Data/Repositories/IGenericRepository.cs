@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// An interface for a generic repository
@@ -19,6 +19,12 @@ namespace FribergCarRentals.DataAccess.Repositories
         /// <param name="entity">The entity to add.</param>
         /// <returns>A <see cref="Task"/> object.</returns>
         public Task AddAsync(T entity);
+
+        /// <summary>
+        /// Returns true if there is any records in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any records in the database.</returns>
+        public Task<bool> AnyAsync();
 
         /// <summary>
         /// Deletes an entity from the database.

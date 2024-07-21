@@ -1,14 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using FribergCarRentals.DataAccess.DatabaseContexts;
+using FribergCarRentals.Data.DatabaseContexts;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// A generic repository class.
@@ -50,6 +44,15 @@ namespace FribergCarRentals.DataAccess.Repositories
         {
             await _databaseContext.Set<T>().AddAsync(entity);
             await _databaseContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Returns true if there is any records in the database.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> object containing true if there is any records in the database.</returns>
+        public Task<bool> AnyAsync()
+        {
+            return _databaseContext.Set<T>().AnyAsync();
         }
 
         /// <summary>

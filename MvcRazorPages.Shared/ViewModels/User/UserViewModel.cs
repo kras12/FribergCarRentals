@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -19,20 +19,22 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// <param name="firstName">The first name for the user.</param>
         /// <param name="lastName">The last name for the user.</param>
         /// <param name="email">The email address for the user.</param>
+        /// <param name="isEmailConfirmed">Set to true if the email address is confirmed.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserViewModel(int userId, string firstName, string lastName, string email) : base(firstName, lastName, email)
+        protected UserViewModel(string userId, string firstName, string lastName, string email, bool isEmailConfirmed) : base(firstName, lastName, email)
         {
             #region Checks
 
-            if (userId < 0)
+            if (string.IsNullOrEmpty(userId))
             {
-                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{userId}' can't be negative.");
+                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{userId}' can't be null or empty.");
             }
 
             #endregion
 
             UserId = userId;
+            IsEmailConfirmed = isEmailConfirmed;
         }
 
         #endregion
@@ -40,11 +42,16 @@ namespace MvcRazorPages.Shared.ViewModels.User
         #region Properties
 
         /// <summary>
+        /// Returns true if the email address is confirmed.
+        /// </summary>
+        public bool IsEmailConfirmed { get; }
+
+        /// <summary>
         /// The ID for the user.
         /// </summary>
-        [DisplayName("ID")]
+        [DisplayName("User ID")]
         [BindNever]
-        public virtual int UserId { get; }
+        public string UserId { get; }
 
         #endregion
     }

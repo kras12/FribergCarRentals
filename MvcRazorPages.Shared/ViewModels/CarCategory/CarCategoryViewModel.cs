@@ -1,9 +1,8 @@
-﻿using FribergCarRentals.DataAccess.DataTransferObjects;
-using FribergCarRentals.DataAccess.EntityClasses;
-using MvcRazorPages.Shared.ViewModels.Other;
+﻿using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.Other;
 using System.ComponentModel;
+using MvcRazorPages.Shared.DTO;
 
 namespace MvcRazorPages.Shared.ViewModels.CarCategory
 {
@@ -17,9 +16,9 @@ namespace MvcRazorPages.Shared.ViewModels.CarCategory
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="category">The car category to model.</param>
-        public CarCategoryViewModel(CarCategoryStatisticsDto category)
-            : this(category.CarCategoryEntity, category.CarCount)
+        /// <param name="categoryStatistics">The car category to model.</param>
+        public CarCategoryViewModel(CarCategoryCountDto categoryStatistics)
+            : this(categoryStatistics.CarCategoryEntity, categoryStatistics.CarCount)
         {
 
         }

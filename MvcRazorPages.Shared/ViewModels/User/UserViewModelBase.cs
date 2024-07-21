@@ -1,5 +1,5 @@
 ﻿using MvcRazorPages.Shared.Attributes;
-using FribergCarRentals.DataAccess.EntityClasses;
+using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -59,8 +59,17 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="user">The user to model.</param>
-        protected UserViewModelBase (UserEntity user) : this(user.FirstName, user.LastName, user.Email)
+        /// <param name="user">The admin to model.</param>
+        protected UserViewModelBase (AdminEntity admin) : this(admin.User.FirstName, admin.User.LastName, admin.User.Email!)
+        {
+
+        }
+
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="user">The customer to model.</param>
+        protected UserViewModelBase(CustomerEntity customer) : this(customer.User.FirstName, customer.User.LastName, customer.User.Email!)
         {
 
         }

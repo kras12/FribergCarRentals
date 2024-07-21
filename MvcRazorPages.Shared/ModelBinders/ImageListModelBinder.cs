@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MvcRazorPages.Shared.ModelBinders

@@ -1,0 +1,68 @@
+﻿@page
+@model FribergCarRentals.Areas.Admin.Pages.CarCategories.ListModel
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>Categories</h1>
+<div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-items-center">
+    @if (Model.CarCategoryListViewModel.Count <= 0)
+    {
+        <p class="text-align-center">No categories found.</p>
+    }
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-area="@AdminPageModelBase.Area" asp-page="Create" class="button function-button">Create Category</a>
+    </div>
+    <partial name="/Pages/Shared/_UserMessages.cshtml" for="CarCategoryListViewModel.Messages" />
+    @if (Model.CarCategoryListViewModel.Count > 0)
+    {
+        <table class="slim-table colored-table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.CarCategoryListViewModel.Models[0].CategoryId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.CarCategoryListViewModel.Models[0].CategoryName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.CarCategoryListViewModel.Models[0].CarCount)
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CarCategoryListViewModel.Models)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CategoryId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CategoryName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CarCount)
+                        </td>
+                        <td>
+                            <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                <a asp-area="@AdminPageModelBase.Area" asp-page="Details" asp-route-id="@item.CategoryId" class="button navigational-button">Details</a>
+                                <a asp-area="@AdminPageModelBase.Area" asp-page="Edit" asp-route-id="@item.CategoryId" class="button function-button">Edit</a>
+                                @if (item.HaveCarCount && item.CarCount == 0)
+                                {
+                                    <form asp-area="@AdminPageModelBase.Area" asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+                                        <input type="hidden" name="id" value="@item.CategoryId" asp-for="@item.CategoryId" />
+                                        <button type="submit" class="negative-button">Delete</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,0 +1,110 @@
+﻿@using System.Web
+@using FribergCarRentals.Areas.Admin.Controllers
+@using FribergCarRentals.Helpers
+@using MvcRazorPages.Shared.ViewModels.Car
+@model CarViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<h2>@($"#{Model.CarId} - {Model.CarInfo}")</h2>
+<div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-items-center">
+    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+        <a asp-area="@AdminControllerBase.Area" asp-action="List" class="button navigational-button">View Cars</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="Edit" asp-route-id="@Model.CarId" class="button function-button">Edit</a>
+        <form asp-area="@AdminControllerBase.Area" asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
+            <input type="hidden" name="id" value="@Model.CarId" asp-for="CarId" />
+            <button type="submit" class="negative-button">Delete</button>
+        </form>
+    </div>
+    <partial name="/Views/Shared/_UserMessages.cshtml" model="Model.Messages" />
+    <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => Model.CarId)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.CarId)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.RentalStatus)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.RentalStatus.StatusDescription)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.Category.CategoryName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.Category.CategoryName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.RegistrationNumber)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.RegistrationNumber)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.Brand)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.Brand)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.Model)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.Model)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.ModelYear)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.ModelYear)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.Color)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.Color)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.PropulsionSystem)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.PropulsionSystem.PropulsionDescription)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.RentalCostPerDay)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.RentalCostPerDay)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => Model.Images)
+            </dt>
+            <dd>
+                @if (Model.Images.Count > 0)
+                {
+                    <div class="tiled-image-gallery tiled-image-gallery__image-size_medium">
+                        @foreach (var image in Model.Images)
+                        {
+                            <figure>
+                                <div class="vertical-flex-container">
+                                    <img src="@image.Url" />
+                                    <figcaption>@image.FileName</figcaption>
+                                </div>
+                            </figure>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <span>None</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>

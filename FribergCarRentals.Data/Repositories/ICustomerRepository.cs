@@ -1,11 +1,6 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FribergCarRentals.Data.EntityClasses;
 
-namespace FribergCarRentals.DataAccess.Repositories
+namespace FribergCarRentals.Data.Repositories
 {
     /// <summary>
     /// An interface for a customer repository.
@@ -29,20 +24,19 @@ namespace FribergCarRentals.DataAccess.Repositories
         public Task DeleteAsync(int id);
 
         /// <summary>
-        /// Attempts to fetch a customer with matching email and password.
+        /// Attempts to fetch a customer by user ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
-        /// <param name="email">The email for the customer.</param>
-        /// <param name="password">The password for the customer.</param>
-        /// <returns>A <see cref="Task"/> object containing the customer if found or null if not found.</returns>
-        public Task<CustomerEntity?> GetMatchingCustomerAsync(string email, string password);
+        /// <param name="id">The ID of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
+        public Task<CustomerEntity?> GetByUserIdAsync(string userId);
 
         /// <summary>
-        /// Updates a customer and ignores the password field.
+        /// Attempts to fetch the user ID for the customer.
         /// </summary>
-        /// <param name="entity">The customer to update</param>
-        /// <returns>A <see cref="Task"/>.</returns>
-        public Task UpdateExcludePasswordAsync(CustomerEntity entity);
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>A <see cref="Task"/> object containing the user ID if found or null if not found.</returns>
+        public Task<string?> GetUserId(int id);
 
         #endregion
     }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FribergCarRentals.DataAccess.Attributes
+﻿
+namespace FribergCarRentals.Data.Attributes
 {
     /// <summary>
     /// A custom attribute class designed to specify values for insertion into value and description database fields. 

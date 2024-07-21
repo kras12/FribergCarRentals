@@ -1,36 +1,49 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using FribergCarRentals.DataAccess.Repositories;
+using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Sessions;
 using FribergCarRentals.Pages.Customer;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.ViewModels.Order;
+using FribergFastigheter.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using FribergFastigheter.Shared.Constants;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentals.Pages.Order
 {
     /// <summary>
     /// Page model for listing orders in the customer back office.
     /// </summary>
-    public class ListModel : PageModel
+    public class ListModel : CustomerPageModelBase
     {
         #region Fields
 
         /// <summary>
-        /// The injected order repository.
+        /// The injected customer repository.
         /// </summary>
-        ICarOrderRepository _orderRepository;
+        private readonly ICustomerRepository _customerRepository;
+
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
 
         #endregion
 
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="orderRepository">Injected order repository.</param>
-        public ListModel(ICarOrderRepository orderRepository)
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="customerRepository">The injected customer repository.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
+        public ListModel(IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, ICustomerRepository customerRepository, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
         {
-            _orderRepository = orderRepository;
+            _customerRepository = customerRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #region Properties
@@ -50,14 +63,16 @@ namespace FribergCarRentals.Pages.Order
         /// <returns><see cref="Task{TResult}"/> containing an <see cref="IActionResult"/>.</returns>
         public async Task<IActionResult> OnGetAsync()
         {
-            if (!UserSessionHandler.IsCustomerLoggedIn(HttpContext.Session))
+            if (!await IsCustomerLoggedIn())
             {
-                return RedirectToLogin("../Order/List");
+                return RedirectToLogin(new RedirectToPageData("../Order/List"));
             }
 
+            var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
+            var customer = await _customerRepository.GetByUserIdAsync(userId) ?? throw new Exception($"Failed to find customer with user ID: {userId}");
             OrderListViewModel = new ListViewModel<OrderViewModel>(
-                (await _orderRepository.GetAllByCustomer(UserSessionHandler.GetUserData(HttpContext.Session).UserId))
-                    .Select(x => new OrderViewModel(x))
+                customer.Orders
+                    .Select(x => new OrderViewModel(x, _imageUploadService))
                     .OrderByDescending(x => x.CarOrderId));            
 
             if (TempDataHelper.TryGet(TempData, CancelModel.CanceledOrderIdTempDataKey, out int canceledOrderId))
@@ -65,34 +80,12 @@ namespace FribergCarRentals.Pages.Order
                 OrderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
             }
 
-            SaveRedirectToPageDataRelativeToCancelOrderPage();
+            TempDataHelper.Set(TempData, CancelModel.CanceledOrderRedirectToPageTempDataKey, new RedirectToPageData(
+                    "List"));
+
             return Page();
         }
 
-
-        #endregion
-
-        #region OtherMethods
-
-        /// <summary>
-        /// Redirects to the login page and request a redirect afterwards. 
-        /// </summary>
-        /// <param name="page">The page to redirect to.</param>
-        /// <returns><see cref="IActionResult"/>.</returns>
-        private IActionResult RedirectToLogin(string page)
-        {
-            TempDataHelper.Set(TempData, AuthenticateModel.RedirectInstructionsTempDataKey, new RedirectToPageData(page));
-            return RedirectToPage("../Customer/Authenticate");
-        }
-
-        /// <summary>
-        /// Saves redirect data for this page relative to the cancel order page.
-        /// </summary>
-        private void SaveRedirectToPageDataRelativeToCancelOrderPage()
-        {
-            TempDataHelper.Set(TempData, CancelModel.CanceledOrderRedirectToPageTempDataKey, new RedirectToPageData(
-                    "List"));
-        }
 
         #endregion
     }

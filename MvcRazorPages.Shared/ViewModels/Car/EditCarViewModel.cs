@@ -1,6 +1,7 @@
-﻿using FribergCarRentals.DataAccess.EntityClasses;
+﻿using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MvcRazorPages.Shared.Services;
 using MvcRazorPages.Shared.ViewModels.CarCategory;
 using MvcRazorPages.Shared.ViewModels.Image;
 using System.ComponentModel;
@@ -29,9 +30,10 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         /// </summary>
         /// <param name="car">The car to model.</param>
         /// <param name="categories">A collection of available car categories to choose from.</param>
+        /// <param name="imageUploadService">The image upload service used for creating the image urls.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public EditCarViewModel(CarEntity car, IEnumerable<CarCategoryEntity> categories)
+        public EditCarViewModel(CarEntity car, IEnumerable<CarCategoryEntity> categories, IImageUploadService imageUploadService)
             : base(car.Brand, car.Color, car.Model, car.ModelYear, car.PropulsionSystem!, car.RegistrationNumber, car.RentalCostPerDay, car.RentalStatus!)
         {
             #region Checks
@@ -45,7 +47,7 @@ namespace MvcRazorPages.Shared.ViewModels.Car
 
             CarId = car.CarId;
             Categories = categories.Select(x => new CarCategoryViewModel(x)).ToList();
-            Images = car.Images.Select(x => new ImageViewModel(x)).ToList();
+            Images = car.Images.Select(x => new ImageViewModel(imageUploadService.GetImageUrl(x))).ToList();
             SelectedCategoryId = car.Category!.CarCategoryId;
             PageSubTitle = $"#{CarId} - {CarInfo}";
         }
