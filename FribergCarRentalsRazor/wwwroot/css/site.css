@@ -1041,7 +1041,10 @@ textarea
 /* Headings */
 :is(h1, h2, h3, h4, h5, h6)
 {
-  text-align: center;
+    margin-block-end: 1rem;
+    margin-block-start: 1rem;
+    text-align: center;
+  
 }
 
 /* H1 inside <article> and <section> elements.
