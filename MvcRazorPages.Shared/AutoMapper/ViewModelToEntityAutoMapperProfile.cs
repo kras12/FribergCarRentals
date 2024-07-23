@@ -23,19 +23,6 @@ namespace FribergFastigheter.Server.AutoMapper
             CreateMap<RegisterCustomerViewModel, ApplicationUser>();
             CreateMap<EditCustomerViewModel, ApplicationUser>();
             CreateMap<EditCarViewModel, CarEntity>();
-
-            // TODO - Remove later if not needed
-            //CreateMap<RegisterCustomerViewModel, ApplicationUser>()
-            //    .ConstructUsing((x, context) =>
-            //    {
-            //        return new ApplicationUser(x.FirstName, x.LastName, x.Email, x.Email, phoneNumber: "");
-            //    });
-
-            //CreateMap<EditCustomerViewModel, ApplicationUser>()
-            //    .ConstructUsing((x, context) =>
-            //    {
-            //        return new ApplicationUser(x.FirstName, x.LastName, x.Email, x.Email, phoneNumber: "");
-            //    });
         }
 	}
 }

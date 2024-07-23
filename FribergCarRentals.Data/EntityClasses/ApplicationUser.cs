@@ -62,14 +62,6 @@ namespace FribergFastigheter.Server.Data.Entities
             EmailConfirmed = emailConfirmed;
             PhoneNumber = phoneNumber;
             Password = password;
-
-            // TODO - Remove later. Framework does this when creating/updating
-            //NormalizedUserName = userName.ToUpper();
-            //NormalizedEmail = email.ToUpper();
-
-            // TODO - Remove later
-            //var hasher = new PasswordHasher<ApplicationUser>();
-            //PasswordHash = hasher.HashPassword(null!, password);
         }
 
         #endregion
