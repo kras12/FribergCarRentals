@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="MockData\CarImages\tesla-model-3-1.webp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
