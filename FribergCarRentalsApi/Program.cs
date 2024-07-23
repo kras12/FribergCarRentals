@@ -93,8 +93,7 @@ namespace FribergCarRentalsApi
                 options.AddPolicy("LocalHostingCorsPolicy", builder => builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
+                    .AllowAnyHeader());
             });
 #endif
 
