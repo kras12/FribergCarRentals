@@ -1,15 +1,14 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Data.Repositories;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Services;
 
-namespace FribergCarRentals.Shared.Services
+namespace MvcRazorPages.Shared.Services
 {
     /// <summary>
     /// Service for seeding mock data to the database. 
@@ -131,7 +130,7 @@ namespace FribergCarRentals.Shared.Services
             List<CarEntity> cars = new()
             {
                 new CarEntity(carCategories.Single(x => x.CategoryName == "Sedan"), "Tesla", "Black", "Model S", 2024, "TOP666",
-                    VehiclePropulsionEntity.CreateFromType(Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(Data.Types.RentalCarStatus.Idle), 3500)
+                    VehiclePropulsionEntity.CreateFromType(FribergCarRentals.Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(Data.Types.RentalCarStatus.Idle), 3500)
                     {
                         Images = new ()
                         {
@@ -141,7 +140,7 @@ namespace FribergCarRentals.Shared.Services
                     },
 
                     new CarEntity(carCategories.Single(x => x.CategoryName == "Sedan"), "Tesla", "Red", "Model 3", 2024, "MIN123",
-                    VehiclePropulsionEntity.CreateFromType(Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(Data.Types.RentalCarStatus.Idle), 2500)
+                    VehiclePropulsionEntity.CreateFromType(FribergCarRentals.Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(Data.Types.RentalCarStatus.Idle), 2500)
                     {
                         Images = new ()
                         {
@@ -151,7 +150,7 @@ namespace FribergCarRentals.Shared.Services
                     },
 
                     new CarEntity(carCategories.Single(x => x.CategoryName == "SUV"), "Tesla", "Gray", "Model X", 2024, "MAX999",
-                    VehiclePropulsionEntity.CreateFromType(Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(Data.Types.RentalCarStatus.Idle), 3500)
+                    VehiclePropulsionEntity.CreateFromType(FribergCarRentals.Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(Data.Types.RentalCarStatus.Idle), 3500)
                     {
                         Images = new ()
                         {
@@ -224,9 +223,9 @@ namespace FribergCarRentals.Shared.Services
                     {
                         admin.User.Password = overridePassword;
                     }
-                    
+
                     await _adminRepository.AddAsync(admin);
-                }               
+                }
             }
         }
 
@@ -276,9 +275,9 @@ namespace FribergCarRentals.Shared.Services
                 //=====================================================
                 // Setup
                 //=====================================================
-                string mockDataImageFolderPath = overrideDefaultMockDataImageFolderPath != null ? overrideDefaultMockDataImageFolderPath : 
-                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
-                        _configuration[MockDataFolderNameConfigEntryKey]!, 
+                string mockDataImageFolderPath = overrideDefaultMockDataImageFolderPath != null ? overrideDefaultMockDataImageFolderPath :
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                        _configuration[MockDataFolderNameConfigEntryKey]!,
                         _configuration[CarImagesFolderNameConfigEntryKey]!);
 
                 //=====================================================

@@ -1,7 +1,7 @@
 ﻿using FribergCarRentals.Data.DatabaseContexts;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Exceptions;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

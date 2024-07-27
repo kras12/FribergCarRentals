@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.EntityClasses;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using MvcRazorPages.Shared.ViewModels.Car;
 using MvcRazorPages.Shared.ViewModels.CarCategory;
 using MvcRazorPages.Shared.ViewModels.Customer;
-namespace FribergFastigheter.Server.AutoMapper
+
+namespace MvcRazorPages.Shared.AutoMapper
 {
     /// <summary>
     /// An auto mapper profile that contains mappings for converting view model classes to entity classes.

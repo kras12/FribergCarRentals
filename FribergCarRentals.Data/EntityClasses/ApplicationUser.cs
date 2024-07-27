@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergFastigheter.Server.Data.Entities
+namespace FribergCarRentals.Data.Entities
 {
     /// <summary>
     /// An entity class that represent a User.

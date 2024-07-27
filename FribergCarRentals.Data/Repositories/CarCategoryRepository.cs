@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
-using MvcRazorPages.Shared.DTO;
+using FribergCarRentals.Data.DTO;
 
 namespace FribergCarRentals.Data.Repositories
 {

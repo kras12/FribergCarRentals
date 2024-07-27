@@ -6,10 +6,10 @@ using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.ViewModels.CarCategory;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
-using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using FribergCarRentals.Data.Entities;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {

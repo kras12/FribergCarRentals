@@ -1,5 +1,5 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using MvcRazorPages.Shared.DTO;
+﻿using FribergCarRentals.Data.DTO;
+using FribergCarRentals.Data.EntityClasses;
 
 namespace FribergCarRentals.Data.Repositories
 {

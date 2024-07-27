@@ -2,10 +2,10 @@
 using System.Linq.Expressions;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
-using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
 using FribergCarRentals.Data.Exceptions;
+using FribergCarRentals.Data.Entities;
 
 namespace FribergCarRentals.Data.Repositories
 {

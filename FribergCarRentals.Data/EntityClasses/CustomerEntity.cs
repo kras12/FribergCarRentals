@@ -1,4 +1,4 @@
-﻿using FribergFastigheter.Server.Data.Entities;
+﻿using FribergCarRentals.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Data.EntityClasses
@@ -22,7 +22,7 @@ namespace FribergCarRentals.Data.EntityClasses
         ///  A constructor.
         /// </summary>
         /// <param name="user"><summary>
-		/// The user associated with the admin.</param>
+		/// The user associated with the customer.</param>
         public CustomerEntity(ApplicationUser user)
         {
             User = user;

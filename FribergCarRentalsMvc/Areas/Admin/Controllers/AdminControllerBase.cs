@@ -1,6 +1,6 @@
 ﻿using FribergCarRentals.Controllers;
+using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Helpers;
-using FribergFastigheter.Server.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

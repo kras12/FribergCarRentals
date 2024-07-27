@@ -2,7 +2,7 @@
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Types;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
 
