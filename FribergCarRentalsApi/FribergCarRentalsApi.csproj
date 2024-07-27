@@ -4,22 +4,25 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>0baeda59-8230-4954-b7bc-0d9176847b82</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <Folder Include="Controllers\AdminApi\" />
+    <Folder Include="Controllers\Public\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FribergCarRentals.Data\FribergCarRentals.Data.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared\FribergCarRentals.Shared.csproj" />
-    <ProjectReference Include="..\FribergCarRentalsMvc\FribergCarRentalsMvc.csproj" />
+    <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

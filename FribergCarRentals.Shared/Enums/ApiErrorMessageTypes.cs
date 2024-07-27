@@ -5,13 +5,18 @@
     /// </summary>
     public enum ApiErrorMessageTypes
     {
-        GeneralError,
         AuthorizationError,
+        EmailConfirmationFailed,
+        GeneralError,
         IdentityError,
         IncompleteInputData,
         InputDataConflict,
-        ResourceOwnershipConflict,
         ResourceNotFound,
-        ValidationError,
+        ResourceOwnershipConflict,
+        UserCreationFailed,
+        UserExist,
+        UserLoginFailed,
+        UserNotFound,
+        ValidationError
     }
 }

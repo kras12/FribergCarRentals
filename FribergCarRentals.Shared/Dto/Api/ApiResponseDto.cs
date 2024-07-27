@@ -3,7 +3,7 @@
 namespace FribergCarRentals.Shared.Dto.Api
 {
     /// <summary>
-    /// Generic API response class that stores a reference type.
+    /// Generic API response class to support web APIs.
     /// </summary>
     public class ApiResponseDto<T> where T : class
     {
@@ -14,38 +14,74 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// </summary>
         public ApiResponseDto()
         {
-
+            
         }
 
         /// <summary>
         /// Constructor for a successful response.
         /// </summary>
         /// <param name="value">The value to send in the response body.</param>
-        public ApiResponseDto(T? value = null)
+        private ApiResponseDto(T? value = null)
         {
             Value = value;
             Success = true;
         }
 
         /// <summary>
-        /// Constructor.
+        /// Constructor for an error response.
         /// </summary>
         /// <param name="errors">A collection of errors.</param>
-        public ApiResponseDto(List<KeyValuePair<string, string>> errors)
+        private ApiResponseDto(List<KeyValuePair<string, string>> errors)
         {
             Errors = errors;
             Success = false;
         }
 
         /// <summary>
-        /// Constructor.
+        /// Constructor for an error response.
         /// </summary>
         /// <param name="errorType">The type of error.</param>
         /// <param name="errorMessage">The error message.</param>
-        public ApiResponseDto(string errorType, string errorMessage)
+        private ApiResponseDto(string errorType, string errorMessage)
             : this(new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(errorType, errorMessage) })
         {
 
+        }
+
+        #endregion
+
+        #region FactoryMethods
+
+        /// <summary>
+        /// Creates an error response.
+        /// </summary>
+        /// <param name="errorType">The type of error.</param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
+        public static ApiResponseDto<T> CreateErrorResponse(string errorType, string errorMessage)
+        {
+            return CreateErrorResponse(new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(errorType, errorMessage) });
+        }
+
+        /// <summary>
+        /// Creates an error response.
+        /// </summary>
+        /// <param name="errors">A collection of errors having labels and descriptions.</param>
+        /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
+        public static ApiResponseDto<T> CreateErrorResponse(List<KeyValuePair<string, string>> errors)
+        {
+            return new ApiResponseDto<T>(errors);
+        }
+
+        /// <summary>
+        /// Creates a successful response.
+        /// </summary>
+        /// <typeparam name="T">The type of the response value</typeparam>
+        /// <param name="value">The response value.</param>
+        /// <returns><see cref="ApiResponseDto"/> containing the supplied response value.</returns>
+        public static ApiResponseDto<T> CreateSuccessfulResponse(T value)
+        {
+            return new ApiResponseDto<T>(value);
         }
 
         #endregion
@@ -55,21 +91,21 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// <summary>
         /// A collection of errors. 
         /// </summary>
-        public List<KeyValuePair<string, string>> Errors { get; set; } = new();
+        public List<KeyValuePair<string, string>> Errors { get; } = new();
 
         /// <summary>
         /// True if operation was successful.
         /// </summary>
-        public bool Success { get; set; }
+        public bool Success { get; }
 
         /// <summary>
         /// The value for a successful response.
         /// </summary>
-        public T? Value { get; set; }
+        public T? Value { get; }
 
         #endregion
 
-        #region Methods
+        #region OtherMethods
 
         /// <summary>
         /// Formats the error descriptions as a list.

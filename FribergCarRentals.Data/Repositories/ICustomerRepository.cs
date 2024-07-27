@@ -24,6 +24,13 @@ namespace FribergCarRentals.Data.Repositories
         public Task DeleteAsync(int id);
 
         /// <summary>
+        /// Gets a customer by email.
+        /// </summary>
+        /// <param name="email">The email of the customer.</param>
+        /// <returns>A <see cref="Task"/> object containg the customer.</returns>
+        public Task<CustomerEntity?> GetByEmailAsync(string email);
+
+        /// <summary>
         /// Attempts to fetch a customer by user ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
@@ -37,6 +44,13 @@ namespace FribergCarRentals.Data.Repositories
         /// <param name="id">The ID of the customer.</param>
         /// <returns>A <see cref="Task"/> object containing the user ID if found or null if not found.</returns>
         public Task<string?> GetUserId(int id);
+
+        /// <summary>
+        /// Checks whether the customer's email address is confirmed.
+        /// </summary>
+        /// <param name="customer">The customer.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the email is confirmed.</returns>
+        public Task<bool> IsEmailConfirmedAsync(CustomerEntity customer);
 
         #endregion
     }

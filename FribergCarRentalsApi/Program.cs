@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using MvcRazorPages.Shared.Services;
 using System.Text;
 using System.Text.Json.Serialization;
+using FribergCarRentalsApi.AutoMapper;
 
 namespace FribergCarRentalsApi
 {
@@ -76,7 +77,8 @@ namespace FribergCarRentalsApi
             // ==================================================================================================================
 
             // Auto Mapper
-            // TODO - Add Auto Mapper profiles
+            builder.Services.AddAutoMapper(typeof(EntityToDtoAutoMapperProfile));
+            builder.Services.AddAutoMapper(typeof(DtoToEntityAutoMapperProfile));
 
             // ==================================================================================================================
             // Network (converters, cors, data transfers, filters)
@@ -127,7 +129,8 @@ namespace FribergCarRentalsApi
 
             })
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
             // Authentication
             builder.Services.AddAuthentication(options =>
