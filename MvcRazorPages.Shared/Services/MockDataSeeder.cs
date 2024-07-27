@@ -221,7 +221,7 @@ namespace MvcRazorPages.Shared.Services
                 {
                     if (overridePassword != null)
                     {
-                        admin.User.Password = overridePassword;
+                        admin.User.NewPassword = overridePassword;
                     }
 
                     await _adminRepository.AddAsync(admin);

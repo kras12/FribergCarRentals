@@ -60,7 +60,7 @@ namespace FribergCarRentals.Data.Repositories
             #endregion
 
             // Create user
-            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.Password!);
+            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.NewPassword!);
             IdentityResult? addRoleResult = null;
 
             if (!createUserResult.Succeeded)

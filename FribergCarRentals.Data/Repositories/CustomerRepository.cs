@@ -56,7 +56,7 @@ namespace FribergCarRentals.Data.Repositories
             #endregion
 
             // Create user
-            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.Password!);
+            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.NewPassword!);
             IdentityResult? addRoleResult = null;
 
             if (!createUserResult.Succeeded)
@@ -118,6 +118,16 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Gets a customer by email.
+        /// </summary>
+        /// <param name="email">The email of the customer.</param>
+        /// <returns>A <see cref="Task"/> object containg the customer.</returns>
+        public async Task<CustomerEntity?> GetByEmailAsync(string email)
+        {
+            return await _databaseContext.Customers.Where(x => x.User.Email == email).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Gets a customer by ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
@@ -147,6 +157,16 @@ namespace FribergCarRentals.Data.Repositories
         public Task<string?> GetUserId(int id)
         {
             return _databaseContext.Customers.AsNoTracking().Where(x => x.CustomerId == id).Select(x => x.User.Id).SingleOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Checks whether the customer's email address is confirmed.
+        /// </summary>
+        /// <param name="customer">The customer.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the email is confirmed.</returns>
+        public Task<bool> IsEmailConfirmedAsync(CustomerEntity customer)
+        {
+            return _userManager.IsEmailConfirmedAsync(customer.User);
         }
 
         #endregion
