@@ -13,6 +13,7 @@ using System.Text;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Controllers.Customer;
+using FribergCarRentals.Models.Customer;
 
 namespace FribergCarRentals.Controllers
 {
