@@ -7,9 +7,12 @@ using FribergCarRentals.Shared;
 using FribergCarRentals.Shared.Dto.Api;
 using FribergCarRentals.Shared.Dto.Car;
 using FribergCarRentals.Shared.Dto.Order;
+using FribergFastigheter.Shared.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MvcRazorPages.Shared.ViewModels.Order;
+using System.Security.Claims;
 
 namespace FribergCarRentalsApi.Controllers.CustomerApi
 {
@@ -18,7 +21,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
     /// </summary>
     [Route("api/customer/order")]
     [ApiController]
-    public class CustomerOrderController : ControllerBase
+    public class CustomerOrderController : ApiControllerBase
     {
         #region ErrorMessages
 
@@ -37,6 +40,11 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         #region Fields
 
         /// <summary>
+        /// // The injected signin manager.
+        /// </summary>
+        protected readonly SignInManager<ApplicationUser> _signInManager;
+
+        /// <summary>
         /// The injected car category repository.
         /// </summary>
         private readonly ICarCategoryRepository _carCategoryRepository;
@@ -45,12 +53,6 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// The injected car repository.
         /// </summary>
         private readonly ICarRepository _carRepository;
-
-        /// <summary>
-        /// // The injected signin manager.
-        /// </summary>
-        protected readonly SignInManager<ApplicationUser> _signInManager;
-
         /// <summary>
         ///The injected customer repository. 
         /// </summary>
@@ -87,7 +89,9 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// <param name="orderRepository">The injected order repository.</param>
         public CustomerOrderController(ICustomerRepository customerRepository, SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IMapper mapper, ICarCategoryRepository carCategoryRepository, ICarRepository carRepository, ICarOrderRepository orderRepository)
+            IMapper mapper, ICarCategoryRepository carCategoryRepository, ICarRepository carRepository, ICarOrderRepository orderRepository, 
+            IAuthorizationService authorizationService)
+            : base(authorizationService)
         {
             _customerRepository = customerRepository;
             _userManager = userManager;
@@ -102,14 +106,178 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
 
         #region Endpoints
 
+        /// <summary>
+        /// Attempts to cancel an order.
+        /// </summary>
+        /// <param name="id">The ID of the order.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
+        [HttpPost("{id}/cancel")]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> CancelOrder(int id)
+        {
+            if (!await IsAuthorized(ApplicationUserPolicies.Customer))
+            {
+                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid order ID: {id}"));
+            }
+
+            if (!await _orderRepository.Exists(id))
+            {
+                return BadRequest(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Order was not found."));
+            }
+
+            if (await _orderRepository.TryCancelOrderAsync(id))
+            {
+                var order = _mapper.Map<CarOrderDto>(await _orderRepository.GetByIdAsync(id));
+                return Ok(ApiResponseDto<CarOrderDto>.CreateSuccessfulResponse(order));
+            }
+
+            return BadRequest(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Failed to cancel order with id {id}. Please check the status of the order."));
+        }
+
+        /// <summary>
+        /// Creates an order.
+        /// </summary>
+        /// <param name="createCarOrderDto">The input data for the new order.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
+        [HttpPost]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Create(CreateCarOrderDto createCarOrderDto)
+        {
+            if (!await IsAuthorized(ApplicationUserPolicies.Customer))
+            {
+                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+            }
+
+            if (!ValidatePickupDate(createCarOrderDto.PickupDateLocalTime))
+            {
+                return BadRequest(ApiResponseDto<CarBookingDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
+                    PickupDateMustBeInFutureErrorMessage));
+            }
+
+            if (!ValidateReturnDate(createCarOrderDto.PickupDateLocalTime, createCarOrderDto.ReturnDateLocalTime))
+            {
+                return BadRequest(ApiResponseDto<CarBookingDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
+                    ReturnDateOccursBeforePickupDateErrorMessage));
+            }
+
+            if (createCarOrderDto.CarId <= 0)
+            {
+                return BadRequest(ApiResponseDto<CarBookingDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
+                    "Invalid car ID."));
+            }
+
+            int customerId = int.Parse(User.FindFirstValue(ApplicationUserClaims.CustomerId)!);
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+            var car = await _carRepository.GetByIdAsync(createCarOrderDto.CarId);
+
+            if (customer == null)
+            {
+                return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Customer was not found."));
+            }
+
+            if (car == null)
+            {
+                return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car was not found."));
+            }
+
+            car.RentalStatus = CarRentalStatusEntity.CreateFromType(RentalCarStatus.PendingPickup);
+            var order = new CarOrderEntity(customer);
+            order.CarBookings.Add(
+                new CarBookingEntity(order, car, pickupDateUTC: createCarOrderDto.PickupDateLocalTime.Date,
+                    returnDateUTC: createCarOrderDto.ReturnDateLocalTime.Date));
+            await _orderRepository.AddAsync(order);
+
+            return Ok(ApiResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
+        }
+
+        /// <summary>
+        /// Gets all orders.
+        /// </summary>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
+        [HttpGet]
+        [ProducesResponseType<ApiResponseDto<List<CarOrderDto>>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto<List<CarOrderDto>>>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto<List<CarOrderDto>>>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            if (!await IsAuthorized(ApplicationUserPolicies.Customer))
+            {
+                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+            }
+
+            int customerId = int.Parse(User.FindFirstValue(ApplicationUserClaims.CustomerId)!);
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+
+            if (customer == null)
+            {
+                return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Customer was not found."));
+            }
+
+            return Ok(ApiResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarOrderDto>>(customer.Orders)));
+        }
+
+        /// <summary>
+        /// Returns all car categories.
+        /// </summary>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet("car-categories")]
+        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCarCategories()
         {
             var carCategories = _mapper.Map<List<CarCategoryDto>>(await _carCategoryRepository.GetAllAsync());
             return Ok(ApiResponseDto<List<CarCategoryDto>>.CreateSuccessfulResponse(carCategories));
         }
 
+        /// <summary>
+        /// Gets an order by ID.
+        /// </summary>
+        /// <param name="id">The ID of the order.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
+        /// <exception cref="Exception"></exception>
+        [HttpGet("{id}")]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto<CarOrderDto>>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOrderById(int id)
+        {
+            if (!await IsAuthorized(ApplicationUserPolicies.Customer))
+            {
+                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+            }
+
+            if (id < 0)
+            {
+                throw new Exception($"Invalid ID: {id}");
+            }
+
+            var order = await _orderRepository.GetByIdAsync(id);
+
+            if (order is not null)
+            {
+                return Ok(ApiResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
+            }
+
+            return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Order was not found."));
+        }
+
+        /// <summary>
+        /// Searches for rentable cars.
+        /// </summary>
+        /// <param name="carRentalSearchDto">The search parameters.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpPost("search-cars")]
+        [ProducesResponseType<ApiResponseDto<CarRentalSearchResultDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto<CarRentalSearchResultDto>>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchRentalCars(CarRentalSearchDto carRentalSearchDto)
         {
             if (!ValidatePickupDate(carRentalSearchDto.PickupDateLocalTime))
@@ -132,118 +300,6 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                 carRentalSearchDto.SelectedCarCategoryFilter)).ToList();
 
             return Ok(ApiResponseDto<CarRentalSearchResultDto>.CreateSuccessfulResponse(new CarRentalSearchResultDto(_mapper.Map<List<CarDto>>(cars))));
-        }
-
-        [HttpPost("{id}/cancel")]
-        public async Task<IActionResult> CancelOrder(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid order ID: {id}"));
-            }
-
-            if (!await _orderRepository.Exists(id))
-            {
-                return BadRequest(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Order was not found."));
-            }
-
-            if (await _orderRepository.TryCancelOrderAsync(id))
-            {
-                var order = _mapper.Map<CarOrderDto>(await _orderRepository.GetByIdAsync(id));
-                return Ok(ApiResponseDto<CarOrderDto>.CreateSuccessfulResponse(order));
-            }
-
-            return BadRequest(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Failed to cancel order with id {id}. Please check the status of the order."));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateCarOrderDto createCarOrderDto)
-        {
-            if (!ValidatePickupDate(createCarOrderDto.PickupDateLocalTime))
-            {
-                return BadRequest(ApiResponseDto<CarBookingDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    PickupDateMustBeInFutureErrorMessage));
-            }
-            else if (!ValidateReturnDate(createCarOrderDto.PickupDateLocalTime, createCarOrderDto.ReturnDateLocalTime))
-            {
-                return BadRequest(ApiResponseDto<CarBookingDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    ReturnDateOccursBeforePickupDateErrorMessage));
-            }
-            else if (createCarOrderDto.CarId <= 0)
-            {
-                return BadRequest(ApiResponseDto<CarBookingDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    "Invalid car ID."));
-            }
-
-            // TODO - Uncomment
-            //var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
-            //var customer = await _customerRepository.GetByUserIdAsync(userId);
-            //var car = await _carRepository.GetByIdAsync(createCarOrderDto.CarId);
-
-            // TODO - remove
-            var customer = await _customerRepository.GetByEmailAsync("kalle@ankeborg.com");
-            var car = await _carRepository.GetByIdAsync(createCarOrderDto.CarId);
-
-            if (customer == null)
-            {
-                return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Customer was not found."));
-            }
-
-            if (car == null)
-            {
-                return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car was not found."));
-            }
-
-
-            
-
-            car.RentalStatus = CarRentalStatusEntity.CreateFromType(RentalCarStatus.PendingPickup);
-            var order = new CarOrderEntity(customer);
-            order.CarBookings.Add(
-                new CarBookingEntity(order, car, pickupDateUTC: createCarOrderDto.PickupDateLocalTime.Date,
-                    returnDateUTC: createCarOrderDto.ReturnDateLocalTime.Date));
-            await _orderRepository.AddAsync(order);
-
-            return Ok(ApiResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
-        }
-
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderById(int id)
-        {
-            if (id < 0)
-            {
-                throw new Exception($"Invalid ID: {id}");
-            }
-
-            var order = await _orderRepository.GetByIdAsync(id);
-
-            if (order is not null)
-            {
-                return Ok(ApiResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
-            }
-
-            return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Order was not found."));
-        }
-        
-        [HttpGet]
-        public async Task<IActionResult> GetAllOrders()
-        {
-            // TODO - Uncomment
-            //var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
-            //var customer = await _customerRepository.GetByUserIdAsync(userId);
-
-
-            // TODO - remove
-            var customer = await _customerRepository.GetByEmailAsync("kalle@ankeborg.com");
-
-
-            if (customer == null)
-            {
-                return NotFound(ApiResponseDto<CarOrderDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Customer was not found."));
-            }
-
-            return Ok(ApiResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarOrderDto>>(customer.Orders)));
         }
 
         #endregion

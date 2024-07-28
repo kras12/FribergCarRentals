@@ -9,6 +9,8 @@ namespace FribergFastigheter.Shared.Constants
     {
         #region Constants
 
+        public const string CustomerId = "customerid";
+
         /// <summary>
         /// The user email claim. 
         /// </summary>

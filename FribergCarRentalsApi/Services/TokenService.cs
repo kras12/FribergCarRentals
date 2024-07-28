@@ -69,7 +69,7 @@ namespace FribergCarRentalsApi.Services
         /// <returns>The created token as a <see cref="string"/>.</returns>
         public async Task<string> CreateToken(AdminEntity admin)
         {
-            return CreateToken(await GetClaimsAync(admin.User));
+            return CreateToken(await GetUserClaimsAync(admin.User));
         }
 
         /// <summary>
@@ -78,8 +78,11 @@ namespace FribergCarRentalsApi.Services
         /// <param name="customer">The customer to create the token for.</param>
         /// <returns>The created token as a <see cref="string"/>.</returns>
         public async Task<string> CreateToken(CustomerEntity customer)
-        {            
-            return CreateToken(await GetClaimsAync(customer.User));
+        {
+            var claims = await GetUserClaimsAync(customer.User);
+            claims.Add(new Claim(ApplicationUserClaims.CustomerId, customer.CustomerId.ToString()));
+
+            return CreateToken(claims);
         }
 
         /// <summary>
@@ -110,7 +113,7 @@ namespace FribergCarRentalsApi.Services
         /// </summary>
         /// <param name="user">The user to return the claims for.</param>
         /// <returns>A collection of created claims.</returns>
-        private async Task<List<Claim>> GetClaimsAync(ApplicationUser user)
+        private async Task<List<Claim>> GetUserClaimsAync(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
