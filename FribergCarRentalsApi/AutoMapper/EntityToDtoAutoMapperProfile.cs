@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Shared.Dto.Car;
 using FribergCarRentals.Shared.Dto.Customer;
+using FribergCarRentals.Shared.Dto.Image;
+using FribergCarRentals.Shared.Dto.Order;
 using FribergCarRentals.Shared.Dto.User;
 
 namespace FribergCarRentalsApi.AutoMapper
@@ -11,14 +14,68 @@ namespace FribergCarRentalsApi.AutoMapper
     /// </summary>
     public class EntityToDtoAutoMapperProfile : Profile
     {
+        #region Constructors
+
         /// <summary>
         /// Constructor.
         /// </summary>
         public EntityToDtoAutoMapperProfile()
         {
+            CreateCarMappings();
+            CreateCustomerMappings();
+            CreateOrderMappings();
+            CreateUserMappings();
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Creates mappings for cars.
+        /// </summary>
+        private void CreateCarMappings()
+        {
+            CreateMap<CarEntity, CarDto>();
+            CreateMap<CarCategoryEntity, CarCategoryDto>();
+            CreateMap<VehiclePropulsionEntity, VehiclePropulsionDto>();
+            CreateMap<CarRentalStatusEntity, CarRentalStatusDto>();
+
+            CreateMap<ImageEntity, CarImageDto>()
+                .ForMember(dest => dest.CarId, opt => opt.MapFrom(src => src.Car.CarId));
+        }
+
+        /// <summary>
+        /// Creates mappings for customers.
+        /// </summary>
+        private void CreateCustomerMappings()
+        {
             CreateMap<CustomerEntity, CustomerDto>();
             CreateMap<CustomerEntity, CreatedCustomerDto>();
+        }
+
+        /// <summary>
+        /// Creates mappings for orders.
+        /// </summary>
+        private void CreateOrderMappings()
+        {
+            CreateMap<OrderStatusEntity, OrderStatusDto>();
+
+            CreateMap<CarOrderEntity, CarOrderDto>()
+                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.Customer!.CustomerId));
+
+            CreateMap<CarBookingEntity, CarBookingDto>()
+                .ForMember(dest => dest.CarOrderId, opt => opt.MapFrom(src => src.CarOrder!.CarOrderId));
+        }
+
+        /// <summary>
+        /// Creates mappings for users.
+        /// </summary>
+        private void CreateUserMappings()
+        {
             CreateMap<ApplicationUser, ApplicationUserDto>();
         }
+
+        #endregion
     }
 }

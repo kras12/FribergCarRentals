@@ -12,7 +12,7 @@ namespace FribergCarRentals.Shared.Dto.Image
         /// <summary>
         /// The car the image belongs to. 
         /// </summary>
-        public CarDto Car { get; set; }
+        public int CarId { get; set; }
 
         /// <summary>
         /// The filename for the image.

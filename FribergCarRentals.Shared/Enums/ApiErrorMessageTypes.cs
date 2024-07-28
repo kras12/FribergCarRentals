@@ -11,6 +11,7 @@
         IdentityError,
         IncompleteInputData,
         InputDataConflict,
+        InvalidInputData,
         ResourceNotFound,
         ResourceOwnershipConflict,
         UserCreationFailed,

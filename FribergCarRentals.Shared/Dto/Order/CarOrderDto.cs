@@ -22,7 +22,7 @@ namespace FribergCarRentals.Shared.Dto.Order
         /// <summary>
         /// The customer that rented the car.
         /// </summary>
-        public CustomerDto? Customer { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// The order date.

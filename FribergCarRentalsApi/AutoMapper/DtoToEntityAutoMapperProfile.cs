@@ -9,13 +9,29 @@ namespace FribergCarRentalsApi.AutoMapper
     /// </summary>
     public class DtoToEntityAutoMapperProfile : Profile
     {
+        #region Constructors
+        
         /// <summary>
         /// Constructor.
         /// </summary>
         public DtoToEntityAutoMapperProfile()
         {
+            CreateCustomerMappings();
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Creates mappings for customers.
+        /// </summary>
+        private void CreateCustomerMappings()
+        {
             CreateMap<CreateCustomerDto, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
         }
+
+        #endregion
     }
 }

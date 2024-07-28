@@ -58,6 +58,17 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// <param name="errorType">The type of error.</param>
         /// <param name="errorMessage">The error message.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
+        public static ApiResponseDto<T> CreateErrorResponse(ApiErrorMessageTypes errorType, string errorMessage)
+        {
+            return CreateErrorResponse(errorType.ToString(), errorMessage);
+        }
+
+        /// <summary>
+        /// Creates an error response.
+        /// </summary>
+        /// <param name="errorType">The type of error.</param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
         public static ApiResponseDto<T> CreateErrorResponse(string errorType, string errorMessage)
         {
             return CreateErrorResponse(new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(errorType, errorMessage) });

@@ -12,7 +12,7 @@ namespace FribergCarRentals.Shared.Dto.Order
         /// <summary>
         /// The car that was rented.
         /// </summary>
-        public CarDto Car { get; set; }
+        public CarDto Car { get; set; } = null!;
 
         /// <summary>
         /// The car booking ID.
@@ -22,7 +22,7 @@ namespace FribergCarRentals.Shared.Dto.Order
         /// <summary>
         /// The order the booking belongs to. 
         /// </summary>
-        public CarOrderDto? CarOrder { get; set; }
+        public int CarOrderId { get; set; }
 
         /// <summary>
         /// The car pickup date in UTC time.
