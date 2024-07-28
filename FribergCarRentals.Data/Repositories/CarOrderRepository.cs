@@ -70,6 +70,16 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Checks whether an order exists.
+        /// </summary>
+        /// <param name="id">The ID of the order.</param>
+        /// <returns></returns>
+        public Task<bool> Exists(int id)
+        {
+            return _databaseContext.CarOrders.AnyAsync(x => x.CarOrderId == id);
+        }
+
+        /// <summary>
         /// Returns all orders that belongs to a customer.
         /// </summary>
         /// <param name="customerId">The ID of the customer to fetch the orders for.</param>

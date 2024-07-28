@@ -19,6 +19,13 @@ namespace FribergCarRentals.Data.Repositories
         public Task DeleteOrderAsync(int id);
 
         /// <summary>
+        /// Checks whether an order exists.
+        /// </summary>
+        /// <param name="id">The ID of the order.</param>
+        /// <returns></returns>
+        public Task<bool> Exists(int id);
+
+        /// <summary>
         /// Returns all orders that belongs to a customer.
         /// </summary>
         /// <param name="customerId">The ID of the customer to fetch the orders for.</param>
@@ -43,6 +50,4 @@ namespace FribergCarRentals.Data.Repositories
     }
 
     #endregion
-
-
 }
