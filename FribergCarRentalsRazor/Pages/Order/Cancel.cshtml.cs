@@ -76,6 +76,11 @@ namespace FribergCarRentals.Pages.Order
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
+                if (!await _orderRepository.Exists(id))
+                {
+                    throw new Exception($"Order was not found.");
+                }
+
                 if (await _orderRepository.TryCancelOrderAsync(id))
                 {
                     TempDataHelper.Set(TempData, CanceledOrderIdTempDataKey, id);
