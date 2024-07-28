@@ -51,7 +51,7 @@ namespace FribergCarRentals.Data.EntityClasses
         /// The car the image belongs to. 
         /// </summary>
         [Required]
-        public CarEntity? Car {  get; set; }
+        public CarEntity Car { get; set; } = null!;
 
         /// <summary>
         /// The filename for the image.
