@@ -21,7 +21,7 @@ namespace FribergCarRentals.Shared.Dto.Customer
         public List<CarOrderDto> Orders { get; } = new();
 
         /// <summary>
-		/// The user associated with the admin.
+		/// The user associated with the customer.
 		/// </summary>
         public required ApplicationUserDto User { get; set; }
 
