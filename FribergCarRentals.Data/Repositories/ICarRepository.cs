@@ -51,11 +51,12 @@ namespace FribergCarRentals.Data.Repositories
         /// Returns all the cars that matches the specified category and that are available to be rented out within the desired timespan. 
         /// </summary>
         /// <param name="pickupDateUtc">The pickup date for the car in UTC format.</param>
-        /// /// <param name="returnDateUtc">The return date for the car in UTC format.</param>
+        /// <param name="returnDateUtc">The return date for the car in UTC format.</param>
+        /// <param name="carCategoryIdFilter">An optional car category filter.</param>
         /// <remarks>Returned cars will not be tracked by EF Core.</remarks>
-        /// <param name="category">The category of the car.</param>
         /// <returns>A <see cref="Task{TResult}"/> containing a collection of matching cars.</returns>
-        public Task<IEnumerable<CarEntity>> GetRentableCarsAsync(DateTime pickupDateUtc, DateTime returnDateUtc, CarCategoryEntity? category = null);
+        public Task<IEnumerable<CarEntity>> GetRentableCarsAsync(DateTime pickupDateUtc, DateTime returnDateUtc, int? carCategoryIdFilter = null);
+
         #endregion
     }
 }

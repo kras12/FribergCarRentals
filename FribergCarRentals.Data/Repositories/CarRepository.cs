@@ -116,12 +116,21 @@ namespace FribergCarRentals.Data.Repositories
         /// Returns all the cars that matches the specified category and that are available to be rented out within the desired timespan. 
         /// </summary>
         /// <param name="pickupDateUtc">The pickup date for the car in UTC format.</param>
-        /// /// <param name="returnDateUtc">The return date for the car in UTC format.</param>
+        /// <param name="returnDateUtc">The return date for the car in UTC format.</param>
+        /// <param name="carCategoryIdFilter">An optional car category filter.</param>
         /// <remarks>Returned cars will not be tracked by EF Core.</remarks>
-        /// <param name="category">The category of the car.</param>
         /// <returns>A <see cref="Task{TResult}"/> containing a collection of matching cars.</returns>
-        public async Task<IEnumerable<CarEntity>> GetRentableCarsAsync(DateTime pickupDateUtc, DateTime returnDateUtc, CarCategoryEntity? category = null)
+        public async Task<IEnumerable<CarEntity>> GetRentableCarsAsync(DateTime pickupDateUtc, DateTime returnDateUtc, int? carCategoryIdFilter = null)
         {
+            #region Checks
+
+            if (carCategoryIdFilter is not null && carCategoryIdFilter <= 0)
+            {
+                throw new ArgumentOutOfRangeException($"The value of parameter '{nameof(carCategoryIdFilter)}' must be larger than zero.", nameof(carCategoryIdFilter));
+            }
+
+            #endregion
+
             List<RentalCarStatus> rentableCarStatusIDs = new()
             {
                 CarRentalStatusEntity.CreateFromType(RentalCarStatus.Idle).CarRentalStatusId,
@@ -131,9 +140,9 @@ namespace FribergCarRentals.Data.Repositories
 
             IQueryable<CarEntity> carQuery = _databaseContext.Cars.Where(car => rentableCarStatusIDs.Contains(car.RentalStatus!.CarRentalStatusId));
 
-            if (category is not null)
+            if (carCategoryIdFilter is not null)
             {
-                carQuery = carQuery.Where(car => car.Category == category);
+                carQuery = carQuery.Where(car => car.Category!.CarCategoryId == carCategoryIdFilter);
             }
 
             return await carQuery
