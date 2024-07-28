@@ -79,6 +79,7 @@ namespace FribergCarRentalsApi
             // Auto Mapper
             builder.Services.AddAutoMapper(typeof(EntityToDtoAutoMapperProfile));
             builder.Services.AddAutoMapper(typeof(DtoToEntityAutoMapperProfile));
+            builder.Services.AddAutoMapper(typeof(DtoToDtoAutoMapperProfile));
 
             // ==================================================================================================================
             // Network (converters, cors, data transfers, filters)
