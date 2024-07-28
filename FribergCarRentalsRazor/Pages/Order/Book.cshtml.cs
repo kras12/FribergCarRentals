@@ -31,6 +31,20 @@ namespace FribergCarRentals.Pages.Order
 
         #endregion
 
+        #region ErrorMessages
+
+        /// <summary>
+        /// Error message for when the pickup date is not in the future. 
+        /// </summary>
+        private const string PickupDateMustBeInFutureErrorMessage = "The pickup date must be at least one day into the future.";
+
+        /// <summary>
+        /// Error message for when the return date occurrs before the pickup date.
+        /// </summary>
+        private const string ReturnDateOccursBeforePickupDateErrorMessage = "The return date can't occur before the pickup date.";
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -86,13 +100,13 @@ namespace FribergCarRentals.Pages.Order
         {
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (createOrderViewModel.PickupDateLocalTime.Date < DateTime.Now.Date)
+                if (!ValidatePickupDate(createOrderViewModel.PickupDateLocalTime))
                 {
-                    throw new Exception("The pickup date can't be in the past.");
+                    throw new Exception(PickupDateMustBeInFutureErrorMessage);
                 }
-                else if (createOrderViewModel.ReturnDateLocalTime.Date < createOrderViewModel.PickupDateLocalTime.Date)
+                else if (!ValidateReturnDate(createOrderViewModel.PickupDateLocalTime, createOrderViewModel.ReturnDateLocalTime))
                 {
-                    throw new Exception("The return date can't occur before the pickup date.");
+                    throw new Exception(ReturnDateOccursBeforePickupDateErrorMessage);
                 }
 
                 TempDataHelper.Set(TempData, PendingOrderTempDataKey, createOrderViewModel);
@@ -138,31 +152,31 @@ namespace FribergCarRentals.Pages.Order
         {
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                if (BookCarViewModel.PickupDateLocalTime is null || BookCarViewModel.PickupDateLocalTime <= DateTime.Now)
+                if (!ValidatePickupDate(BookCarViewModel.PickupDateLocalTime))
                 {
                     ModelState.AddModelError($"{nameof(BookCarViewModel.PickupDateLocalTime)}",
-                        "The pickup date must be at least one day into the future.");
+                        PickupDateMustBeInFutureErrorMessage);
                 }
-                else if (BookCarViewModel.ReturnDateLocalTime is null || BookCarViewModel.ReturnDateLocalTime.Value.Date < BookCarViewModel.PickupDateLocalTime.Value.Date)
+                else if (!ValidateReturnDate(BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime))
                 {
                     ModelState.AddModelError($"{nameof(BookCarViewModel.ReturnDateLocalTime)}",
-                        "The return date can't occur before the pickup date.");
+                        ReturnDateOccursBeforePickupDateErrorMessage);
                 }
                 else
                 {
-                    CarCategoryEntity? carCategoryFilter = null;
+                    int? selectedCarCategoryFilter = null;
 
                     if (BookCarViewModel.SelectedCarCategoryFilter > 0)
                     {
-                        carCategoryFilter = await _carCategoryRepository.GetByIdAsync(BookCarViewModel.SelectedCarCategoryFilter);
-
-                        if (carCategoryFilter is null)
+                        if (!await _carCategoryRepository.CategoryExists(BookCarViewModel.SelectedCarCategoryFilter))
                         {
                             throw new Exception("Failed to find the car category");
                         }
+
+                        selectedCarCategoryFilter = BookCarViewModel.SelectedCarCategoryFilter;
                     }
 
-                    var cars = (await _carRepository.GetRentableCarsAsync(BookCarViewModel.PickupDateLocalTime.Value, BookCarViewModel.ReturnDateLocalTime.Value, carCategoryFilter)).ToList();
+                    var cars = (await _carRepository.GetRentableCarsAsync(BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime, selectedCarCategoryFilter)).ToList();
                     BookCarViewModel = new BookCarViewModel(
                         availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
                         havePerformedCarSearch: true,
@@ -177,6 +191,31 @@ namespace FribergCarRentals.Pages.Order
 
             BookCarViewModel.SetAvailableCarCategoryFilters(await _carCategoryRepository.GetAllAsync());
             return Page();
+        }
+
+        #endregion
+
+        #region OtherMethods
+
+        /// <summary>
+        /// Validates the pickup date for car rentals.
+        /// </summary>
+        /// <param name="pickupDate">The pickup date.</param>
+        /// <returns>True if the date is valid.</returns>
+        private bool ValidatePickupDate(DateTime pickupDate)
+        {
+            return pickupDate.Date > DateTime.Now.Date;
+        }
+
+        /// <summary>
+        /// Validates the return date for car rentals.
+        /// </summary>
+        /// <param name="pickupDate">The pickup date.</param>
+        /// <param name="returnDate">The return date.</param>
+        /// <returns>True if the date is valid.</returns>
+        private bool ValidateReturnDate(DateTime pickupDate, DateTime returnDate)
+        {
+            return returnDate >= pickupDate;
         }
 
         #endregion
