@@ -11,6 +11,13 @@ namespace FribergCarRentals.Data.Repositories
         #region Methods
 
         /// <summary>
+        /// Checks the existence of a car category.
+        /// </summary>
+        /// <param name="carCategoryId">The ID of the category to look for.</param>
+        /// <returns>A <see cref="Task"/> containing true if the category exists.</returns>
+        public Task<bool> CategoryExists(int carCategoryId);
+
+        /// <summary>
         /// Deletes a car category from the database.
         /// </summary>
         /// <param name="id">The ID of the car category to delete.</param>
