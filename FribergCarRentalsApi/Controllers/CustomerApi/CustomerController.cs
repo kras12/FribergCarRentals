@@ -210,7 +210,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             {
                 if (_userManager.Options.SignIn.RequireConfirmedEmail && !await _customerRepository.IsEmailConfirmedAsync(customer))
                 {
-                    return BadRequest(ApiResponseDto<CustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The email address must be confirmed before logging in."));
+                    return BadRequest(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The email address must be confirmed before logging in."));
                 }
 
                 var result = await _signInManager.CheckPasswordSignInAsync(customer.User, credentials.Password, lockoutOnFailure: false);
@@ -223,21 +223,21 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                 {
                     if (result.IsLockedOut)
                     {
-                        return Unauthorized(ApiResponseDto<CustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is locked out."));
+                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is locked out."));
                     }
                     else if (result.IsNotAllowed)
                     {
-                        return Unauthorized(ApiResponseDto<CustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is not allowed to login."));
+                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is not allowed to login."));
                     }
                     else
                     {
-                        return Unauthorized(ApiResponseDto<CustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
+                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
                     }
                 }
             }
             else
             {
-                return NotFound(ApiResponseDto<CustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
+                return NotFound(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
             }
         }
 
