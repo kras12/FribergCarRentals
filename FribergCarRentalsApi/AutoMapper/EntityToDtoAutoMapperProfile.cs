@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Shared.Dto.Admin;
 using FribergCarRentals.Shared.Dto.Car;
 using FribergCarRentals.Shared.Dto.Customer;
 using FribergCarRentals.Shared.Dto.Image;
@@ -25,11 +26,17 @@ namespace FribergCarRentalsApi.AutoMapper
             CreateCustomerMappings();
             CreateOrderMappings();
             CreateUserMappings();
+            CreateAdminMappings();
         }
 
         #endregion
 
         #region Methods
+
+        private void CreateAdminMappings()
+        {
+            CreateMap<AdminEntity, AdminDto>();
+        }
 
         /// <summary>
         /// Creates mappings for cars.

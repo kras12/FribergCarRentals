@@ -69,7 +69,10 @@ namespace FribergCarRentalsApi.Services
         /// <returns>The created token as a <see cref="string"/>.</returns>
         public async Task<string> CreateToken(AdminEntity admin)
         {
-            return CreateToken(await GetUserClaimsAync(admin.User));
+            var claims = await GetUserClaimsAync(admin.User);
+            claims.Add(new Claim(ApplicationUserClaims.AdminId, admin.AdminId.ToString()));
+
+            return CreateToken(claims);
         }
 
         /// <summary>

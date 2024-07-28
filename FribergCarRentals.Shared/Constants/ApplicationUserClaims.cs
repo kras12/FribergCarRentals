@@ -9,6 +9,14 @@ namespace FribergFastigheter.Shared.Constants
     {
         #region Constants
 
+        /// <summary>
+        /// The admin ID claim.
+        /// </summary>
+        public const string AdminId = "adminid";
+
+        /// <summary>
+        /// The customer ID claim.
+        /// </summary>
         public const string CustomerId = "customerid";
 
         /// <summary>
