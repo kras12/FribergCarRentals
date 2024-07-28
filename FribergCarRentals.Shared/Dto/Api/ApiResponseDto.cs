@@ -50,6 +50,25 @@ namespace FribergCarRentals.Shared.Dto.Api
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// A collection of errors. 
+        /// </summary>
+        public List<KeyValuePair<string, string>> Errors { get; } = new();
+
+        /// <summary>
+        /// True if operation was successful.
+        /// </summary>
+        public bool Success { get; }
+
+        /// <summary>
+        /// The value for a successful response.
+        /// </summary>
+        public T? Value { get; }
+
+        #endregion
+
         #region FactoryMethods
 
         /// <summary>
@@ -94,25 +113,6 @@ namespace FribergCarRentals.Shared.Dto.Api
         {
             return new ApiResponseDto<T>(value);
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// A collection of errors. 
-        /// </summary>
-        public List<KeyValuePair<string, string>> Errors { get; } = new();
-
-        /// <summary>
-        /// True if operation was successful.
-        /// </summary>
-        public bool Success { get; }
-
-        /// <summary>
-        /// The value for a successful response.
-        /// </summary>
-        public T? Value { get; }
 
         #endregion
 
