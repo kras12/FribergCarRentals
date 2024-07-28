@@ -54,7 +54,7 @@ namespace FribergCarRentalsApi.Controllers
         /// <returns>True if the user is authorized.</returns>
         protected async Task<bool> IsAuthorized(string policy)
         {
-            var result = await _authorizationService.AuthorizeAsync(User, ApplicationUserPolicies.Customer);
+            var result = await _authorizationService.AuthorizeAsync(User, policy);
             return result.Succeeded;
         }
 
