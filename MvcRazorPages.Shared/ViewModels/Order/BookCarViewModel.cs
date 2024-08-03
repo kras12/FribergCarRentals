@@ -5,6 +5,7 @@ using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.Order
 {
@@ -107,7 +108,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// The pickup date filter to use when searching for cars.
         /// </summary>
         [DisplayName("Pickup Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
         [Required]
         public DateTime PickupDateLocalTime { get; set; } = DateTime.Now.AddDays(1);
 
@@ -115,7 +116,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// The return date filter to use when searching for cars.
         /// </summary>
         [DisplayName("Return Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
         [Required]
         public DateTime ReturnDateLocalTime { get; set; } = DateTime.Now.AddDays(1);
 

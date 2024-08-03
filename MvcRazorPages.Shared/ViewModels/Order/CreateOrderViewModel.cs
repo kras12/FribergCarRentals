@@ -1,4 +1,5 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Shared.Constants;
 using MvcRazorPages.Shared.ViewModels.Other;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -68,7 +69,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// The pickup date in local time.
         /// </summary>
         [DisplayName("Pickup Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
         [Required]
         public DateTime PickupDateLocalTime { get; set; }
 
@@ -76,7 +77,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// The return date in local time.
         /// </summary>
         [DisplayName("Return Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
         [Required]
         public DateTime ReturnDateLocalTime { get; set; }
 

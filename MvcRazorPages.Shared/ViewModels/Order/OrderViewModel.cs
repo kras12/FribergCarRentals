@@ -5,6 +5,7 @@ using FribergCarRentals.Data.EntityClasses;
 using MvcRazorPages.Shared.ViewModels.Customer;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.Order
 {
@@ -112,7 +113,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// The order date in local time.
         /// </summary>
         [DisplayName("Order Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DefaultDateFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DefaultDateFormatString)]
         [BindNever]
         public DateTime OrderDateLocal
         {
@@ -146,7 +147,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// The total sum of the order.
         /// </summary>
         [DisplayName("Order Sum")]
-        [DisplayFormat(DataFormatString = DefaultPriceOutputFormatString)]
+        [DisplayFormat(DataFormatString = ValidationRules.DefaultPriceOutputFormatString)]
         [BindNever]
         public decimal OrderSum
         {

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MvcRazorPages.Shared.ViewModels.Other;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.User
 {
@@ -55,10 +56,10 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// </summary>
         [DisplayName("Email")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
         [DataType(DataType.EmailAddress)]
         [EmailAddress]
-        [ServerSideRegularExpression(EmailRegexPattern, ErrorMessage = EmailInputValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.EmailRegexPattern, ErrorMessage = ValidationMessages.EmailInputValidationMessage)]
         public string Email { get; set; } = "";
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         [DisplayName("Password")]
         [Required(AllowEmptyStrings = false)]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.MaxPasswordLength, MinimumLength = ValidationRules.MinPasswordLength, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
         public string Password { get; set; } = "";
 
         #endregion

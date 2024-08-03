@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MvcRazorPages.Shared.ViewModels.Other;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.User
 {
@@ -83,10 +84,10 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// </summary>
         [DisplayName("Email")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
         [DataType(DataType.EmailAddress)]
         [EmailAddress]
-        [ServerSideRegularExpression(EmailRegexPattern, ErrorMessage = EmailInputValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.EmailRegexPattern, ErrorMessage = ValidationMessages.EmailInputValidationMessage)]
         public virtual string Email { get; set; } = "";
 
         /// <summary>
@@ -94,8 +95,8 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// </summary>
         [DisplayName("First Name")]
         [Required]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersAndSpacesRegexPattern, ErrorMessage = OnlyLettersAndSpacesValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public virtual string FirstName { get; set; } = "";
 
         /// <summary>
@@ -116,8 +117,8 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// </summary>
         [DisplayName("Last Name")]
         [Required]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersAndSpacesRegexPattern, ErrorMessage = OnlyLettersAndSpacesValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public virtual string LastName { get; set; } = "";
 
         #endregion

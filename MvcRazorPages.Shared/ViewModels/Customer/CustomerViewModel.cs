@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using MvcRazorPages.Shared.ViewModels.User;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.Customer
 {
@@ -89,7 +90,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
         /// </summary>
         [DisplayName("Orders")]
         [BindNever]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DefaultIntegerNumberOutputFormatString )]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DefaultIntegerNumberOutputFormatString )]
         public int OrderCount { get; }
 
         #endregion
