@@ -6,13 +6,14 @@ using MvcRazorPages.Shared.ViewModels.Customer;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Controllers.Customer;
+using FribergCarRentals.Models.Customer;
 
 namespace FribergCarRentals.Controllers
 {

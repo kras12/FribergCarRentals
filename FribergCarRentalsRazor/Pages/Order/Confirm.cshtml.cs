@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using FribergCarRentals.Pages.Customer;
 using MvcRazorPages.Shared.ViewModels.Order;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
@@ -120,20 +118,25 @@ namespace FribergCarRentals.Pages.Order
                 var customer = await _customerRepository.GetByUserIdAsync(userId);
                 var car = await _carRepository.GetByIdAsync(CreateOrderViewModel.CarId);
 
-                if (customer is not null && car is not null)
+                if (customer == null)
                 {
-                    car.RentalStatus = CarRentalStatusEntity.CreateFromType(RentalCarStatus.PendingPickup);
-                    var order = new CarOrderEntity(customer);
-                    order.CarBookings.Add(
-                        new CarBookingEntity(order, car, pickupDateUTC: CreateOrderViewModel.PickupDateLocalTime.Date,
-                            returnDateUTC: CreateOrderViewModel.ReturnDateLocalTime.Date));
-
-                    await _orderRepository.AddAsync(order);
-                    TempDataHelper.Set(TempData, IsNewOrderTempDataKey, true);
-                    return RedirectToPage("Details", new { id = order.CarOrderId });
+                    throw new Exception("Customer was not found.");
                 }
 
-                throw new Exception($"Failed to retrieve car and/or customer from the database. - CarID: {CreateOrderViewModel.CarId} - UserId: {User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value}");
+                if (car == null)
+                {
+                    throw new Exception("Car was not found.");
+                }
+
+                car.RentalStatus = CarRentalStatusEntity.CreateFromType(RentalCarStatus.PendingPickup);
+                var order = new CarOrderEntity(customer);
+                order.CarBookings.Add(
+                    new CarBookingEntity(order, car, pickupDateUTC: CreateOrderViewModel.PickupDateLocalTime.Date,
+                        returnDateUTC: CreateOrderViewModel.ReturnDateLocalTime.Date));
+
+                await _orderRepository.AddAsync(order);
+                TempDataHelper.Set(TempData, IsNewOrderTempDataKey, true);
+                return RedirectToPage("Details", new { id = order.CarOrderId });
             }
 
             throw new Exception($"Failed to retrieve the pending order from temp storage.");

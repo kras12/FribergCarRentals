@@ -1,6 +1,6 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
 
-namespace MvcRazorPages.Shared.DTO
+namespace FribergCarRentals.Data.DTO
 {
     /// <summary>
     /// A DTO class storing the number of cars found for a specific car category.

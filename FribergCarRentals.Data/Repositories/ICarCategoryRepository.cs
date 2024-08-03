@@ -1,5 +1,5 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using MvcRazorPages.Shared.DTO;
+﻿using FribergCarRentals.Data.DTO;
+using FribergCarRentals.Data.EntityClasses;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -9,6 +9,13 @@ namespace FribergCarRentals.Data.Repositories
     public interface ICarCategoryRepository : IGenericRepository<CarCategoryEntity>
     {
         #region Methods
+
+        /// <summary>
+        /// Checks the existence of a car category.
+        /// </summary>
+        /// <param name="carCategoryId">The ID of the category to look for.</param>
+        /// <returns>A <see cref="Task"/> containing true if the category exists.</returns>
+        public Task<bool> CategoryExists(int carCategoryId);
 
         /// <summary>
         /// Deletes a car category from the database.

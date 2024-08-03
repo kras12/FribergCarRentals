@@ -3,12 +3,11 @@ using FribergCarRentals.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using AppSettings.Shared.Settings;
 using MvcRazorPages.Shared.ModelBinders;
-using FribergFastigheter.Server.AutoMapper;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
-using FribergCarRentals.Shared.Services;
 using MvcRazorPages.Shared.Services;
+using MvcRazorPages.Shared.AutoMapper;
 
 namespace FribergCarRentals
 {
@@ -51,19 +50,7 @@ namespace FribergCarRentals
             // ==================================================================================================================
             //  Seeding
             // ==================================================================================================================
-            builder.Services.AddTransient<IMockDataSeeder, MockDataSeeder>();
-
-            // ==================================================================================================================
-            //  Sessions
-            // ==================================================================================================================
-            // TODO - Check if safe to remove
-            //builder.Services.AddDistributedMemoryCache();
-            //builder.Services.AddSession(options =>
-            //{
-            //    options.IdleTimeout = TimeSpan.FromMinutes(15);
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.IsEssential = true;
-            //});            
+            builder.Services.AddTransient<IMockDataSeeder, MockDataSeeder>();        
 
             // ==================================================================================================================
             // Security (authentication, authorization)

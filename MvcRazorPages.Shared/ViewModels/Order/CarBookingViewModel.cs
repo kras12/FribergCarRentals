@@ -5,6 +5,7 @@ using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.Order
 {
@@ -83,7 +84,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// </summary>
         /// <remarks>The date is saved in the database with the time component stripped off.</remarks>
         [DisplayName("Pickup Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
         [BindNever]
         public DateTime CarPickupDate { get; }
 
@@ -92,7 +93,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// </summary>
         /// <remarks>The date is saved in the database with the time component stripped off.</remarks>
         [DisplayName("Return Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
         [BindNever]
         public DateTime CarReturnDate { get; }
 
@@ -113,7 +114,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// The rental cost per day.
         /// </summary>
         [DisplayName("Cost Per Day")]
-        [DisplayFormat(DataFormatString = DefaultPriceOutputFormatString)]
+        [DisplayFormat(DataFormatString = ValidationRules.DefaultPriceOutputFormatString)]
         [BindNever]
         public decimal RentalCostPerDay { get; }
 

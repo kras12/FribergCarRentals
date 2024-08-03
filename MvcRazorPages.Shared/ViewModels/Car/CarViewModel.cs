@@ -1,4 +1,5 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Shared.Constants;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.Services;
 using MvcRazorPages.Shared.ViewModels.CarCategory;
@@ -75,7 +76,7 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         /// The rental cost per day.
         /// </summary>
         [DisplayName("Cost per day")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DefaultPriceOutputFormatString)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DefaultPriceOutputFormatString)]
         [BindNever]
         public override decimal RentalCostPerDay { get; set; }
 

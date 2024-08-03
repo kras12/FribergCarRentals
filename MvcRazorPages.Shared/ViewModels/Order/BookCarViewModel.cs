@@ -5,6 +5,7 @@ using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.Order
 {
@@ -38,8 +39,8 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// <param name="availableCarCategoryFilters">A collection of car categories that can be used as filters when searching for cars to rent.</param>
         /// <param name="havePerformedCarSearch">True if the user have performed a car search. </param>
         /// <param name="availableCars">A collection of cars that matches the chosen date filters, or all cars if no filters where chosen.</param>
-        /// <param name="pickupDateFilter">The pickup date filter to use when searching for cars to rent.</param>
-        /// <param name="returnDateFilter">The return date filter to use when searching for cars to rent.</param>
+        /// <param name="pickupDateFilter">An optional pickup date filter to override the default date when searching for cars to rent.</param>
+        /// <param name="returnDateFilter">An optional return date filter to override the default date when searching for cars to rent.</param>
         /// <param name="carCategoryFilter">The car category filter to use when searching for cars to rent.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
@@ -57,9 +58,17 @@ namespace MvcRazorPages.Shared.ViewModels.Order
 
             AvailableCars = availableCars is not null ? availableCars : new();
             HavePerformedCarSearch = havePerformedCarSearch;
-            PickupDateLocalTime = pickupDateFilter;
-            ReturnDateLocalTime = returnDateFilter;
             SelectedCarCategoryFilter = carCategoryFilter is not null ? carCategoryFilter.Value : 0;
+
+            if (pickupDateFilter is not null)
+            {
+                PickupDateLocalTime = pickupDateFilter.Value;
+            }
+
+            if (returnDateFilter is not null)
+            {
+                ReturnDateLocalTime = returnDateFilter.Value;
+            }
 
             SetAvailableCarCategoryFilters(availableCarCategoryFilters);
         }
@@ -92,24 +101,25 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// An ID of zero represents no filter. 
         /// </remarks>
         [DisplayName("Category")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(1, int.MaxValue)]
         public int SelectedCarCategoryFilter { get; set; }
 
         /// <summary>
         /// The pickup date filter to use when searching for cars.
         /// </summary>
         [DisplayName("Pickup Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
-        [Required]
-        public DateTime? PickupDateLocalTime { get; set; } = null;
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        public DateTime PickupDateLocalTime { get; set; } = DateTime.Now.AddDays(1);
 
         /// <summary>
         /// The return date filter to use when searching for cars.
         /// </summary>
         [DisplayName("Return Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DateFormatString)]
-        [Required]
-        public DateTime? ReturnDateLocalTime { get; set; } = null;
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        public DateTime ReturnDateLocalTime { get; set; } = DateTime.Now.AddDays(1);
 
         #endregion
 

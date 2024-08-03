@@ -6,7 +6,7 @@ namespace MvcRazorPages.Shared.ViewModels.Customer
     /// <summary>
     /// A view model that handles data related to user login.
     /// </summary>
-    public class LoginCustomerViewModel : UserLoginViewModel
+    public class LoginCustomerViewModel : LoginUserViewModel
     {
         #region Constructors
 

@@ -4,7 +4,7 @@ using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.ViewModels.Customer;
 using MvcRazorPages.Shared.ViewModels.Other;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 

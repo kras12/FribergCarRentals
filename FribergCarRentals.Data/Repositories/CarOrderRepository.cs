@@ -33,17 +33,30 @@ namespace FribergCarRentals.Data.Repositories
         /// <returns>A <see cref="Task"/> object.</returns>
         public override async Task AddAsync(CarOrderEntity entity)
         {
+            // Since we have a complex relationsship structure we make sure we are not tracking anything.
+            _databaseContext.ChangeTracker.Clear();
+
+            // Customer
+            entity.Customer!.Orders.Clear();                // Avoid conflicts with previous orders
+            _databaseContext.Attach(entity.Customer!);
+
             // Instead of adding the order first and manually change the tracking state of all existing entities in the database, 
             // we instead attach existing entities first and modify the tracking states later as necessary. 
             entity.CarBookings.ForEach(booking =>
             {
-                _databaseContext.Attach(booking.Car!);
+                // Make sure we only attach a car once.
+                if (!_databaseContext.Cars.Local.Any(x => x.CarId == booking.Car!.CarId))
+                {
+                    _databaseContext.Attach(booking.Car!);
+                }
+                
                 _databaseContext.Entry(booking.Car!).State = EntityState.Modified;  // The rental status will have changed
             });
-            entity.Customer!.Orders.Clear();                                        // Cars from other others will cause conflicts
-            _databaseContext.Attach(entity.Customer!);
+            
+            // Order
             await _databaseContext.CarOrders.AddAsync(entity);
             _databaseContext.Entry(entity.OrderStatus!).State = EntityState.Unchanged;
+
             await _databaseContext.SaveChangesAsync();
         }
 
@@ -67,6 +80,16 @@ namespace FribergCarRentals.Data.Repositories
             }
 
             throw new Exception("The order could not be found.");
+        }
+
+        /// <summary>
+        /// Checks whether an order exists.
+        /// </summary>
+        /// <param name="id">The ID of the order.</param>
+        /// <returns></returns>
+        public Task<bool> Exists(int id)
+        {
+            return _databaseContext.CarOrders.AnyAsync(x => x.CarOrderId == id);
         }
 
         /// <summary>

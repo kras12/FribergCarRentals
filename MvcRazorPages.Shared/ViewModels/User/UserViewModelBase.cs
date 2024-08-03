@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MvcRazorPages.Shared.ViewModels.Other;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.User
 {
@@ -82,20 +83,19 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// The email address for the user.
         /// </summary>
         [DisplayName("Email")]
-        [Required(AllowEmptyStrings = false)]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [DataType(DataType.EmailAddress)]
         [EmailAddress]
-        [ServerSideRegularExpression(EmailRegexPattern, ErrorMessage = EmailInputValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]        
+        [ServerSideRegularExpression(ValidationRules.EmailRegexPattern, ErrorMessage = ValidationMessages.EmailInputValidationMessage)]
         public virtual string Email { get; set; } = "";
 
         /// <summary>
         /// The first name for the user.
         /// </summary>
         [DisplayName("First Name")]
-        [Required]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersAndSpacesRegexPattern, ErrorMessage = OnlyLettersAndSpacesValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public virtual string FirstName { get; set; } = "";
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// The last name for the user.
         /// </summary>
         [DisplayName("Last Name")]
-        [Required]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersAndSpacesRegexPattern, ErrorMessage = OnlyLettersAndSpacesValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public virtual string LastName { get; set; } = "";
 
         #endregion

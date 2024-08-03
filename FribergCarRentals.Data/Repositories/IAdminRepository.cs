@@ -23,6 +23,13 @@ namespace FribergCarRentals.Data.Repositories
         public Task<bool> AnyAsync();
 
         /// <summary>
+        /// Gets an admin by email.
+        /// </summary>
+        /// <param name="email">The email of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containg the admin.</returns>
+        public Task<AdminEntity?> GetByEmailAsync(string email);
+
+        /// <summary>
         /// Attempts to fetch an admin by ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
@@ -37,6 +44,13 @@ namespace FribergCarRentals.Data.Repositories
         /// <param name="id">The ID of the admin.</param>
         /// <returns>A <see cref="Task"/> object containing the admin if found or null if not found.</returns>
         public Task<AdminEntity?> GetByUserIdAsync(string userId);
+
+        /// <summary>
+        /// Checks whether the admin's email address is confirmed.
+        /// </summary>
+        /// <param name="admin">The admin.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the email is confirmed.</returns>
+        public Task<bool> IsEmailConfirmedAsync(AdminEntity admin);
 
         #endregion
     }

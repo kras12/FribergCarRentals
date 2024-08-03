@@ -1,4 +1,4 @@
-﻿using FribergFastigheter.Server.Data.Entities;
+﻿using FribergCarRentals.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Data.EntityClasses

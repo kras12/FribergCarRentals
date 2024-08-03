@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using FribergCarRentals.Shared.Constants;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MvcRazorPages.Shared.ViewModels.User
@@ -43,7 +44,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// </summary>
         [DisplayName("New Password")]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
         public string? NewPassword { get; set; }
 
         // TODO - Give better name?

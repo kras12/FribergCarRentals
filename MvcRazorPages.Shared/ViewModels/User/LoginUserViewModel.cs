@@ -2,20 +2,21 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MvcRazorPages.Shared.ViewModels.Other;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.User
 {
     /// <summary>
     /// A viewmodel base class that handles data related to user login. 
     /// </summary>
-    public abstract class UserLoginViewModel : ViewModelBase
+    public abstract class LoginUserViewModel : ViewModelBase
     {
         #region Constructors
 
         /// <summary>
         /// A constructor. 
         /// </summary>
-        protected UserLoginViewModel()
+        protected LoginUserViewModel()
         {
 
         }
@@ -26,7 +27,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// <param name="email">The email for the user.</param>
         /// <param name="password">The password for the user.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserLoginViewModel(string email, string password)
+        protected LoginUserViewModel(string email, string password)
         {
             #region Checks
 
@@ -55,10 +56,9 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// </summary>
         [DisplayName("Email")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [DataType(DataType.EmailAddress)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
         [EmailAddress]
-        [ServerSideRegularExpression(EmailRegexPattern, ErrorMessage = EmailInputValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.EmailRegexPattern, ErrorMessage = ValidationMessages.EmailInputValidationMessage)]
         public string Email { get; set; } = "";
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         [DisplayName("Password")]
         [Required(AllowEmptyStrings = false)]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
         public string Password { get; set; } = "";
 
         #endregion

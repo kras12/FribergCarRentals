@@ -5,10 +5,11 @@ using MvcRazorPages.Shared.Helpers;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.ViewModels.Customer;
 using AutoMapper;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Data.Exceptions;
+using FribergCarRentals.Shared.Dto.Customer;
 
 namespace FribergCarRentals.Pages.Customer
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using FribergCarRentals.Shared.Constants;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -51,7 +52,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         [DisplayName("Password")]
         [Required(AllowEmptyStrings = false)]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: MaxPasswordLength, MinimumLength = MinPasswordLength, ErrorMessage = PasswordLengthValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
         public string Password { get; set; } = "";
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FribergFastigheter.Server.Data.Entities
+namespace FribergCarRentals.Data.Entities
 {
     /// <summary>
     /// An entity class that represent a User.
@@ -61,15 +61,7 @@ namespace FribergFastigheter.Server.Data.Entities
             Email = email;            
             EmailConfirmed = emailConfirmed;
             PhoneNumber = phoneNumber;
-            Password = password;
-
-            // TODO - Remove later. Framework does this when creating/updating
-            //NormalizedUserName = userName.ToUpper();
-            //NormalizedEmail = email.ToUpper();
-
-            // TODO - Remove later
-            //var hasher = new PasswordHasher<ApplicationUser>();
-            //PasswordHash = hasher.HashPassword(null!, password);
+            NewPassword = password;
         }
 
         #endregion
@@ -90,7 +82,7 @@ namespace FribergFastigheter.Server.Data.Entities
         /// The password to use when creating or updating users.
         /// </summary>
         [NotMapped]
-        public string? Password { get; set; } = null;
+        public string? NewPassword { get; set; } = null;
 
         #endregion
 

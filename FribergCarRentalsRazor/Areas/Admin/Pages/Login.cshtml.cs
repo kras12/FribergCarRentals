@@ -3,7 +3,7 @@ using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using MvcRazorPages.Shared.ViewModels.Admin;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 

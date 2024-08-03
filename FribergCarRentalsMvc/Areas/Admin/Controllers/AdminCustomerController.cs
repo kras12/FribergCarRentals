@@ -6,11 +6,13 @@ using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using MvcRazorPages.Shared.ViewModels.Customer;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
+using FribergCarRentals.Shared.Dto.Api;
+using FribergCarRentals.Shared;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -63,9 +65,6 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         // The injected Auto Mapper.
         private readonly IMapper _mapper;
 
-        // The injected user manager.
-        private readonly UserManager<ApplicationUser> _userManager;
-
         #endregion
 
         #region Constructors
@@ -81,11 +80,10 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         /// <param name="userStore">The injected user store.</param>
         /// <param name="emailStore">The injected email store.</param>
         public AdminCustomerController(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IMapper mapper, UserManager<ApplicationUser> userManager) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
         #endregion
@@ -259,22 +257,16 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var userId = await _customerRepository.GetUserId(editCustomerViewModel.AccountId) ?? throw new Exception($"Failed to find customer with ID: {editCustomerViewModel.AccountId}");
+                var customer = await _customerRepository.GetByIdAsync(id);
 
-                // Must fetch the user this way instead of fetching the customer entity and use the included user entity there.
-                // This is to avoid tracking conflicts with EF Core that occurs despite the fact that the customer retrieval is done as no tracking. 
-                var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception($"Failed to find user with ID: {userId}");
-
-                _mapper.Map(editCustomerViewModel, user);
-                await _userManager.UpdateAsync(user);
-
-                if (!string.IsNullOrEmpty(editCustomerViewModel.NewPassword))
+                if (customer == null)
                 {
-                    await _userManager.RemovePasswordAsync(user);
-                    await _userManager.AddPasswordAsync(user, editCustomerViewModel.NewPassword!);
+                    throw new Exception($"Failed to find customer with ID: {editCustomerViewModel.AccountId}");
                 }
 
-                var customer = await _customerRepository.GetByUserIdAsync(user.Id) ?? throw new Exception($"Failed to find customer with ID: {editCustomerViewModel.AccountId}");
+                _mapper.Map(editCustomerViewModel, customer.User);
+                await _customerRepository.UpdateAsync(customer);
+
                 EditCustomerViewModel viewModel = new EditCustomerViewModel(customer);
                 viewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
 
@@ -314,21 +306,21 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ResendConfirmEmailLink(int id)
         {
-            // Since we haven't implemented code for sending emails to the customer, 
-            // we will manually confirm the emails ourselves for now. 
-
-            var customer = await _customerRepository.GetByIdAsync(id) ?? throw new Exception($"Failed to fetch customer with ID: {id}");
-            var user = await _userManager.FindByIdAsync(customer.User.Id) ?? throw new Exception($"Failed to find user with ID: {customer.User.Id}");
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmResult = await _userManager.ConfirmEmailAsync(user, code);
-
-            if (confirmResult.Succeeded)
+            if (!await _customerRepository.CustomerExists(id))
             {
-                TempDataHelper.Set(TempData, ResentConfirmEmailLinkForCustomerIdTempDataKey, customer.CustomerId);
-                return RedirectToActionInArea(nameof(Details), new RouteValueDictionary(new { id }));
+                throw new Exception($"Failed to find user with ID: {id}");
             }
 
-            throw new Exception($"Failed to confirm email for user with ID: {id}");
+            string code = await _customerRepository.GenerateEmailConfirmationTokenAsync(id);
+            var confirmResult = await _customerRepository.ConfirmEmailAsync(id, code);
+
+            if (!confirmResult.Succeeded)
+            {
+                throw new Exception($"Failed to confirm email for user with ID: {id}");
+            }
+
+            TempDataHelper.Set(TempData, ResentConfirmEmailLinkForCustomerIdTempDataKey, id);
+            return RedirectToActionInArea(nameof(Details), new RouteValueDictionary(new { id }));
         }
 
         #endregion

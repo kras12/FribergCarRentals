@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.Other;
 using System.ComponentModel;
-using MvcRazorPages.Shared.DTO;
+using FribergCarRentals.Data.DTO;
 
 namespace MvcRazorPages.Shared.ViewModels.CarCategory
 {

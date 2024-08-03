@@ -1,7 +1,7 @@
 ﻿using FribergCarRentals.Data.DatabaseContexts;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Exceptions;
-using FribergFastigheter.Server.Data.Entities;
+using FribergCarRentals.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +60,7 @@ namespace FribergCarRentals.Data.Repositories
             #endregion
 
             // Create user
-            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.Password!);
+            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.NewPassword!);
             IdentityResult? addRoleResult = null;
 
             if (!createUserResult.Succeeded)
@@ -99,6 +99,16 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Gets an admin by email.
+        /// </summary>
+        /// <param name="email">The email of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containg the admin.</returns>
+        public async Task<AdminEntity?> GetByEmailAsync(string email)
+        {
+            return await _databaseContext.Admins.Where(x => x.User.Email == email).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// Attempts to fetch an admin by ID.
         /// </summary>
         /// <remarks>Returned entities will not be tracked by EF Core.</remarks>
@@ -118,6 +128,16 @@ namespace FribergCarRentals.Data.Repositories
         public Task<AdminEntity?> GetByUserIdAsync(string userId)
         {
             return _databaseContext.Admins.Where(x => x.User.Id == userId).AsNoTracking().SingleOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Checks whether the admin's email address is confirmed.
+        /// </summary>
+        /// <param name="admin">The admin.</param>
+        /// <returns>A <see cref="Task"/> object containing true if the email is confirmed.</returns>
+        public Task<bool> IsEmailConfirmedAsync(AdminEntity admin)
+        {
+            return _userManager.IsEmailConfirmedAsync(admin.User);
         }
 
         #endregion

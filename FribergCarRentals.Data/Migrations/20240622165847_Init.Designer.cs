@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FribergCarRentals.Data.V2.Migrations
+namespace FribergCarRentals.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240622165847_Init")]

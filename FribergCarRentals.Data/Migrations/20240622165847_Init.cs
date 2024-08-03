@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace FribergCarRentals.Data.V2.Migrations
+namespace FribergCarRentals.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration

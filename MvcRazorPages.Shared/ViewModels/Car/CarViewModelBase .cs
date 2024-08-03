@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using FribergCarRentals.Data.Types;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.Car
 {
@@ -13,20 +14,6 @@ namespace MvcRazorPages.Shared.ViewModels.Car
     /// </summary>
     public abstract class CarViewModelBase : ViewModelBase
     {
-        #region Constants
-
-        /// <summary>
-        /// The maximum allowed model year for a car.
-        /// </summary>
-        protected const int MaxCarModelYear = 2200;
-
-        /// <summary>
-        /// The minimum allowed model year for a car.
-        /// </summary>
-        protected const int MinCarModelYear = 1900;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -70,9 +57,9 @@ namespace MvcRazorPages.Shared.ViewModels.Car
                 throw new ArgumentNullException(nameof(model), $"The value of parameter '{model}' can't be null");
             }
 
-            if (modelYear < MinCarModelYear || modelYear > MaxCarModelYear)
+            if (modelYear < ValidationRules.CarModelYearMinimum || modelYear > ValidationRules.CarModelYearMaximum)
             {
-                throw new ArgumentOutOfRangeException(nameof(modelYear), $"The value of parameter '{modelYear}' ({modelYear}) must fit in the interval of '{MinCarModelYear}' and '{MaxCarModelYear}'.");
+                throw new ArgumentOutOfRangeException(nameof(modelYear), $"The value of parameter '{modelYear}' ({modelYear}) must fit in the interval of '{ValidationRules.CarModelYearMinimum}' and '{ValidationRules.CarModelYearMaximum}'.");
             }
 
             if (registrationNumber is null)
@@ -105,9 +92,9 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         /// The brand for the car.
         /// </summary>
         [DisplayName("Brand")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersNumbersAndSpacesRegexPattern, ErrorMessage = OnlyLettersNumbersAndSpacesValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersNumbersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersNumbersAndSpacesValidationMessage)]
         public virtual string Brand { get; set; } = "";
 
         /// <summary>
@@ -140,58 +127,58 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         /// The color for the car.
         /// </summary>
         [DisplayName("Color")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersAndSpacesRegexPattern, ErrorMessage = OnlyLettersAndSpacesValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public virtual string Color { get; set; } = "";
 
         /// <summary>
         /// The model for the car.
         /// </summary>
         [DisplayName("Model")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersNumbersAndSpacesRegexPattern, ErrorMessage = OnlyLettersNumbersAndSpacesValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersNumbersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersNumbersAndSpacesValidationMessage)]
         public virtual string Model { get; set; } = "";
 
         /// <summary>
         /// The model year for the car.
         /// </summary>
         [DisplayName("Year")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
-        [Range(MinCarModelYear, MaxCarModelYear)]        
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(ValidationRules.CarModelYearMinimum, ValidationRules.CarModelYearMaximum)]        
         public virtual int ModelYear { get; set; }
 
         /// <summary>
         /// The propulsion system for the car.
         /// </summary>
         [DisplayName("Propulsion")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public virtual VehiclePropulsionEntity PropulsionSystem { get; set; } = VehiclePropulsionEntity.CreateFromType(VehiclePropulsionType.None);
 
         /// <summary>
         /// The registration number for the car.
         /// </summary>
         [DisplayName("Reg Nr")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
-        [StringLength(maximumLength: 6, ErrorMessage = RegistrationNumberValidationMessage)]
-        [RegularExpression(RegistrationNumberRegexPattern, ErrorMessage = RegistrationNumberValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: 6, ErrorMessage = ValidationMessages.RegistrationNumberValidationMessage)]
+        [RegularExpression(ValidationRules.RegistrationNumberRegexPattern, ErrorMessage = ValidationMessages.RegistrationNumberValidationMessage)]
         public virtual string RegistrationNumber { get; set; } = "";
 
         /// <summary>
         /// The rental cost per day.
         /// </summary>
         [DisplayName("Cost per day")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
-        [Range(0, 20_000)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = DefaultFloatNumberInputFormatString)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(ValidationRules.RentalCostPerDayMinimum, ValidationRules.RentalCostPerDayMaximum)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DefaultFloatNumberInputFormatString)]
         public virtual decimal RentalCostPerDay { get; set; }
 
         /// <summary>
         /// The rental status for the car.
         /// </summary>
         [DisplayName("Status")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = MandatoryFieldValidationMessage)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public virtual CarRentalStatusEntity RentalStatus { get; set; } = CarRentalStatusEntity.CreateFromType(RentalCarStatus.None);
 
         #endregion

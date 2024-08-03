@@ -1,7 +1,6 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
-using FribergFastigheter.Server.Data.Entities;
 
-namespace FribergCarRentals.Shared.Services
+namespace MvcRazorPages.Shared.Services
 {
     /// <summary>
     /// Interface for a service that seeds data to the database. 

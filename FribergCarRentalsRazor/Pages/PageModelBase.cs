@@ -1,4 +1,4 @@
-﻿using FribergFastigheter.Server.Data.Entities;
+﻿using FribergCarRentals.Data.Entities;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

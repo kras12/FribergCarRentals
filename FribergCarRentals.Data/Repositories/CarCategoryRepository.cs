@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
-using MvcRazorPages.Shared.DTO;
+using FribergCarRentals.Data.DTO;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -25,6 +25,16 @@ namespace FribergCarRentals.Data.Repositories
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Checks the existence of a car category.
+        /// </summary>
+        /// <param name="carCategoryId">The ID of the category to look for.</param>
+        /// <returns>A <see cref="Task"/> containing true if the category exists.</returns>
+        public Task<bool> CategoryExists(int carCategoryId)
+        {
+            return _databaseContext.CarCategories.AnyAsync(x =>  x.CarCategoryId == carCategoryId);
+        }
 
         /// <summary>
         /// Deletes a car category from the database.

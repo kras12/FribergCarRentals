@@ -6,7 +6,7 @@ namespace MvcRazorPages.Shared.ViewModels.Admin
     /// <summary>
     /// A view model class to handle login input data for an admin. 
     /// </summary>
-    public class LoginAdminViewModel : UserLoginViewModel
+    public class LoginAdminViewModel : LoginUserViewModel
     {
         #region Constructors
 

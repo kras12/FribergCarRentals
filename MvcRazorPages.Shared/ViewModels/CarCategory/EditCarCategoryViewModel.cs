@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MvcRazorPages.Shared.Attributes;
 using MvcRazorPages.Shared.ViewModels.Other;
+using FribergCarRentals.Shared.Constants;
 
 namespace MvcRazorPages.Shared.ViewModels.CarCategory
 {
@@ -56,12 +57,12 @@ namespace MvcRazorPages.Shared.ViewModels.CarCategory
         public int CarCategoryId { get; set; }
 
         /// <summary>
-        /// The filename for the category.
+        /// The name for the category.
         /// </summary>
         [DisplayName("Category Name")]
         [Required]
-        [StringLength(maximumLength: DefaultMaxCharacterInput, ErrorMessage = InputTooLongValidationMessage)]
-        [ServerSideRegularExpression(LettersAndSpacesRegexPattern, ErrorMessage = OnlyLettersAndSpacesValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
+        [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public string CategoryName { get; set; } = "";
 
         #endregion
