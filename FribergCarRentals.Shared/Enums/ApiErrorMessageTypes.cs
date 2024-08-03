@@ -12,6 +12,7 @@
         InputDataConflict,
         InvalidInputData,
         ResourceNotFound,
+        ResourceNotModified,
         ResourceOwnershipConflict,
         UserCreationFailed,
         UserExist,
