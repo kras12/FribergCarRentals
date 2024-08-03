@@ -1,5 +1,6 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Shared.Constants;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MvcRazorPages.Shared.ViewModels.Other;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -54,14 +55,15 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// Description of the car.
         /// </summary>
         [DisplayName("Car")]
-        [Required]
+        [Required(ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [BindNever]
         public string CarDescription { get; set;  } = "";
 
         /// <summary>
         /// The ID of the car for the order.
         /// </summary>
         [DisplayName("Car ID")]
-        [Required]
+        [Required(ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         [Range(1, int.MaxValue, ErrorMessage = "The value must be a positive number larger than 1.")]
         public int CarId { get; set; }
 
@@ -70,7 +72,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// </summary>
         [DisplayName("Pickup Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
-        [Required]
+        [Required(ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public DateTime PickupDateLocalTime { get; set; }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// </summary>
         [DisplayName("Return Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
-        [Required]
+        [Required(ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public DateTime ReturnDateLocalTime { get; set; }
 
         #endregion

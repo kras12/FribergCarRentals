@@ -83,10 +83,9 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// The email address for the user.
         /// </summary>
         [DisplayName("Email")]
-        [Required(AllowEmptyStrings = false)]
-        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
-        [DataType(DataType.EmailAddress)]
         [EmailAddress]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]        
         [ServerSideRegularExpression(ValidationRules.EmailRegexPattern, ErrorMessage = ValidationMessages.EmailInputValidationMessage)]
         public virtual string Email { get; set; } = "";
 
@@ -94,7 +93,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// The first name for the user.
         /// </summary>
         [DisplayName("First Name")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
         [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public virtual string FirstName { get; set; } = "";
@@ -116,7 +115,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// The last name for the user.
         /// </summary>
         [DisplayName("Last Name")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         [StringLength(maximumLength: ValidationRules.DefaultMaxCharacterInput, ErrorMessage = ValidationMessages.InputTooLongValidationMessage)]
         [ServerSideRegularExpression(ValidationRules.LettersAndSpacesRegexPattern, ErrorMessage = ValidationMessages.OnlyLettersAndSpacesValidationMessage)]
         public virtual string LastName { get; set; } = "";

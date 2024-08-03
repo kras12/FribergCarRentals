@@ -52,7 +52,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         [DisplayName("Password")]
         [Required(AllowEmptyStrings = false)]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: ValidationRules.MaxPasswordLength, MinimumLength = ValidationRules.MinPasswordLength, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
         public string Password { get; set; } = "";
 
         /// <summary>

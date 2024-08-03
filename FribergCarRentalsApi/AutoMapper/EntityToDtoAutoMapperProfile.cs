@@ -3,6 +3,7 @@ using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Shared.Dto.Admin;
 using FribergCarRentals.Shared.Dto.Car;
+using FribergCarRentals.Shared.Dto.CarCategory;
 using FribergCarRentals.Shared.Dto.Customer;
 using FribergCarRentals.Shared.Dto.Image;
 using FribergCarRentals.Shared.Dto.Order;

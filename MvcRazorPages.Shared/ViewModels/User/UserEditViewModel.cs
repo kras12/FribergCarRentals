@@ -44,7 +44,7 @@ namespace MvcRazorPages.Shared.ViewModels.User
         /// </summary>
         [DisplayName("New Password")]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: ValidationRules.MaxPasswordLength, MinimumLength = ValidationRules.MinPasswordLength, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
+        [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
         public string? NewPassword { get; set; }
 
         // TODO - Give better name?

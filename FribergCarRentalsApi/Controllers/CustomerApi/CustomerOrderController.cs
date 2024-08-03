@@ -6,6 +6,7 @@ using FribergCarRentals.Data.Types;
 using FribergCarRentals.Shared;
 using FribergCarRentals.Shared.Dto.Api;
 using FribergCarRentals.Shared.Dto.Car;
+using FribergCarRentals.Shared.Dto.CarCategory;
 using FribergCarRentals.Shared.Dto.Order;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;

@@ -1,4 +1,7 @@
-﻿using FribergCarRentals.Shared.Dto.Car;
+﻿using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Dto.Car;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Shared.Dto.Order
 {
@@ -12,16 +15,21 @@ namespace FribergCarRentals.Shared.Dto.Order
         /// <summary>
         /// The car category filter to use when searching for cars. 
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(1, int.MaxValue)]
+        [DefaultValue(1)]
         public int? SelectedCarCategoryFilter { get; set; } = null;
 
         /// <summary>
         /// The pickup date filter to use when searching for cars.
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public DateTime PickupDateLocalTime { get; set; }
 
         /// <summary>
         /// The return date filter to use when searching for cars.
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public DateTime ReturnDateLocalTime { get; set; }
 
         #endregion

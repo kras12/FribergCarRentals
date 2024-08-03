@@ -3,6 +3,7 @@ using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Types;
 using FribergCarRentals.Shared.Dto.Car;
+using FribergCarRentals.Shared.Dto.CarCategory;
 using FribergCarRentals.Shared.Dto.Customer;
 
 namespace FribergCarRentalsApi.AutoMapper

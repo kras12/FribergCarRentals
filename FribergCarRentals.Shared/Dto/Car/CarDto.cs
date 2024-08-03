@@ -1,4 +1,5 @@
-﻿using FribergCarRentals.Shared.Dto.Image;
+﻿using FribergCarRentals.Shared.Dto.CarCategory;
+using FribergCarRentals.Shared.Dto.Image;
 
 namespace FribergCarRentals.Shared.Dto.Car
 {

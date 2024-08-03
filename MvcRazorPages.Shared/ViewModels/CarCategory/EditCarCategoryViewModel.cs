@@ -57,7 +57,7 @@ namespace MvcRazorPages.Shared.ViewModels.CarCategory
         public int CarCategoryId { get; set; }
 
         /// <summary>
-        /// The filename for the category.
+        /// The name for the category.
         /// </summary>
         [DisplayName("Category Name")]
         [Required]

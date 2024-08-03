@@ -14,20 +14,6 @@ namespace MvcRazorPages.Shared.ViewModels.Car
     /// </summary>
     public abstract class CarViewModelBase : ViewModelBase
     {
-        #region Constants
-
-        /// <summary>
-        /// The maximum allowed model year for a car.
-        /// </summary>
-        protected const int MaxCarModelYear = 2200;
-
-        /// <summary>
-        /// The minimum allowed model year for a car.
-        /// </summary>
-        protected const int MinCarModelYear = 1900;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -71,9 +57,9 @@ namespace MvcRazorPages.Shared.ViewModels.Car
                 throw new ArgumentNullException(nameof(model), $"The value of parameter '{model}' can't be null");
             }
 
-            if (modelYear < MinCarModelYear || modelYear > MaxCarModelYear)
+            if (modelYear < ValidationRules.CarModelYearMinimum || modelYear > ValidationRules.CarModelYearMaximum)
             {
-                throw new ArgumentOutOfRangeException(nameof(modelYear), $"The value of parameter '{modelYear}' ({modelYear}) must fit in the interval of '{MinCarModelYear}' and '{MaxCarModelYear}'.");
+                throw new ArgumentOutOfRangeException(nameof(modelYear), $"The value of parameter '{modelYear}' ({modelYear}) must fit in the interval of '{ValidationRules.CarModelYearMinimum}' and '{ValidationRules.CarModelYearMaximum}'.");
             }
 
             if (registrationNumber is null)
@@ -160,7 +146,7 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         /// </summary>
         [DisplayName("Year")]
         [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
-        [Range(MinCarModelYear, MaxCarModelYear)]        
+        [Range(ValidationRules.CarModelYearMinimum, ValidationRules.CarModelYearMaximum)]        
         public virtual int ModelYear { get; set; }
 
         /// <summary>
@@ -184,7 +170,7 @@ namespace MvcRazorPages.Shared.ViewModels.Car
         /// </summary>
         [DisplayName("Cost per day")]
         [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
-        [Range(0, 20_000)]
+        [Range(ValidationRules.RentalCostPerDayMinimum, ValidationRules.RentalCostPerDayMaximum)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DefaultFloatNumberInputFormatString)]
         public virtual decimal RentalCostPerDay { get; set; }
 

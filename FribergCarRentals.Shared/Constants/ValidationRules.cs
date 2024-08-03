@@ -37,6 +37,16 @@
         #region OtherConstants
 
         /// <summary>
+        /// The minimum model year allowed.
+        /// </summary>
+        public const int CarModelYearMinimum = 1900;
+
+        /// <summary>
+        /// The maximum model year allowed. 
+        /// </summary>
+        public const int CarModelYearMaximum = 2200;
+
+        /// <summary>
         /// A format string for showing date only (format yyyy-MM-dd).
         /// </summary>
         public const string DateFormatString = "{0:yyyy-MM-dd}";
@@ -69,12 +79,22 @@
         /// <summary>
         /// The maximum allowed password length.
         /// </summary>
-        public const int MaxPasswordLength = 50;
+        public const int PasswordLengthMaximum = 50;
 
         /// <summary>
         /// The minimum allowed password length.
         /// </summary>
-        public const int MinPasswordLength = 6;
+        public const int PasswordLengthMinium = 6;
+
+        /// <summary>
+        /// The minimum allowed amount to input for the daily rental cost. 
+        /// </summary>
+        public const int RentalCostPerDayMinimum = 0;
+
+        /// <summary>
+        /// The maximum allowed amount to input for the daily rental cost. 
+        /// </summary>
+        public const int RentalCostPerDayMaximum = 20_000;
 
         #endregion
     }

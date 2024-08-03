@@ -101,7 +101,8 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// An ID of zero represents no filter. 
         /// </remarks>
         [DisplayName("Category")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(1, int.MaxValue)]
         public int SelectedCarCategoryFilter { get; set; }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// </summary>
         [DisplayName("Pickup Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public DateTime PickupDateLocalTime { get; set; } = DateTime.Now.AddDays(1);
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace MvcRazorPages.Shared.ViewModels.Order
         /// </summary>
         [DisplayName("Return Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DateFormatString)]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         public DateTime ReturnDateLocalTime { get; set; } = DateTime.Now.AddDays(1);
 
         #endregion

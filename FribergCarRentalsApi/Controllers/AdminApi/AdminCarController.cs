@@ -5,6 +5,7 @@ using FribergCarRentals.Helpers;
 using FribergCarRentals.Shared;
 using FribergCarRentals.Shared.Dto.Api;
 using FribergCarRentals.Shared.Dto.Car;
+using FribergCarRentals.Shared.Dto.CarCategory;
 using FribergCarRentals.Shared.Dto.Image;
 using FribergCarRentalsApi.Services;
 using FribergFastigheter.Shared.Constants;

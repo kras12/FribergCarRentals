@@ -173,6 +173,11 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                 return Unauthorized(CreateUnauthorizedResponse());
             }
 
+            if (id <= 0)
+            {
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid customer id: {id}"));
+            }
+
             int userId = int.Parse(User.FindFirstValue(ApplicationUserClaims.CustomerId)!);
 
             if (id != userId)

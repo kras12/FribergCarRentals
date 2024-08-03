@@ -1,4 +1,4 @@
-﻿namespace FribergCarRentals.Shared.Dto.Car
+﻿namespace FribergCarRentals.Shared.Dto.CarCategory
 {
     /// <summary>
     /// A DTO class that represents a car category.

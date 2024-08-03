@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.DTO;
-using FribergCarRentals.Shared.Dto.Car;
+using FribergCarRentals.Shared.Dto.CarCategory;
 
 namespace FribergCarRentalsApi.AutoMapper
 {
