@@ -170,14 +170,14 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Customer))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CustomerDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             int userId = int.Parse(User.FindFirstValue(ApplicationUserClaims.CustomerId)!);
 
             if (id != userId)
             {
-                return Unauthorized(CreateUnauthorizedResponse<CustomerDto>("You are not authorized to fetch data for other customers."));
+                return Unauthorized(CreateUnauthorizedResponse("You are not authorized to fetch data for other customers."));
             }
 
             var customer = await _customerRepository.GetByIdAsync(id);

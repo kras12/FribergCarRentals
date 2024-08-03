@@ -3,7 +3,7 @@
     /// <summary>
     /// A DTO class for application users.
     /// </summary>
-    public class ApplicationUserDto
+    public class UserDto
     {
         #region Properties
 

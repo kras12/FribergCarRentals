@@ -17,7 +17,7 @@ namespace FribergCarRentals.Shared.Dto.Admin
         /// <summary>
 		/// The user associated with the admin.
 		/// </summary>
-        public required ApplicationUserDto User { get; set; }
+        public required UserDto User { get; set; }
 
         #endregion
     }

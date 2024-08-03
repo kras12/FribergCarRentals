@@ -59,6 +59,8 @@ namespace FribergCarRentalsApi.AutoMapper
         {
             CreateMap<CreateCustomerDto, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
+
+            CreateMap<EditCustomerDto, ApplicationUser>();
         }
 
         #endregion

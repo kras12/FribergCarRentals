@@ -1,4 +1,6 @@
-﻿using FribergCarRentals.Data.EntityClasses;
+﻿using FribergCarRentals.Data.Entities;
+using FribergCarRentals.Data.EntityClasses;
+using Microsoft.AspNetCore.Identity;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -10,6 +12,14 @@ namespace FribergCarRentals.Data.Repositories
         #region Methods
 
         /// <summary>
+        /// Confirms an email account for the customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <param name="token">The token to use.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public Task<IdentityResult> ConfirmEmailAsync(int id, string token);
+
+        /// <summary>
         /// Checks whether a customer with the specified email exists. 
         /// </summary>
         /// <param name="email">The email for the customer.</param>
@@ -17,11 +27,26 @@ namespace FribergCarRentals.Data.Repositories
         public Task<bool> CustomerExists(string email);
 
         /// <summary>
+        /// Checks whether a customer with the specified ID exists. 
+        /// </summary>
+        /// <param name="id">The ID for the customer.</param>
+        /// <returns>A <see cref="Task"/> object containing true if there was a matching customer.</returns>
+        public Task<bool> CustomerExists(int id);
+
+        /// <summary>
         /// Deletes a customer from the database.
         /// </summary>
         /// <param name="id">The ID of the customer to delete.</param>
         /// <returns>A <see cref="Task"/>.</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
         public Task DeleteAsync(int id);
+
+        /// <summary>
+        /// Generates an email confirmation token for the customer.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public Task<string> GenerateEmailConfirmationTokenAsync(int customerId);
 
         /// <summary>
         /// Gets a customer by email.
@@ -51,6 +76,14 @@ namespace FribergCarRentals.Data.Repositories
         /// <param name="customer">The customer.</param>
         /// <returns>A <see cref="Task"/> object containing true if the email is confirmed.</returns>
         public Task<bool> IsEmailConfirmedAsync(CustomerEntity customer);
+
+        /// <summary>
+        /// Updates the password of a customer.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer.</param>
+        /// <param name="password">The new password.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public Task UpdatePasswordAsync(int customerId, string password);
 
         #endregion
     }

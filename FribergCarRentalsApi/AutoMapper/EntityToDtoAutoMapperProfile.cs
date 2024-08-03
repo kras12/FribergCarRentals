@@ -80,7 +80,7 @@ namespace FribergCarRentalsApi.AutoMapper
         /// </summary>
         private void CreateUserMappings()
         {
-            CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<ApplicationUser, UserDto>();
         }
 
         #endregion

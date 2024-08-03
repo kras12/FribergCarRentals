@@ -54,7 +54,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             var fileResult = await _imageDownloadService.PrepareImageFileDownloadAsync(fileName);

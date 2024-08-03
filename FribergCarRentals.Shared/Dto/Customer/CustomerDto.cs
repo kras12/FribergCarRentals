@@ -23,7 +23,7 @@ namespace FribergCarRentals.Shared.Dto.Customer
         /// <summary>
 		/// The user associated with the customer.
 		/// </summary>
-        public required ApplicationUserDto User { get; set; }
+        public required UserDto User { get; set; }
 
         #endregion
     }

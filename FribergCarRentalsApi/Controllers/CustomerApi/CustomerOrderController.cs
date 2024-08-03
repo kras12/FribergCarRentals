@@ -119,7 +119,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Customer))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)
@@ -155,7 +155,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Customer))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (!ValidatePickupDate(createCarOrderDto.PickupDateLocalTime))
@@ -212,7 +212,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Customer))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             int customerId = int.Parse(User.FindFirstValue(ApplicationUserClaims.CustomerId)!);
@@ -252,7 +252,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Customer))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarOrderDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id < 0)

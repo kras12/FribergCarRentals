@@ -88,7 +88,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<AdminDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)
@@ -100,7 +100,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
 
             if (id != adminId)
             {
-                return Unauthorized(CreateUnauthorizedResponse<AdminDto>("You are not authorized to fetch data for other admins."));
+                return Unauthorized(CreateUnauthorizedResponse("You are not authorized to fetch data for other admins."));
             }
 
             var admin = await _adminRepository.GetByIdAsync(id);

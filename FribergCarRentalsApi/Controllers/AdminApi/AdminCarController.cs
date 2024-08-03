@@ -83,12 +83,13 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [ProducesResponseType<ApiValueResponseDto<CarDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [HttpPost]
         public async Task<IActionResult> Create(CreateCarDto createCarDto)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             var car = _mapper.Map<CarEntity>(createCarDto);
@@ -121,7 +122,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (files.Count == 0)
@@ -146,28 +147,28 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// </summary>
         /// <param name="id">The ID for the car.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
-        [ProducesResponseType<ApiValueResponseDto<CarDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<ApiValueResponseDto<CarDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)
             {
-                return BadRequest(ApiValueResponseDto<CarCategoryDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid car id: {id}"));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid car id: {id}"));
             }
 
             var car = await _carRepository.GetByIdAsync(id);
 
             if (car == null)
             {
-                return NotFound(ApiValueResponseDto<CarDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {id}"));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {id}"));
             }
 
             if (car!.Images.Count > 0)
@@ -195,7 +196,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (deleteCarImagesDto.ImageIds.Count == 0)
@@ -227,13 +228,12 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
-
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(int id, EditCarDto editCarDto)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)
@@ -279,7 +279,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)
@@ -291,7 +291,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
 
             if (car == null)
             {
-                return NotFound(ApiValueResponseDto<CarDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {id}"));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {id}"));
             }
 
             var finalCar = _mapper.Map<CarDto>(car);
@@ -313,7 +313,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             var cars = _mapper.Map<List<CarDto>>((await _carRepository.GetAllAsync()).ToList());

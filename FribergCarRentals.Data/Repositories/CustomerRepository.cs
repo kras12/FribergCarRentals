@@ -85,6 +85,33 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Confirms an email account for the customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <param name="token">The token to use.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public async Task<IdentityResult> ConfirmEmailAsync(int id, string token)
+        {
+            #region Checks
+
+            if (id <= 0)
+            {
+                throw new ArgumentException("Customer ID must be larger than zero.", nameof(id));
+            }
+
+            #endregion
+
+            var customer = await _databaseContext.Customers.SingleOrDefaultAsync(x => x.CustomerId == id);
+
+            if (customer == null)
+            {
+                throw new EntityNotFoundException($"Failed to find customer with ID: '{id}'");
+            }
+
+            return await _userManager.ConfirmEmailAsync(customer.User, token);
+        }
+
+        /// <summary>
         /// Checks whether a customer with the specified email exists. 
         /// </summary>
         /// <param name="email">The email for the customer.</param>
@@ -95,15 +122,59 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Checks whether a customer with the specified ID exists. 
+        /// </summary>
+        /// <param name="id">The ID for the customer.</param>
+        /// <returns>A <see cref="Task"/> object containing true if there was a matching customer.</returns>
+        public Task<bool> CustomerExists(int id)
+        {
+            return _databaseContext.Customers.AnyAsync(x => x.CustomerId == id);
+        }
+
+        /// <summary>
         /// Deletes a customer from the database.
         /// </summary>
         /// <param name="id">The ID of the customer to delete.</param>
         /// <returns>A <see cref="Task"/>.</returns>
+        /// <exception cref="EntityNotFoundException"></exception>
         public Task DeleteAsync(int id)
         {
-            var entity = new CustomerEntity() { CustomerId = id };
-            _databaseContext.Customers.Remove(entity);
-            return _databaseContext.SaveChangesAsync();
+            try
+            {
+                var entity = new CustomerEntity() { CustomerId = id };
+                _databaseContext.Customers.Remove(entity);
+                return _databaseContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new EntityNotFoundException($"The customer with ID '{id}' was not found.");
+            }
+        }
+
+        /// <summary>
+        /// Generates an email confirmation token for the customer.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public async Task<string> GenerateEmailConfirmationTokenAsync(int customerId)
+        {
+            #region Checks
+
+            if (customerId <= 0)
+            {
+                throw new ArgumentException("Customer ID must be larger than zero.", nameof(customerId));
+            }
+
+            #endregion
+
+            var customer = await _databaseContext.Customers.SingleOrDefaultAsync(x => x.CustomerId == customerId);
+
+            if (customer == null)
+            {
+                throw new EntityNotFoundException($"Failed to find customer with ID: '{customerId}'");
+            }
+
+            return await _userManager.GenerateEmailConfirmationTokenAsync(customer.User);
         }
 
         /// <summary>
@@ -167,6 +238,56 @@ namespace FribergCarRentals.Data.Repositories
         public Task<bool> IsEmailConfirmedAsync(CustomerEntity customer)
         {
             return _userManager.IsEmailConfirmedAsync(customer.User);
+        }
+
+        /// <summary>
+        /// Updates a customer.
+        /// </summary>
+        /// <param name="customer">The customer to update.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public override async Task UpdateAsync(CustomerEntity customer)
+        {
+            _databaseContext.Customers.Update(customer);
+
+            if (!string.IsNullOrEmpty(customer.User.NewPassword))
+            {
+                await UpdatePasswordAsync(customer.CustomerId, customer.User.NewPassword);
+            }
+
+            await _databaseContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Updates the password of a customer.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer.</param>
+        /// <param name="password">The new password.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public async Task UpdatePasswordAsync(int customerId, string password)
+        {
+            #region Checks
+
+            if (customerId <= 0)
+            {
+                throw new ArgumentException("Customer ID must be larger than zero.", nameof(customerId));
+            }
+
+            if (!string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("Password can't be null or empty.", nameof(password));
+            }
+
+            #endregion
+
+            var customer = await _databaseContext.Customers.SingleOrDefaultAsync(x => x.CustomerId == customerId);
+
+            if (customer  == null)
+            {
+                throw new EntityNotFoundException($"Failed to find customer with ID: '{customerId}'");
+            }
+
+            await _userManager.RemovePasswordAsync(customer.User);
+            await _userManager.AddPasswordAsync(customer.User, password);
         }
 
         #endregion

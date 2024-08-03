@@ -62,7 +62,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             var category = _mapper.Map<CarCategoryEntity>(createCarCategoryDto);
@@ -85,7 +85,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)
@@ -117,7 +117,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)
@@ -149,7 +149,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             var categoryStatistics = await _carCategoryRepository.GetAllAsync();
@@ -167,7 +167,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             var categoryStatistics = await _carCategoryRepository.GetCategoryStatistics();
@@ -188,7 +188,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
-                return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
+                return Unauthorized(CreateUnauthorizedResponse());
             }
 
             if (id <= 0)

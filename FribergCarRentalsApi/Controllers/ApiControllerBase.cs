@@ -40,7 +40,7 @@ namespace FribergCarRentalsApi.Controllers
         /// </summary>
         /// <typeparam name="T">The for the <see cref="ApiResponseDto{T}"/> object.</typeparam>
         /// <returns>An <see cref="ApiResponseDto{T}"/> object.</returns>
-        protected ApiResponseDto CreateUnauthorizedResponse<T>(string? overrideMessage = null) where T : class
+        protected ApiResponseDto CreateUnauthorizedResponse(string? overrideMessage = null)
         {
             string message = overrideMessage ?? "Authorization failed.";
             return ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.AuthorizationError.ToString(),
