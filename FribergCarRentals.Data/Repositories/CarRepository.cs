@@ -2,7 +2,7 @@
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
 using FribergCarRentals.Data.Types;
-using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.Data.Exceptions;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -61,8 +61,7 @@ namespace FribergCarRentals.Data.Repositories
 
             if (car == null)
             {
-                // TODO - Create a new exception class for this kind of situation.
-                throw new Exception($"The car with ID '{carId}' doesn't exist.");
+                throw new EntityNotFoundException($"The car with ID '{carId}' doesn't exist.");
             }
 
             car.Images.AddRange(images);
@@ -86,9 +85,16 @@ namespace FribergCarRentals.Data.Repositories
         /// <returns>A <see cref="Task"/>.</returns>
         public Task DeleteAsync(int id)
         {
-            var car = new CarEntity() { CarId = id };
-            _databaseContext.Cars.Remove(car);
-            return _databaseContext.SaveChangesAsync();
+            try
+            {
+                var car = new CarEntity() { CarId = id };
+                _databaseContext.Cars.Remove(car);
+                return _databaseContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new EntityNotFoundException($"The car with ID '{id}' doesn't exist.");
+            }
         }
 
         /// <summary>
@@ -123,8 +129,7 @@ namespace FribergCarRentals.Data.Repositories
 
             if (car == null)
             {
-                // TODO - Create a new exception class for this kind of situation.
-                throw new Exception($"The car with ID '{carId}' doesn't exist.");
+                throw new EntityNotFoundException($"The car with ID '{carId}' doesn't exist.");
             }
 
             car.Images.RemoveAll(x => imageIds.Contains(x.ImageId));
