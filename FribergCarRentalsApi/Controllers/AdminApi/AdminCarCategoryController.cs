@@ -56,8 +56,8 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="createCarCategoryDto">The input data for the category.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpPost]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiValueResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateCategory(CreateCarCategoryDto createCarCategoryDto)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -68,7 +68,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             var category = _mapper.Map<CarCategoryEntity>(createCarCategoryDto);
             await _carCategoryRepository.AddAsync(category);
             
-            return Ok(ApiResponseDto<CarCategoryDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryDto>(category)));
+            return Ok(ApiValueResponseDto<CarCategoryDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryDto>(category)));
         }
 
         /// <summary>
@@ -77,10 +77,10 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="id">The ID of the category.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpDelete("{id}")]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiValueResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -88,18 +88,18 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
             }
 
-            if (id < 0)
+            if (id <= 0)
             {
-                return BadRequest(ApiResponseDto<CarCategoryDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid category id: {id}"));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid category id: {id}"));
             }
 
             if (!await _carCategoryRepository.CategoryExists(id))
             {
-                return NotFound(ApiResponseDto<CarCategoryDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car category not found."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car category not found."));
             }
 
             await _carCategoryRepository.DeleteAsync(id);
-            return Ok(ApiResponseDto<CarCategoryDto>.CreateSuccessfulResponse(null!));
+            return Ok(ApiValueResponseDto<CarCategoryDto>.CreateSuccessfulResponse(null!));
         }
 
         /// <summary>
@@ -109,10 +109,10 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="editCarCategoryDto">The new data for the category.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpPut("{id}")]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiValueResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit(int id, EditCarCategoryDto editCarCategoryDto)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -120,14 +120,14 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
             }
 
-            if (id < 0)
+            if (id <= 0)
             {
-                return BadRequest(ApiResponseDto<CarCategoryDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid category id: {id}"));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid category id: {id}"));
             }
 
             if (!await _carCategoryRepository.CategoryExists(id))
             {
-                return NotFound(ApiResponseDto<CarCategoryDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car category not found."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car category not found."));
             }
 
             var category = _mapper.Map<CarCategoryEntity>(editCarCategoryDto);
@@ -135,7 +135,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
 
             await _carCategoryRepository.UpdateAsync(category);
 
-            return Ok(ApiResponseDto<CarCategoryDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryDto>(category)));
+            return Ok(ApiValueResponseDto<CarCategoryDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryDto>(category)));
         }
 
         /// <summary>
@@ -143,8 +143,8 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// </summary>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet]
-        [ProducesResponseType<ApiResponseDto<List<CarCategoryDto>>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<List<CarCategoryDto>>>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiValueResponseDto<List<CarCategoryDto>>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetCarCategories()
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -153,7 +153,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             var categoryStatistics = await _carCategoryRepository.GetAllAsync();
-            return Ok(ApiResponseDto<List<CarCategoryDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarCategoryDto>>(categoryStatistics)));
+            return Ok(ApiValueResponseDto<List<CarCategoryDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarCategoryDto>>(categoryStatistics)));
         }
 
         /// <summary>
@@ -161,8 +161,8 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// </summary>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet("statistics")]
-        [ProducesResponseType<ApiResponseDto<List<CarCategoryStatisticsDto>>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<List<CarCategoryStatisticsDto>>>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiValueResponseDto<List<CarCategoryStatisticsDto>>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetCarCategoryStatistics()
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -171,7 +171,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             var categoryStatistics = await _carCategoryRepository.GetCategoryStatistics();
-            return Ok(ApiResponseDto<List<CarCategoryStatisticsDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarCategoryStatisticsDto>>(categoryStatistics)));
+            return Ok(ApiValueResponseDto<List<CarCategoryStatisticsDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarCategoryStatisticsDto>>(categoryStatistics)));
         }
 
         /// <summary>
@@ -180,10 +180,10 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="id">The ID of the category.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<CarCategoryDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiValueResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCategoryById(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -191,19 +191,19 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return Unauthorized(CreateUnauthorizedResponse<CarCategoryDto>());
             }
 
-            if (id < 0)
+            if (id <= 0)
             {
-                return BadRequest(ApiResponseDto<CarCategoryDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid category id: {id}"));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid category id: {id}"));
             }
 
             var category = await _carCategoryRepository.GetByIdAsync(id);
 
             if (category == null)
             {
-                return NotFound(ApiResponseDto<CarCategoryDto>.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car category not found."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car category not found."));
             }
 
-            return Ok(ApiResponseDto<CarCategoryDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryDto>(category)));
+            return Ok(ApiValueResponseDto<CarCategoryDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryDto>(category)));
         }
 
         #endregion

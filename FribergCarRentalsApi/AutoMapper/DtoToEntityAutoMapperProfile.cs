@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
+using FribergCarRentals.Data.Types;
 using FribergCarRentals.Shared.Dto.Car;
 using FribergCarRentals.Shared.Dto.Customer;
 
@@ -20,11 +21,27 @@ namespace FribergCarRentalsApi.AutoMapper
         {
             CreateCustomerMappings();
             CreateCarCategoryMappings();
+            CreateCarMappings();
         }
 
         #endregion
 
         #region Methods
+
+        private void CreateCarMappings()
+        {
+            CreateMap<CreateCarDto, CarEntity>()
+                .ForMember(dest => dest.PropulsionSystem, opt =>
+                    opt.MapFrom(src => VehiclePropulsionEntity.CreateFromType((VehiclePropulsionType)src.PropulsionSystemId)))
+                .ForMember(dest => dest.RentalStatus, opt =>
+                    opt.MapFrom(src => CarRentalStatusEntity.CreateFromType((RentalCarStatus)src.RentalStatusId)));
+
+            CreateMap<EditCarDto, CarEntity>()
+                .ForMember(dest => dest.PropulsionSystem, opt =>
+                    opt.MapFrom(src => VehiclePropulsionEntity.CreateFromType((VehiclePropulsionType)src.PropulsionSystemId)))
+                .ForMember(dest => dest.RentalStatus, opt =>
+                    opt.MapFrom(src => CarRentalStatusEntity.CreateFromType((RentalCarStatus)src.RentalStatusId)));
+        }
 
         /// <summary>
         /// Creates mappings for car categories.

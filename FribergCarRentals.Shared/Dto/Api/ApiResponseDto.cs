@@ -3,35 +3,26 @@
 namespace FribergCarRentals.Shared.Dto.Api
 {
     /// <summary>
-    /// Generic API response class to support web APIs.
+    /// Basic API response class. 
     /// </summary>
-    public class ApiResponseDto<T> where T : class
+    public class ApiResponseDto
     {
         #region Constructors
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ApiResponseDto()
+        /// <param name="success">True if the operation was successful.</param>
+        public ApiResponseDto(bool success = false)
         {
-            
-        }
-
-        /// <summary>
-        /// Constructor for a successful response.
-        /// </summary>
-        /// <param name="value">The value to send in the response body.</param>
-        private ApiResponseDto(T? value = null)
-        {
-            Value = value;
-            Success = true;
+            Success = success;
         }
 
         /// <summary>
         /// Constructor for an error response.
         /// </summary>
         /// <param name="errors">A collection of errors.</param>
-        private ApiResponseDto(List<KeyValuePair<string, string>> errors)
+        protected ApiResponseDto(List<KeyValuePair<string, string>> errors)
         {
             Errors = errors;
             Success = false;
@@ -42,7 +33,7 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// </summary>
         /// <param name="errorType">The type of error.</param>
         /// <param name="errorMessage">The error message.</param>
-        private ApiResponseDto(string errorType, string errorMessage)
+        protected ApiResponseDto(string errorType, string errorMessage)
             : this(new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(errorType, errorMessage) })
         {
 
@@ -62,11 +53,6 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// </summary>
         public bool Success { get; }
 
-        /// <summary>
-        /// The value for a successful response.
-        /// </summary>
-        public T? Value { get; }
-
         #endregion
 
         #region FactoryMethods
@@ -77,7 +63,7 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// <param name="errorType">The type of error.</param>
         /// <param name="errorMessage">The error message.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
-        public static ApiResponseDto<T> CreateErrorResponse(ApiErrorMessageTypes errorType, string errorMessage)
+        public static ApiResponseDto CreateErrorResponse(ApiErrorMessageTypes errorType, string errorMessage)
         {
             return CreateErrorResponse(errorType.ToString(), errorMessage);
         }
@@ -88,7 +74,7 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// <param name="errorType">The type of error.</param>
         /// <param name="errorMessage">The error message.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
-        public static ApiResponseDto<T> CreateErrorResponse(string errorType, string errorMessage)
+        public static ApiResponseDto CreateErrorResponse(string errorType, string errorMessage)
         {
             return CreateErrorResponse(new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(errorType, errorMessage) });
         }
@@ -98,20 +84,18 @@ namespace FribergCarRentals.Shared.Dto.Api
         /// </summary>
         /// <param name="errors">A collection of errors having labels and descriptions.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
-        public static ApiResponseDto<T> CreateErrorResponse(List<KeyValuePair<string, string>> errors)
+        public static ApiResponseDto CreateErrorResponse(List<KeyValuePair<string, string>> errors)
         {
-            return new ApiResponseDto<T>(errors);
+            return new ApiResponseDto(errors);
         }
 
         /// <summary>
-        /// Creates a successful response.
+        /// Creates a successful response having a value of type <see cref="T"/>.
         /// </summary>
-        /// <typeparam name="T">The type of the response value</typeparam>
-        /// <param name="value">The response value.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied response value.</returns>
-        public static ApiResponseDto<T> CreateSuccessfulResponse(T value)
+        public static ApiResponseDto CreateSuccessfulResponse()
         {
-            return new ApiResponseDto<T>(value);
+            return new ApiResponseDto(success: true);
         }
 
         #endregion

@@ -87,9 +87,9 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// <param name="confirmEmailDto"></param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpPost("confirm-email")]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiValueResponseDto<LoginUserResponseDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
         {
             var customer = await _customerRepository.GetByEmailAsync(confirmEmailDto.Email);
@@ -105,12 +105,12 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                 }
                 else
                 {
-                    return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.EmailConfirmationFailed.ToString(), "The email confirmation failed."));
+                    return Unauthorized(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.EmailConfirmationFailed.ToString(), "The email confirmation failed."));
                 }
             }
             else
             {
-                return NotFound(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The customer was not found."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The customer was not found."));
             }
         }
 
@@ -120,15 +120,15 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// <param name="createCustomerDto"></param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpPost("create")]
-        [ProducesResponseType<ApiResponseDto<CreatedCustomerDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<CreatedCustomerDto>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiValueResponseDto<CreatedCustomerDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerDto createCustomerDto)
         {
             var customer = new CustomerEntity(_mapper.Map<ApplicationUser>(createCustomerDto));
 
             if (await _customerRepository.CustomerExists(customer.User.Email!))
             {
-                return BadRequest(ApiResponseDto<CreatedCustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserExist.ToString(), $"A customer with email '{createCustomerDto.Email}' already exists."));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserExist.ToString(), $"A customer with email '{createCustomerDto.Email}' already exists."));
             }
             else
             {
@@ -148,11 +148,11 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                         createdCustomerDto.Token = await _tokenService.CreateToken(customer);
                     }
 
-                    return Ok(ApiResponseDto<CreatedCustomerDto>.CreateSuccessfulResponse(createdCustomerDto));
+                    return Ok(ApiValueResponseDto<CreatedCustomerDto>.CreateSuccessfulResponse(createdCustomerDto));
                 }
                 catch (CreateUserException ex)
                 {
-                    return BadRequest(ApiResponseDto<CreatedCustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserCreationFailed.ToString(), ex.Message));
+                    return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserCreationFailed.ToString(), ex.Message));
                 }
             }
         }
@@ -163,9 +163,9 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// <param name="id">The ID of the customer.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType<ApiResponseDto<CustomerDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<CustomerDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<CustomerDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiValueResponseDto<CustomerDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCustomerById(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Customer))
@@ -188,7 +188,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             }
             else
             {
-                return NotFound(ApiResponseDto<CustomerDto>.CreateErrorResponse(ApiErrorMessageTypes.UserNotFound.ToString(), "The customer was not found."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserNotFound.ToString(), "The customer was not found."));
             }
         }
 
@@ -198,10 +198,10 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// <param name="credentials">The credentials for the login.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpPost("login")]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiValueResponseDto<LoginUserResponseDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LoginCustomer([FromBody] LoginCustomerDto credentials)
         {
             var customer = await _customerRepository.GetByEmailAsync(credentials.Email);
@@ -210,7 +210,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             {
                 if (_userManager.Options.SignIn.RequireConfirmedEmail && !await _customerRepository.IsEmailConfirmedAsync(customer))
                 {
-                    return BadRequest(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The email address must be confirmed before logging in."));
+                    return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The email address must be confirmed before logging in."));
                 }
 
                 var result = await _signInManager.CheckPasswordSignInAsync(customer.User, credentials.Password, lockoutOnFailure: false);
@@ -223,21 +223,21 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                 {
                     if (result.IsLockedOut)
                     {
-                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is locked out."));
+                        return Unauthorized(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is locked out."));
                     }
                     else if (result.IsNotAllowed)
                     {
-                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is not allowed to login."));
+                        return Unauthorized(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is not allowed to login."));
                     }
                     else
                     {
-                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
+                        return Unauthorized(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
                     }
                 }
             }
             else
             {
-                return NotFound(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
             }
         }
 
@@ -250,9 +250,9 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// </summary>
         /// <param name="customer">The customer</param>
         /// <returns></returns>
-        private async Task<ApiResponseDto<LoginUserResponseDto>> CreateLoginResponse(CustomerEntity customer)
+        private async Task<ApiValueResponseDto<LoginUserResponseDto>> CreateLoginResponse(CustomerEntity customer)
         {
-            return ApiResponseDto<LoginUserResponseDto>.CreateSuccessfulResponse(
+            return ApiValueResponseDto<LoginUserResponseDto>.CreateSuccessfulResponse(
                 new LoginUserResponseDto()
                 {
                     Email = customer.User!.Email!,

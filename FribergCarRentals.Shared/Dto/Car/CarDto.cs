@@ -5,19 +5,9 @@ namespace FribergCarRentals.Shared.Dto.Car
     /// <summary>
     /// A DTO class that represents a car.
     /// </summary>
-    public class CarDto
+    public class CarDto : CarDtoBase
     {
-        #region Properties
-
-        /// <summary>
-        /// The brand for the car.
-        /// </summary>
-        public string Brand { get; set; } = "";
-
-        /// <summary>
-        /// The category for the car. 
-        /// </summary>
-        public CarCategoryDto Category { get; set; }
+        #region Properties        
 
         /// <summary>
         /// The ID for the car.
@@ -25,9 +15,9 @@ namespace FribergCarRentals.Shared.Dto.Car
         public int CarId { get; set; }
 
         /// <summary>
-        /// The color for the car.
+        /// The category for the car. 
         /// </summary>
-        public string Color { get; set; } = "";
+        public CarCategoryDto Category { get; set; } = null!;
 
         /// <summary>
         /// A collection of images for the car.
@@ -35,34 +25,14 @@ namespace FribergCarRentals.Shared.Dto.Car
         public List<CarImageDto> Images { get; set; } = new();
 
         /// <summary>
-        /// The model for the car.
-        /// </summary>
-        public string Model { get; set; } = "";
-
-        /// <summary>
-        /// The model year for the car.
-        /// </summary>
-        public int ModelYear { get; set; }
-
-        /// <summary>
         /// The propulsion system for the car.
         /// </summary>
-        public VehiclePropulsionDto PropulsionSystem { get; set; }
-
-        /// <summary>
-        /// The registration number for the car.
-        /// </summary>
-        public string RegistrationNumber { get; set; } = "";
-
-        /// <summary>
-        /// The rental cost per day.
-        /// </summary>
-        public decimal RentalCostPerDay { get; set; }
+        public VehiclePropulsionDto PropulsionSystem { get; set; } = null!;
 
         /// <summary>
         /// The rental status for the car.
         /// </summary>
-        public CarRentalStatusDto RentalStatus { get; set; }
+        public CarRentalStatusDto RentalStatus { get; set; } = null!;
 
         #endregion
     }

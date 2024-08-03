@@ -9,7 +9,6 @@
         EmailConfirmationFailed,
         GeneralError,
         IdentityError,
-        IncompleteInputData,
         InputDataConflict,
         InvalidInputData,
         ResourceNotFound,

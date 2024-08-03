@@ -59,7 +59,7 @@ namespace MvcRazorPages.Shared.Services
             _imageUploadsRoute = _configuration["PublicResources:ImageUploadsRoute"]!;
             _localDiskImageUploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), 
                 _configuration["LocalResources:WwwRootFolderName"]!,
-                _configuration["LocalResources:ImageUploadsFolderName"]!);            
+                _configuration["LocalResources:ImageUploadsFolderName"]!);
         }
 
         #endregion
@@ -116,6 +116,18 @@ namespace MvcRazorPages.Shared.Services
         public string GetImageUrl(ImageEntity image)
         {
             return $"{_imageUploadsRoute}/{image.FileName}";
+        }
+
+        /// <summary>
+        /// Saves an uploaded image to the local disk. 
+        /// </summary>
+        /// <param name="imageFile">The uploaded image to save to the disk.</param>
+        /// <returns>The file name of the saved file.</returns>
+        /// <exception cref="IOException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<string> SaveImageToDiskAsync(IFormFile imageFile)
+        {
+            return (await SaveImagesToDisk(new List<IFormFile>() { imageFile })).Single();
         }
 
         /// <summary>

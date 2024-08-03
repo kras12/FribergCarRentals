@@ -3,10 +3,11 @@
     /// <summary>
     /// Supported image types.
     /// </summary>
-    public enum ImageTypes
+    public enum SupportedImageTypes
     {
         None,
         Jpeg,
-        Png
+        Png,
+        Webp
     }
 }

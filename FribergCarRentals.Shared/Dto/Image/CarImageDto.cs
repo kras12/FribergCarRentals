@@ -1,6 +1,4 @@
-﻿using FribergCarRentals.Shared.Dto.Car;
-
-namespace FribergCarRentals.Shared.Dto.Image
+﻿namespace FribergCarRentals.Shared.Dto.Image
 {
     /// <summary>
     /// A DTO class for far images.
@@ -23,6 +21,11 @@ namespace FribergCarRentals.Shared.Dto.Image
         /// The ID for the image.
         /// </summary>
         public int ImageId { get; set; }
+
+        /// <summary>
+        /// The url for the image.
+        /// </summary>
+        public string Url { get; set;  } = "";
 
         #endregion
     }

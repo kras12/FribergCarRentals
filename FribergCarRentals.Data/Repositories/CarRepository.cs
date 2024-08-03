@@ -2,6 +2,7 @@
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
 using FribergCarRentals.Data.Types;
+using System.ComponentModel.DataAnnotations;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -40,6 +41,45 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Adds images to a car.
+        /// </summary>
+        /// <param name="carId">The ID of the car.</param>
+        /// <param name="images">A collection of images to add.</param>
+        /// <returns></returns>
+        public async Task AddImages(int carId, IEnumerable<ImageEntity> images)
+        {
+            #region Checks
+
+            if (!images.Any())
+            {
+                throw new ArgumentException($"The collection of images to add can't be empty", nameof(images));
+            }
+
+            #endregion
+
+            var car = await _databaseContext.Cars.SingleOrDefaultAsync(x => x.CarId == carId);
+
+            if (car == null)
+            {
+                // TODO - Create a new exception class for this kind of situation.
+                throw new Exception($"The car with ID '{carId}' doesn't exist.");
+            }
+
+            car.Images.AddRange(images);
+            await _databaseContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Checks whether a car exists in the database.
+        /// </summary>
+        /// <param name="carId">The ID of the car to find.</param>
+        /// <returns>A <see cref="Task"/> containing true if the car exists.</returns>
+        public Task<bool> CarExists(int carId)
+        {
+            return _databaseContext.Cars.AnyAsync(x => x.CarId == carId);
+        }
+
+        /// <summary>
         /// Deletes a car from the database.
         /// </summary>
         /// <param name="id">The ID of the car to delete.</param>
@@ -49,6 +89,46 @@ namespace FribergCarRentals.Data.Repositories
             var car = new CarEntity() { CarId = id };
             _databaseContext.Cars.Remove(car);
             return _databaseContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Deletes a car image. 
+        /// </summary>
+        /// <param name="carId">The ID of the car the image belongs to.</param>
+        /// <param name="imageId">The ID for the image to delete.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public Task DeleteCarImage(int carId, int imageId)
+        {
+            return DeleteCarImages(carId, new List<int> { imageId });
+        }
+
+        /// <summary>
+        /// Deletes car images. 
+        /// </summary>
+        /// <param name="carId">The ID of the car the image belongs to.</param>
+        /// <param name="imageId">A collection of IDs for the images to delete.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
+        public async Task DeleteCarImages(int carId, IEnumerable<int> imageIds)
+        {
+            #region Checks
+
+            if (!imageIds.Any())
+            {
+                throw new ArgumentException($"The collection of images to delete can't be empty", nameof(imageIds));
+            }
+
+            #endregion
+
+            var car = await _databaseContext.Cars.SingleOrDefaultAsync(x => x.CarId == carId);
+
+            if (car == null)
+            {
+                // TODO - Create a new exception class for this kind of situation.
+                throw new Exception($"The car with ID '{carId}' doesn't exist.");
+            }
+
+            car.Images.RemoveAll(x => imageIds.Contains(x.ImageId));
+            await _databaseContext.SaveChangesAsync();
         }
 
         /// <summary>

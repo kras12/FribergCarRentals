@@ -80,10 +80,10 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="id">The ID of the admin.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType<ApiResponseDto<AdminDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<AdminDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<AdminDto>>(StatusCodes.Status404NotFound)]
-        [ProducesResponseType<ApiResponseDto<AdminDto>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiValueResponseDto<AdminDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAdminById(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -93,7 +93,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
 
             if (id <= 0)
             {
-                return BadRequest(ApiResponseDto<AdminDto>.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid id: {id}"));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid id: {id}"));
             }
 
             int adminId = int.Parse(User.FindFirstValue(ApplicationUserClaims.AdminId)!);            
@@ -107,11 +107,11 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
 
             if (admin != null)
             {
-                return Ok(_mapper.Map<AdminDto>(admin));
+                return Ok(ApiValueResponseDto<AdminDto>.CreateSuccessfulResponse(_mapper.Map<AdminDto>(admin)));
             }
             else
             {
-                return NotFound(ApiResponseDto<AdminDto>.CreateErrorResponse(ApiErrorMessageTypes.UserNotFound.ToString(), "The admin was not found."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserNotFound.ToString(), "The admin was not found."));
             }
         }
 
@@ -121,10 +121,10 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="credentials">The credentials for the login.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpPost("login")]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType<ApiResponseDto<LoginUserResponseDto>>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiValueResponseDto<LoginUserResponseDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LoginAdmin([FromBody] LoginAdminDto credentials)
         {
             var admin = await _adminRepository.GetByEmailAsync(credentials.Email);
@@ -133,14 +133,14 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             {
                 if (_userManager.Options.SignIn.RequireConfirmedEmail && !await _adminRepository.IsEmailConfirmedAsync(admin))
                 {
-                    return BadRequest(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The email address must be confirmed before logging in."));
+                    return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The email address must be confirmed before logging in."));
                 }
 
                 var result = await _signInManager.CheckPasswordSignInAsync(admin.User, credentials.Password, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
-                    return Ok(ApiResponseDto<LoginUserResponseDto>.CreateSuccessfulResponse(
+                    return Ok(ApiValueResponseDto<LoginUserResponseDto>.CreateSuccessfulResponse(
                         new LoginUserResponseDto()
                         {
                             Email = admin.User!.Email!,
@@ -151,21 +151,21 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 {
                     if (result.IsLockedOut)
                     {
-                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is locked out."));
+                        return Unauthorized(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is locked out."));
                     }
                     else if (result.IsNotAllowed)
                     {
-                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is not allowed to login."));
+                        return Unauthorized(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "The user is not allowed to login."));
                     }
                     else
                     {
-                        return Unauthorized(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
+                        return Unauthorized(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
                     }
                 }
             }
             else
             {
-                return NotFound(ApiResponseDto<LoginUserResponseDto>.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.UserLoginFailed.ToString(), "Invalid credentials."));
             }
         }
 
