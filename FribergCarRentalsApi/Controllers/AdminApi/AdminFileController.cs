@@ -4,7 +4,7 @@ using FribergCarRentals.Shared;
 using FribergCarRentalsApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {

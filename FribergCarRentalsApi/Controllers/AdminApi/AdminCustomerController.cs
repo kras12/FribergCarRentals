@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentalsApi.Controllers;
-using FribergFastigheter.Shared.Constants;
 using FribergCarRentals.Shared.Dto.Customer;
 using FribergCarRentals.Shared.Dto.Api;
 using FribergCarRentals.Shared;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {

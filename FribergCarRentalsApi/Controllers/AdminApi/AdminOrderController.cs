@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using FribergFastigheter.Shared.Constants;
 using FribergCarRentals.Shared.Dto.Api;
 using FribergCarRentals.Shared;
 using FribergCarRentals.Shared.Dto.Order;
 using AutoMapper;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {

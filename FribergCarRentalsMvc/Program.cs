@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
 using MvcRazorPages.Shared.Services;
 using MvcRazorPages.Shared.AutoMapper;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals
 {

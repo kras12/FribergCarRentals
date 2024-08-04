@@ -2,9 +2,9 @@
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Shared;
+using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Dto.Api;
 using FribergCarRentals.Shared.Dto.CarCategory;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

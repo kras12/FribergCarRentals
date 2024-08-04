@@ -11,6 +11,7 @@ using FribergCarRentals.Shared.Dto.User;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentalsApi.Services;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {
