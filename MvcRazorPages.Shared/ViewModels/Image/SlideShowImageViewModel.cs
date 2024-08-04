@@ -1,12 +1,11 @@
 ﻿using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MvcRazorPages.Shared.Data;
 using System.ComponentModel;
 
 namespace MvcRazorPages.Shared.ViewModels.Image
 {
 	/// <summary>
-	/// A view model class designed to be used with the image slideshow component <see cref="CarImageSlideShow"/>.
+	/// A view model class designed to be used with image slideshow components.
 	/// </summary>
 	public class SlideShowImageViewModel : ViewModelBase
     {
@@ -55,6 +54,7 @@ namespace MvcRazorPages.Shared.ViewModels.Image
         /// An optional image caption. 
         /// </summary>
         public string? ImageCaption { get; set; } = null;
+
         /// <summary>
         /// The ID for the image.
         /// </summary>
