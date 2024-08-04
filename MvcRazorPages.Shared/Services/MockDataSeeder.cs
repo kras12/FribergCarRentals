@@ -1,12 +1,9 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Data.Entities;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using MvcRazorPages.Shared.Helpers;
 
 namespace MvcRazorPages.Shared.Services
 {
