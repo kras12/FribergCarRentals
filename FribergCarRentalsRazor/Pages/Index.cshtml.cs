@@ -1,10 +1,10 @@
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Image;
-using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
 
 namespace FribergCarRentals.Pages
 {
@@ -67,7 +67,7 @@ namespace FribergCarRentals.Pages
                 var image = car.Images.First();
 
                 images.Add(new SlideShowImageViewModel(
-                    _imageUploadService.GetImageUrl(image), image.FileName, image.ImageId,
+                    _imageUploadService.GetImageUrl(image.FileName), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
                     linksToPage: Url.Page(
                         pageName: "Order/Book",

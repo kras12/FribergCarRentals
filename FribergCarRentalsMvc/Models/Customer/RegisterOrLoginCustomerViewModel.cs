@@ -1,4 +1,4 @@
-﻿using MvcRazorPages.Shared.ViewModels.Customer;
+﻿using FribergCarRentals.Shared.Models.ViewModels.Customer;
 
 namespace FribergCarRentals.Models.Customer
 {

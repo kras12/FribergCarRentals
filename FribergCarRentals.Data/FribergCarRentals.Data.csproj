@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FribergCarRentals.Shared.Types\FribergCarRentals.Shared.Types.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared\FribergCarRentals.Shared.csproj" />
     <ProjectReference Include="..\FribergCars.Shared\AppSettings.Shared.csproj" />
   </ItemGroup>

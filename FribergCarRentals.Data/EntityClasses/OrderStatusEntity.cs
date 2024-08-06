@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using FribergCarRentals.Data.Types;
-using FribergCarRentals.Data.Attributes;
-using FribergCarRentals.Data.Extensions;
+using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Types.Attributes;
+using FribergCarRentals.Shared.Types.Extensions;
 
 namespace FribergCarRentals.Data.EntityClasses
 {
-    /// <summary>
-    /// An entity class that represents an order status.
-    /// </summary>
-    [Table("OrderStatuses")]
+	/// <summary>
+	/// An entity class that represents an order status.
+	/// </summary>
+	[Table("OrderStatuses")]
     public class OrderStatusEntity
     {
         #region Constructors

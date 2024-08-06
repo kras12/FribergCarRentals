@@ -11,13 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FribergCarRentals.Data\FribergCarRentals.Data.csproj" />
+    <ProjectReference Include="..\FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj" />
   </ItemGroup>
 
 </Project>

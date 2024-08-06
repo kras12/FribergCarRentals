@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.ViewModels.Admin;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Models.ViewModels.Admin;
+using AutoMapper;
 
 namespace FribergCarRentals.Areas.Admin.Pages
 {
@@ -30,30 +31,35 @@ namespace FribergCarRentals.Areas.Admin.Pages
         /// </summary>
         private readonly IAdminRepository _adminRepository;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="adminRepository">Injected admin repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        public IndexModel(IAdminRepository adminRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
-        {
-            _adminRepository = adminRepository;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor.
+		/// </summary>
+		/// <param name="adminRepository">Injected admin repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public IndexModel(IAdminRepository adminRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_adminRepository = adminRepository;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// The view model for the page. 
-        /// </summary>
-        public AdminViewModel AdminViewModel { get; set; } = new();
+		#region Properties
+
+		/// <summary>
+		/// The view model for the page. 
+		/// </summary>
+		public AdminViewModel AdminViewModel { get; set; } = new();
 
         #endregion
 
@@ -75,7 +81,7 @@ namespace FribergCarRentals.Areas.Admin.Pages
 
             if (admin is not null)
             {
-                AdminViewModel = new AdminViewModel(admin);
+                AdminViewModel = _mapper.Map<AdminViewModel>(admin);
                 return Page();
             }
 

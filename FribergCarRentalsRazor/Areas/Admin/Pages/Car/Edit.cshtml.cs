@@ -3,20 +3,21 @@ using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Car;
-using MvcRazorPages.Shared.ViewModels.Image;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
-    /// <summary>
-    /// Page model class for editing a car in the admin back office. 
-    /// </summary>
-    public class EditModel : AdminPageModelBase
+	/// <summary>
+	/// Page model class for editing a car in the admin back office. 
+	/// </summary>
+	public class EditModel : AdminPageModelBase
     {
         #region Constants
 
@@ -111,9 +112,11 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 
                 if (car is not null)
                 {
-                    var carCategories = await _carCategoryRepository.GetAllAsync();
-                    EditCarViewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
-                    TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCarViewModel.PageSubTitle!);
+                    EditCarViewModel = _mapper.Map<EditCarViewModel>(car);
+                    EditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
+					SetImageUrls(EditCarViewModel.Images);
+
+					TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCarViewModel.PageSubTitle!);
                     return Page();
                 }
             }
@@ -165,24 +168,41 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                 }
 
                 await _carRepository.UpdateAsync(car);
-                var carCategories = await _carCategoryRepository.GetAllAsync();
-                EditCarViewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
+
+				EditCarViewModel = _mapper.Map<EditCarViewModel>(car);
+				EditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
+				SetImageUrls(EditCarViewModel.Images);
                 EditCarViewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
 
                 return Page();
             }
 
-            EditCarViewModel.Images = carImages.Select(x => new ImageViewModel(_imageUploadService.GetImageUrl(x))).ToList();
+			List<ImageViewModel> imageViewModels = _mapper.Map<List<ImageViewModel>>(carImages);
+			SetImageUrls(imageViewModels);
+			EditCarViewModel.Images = imageViewModels;
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))
             {
-                EditCarViewModel.PageSubTitle = pageSubTitle;
+				EditCarViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCarViewModel.PageSubTitle!); // The user can fail again.
             }
 
             return Page();
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region OtherMethods
+
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+		}
+
+		#endregion
+	}
 }

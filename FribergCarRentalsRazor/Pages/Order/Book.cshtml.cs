@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Order;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.ViewModels.Car;
 using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -62,34 +64,39 @@ namespace FribergCarRentals.Pages.Order
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="carRepository">Injected car repository. </param>
-        /// <param name="carCategoryRepository">Injected car category repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service</param>
-        public BookModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
-        {
-            _carRepository = carRepository;
-            _carCategoryRepository = carCategoryRepository;
-            _imageUploadService = imageUploadService;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor.
+		/// </summary>
+		/// <param name="carRepository">Injected car repository. </param>
+		/// <param name="carCategoryRepository">Injected car category repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="imageUploadService">The injected image upload service</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public BookModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_carRepository = carRepository;
+			_carCategoryRepository = carCategoryRepository;
+			_imageUploadService = imageUploadService;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// The view model used to book a car. 
-        /// </summary>
-        [BindProperty]
+		#region Properties
+
+		/// <summary>
+		/// The view model used to book a car. 
+		/// </summary>
+		[BindProperty]
         public BookCarViewModel BookCarViewModel { get; set; } = new();
 
         #endregion
@@ -134,7 +141,9 @@ namespace FribergCarRentals.Pages.Order
                 throw new Exception($"Invalid ID: {carCategoryId}");
             }
 
-            BookCarViewModel = new BookCarViewModel(availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(), havePerformedCarSearch: false);
+            BookCarViewModel = new BookCarViewModel(
+                availableCarCategoryFilters: _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()), 
+                havePerformedCarSearch: false);
 
             if (carCategoryId != null)
             {
@@ -177,10 +186,13 @@ namespace FribergCarRentals.Pages.Order
                     }
 
                     var cars = (await _carRepository.GetRentableCarsAsync(BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime, selectedCarCategoryFilter)).ToList();
+                    List<CarViewModel> availableCars = _mapper.Map<List<CarViewModel>>(cars);
+                    SetImageUrls(availableCars.SelectMany(x => x.Images).ToList());
+
                     BookCarViewModel = new BookCarViewModel(
-                        availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
+                        availableCarCategoryFilters: _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()),
                         havePerformedCarSearch: true,
-                        availableCars: cars.Select(x => new CarViewModel(x, _imageUploadService)).ToList(),
+                        availableCars: availableCars,
                         pickupDateFilter: BookCarViewModel.PickupDateLocalTime,
                         returnDateFilter: BookCarViewModel.ReturnDateLocalTime,
                         carCategoryFilter: BookCarViewModel.SelectedCarCategoryFilter);
@@ -189,20 +201,29 @@ namespace FribergCarRentals.Pages.Order
                 }
             }
 
-            BookCarViewModel.SetAvailableCarCategoryFilters(await _carCategoryRepository.GetAllAsync());
+            BookCarViewModel.SetAvailableCarCategoryFilters(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()));
             return Page();
         }
 
-        #endregion
+		#endregion
 
-        #region OtherMethods
+		#region OtherMethods
 
-        /// <summary>
-        /// Validates the pickup date for car rentals.
-        /// </summary>
-        /// <param name="pickupDate">The pickup date.</param>
-        /// <returns>True if the date is valid.</returns>
-        private bool ValidatePickupDate(DateTime pickupDate)
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+		}
+
+		/// <summary>
+		/// Validates the pickup date for car rentals.
+		/// </summary>
+		/// <param name="pickupDate">The pickup date.</param>
+		/// <returns>True if the date is valid.</returns>
+		private bool ValidatePickupDate(DateTime pickupDate)
         {
             return pickupDate.Date > DateTime.Now.Date;
         }

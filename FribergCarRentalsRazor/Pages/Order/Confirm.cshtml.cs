@@ -3,12 +3,12 @@ using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Order;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
-using FribergCarRentals.Data.Types;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using FribergCarRentals.Shared.Types.Enums;
 
 namespace FribergCarRentals.Pages.Order
 {

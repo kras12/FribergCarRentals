@@ -2,12 +2,14 @@
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Order;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Areas.Admin.Pages.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Order
 {
@@ -37,32 +39,37 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="orderRepository">Injected order repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service.</param>
-        public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
-        {
-            _orderRepository = orderRepository;
-            _imageUploadService = imageUploadService;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor.
+		/// </summary>
+		/// <param name="orderRepository">Injected order repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="imageUploadService">The injected image upload service.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_orderRepository = orderRepository;
+			_imageUploadService = imageUploadService;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// The view model used for presenting order details in the admin back office. 
-        /// </summary>
-        public OrderViewModel OrderViewModel { get; set; }
+		#region Properties
+
+		/// <summary>
+		/// The view model used for presenting order details in the admin back office. 
+		/// </summary>
+		public OrderViewModel OrderViewModel { get; set; }
 
         #endregion
 
@@ -91,7 +98,8 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
 
                 if (order is not null)
                 {
-                    OrderViewModel = new OrderViewModel(order, _imageUploadService);
+                    OrderViewModel = _mapper.Map<OrderViewModel>(order);
+                    SetImageUrls(OrderViewModel.CarBooking.Car.Images);
 
                     TempDataHelper.Set(TempData, CompleteModel.RedirectToPageAfterOrderCompletionTempDataKey, 
                         new RedirectToPageData("Details", new RouteValueDictionary(new { id = id }), area: Area));
@@ -108,6 +116,19 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
             throw new Exception($"Failed to show the order with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region OtherMethods
+
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+		}
+
+		#endregion
+	}
 }

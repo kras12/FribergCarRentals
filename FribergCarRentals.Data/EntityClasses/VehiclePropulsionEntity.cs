@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using FribergCarRentals.Data.Types;
-using FribergCarRentals.Data.Attributes;
-using FribergCarRentals.Data.Extensions;
+using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Types.Attributes;
+using FribergCarRentals.Shared.Types.Extensions;
 
 namespace FribergCarRentals.Data.EntityClasses
 {
-    /// <summary>
-    /// An entity class that represents the propulsion system for a vehicle.
-    /// </summary>
-    [Table("VehiclePropulsion")]
+	/// <summary>
+	/// An entity class that represents the propulsion system for a vehicle.
+	/// </summary>
+	[Table("VehiclePropulsion")]
     public class VehiclePropulsionEntity
     {
         #region Constructors

@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FribergCarRentals.Data\FribergCarRentals.Data.csproj" />
+    <ProjectReference Include="..\FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared\FribergCarRentals.Shared.csproj" />
     <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
   </ItemGroup>

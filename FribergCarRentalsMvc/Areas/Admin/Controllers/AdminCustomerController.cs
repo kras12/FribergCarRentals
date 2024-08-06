@@ -2,17 +2,15 @@
 using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
-using MvcRazorPages.Shared.ViewModels.Customer;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
-using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -192,7 +190,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (customer is not null)
                 {
-                    CustomerViewModel viewModel = new(customer);
+                    CustomerViewModel viewModel = _mapper.Map<CustomerViewModel>(customer);
 
                     if (TempDataHelper.TryGet(TempData, CreatedCustomerIdTempDataKey, out int createdCustomerId))
                     {
@@ -231,7 +229,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (customer is not null)
                 {
-                    EditCustomerViewModel viewModel = new EditCustomerViewModel(customer);
+                    EditCustomerViewModel viewModel = _mapper.Map<EditCustomerViewModel>(customer);
                     TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, viewModel.PageSubTitle!);
                     return View(viewModel);
                 }
@@ -267,7 +265,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 _mapper.Map(editCustomerViewModel, customer.User);
                 await _customerRepository.UpdateAsync(customer);
 
-                EditCustomerViewModel viewModel = new EditCustomerViewModel(customer);
+                EditCustomerViewModel viewModel = _mapper.Map<EditCustomerViewModel>(customer);
                 viewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
 
                 return View(viewModel);
@@ -275,7 +273,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))
             {
-                editCustomerViewModel.PageSubTitle = pageSubTitle;
+				editCustomerViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, editCustomerViewModel.PageSubTitle!);  // The user can fail again.
             }
 
@@ -291,7 +289,9 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCustomerController>(), area: Area));
             }
 
-            ListViewModel<CustomerViewModel> viewModel = new ListViewModel<CustomerViewModel>((await _customerRepository.GetAllAsync()).Select(x => new CustomerViewModel(x)));
+            List<CustomerViewModel> customerViewModels = _mapper.Map<List<CustomerViewModel>>(await _customerRepository.GetAllAsync());
+			ListViewModel<CustomerViewModel> viewModel = new ListViewModel<CustomerViewModel>(customerViewModels);
+
             TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey,
                 new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCustomerController>(), area: Area));
 

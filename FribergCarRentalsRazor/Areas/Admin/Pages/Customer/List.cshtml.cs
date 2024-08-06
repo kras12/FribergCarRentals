@@ -2,11 +2,12 @@
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Customer;
-using MvcRazorPages.Shared.ViewModels.Other;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using AutoMapper;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -31,30 +32,35 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
         /// </summary>
         private readonly ICustomerRepository _customerRepository;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="customerRepository">Injected customer repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        public ListModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
-        {
-            _customerRepository = customerRepository;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor.
+		/// </summary>
+		/// <param name="customerRepository">Injected customer repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public ListModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_customerRepository = customerRepository;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// A view model used to present a list of customers. 
-        /// </summary>
-        public ListViewModel<CustomerViewModel> CustomerListViewModel { get; private set; } = new();
+		#region Properties
+
+		/// <summary>
+		/// A view model used to present a list of customers. 
+		/// </summary>
+		public ListViewModel<CustomerViewModel> CustomerListViewModel { get; private set; } = new();
 
         #endregion
 
@@ -71,7 +77,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
                 return RedirectToLogin(new RedirectToPageData(PageUrlRelativeToLoginPage, area: Area));
             }
 
-            CustomerListViewModel = new ListViewModel<CustomerViewModel>((await _customerRepository.GetAllAsync()).Select(x => new CustomerViewModel(x)));
+            CustomerListViewModel = new ListViewModel<CustomerViewModel>(_mapper.Map<List<CustomerViewModel>>(await _customerRepository.GetAllAsync()));
             TempDataHelper.Set(TempData, DeleteModel.RedirectToPageAfterDeleteTempDataKey, new RedirectToPageData("List", area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedCustomerIdTempDataKey, out int deletedCustomerId))

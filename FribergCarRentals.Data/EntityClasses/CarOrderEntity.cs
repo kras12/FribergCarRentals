@@ -27,7 +27,7 @@ namespace FribergCarRentals.Data.EntityClasses
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public CarOrderEntity(CustomerEntity customer) :
-            this(OrderStatusEntity.CreateFromType(Types.OrderStatus.Created),
+            this(OrderStatusEntity.CreateFromType(Shared.Types.Enums.OrderStatus.Created),
                 DateTime.UtcNow, customer, payments: new(), carBookings: new())
         {
 

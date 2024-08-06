@@ -1,8 +1,8 @@
-﻿using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared;
+﻿using FribergCarRentals.Shared;
 using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using FribergCarRentals.Shared.Models.Dto.Api;
 
 namespace FribergCarRentalsApi.Controllers
 {

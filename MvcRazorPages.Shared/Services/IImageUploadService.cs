@@ -29,18 +29,18 @@ namespace MvcRazorPages.Shared.Services
         /// <summary>
         /// Returns the url for the image.
         /// </summary>
-        /// <param name="image">The image to retrive the url for.</param>
+        /// <param name="fileName">The filename of the image to retrive the url for.</param>
         /// <returns>The url of the image.</returns>
-        public string GetImageUrl(ImageEntity image);
+        public string GetImageUrl(string fileName);
 
-        /// <summary>
-        /// Saves an uploaded image to the local disk. 
-        /// </summary>
-        /// <param name="imageFile">The uploaded image to save to the disk.</param>
-        /// <returns>The file name of the saved file.</returns>
-        /// <exception cref="IOException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        public Task<string> SaveImageToDiskAsync(IFormFile imageFile);
+		/// <summary>
+		/// Saves an uploaded image to the local disk. 
+		/// </summary>
+		/// <param name="imageFile">The uploaded image to save to the disk.</param>
+		/// <returns>The file name of the saved file.</returns>
+		/// <exception cref="IOException"></exception>
+		/// <exception cref="ArgumentException"></exception>
+		public Task<string> SaveImageToDiskAsync(IFormFile imageFile);
 
         /// <summary>
         /// Saves a collection of uploaded images to the local disk. 

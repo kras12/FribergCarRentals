@@ -3,16 +3,20 @@ using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using FribergCarRentals.Data.Types;
-using MvcRazorPages.Shared.ViewModels.Order;
-using MvcRazorPages.Shared.ViewModels.Other;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
-using MvcRazorPages.Shared.ViewModels.Car;
 using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using System.Runtime.Intrinsics.X86;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Car;
 
 namespace FribergCarRentals.Controllers.Customer
 {
@@ -84,44 +88,49 @@ namespace FribergCarRentals.Controllers.Customer
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
 
-        /// <summary>
-        /// The injected order repository.
-        /// </summary>
-        private readonly ICarOrderRepository _orderRepository;
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #endregion
+		/// <summary>
+		/// The injected order repository.
+		/// </summary>
+		private readonly ICarOrderRepository _orderRepository;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="orderRepository">The injected order repository.</param>
-        /// <param name="customerRepository">The injected customer repository.</param>
-        /// <param name="carRepository">The injected car repository.</param>
-        /// <param name="carCategoryRepository">The injected car category repository.</param>
-        /// <param name="authorizationService"></param>
-        /// <param name="signInManager"></param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service.</param>
-        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository,
-            ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
-        {
-            _orderRepository = orderRepository;
-            _customerRepository = customerRepository;
-            _carRepository = carRepository;
-            _carCategoryRepository = carCategoryRepository;
-            _imageUploadService = imageUploadService;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="orderRepository">The injected order repository.</param>
+		/// <param name="customerRepository">The injected customer repository.</param>
+		/// <param name="carRepository">The injected car repository.</param>
+		/// <param name="carCategoryRepository">The injected car category repository.</param>
+		/// <param name="authorizationService"></param>
+		/// <param name="signInManager"></param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="imageUploadService">The injected image upload service.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository,
+			ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_orderRepository = orderRepository;
+			_customerRepository = customerRepository;
+			_carRepository = carRepository;
+			_carCategoryRepository = carCategoryRepository;
+			_imageUploadService = imageUploadService;
+			_mapper = mapper;
+		}
 
-        #region Actions
+		#endregion
 
-        // GET: CustomerOrderController/Book
-        [HttpGet]
+		#region Actions
+
+		// GET: CustomerOrderController/Book
+		[HttpGet]
         public async Task<IActionResult> Book(int? carCategoryId)
         {
             if (carCategoryId < 0)
@@ -129,7 +138,7 @@ namespace FribergCarRentals.Controllers.Customer
                 throw new Exception($"Invalid ID: {carCategoryId}");
             }
 
-            var viewModel = new BookCarViewModel(availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(), havePerformedCarSearch: false);
+            var viewModel = new BookCarViewModel(availableCarCategoryFilters: _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()), havePerformedCarSearch: false);
 
             if (carCategoryId != null)
             {
@@ -170,20 +179,22 @@ namespace FribergCarRentals.Controllers.Customer
                         selectedCarCategoryFilter = bookCarViewModel.SelectedCarCategoryFilter;
                     }
 
-                    var cars = (await _carRepository.GetRentableCarsAsync(bookCarViewModel.PickupDateLocalTime, bookCarViewModel.ReturnDateLocalTime, selectedCarCategoryFilter)).ToList();
+					var cars = (await _carRepository.GetRentableCarsAsync(bookCarViewModel.PickupDateLocalTime, bookCarViewModel.ReturnDateLocalTime, selectedCarCategoryFilter)).ToList();
+					List<CarViewModel> availableCars = _mapper.Map<List<CarViewModel>>(cars);
+					SetImageUrls(availableCars.SelectMany(x => x.Images).ToList());
 
                     return View(new BookCarViewModel(
-                        availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
+                        availableCarCategoryFilters: _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()),
                         havePerformedCarSearch: true,
-                        availableCars: cars.Select(x => new CarViewModel(x, _imageUploadService)).ToList(),
+                        availableCars: availableCars,
                         pickupDateFilter: bookCarViewModel.PickupDateLocalTime,
                         returnDateFilter: bookCarViewModel.ReturnDateLocalTime,
                         carCategoryFilter: bookCarViewModel.SelectedCarCategoryFilter));
                 }
             }
 
-            bookCarViewModel.SetAvailableCarCategoryFilters(await _carCategoryRepository.GetAllAsync());
-            return View(bookCarViewModel);
+            bookCarViewModel.SetAvailableCarCategoryFilters(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()));
+			return View(bookCarViewModel);
         }
 
         // POST: CustomerOrderController/Cancel/(5)
@@ -307,15 +318,18 @@ namespace FribergCarRentals.Controllers.Customer
                 if (order is not null)
                 {
                     TempDataHelper.TryGet(TempData, IsNewOrderTempDataKey, out bool orderWasCreated);
-                    OrderViewModel viewModel = new OrderViewModel(order, _imageUploadService, isNewOrder: orderWasCreated);
+                    OrderViewModel orderViewModel = _mapper.Map<OrderViewModel>(order);
+                    orderViewModel.IsNewOrder = orderWasCreated;
+                    SetImageUrls(orderViewModel.CarBooking.Car.Images);
+                    
                     SaveRedirectBackInstructionsForCancelOrderAction(nameof(Details), id);
 
                     if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))
                     {
-                        viewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
+                        orderViewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
                     }
 
-                    return View(viewModel);
+                    return View(orderViewModel);
                 }
 
                 throw new Exception($"Failed to retrieve the order from the database. - OrderID: {id}");
@@ -335,10 +349,10 @@ namespace FribergCarRentals.Controllers.Customer
 
             var userId = User.FindFirst(x => x.Type == ApplicationUserClaims.UserId)!.Value;
             var customer = await _customerRepository.GetByUserIdAsync(userId) ?? throw new Exception($"Failed to find customer with user ID: {userId}");
-            ListViewModel<OrderViewModel> orderListViewModel = new ListViewModel<OrderViewModel>(
-                customer.Orders
-                    .Select(x => new OrderViewModel(x, _imageUploadService))
-                    .OrderByDescending(x => x.CarOrderId));
+
+			List<OrderViewModel> orderViewModels = _mapper.Map<List<OrderViewModel>>(customer.Orders).OrderByDescending(x => x.CarOrderId).ToList();
+			SetImageUrls(orderViewModels.SelectMany(x => x.CarBooking.Car.Images).ToList());
+			ListViewModel<OrderViewModel> orderListViewModel = new ListViewModel<OrderViewModel>(orderViewModels);
 
             if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))
             {
@@ -395,12 +409,21 @@ namespace FribergCarRentals.Controllers.Customer
                     redirectToAction, ControllerHelper.GetControllerName<CustomerOrderController>(), routeValues: routeValues));
         }
 
-        /// <summary>
-        /// Validates the pickup date for car rentals.
-        /// </summary>
-        /// <param name="pickupDate">The pickup date.</param>
-        /// <returns>True if the date is valid.</returns>
-        private bool ValidatePickupDate(DateTime pickupDate)
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+		}
+
+		/// <summary>
+		/// Validates the pickup date for car rentals.
+		/// </summary>
+		/// <param name="pickupDate">The pickup date.</param>
+		/// <returns>True if the date is valid.</returns>
+		private bool ValidatePickupDate(DateTime pickupDate)
         {
             return pickupDate.Date > DateTime.Now.Date;
         }

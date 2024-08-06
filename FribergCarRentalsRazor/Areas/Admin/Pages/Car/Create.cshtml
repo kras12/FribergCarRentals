@@ -1,10 +1,7 @@
 ﻿@page
-@using FribergCarRentals.Data.Types
 @using FribergCarRentals.Data.EntityClasses
 @using AppSettings.Shared.Settings;
-@using FribergCarRentals.Data.Attributes
-@using FribergCarRentals.Data.Extensions
-@using MvcRazorPages.Shared.ViewModels.CarCategory
+@using FribergCarRentals.Shared.Models.ViewModels.CarCategory
 @model FribergCarRentals.Areas.Admin.Pages.Car.CreateModel
 
 @{
@@ -26,10 +23,10 @@
                 <div class="vertical-form-field">
                     <label asp-for="CreateCarViewModel.RentalStatus"></label>
                     <select asp-for="CreateCarViewModel.RentalStatus">
-                        @foreach (var value in Enum.GetValues<RentalCarStatus>())
+                        @foreach (var status in Model.CreateCarViewModel.RentalStatuses)
                         {
-                            <!option value="@value" @(value == RentalCarStatus.None ? "selected" : "")>
-                                @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                            <!option value="@status.CarRentalStatusId" @(status.IsStatusNone ? "selected" : "")>
+                                @(status.StatusName)
                             </!option>
                         }
                     </select>
@@ -68,10 +65,10 @@
                 <div class="vertical-form-field">
                     <label asp-for="CreateCarViewModel.PropulsionSystem"></label>
                     <select asp-for="CreateCarViewModel.PropulsionSystem">
-                        @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
+                        @foreach (var propulsion in Model.CreateCarViewModel.VehiclePropulsions)
                         {
-                            <!option value="@value" @(value == VehiclePropulsionType.None ? "selected" : "")>
-                                @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                            <!option value="@propulsion.VehiclePropulsionId" @(propulsion.IsStatusNone ? "selected" : "")>
+                                @(propulsion.PropulsionName)
                             </!option>
                         }
                     </select>

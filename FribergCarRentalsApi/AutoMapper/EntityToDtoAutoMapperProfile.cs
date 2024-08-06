@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Shared.Dto.Admin;
-using FribergCarRentals.Shared.Dto.Car;
-using FribergCarRentals.Shared.Dto.CarCategory;
-using FribergCarRentals.Shared.Dto.Customer;
-using FribergCarRentals.Shared.Dto.Image;
-using FribergCarRentals.Shared.Dto.Order;
-using FribergCarRentals.Shared.Dto.User;
+using FribergCarRentals.Shared.Models.Dto.Admin;
+using FribergCarRentals.Shared.Models.Dto.Car;
+using FribergCarRentals.Shared.Models.Dto.CarCategory;
+using FribergCarRentals.Shared.Models.Dto.Customer;
+using FribergCarRentals.Shared.Models.Dto.Image;
+using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Models.Dto.User;
 
 namespace FribergCarRentalsApi.AutoMapper
 {

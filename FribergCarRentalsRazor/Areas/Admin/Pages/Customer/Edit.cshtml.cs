@@ -2,11 +2,11 @@
 using FribergCarRentals.Data.Repositories;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Customer;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -99,7 +99,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
 
                 if (customer is not null)
                 {
-                    EditCustomerViewModel = new EditCustomerViewModel(customer);
+                    EditCustomerViewModel = _mapper.Map<EditCustomerViewModel>(customer);
                     TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCustomerViewModel.PageSubTitle!);
                     return Page();
                 }
@@ -143,15 +143,15 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
                 }
 
                 var customer = await _customerRepository.GetByUserIdAsync(user.Id) ?? throw new Exception($"Failed to find customer with ID: {EditCustomerViewModel.AccountId}");
-                EditCustomerViewModel = new EditCustomerViewModel(customer);
-                EditCustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
+                EditCustomerViewModel = _mapper.Map<EditCustomerViewModel>(customer);
+				EditCustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
 
                 return Page();
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))
             {
-                EditCustomerViewModel.PageSubTitle = pageSubTitle;
+				EditCustomerViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCustomerViewModel.PageSubTitle!);  // The user can fail again.
             }
 

@@ -7,12 +7,12 @@ using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using FribergFastigheter.Shared.Constants;
 using MvcRazorPages.Shared.Services;
-using MvcRazorPages.Shared.AutoMapper;
 using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Mapping.AutoMapper;
 
 namespace FribergCarRentals
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {

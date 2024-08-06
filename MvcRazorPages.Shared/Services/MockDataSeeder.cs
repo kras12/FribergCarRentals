@@ -4,6 +4,7 @@ using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using FribergCarRentals.Shared.Types.Enums;
 
 namespace MvcRazorPages.Shared.Services
 {
@@ -127,7 +128,7 @@ namespace MvcRazorPages.Shared.Services
             List<CarEntity> cars = new()
             {
                 new CarEntity(carCategories.Single(x => x.CategoryName == "Sedan"), "Tesla", "Black", "Model S", 2024, "TOP666",
-                    VehiclePropulsionEntity.CreateFromType(FribergCarRentals.Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(FribergCarRentals.Data.Types.RentalCarStatus.Idle), 3500)
+                    VehiclePropulsionEntity.CreateFromType(VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(RentalCarStatus.Idle), 3500)
                     {
                         Images = new ()
                         {
@@ -137,7 +138,7 @@ namespace MvcRazorPages.Shared.Services
                     },
 
                     new CarEntity(carCategories.Single(x => x.CategoryName == "Sedan"), "Tesla", "Red", "Model 3", 2024, "MIN123",
-                    VehiclePropulsionEntity.CreateFromType(FribergCarRentals.Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(FribergCarRentals.Data.Types.RentalCarStatus.Idle), 2500)
+                    VehiclePropulsionEntity.CreateFromType(VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(RentalCarStatus.Idle), 2500)
                     {
                         Images = new ()
                         {
@@ -147,7 +148,7 @@ namespace MvcRazorPages.Shared.Services
                     },
 
                     new CarEntity(carCategories.Single(x => x.CategoryName == "SUV"), "Tesla", "Gray", "Model X", 2024, "MAX999",
-                    VehiclePropulsionEntity.CreateFromType(FribergCarRentals.Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(FribergCarRentals.Data.Types.RentalCarStatus.Idle), 3500)
+                    VehiclePropulsionEntity.CreateFromType(VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(RentalCarStatus.Idle), 3500)
                     {
                         Images = new ()
                         {
@@ -157,7 +158,7 @@ namespace MvcRazorPages.Shared.Services
                     },
 
                     new CarEntity(carCategories.Single(x => x.CategoryName == "Sedan"), "Tesla", "Blue", "Model Y", 2024, "MID456",
-                    VehiclePropulsionEntity.CreateFromType(FribergCarRentals.Data.Types.VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(FribergCarRentals.Data.Types.RentalCarStatus.Idle), 2500)
+                    VehiclePropulsionEntity.CreateFromType(VehiclePropulsionType.BEV), CarRentalStatusEntity.CreateFromType(RentalCarStatus.Idle), 2500)
                     {
                         Images = new ()
                         {

@@ -1,13 +1,13 @@
-﻿using MvcRazorPages.Shared.ViewModels.Other;
-using Microsoft.AspNetCore.Mvc;
-using MvcRazorPages.Shared.ViewModels.Image;
+﻿using Microsoft.AspNetCore.Mvc;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
 
 namespace MvcRazorPages.Shared.Components
 {
-	/// <summary>
-	/// A class that handles image slideshows.
-	/// </summary>
-	public class ImageSlideShow : ViewComponent
+    /// <summary>
+    /// A class that handles image slideshows.
+    /// </summary>
+    public class ImageSlideShow : ViewComponent
 	{
 		#region Methods
 

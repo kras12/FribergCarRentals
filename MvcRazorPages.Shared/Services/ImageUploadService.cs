@@ -108,14 +108,14 @@ namespace MvcRazorPages.Shared.Services
             }
         }
 
-        /// <summary>
-        /// Returns the url for the image.
-        /// </summary>
-        /// <param name="image">The image to retrive the url for.</param>
-        /// <returns>The url of the image.</returns>
-        public string GetImageUrl(ImageEntity image)
+		/// <summary>
+		/// Returns the url for the image.
+		/// </summary>
+		/// <param name="fileName">The filename of the image to retrive the url for.</param>
+		/// <returns>The url of the image.</returns>
+		public string GetImageUrl(string fileName)
         {
-            return $"{_imageUploadsRoute}/{image.FileName}";
+            return $"{_imageUploadsRoute}/{fileName}";
         }
 
         /// <summary>

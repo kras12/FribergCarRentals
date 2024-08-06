@@ -15,7 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Data", "F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared", "FribergCarRentals.Shared\FribergCarRentals.Shared.csproj", "{C5F358A7-3FA3-420C-9725-4CC0E3035F10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentalsApi", "FribergCarRentalsApi\FribergCarRentalsApi.csproj", "{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsApi", "FribergCarRentalsApi\FribergCarRentalsApi.csproj", "{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Models", "FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj", "{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Shared.Mapping", "FribergCarRentals.Shared.Mapping\FribergCarRentals.Shared.Mapping.csproj", "{6C2D0D93-70AD-4505-B63F-BCE22D593BA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Shared.Types", "FribergCarRentals.Shared.Types\FribergCarRentals.Shared.Types.csproj", "{61951941-33E8-4E03-87E0-7D9888A2FF0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Shared.Models.Mvc", "FribergCarRentals.Shared.Models.Mvc\FribergCarRentals.Shared.Models.Mvc.csproj", "{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +59,22 @@ Global
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C2D0D93-70AD-4505-B63F-BCE22D593BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C2D0D93-70AD-4505-B63F-BCE22D593BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C2D0D93-70AD-4505-B63F-BCE22D593BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C2D0D93-70AD-4505-B63F-BCE22D593BA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61951941-33E8-4E03-87E0-7D9888A2FF0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61951941-33E8-4E03-87E0-7D9888A2FF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61951941-33E8-4E03-87E0-7D9888A2FF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61951941-33E8-4E03-87E0-7D9888A2FF0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

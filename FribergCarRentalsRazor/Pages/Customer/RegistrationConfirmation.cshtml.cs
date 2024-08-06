@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using MvcRazorPages.Shared.Data;
 using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Customer;
 using System.Text;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
 
 namespace FribergCarRentals.Pages.Customer
 {

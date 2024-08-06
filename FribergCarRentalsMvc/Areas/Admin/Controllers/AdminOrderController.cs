@@ -1,14 +1,16 @@
 ﻿using MvcRazorPages.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Order;
-using MvcRazorPages.Shared.ViewModels.Other;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -57,30 +59,35 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="orderRepository">The injected order repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service.</param>
-        public AdminOrderController(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
-        {
-            _orderRepository = orderRepository;
-            _imageUploadService = imageUploadService;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="orderRepository">The injected order repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="imageUploadService">The injected image upload service.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public AdminOrderController(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_orderRepository = orderRepository;
+			_imageUploadService = imageUploadService;
+			_mapper = mapper;
+		}
 
-        #region Actions
+		#endregion
 
-        // POST: AdminOrder/Complete/5
-        [ActionName(nameof(Complete))]
+		#region Actions
+
+		// POST: AdminOrder/Complete/5
+		[ActionName(nameof(Complete))]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Complete(int id)
@@ -169,7 +176,8 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (order is not null)
                 {
-                    OrderViewModel viewModel = new OrderViewModel(order, _imageUploadService);
+                    OrderViewModel orderViewModel = _mapper.Map<OrderViewModel>(order);
+                    SetImageUrls(orderViewModel.CarBooking.Car.Images);
 
                     // ============================================================================================================
                     // Set redirect back to action data for order manipulation
@@ -182,10 +190,10 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                     // ============================================================================================================
                     if (TempDataHelper.TryGet(TempData, CompletedOrderIdTempDataKey, out int completedOrderId))
                     {
-                        viewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
+                        orderViewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
                     }
 
-                    return View(viewModel);
+                    return View(orderViewModel);
                 }
             }
 
@@ -200,7 +208,9 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminOrderController>(), area: Area));
             }
 
-            ListViewModel<OrderViewModel> viewModel = new((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x, _imageUploadService)).OrderByDescending(x => x.CarOrderId));
+            List<OrderViewModel> orderViewModels = _mapper.Map<List<OrderViewModel>>(await _orderRepository.GetAllAsync()).OrderByDescending(x => x.CarOrderId).ToList();
+            SetImageUrls(orderViewModels.SelectMany(x => x.CarBooking.Car.Images).ToList());
+			ListViewModel<OrderViewModel> viewModel = new(orderViewModels);
 
             // ============================================================================================================
             // Set redirect back to action data for order manipulation
@@ -227,6 +237,19 @@ namespace FribergCarRentals.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region OtherMethods
+
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+		}
+
+		#endregion
+	}
 }

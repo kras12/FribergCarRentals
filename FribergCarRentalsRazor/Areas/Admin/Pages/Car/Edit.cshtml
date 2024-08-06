@@ -1,11 +1,9 @@
 ﻿@page "{id}"
-@using FribergCarRentals.Data.Types
 @using FribergCarRentals.Data.EntityClasses
 @using AppSettings.Shared.Settings;
-@using FribergCarRentals.Data.Attributes
-@using FribergCarRentals.Data.Extensions
-@using MvcRazorPages.Shared.ViewModels.Car
-@using MvcRazorPages.Shared.ViewModels.CarCategory
+@using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car
+@using FribergCarRentals.Shared.Models.ViewModels.Car
+@using FribergCarRentals.Shared.Models.ViewModels.CarCategory
 @model FribergCarRentals.Areas.Admin.Pages.Car.EditModel
 
 @{
@@ -40,10 +38,10 @@ else
             <div class="vertical-form-field">
                 <label asp-for="EditCarViewModel.RentalStatus"></label>
                 <select asp-for="EditCarViewModel.RentalStatus">
-                    @foreach (var value in Enum.GetValues<RentalCarStatus>())
+                    @foreach (var status in Model.EditCarViewModel.RentalStatuses)
                     {
-                        <!option value="@value" @(value == Model.EditCarViewModel.RentalStatus.StatusType ? "selected" : "")>
-                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        <!option value="@status.CarRentalStatusId" @(status.IsStatusNone ? "selected" : "")>
+                            @(status.StatusName)
                         </!option>
                     }
                 </select>
@@ -82,10 +80,10 @@ else
             <div class="vertical-form-field">
                 <label asp-for="EditCarViewModel.PropulsionSystem"></label>
                 <select asp-for="EditCarViewModel.PropulsionSystem">
-                    @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
+                    @foreach (var propulsion in Model.EditCarViewModel.VehiclePropulsions)
                     {
-                        <!option value="@value" @(value == Model.EditCarViewModel.PropulsionSystem.PropulsionType ? "selected" : "")>
-                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        <!option value="@propulsion.VehiclePropulsionId" @(propulsion.IsStatusNone ? "selected" : "")>
+                            @(propulsion.PropulsionName)
                         </!option>
                     }
                 </select>

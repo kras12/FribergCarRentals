@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Other;
-using MvcRazorPages.Shared.ViewModels.CarCategory;
 using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Data.Entities;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -167,7 +167,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (category is not null)
                 {
-                    CarCategoryViewModel viewModel = new CarCategoryViewModel(category);
+                    CarCategoryViewModel viewModel = new CarCategoryViewModel(category.CarCategoryId, category.CategoryName);
 
                     if (TempDataHelper.TryGet(TempData, CreatedCarCategoryIdTempDataKey, out int categoryId))
                     {
@@ -201,7 +201,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (category is not null)
                 {
-                    EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category);
+                    EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category.CarCategoryId, category.CategoryName);
                     TempDataHelper.Set(TempData, PageSubTitleTempDataKey, viewModel.PageSubTitle!);
                     return View(viewModel);
                 }
@@ -229,14 +229,14 @@ namespace FribergCarRentals.Areas.Admin.Controllers
             {
                 var category = _mapper.Map<CarCategoryEntity>(editCarCategoryViewModel);
                 await _carCategoryRepository.UpdateAsync(category);
-                EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category);
+                EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category.CarCategoryId, category.CategoryName);
                 viewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
                 return View(viewModel);
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempDataKey, out string? pageSubTitle))
             {
-                editCarCategoryViewModel.PageSubTitle = pageSubTitle;
+                editCarCategoryViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempDataKey, editCarCategoryViewModel.PageSubTitle!); // The user can fail again.
             }
 
@@ -251,7 +251,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
             }
 
-            ListViewModel<CarCategoryViewModel> viewModel = new((await _carCategoryRepository.GetCategoryStatistics()).Select(x => new CarCategoryViewModel(x)));
+            ListViewModel<CarCategoryViewModel> viewModel = new((await _carCategoryRepository.GetCategoryStatistics()).Select(x => new CarCategoryViewModel(x.CarCategoryEntity.CarCategoryId, x.CarCategoryEntity.CategoryName, x.CarCount)));
             TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
                 new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
 
