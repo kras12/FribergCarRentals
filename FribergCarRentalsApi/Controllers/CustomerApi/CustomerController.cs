@@ -21,7 +21,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
     /// <summary>
     /// Handles customer related activites like registration and login. 
     /// </summary>
-    [Route("api/customer")]
+    [Route("customer-api/customer")]
     [ApiController]
     public class CustomerController : ApiControllerBase
     {

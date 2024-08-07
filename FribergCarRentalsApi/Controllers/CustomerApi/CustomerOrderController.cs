@@ -19,7 +19,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
     /// <summary>
     /// Handles customer related activites like booking a car and place an order for the booking.
     /// </summary>
-    [Route("api/customer/order")]
+    [Route("customer-api/customer/order")]
     [ApiController]
     public class CustomerOrderController : ApiControllerBase
     {
