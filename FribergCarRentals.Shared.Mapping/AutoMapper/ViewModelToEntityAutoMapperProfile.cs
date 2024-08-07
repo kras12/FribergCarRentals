@@ -8,7 +8,6 @@ using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.Admin;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Data.DTO;
-using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
 
 namespace FribergCarRentals.Shared.Mapping.AutoMapper
 {
@@ -69,8 +68,6 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 		public void CreateMappingsForCars()
 		{
 			CreateMap<CarViewModel, CarEntity>();
-			CreateMap<CreateCarViewModel, CarEntity>();
-			CreateMap<EditCarViewModel, CarEntity>();
 		}
 
 		/// <summary>
