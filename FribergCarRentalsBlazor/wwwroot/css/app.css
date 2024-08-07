@@ -782,15 +782,15 @@ dd
 }
 
 /* Flex container - row gap */
-.flex-container__row-gap__4-rem
+.flex-container__row-gap__3-rem
 {
-  row-gap: 2rem;
+  row-gap: 3rem;
 }
 
 /* Flex container - row gap */
 .flex-container__row-gap__4-rem
 {
-  row-gap: 2rem;
+  row-gap: 4rem;
 }
 
 /* Flex container - row gap */
@@ -2119,6 +2119,31 @@ table.slim-table
 {
     padding-left: 1rem;
     padding-right: 1rem;
+}
+
+
+/* Width - 25% */
+.width__25
+{
+    width: 25%;
+}
+
+/* Width - 50% */
+.width__50 
+{
+    width: 50%;
+}
+
+/* Width - 75% */
+.width__75 
+{
+    width: 75%;
+}
+
+/* Width - 100% */
+.width__100
+{
+    width: 100%;
 }
 
 /*==================================================*/

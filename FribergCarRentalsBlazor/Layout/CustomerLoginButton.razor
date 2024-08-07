@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+    <Authorized>
+        <li>
+            <button type="button" @onclick="OnLogoutButtonClicked">Logout</button>
+        </li>
+        <li>
+            <a href="member" class="nav-link"><i class='fas fa-user'></i></a>
+        </li>
+    </Authorized>
+    <NotAuthorized>
+        <li>
+            <a type="button" id="@(_modalDialogId)-toggle" data-bs-toggle="modal" data-bs-target="#@_modalDialogId">Login</a>
+        </li>
+        <div class="modal fade" id="@_modalDialogId" tabindex="-1" aria-labelledby="@(_modalDialogId)-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="@(_modalDialogId)-label">Login</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Context="EditFormContext" Model="FormInput" OnValidSubmit="OnValidSubmit">
+                            <DataAnnotationsValidator></DataAnnotationsValidator>
+                            <div class="vertical-flex-container .flex-container__row-gap__2-rem flex-container__align-self-center">
+                                @if (_apiValidationErrors.Count > 0)
+                                {
+                                    <ul>
+                                        @{
+                                            foreach (var error in _apiValidationErrors)
+                                            {
+                                                <li class="text-danger">@error</li>
+                                            }
+                                        }
+                                    </ul>
+                                }
+                                <div class="vertical-flex-container width__75">
+                                    <label for="email">Email</label>
+                                    <InputText name="email" @bind-Value="FormInput.Email"></InputText>
+                                    <ValidationMessage For="@(() => FormInput.Email)" />
+                                </div>
+                                <div class="vertical-flex-container width__75">
+                                    <label for="password">Password</label>
+                                    <InputText type="password" name="password" @bind-Value="FormInput.Password"></InputText>
+                                    <ValidationMessage For="@(() => FormInput.Password)" />
+                                </div>
+                                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__row-gap__2-rem">
+                                    <button type="submit" class="btn btn-success">Logga in</button>
+                                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Avbryt</button>
+                                </div>
+                            </div>
+                        </EditForm>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+<script>
+    function HideCustomerLoginModal(id) {
+        let modal = bootstrap.Modal.getInstance(document.getElementById(id))
+        modal.hide();
+    }
+
+    function ShowCustomerLoginModal(id) {
+        let modal = bootstrap.Modal.getInstance(document.getElementById(id))
+        let modalToggle = document.getElementById('id' + '-toggle')
+        modal.show(modalToggle);
+    }
+</script>

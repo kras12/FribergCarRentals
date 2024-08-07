@@ -34,10 +34,10 @@ namespace FribergCarRentalsBlazor
 				client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
 			});
 
-            // ==================================================================================================================
-            // Security (authentication, authorization)
-            // ==================================================================================================================
-            builder.Services.AddAuthorizationCore(options =>
+			// ==================================================================================================================
+			// Security (authentication, authorization)
+			// ==================================================================================================================
+			builder.Services.AddAuthorizationCore(options =>
             {
 				options.AddPolicy(ApplicationUserPolicies.Admin, policy =>
 					policy.RequireClaim(ApplicationUserClaims.UserRole, ApplicationUserRoles.Admin));
@@ -47,6 +47,7 @@ namespace FribergCarRentalsBlazor
 			});
 
 			builder.Services.AddScoped<AuthenticationStateProvider, ApiUserAuthenticationStateProvider>();
+			builder.Services.AddTransient<ICustomerAuthenticationService, CustomerAuthenticationService>();
 
 			// ==================================================================================================================
 			// Storage

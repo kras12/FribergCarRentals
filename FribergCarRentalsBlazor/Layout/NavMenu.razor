@@ -19,25 +19,16 @@
                 </Authorized>
             </AuthorizeView>
             <div class="menu-group right-aligned">
-                <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+                <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
                     <Authorized>
                         <li>
-                            <a href="/customer/logout">Logout</a>
+                            <a href="/admin">Account</a>
                         </li>
+                        @* TODO - Show admin logout button *@
                     </Authorized>
-                    <NotAuthorized>                        
-                        <li>
-                            <a href="/customer/authenticate" asp-area="" asp-controller="Customer" asp-action="Authenticate">Register/Login</a>
-                        </li>
+                    <NotAuthorized>
+                        <CustomerLoginButton></CustomerLoginButton>
                     </NotAuthorized>
-                </AuthorizeView>
-                <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
-                    <li>
-                        <a href="/admin/">Account</a>
-                    </li>
-                    <li>
-                        <a href="/admin/logout">Logout</a>
-                    </li>
                 </AuthorizeView>
             </div>
         </ul>

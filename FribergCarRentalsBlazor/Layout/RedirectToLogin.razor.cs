@@ -45,7 +45,7 @@ namespace FribergCarRentalsBlazor.Layout
 		{
 			if (!string.IsNullOrEmpty(ReturnToUrl))
 			{
-				await SessionStorageService.SetItemAsStringAsync(LoginButton.RedirectUrlStorageKey, ReturnToUrl);
+				await SessionStorageService.SetItemAsStringAsync(CustomerLoginButton.RedirectUrlStorageKey, ReturnToUrl);
 			}
 
 			NavigationManager.NavigateToLogin("login");
