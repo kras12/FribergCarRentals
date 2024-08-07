@@ -1,8 +1,9 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using FribergCarRentals.Shared.Constants;
-using FribergFastigheter.Client.Services.FribergFastigheterApi;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Mapping.AutoMapper;
+using FribergCarRentalsBlazor.Services.Authentication;
+using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -17,7 +18,21 @@ namespace FribergCarRentalsBlazor
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
+            // ==================================================================================================================
+            // Mapping
+            // ==================================================================================================================
+            builder.Services.AddAutoMapper(typeof(ViewModelToDtoAutoMapperProfile));
+
+            // ==================================================================================================================
+            // Network (API Service, data transfers)
+            // ==================================================================================================================
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+			// Add API services with typed http clients
+			builder.Services.AddHttpClient<ICustomerApiService, CustomerApiService>(client =>
+			{
+				client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
+			});
 
             // ==================================================================================================================
             // Security (authentication, authorization)
