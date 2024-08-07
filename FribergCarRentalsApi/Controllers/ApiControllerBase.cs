@@ -1,5 +1,4 @@
 ﻿using FribergCarRentals.Shared;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FribergCarRentals.Shared.Models.Dto.Api;

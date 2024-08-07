@@ -4,9 +4,9 @@ using MvcRazorPages.Shared.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
 using FribergCarRentals.Shared.Models.ViewModels.Admin;
 using AutoMapper;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Areas.Admin.Pages
 {

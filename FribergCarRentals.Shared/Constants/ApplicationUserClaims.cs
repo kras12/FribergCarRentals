@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace FribergFastigheter.Shared.Constants
+namespace FribergCarRentals.Shared.Constants
 {
     /// <summary>
     /// A class that contains user claims.

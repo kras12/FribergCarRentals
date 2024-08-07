@@ -6,7 +6,6 @@ using FribergCarRentals.Shared.Constants;
 using FribergCarRentalsApi.Filters;
 using FribergCarRentalsApi.Services;
 using FribergCarRentals.Data.Entities;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

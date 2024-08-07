@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using AppSettings.Shared.Settings;
 using MvcRazorPages.Shared.ModelBinders;
 using FribergCarRentals.Data.Entities;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Constants;

@@ -1,4 +1,4 @@
-﻿namespace FribergFastigheter.Shared.Constants
+﻿namespace FribergCarRentals.Shared.Constants
 {
     /// <summary>
     /// A class that contains application user roles.

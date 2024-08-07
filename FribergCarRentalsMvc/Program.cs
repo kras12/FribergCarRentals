@@ -5,7 +5,6 @@ using AppSettings.Shared.Settings;
 using MvcRazorPages.Shared.ModelBinders;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
 using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Mapping.AutoMapper;

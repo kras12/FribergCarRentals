@@ -5,7 +5,7 @@ using MvcRazorPages.Shared.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Pages.Order
 {

@@ -7,7 +7,6 @@ using FribergCarRentals.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
 using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
@@ -17,6 +16,7 @@ using System.Runtime.Intrinsics.X86;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Controllers.Customer
 {
