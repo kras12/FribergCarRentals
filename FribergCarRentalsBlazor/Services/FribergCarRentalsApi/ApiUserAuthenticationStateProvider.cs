@@ -1,10 +1,10 @@
 ﻿using Blazored.LocalStorage;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Constants;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace FribergFastigheter.Client.Services.FribergFastigheterApi
+namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 {
     /// <summary>
     /// A service that provides information about the authentication state of the current user.
@@ -68,10 +68,10 @@ namespace FribergFastigheter.Client.Services.FribergFastigheterApi
             var parsedToken = new JwtSecurityTokenHandler().ReadJwtToken(_token);
 
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(
-                parsedToken.Claims, authenticationType: "FribergCarRentalsApiUser", 
-                nameType: JwtRegisteredClaimNames.GivenName, 
+                parsedToken.Claims, authenticationType: "FribergCarRentalsApiUser",
+                nameType: JwtRegisteredClaimNames.GivenName,
                 roleType: ApplicationUserClaims.UserRole)));
-        }        
+        }
 
         /// <summary>
         /// Gets the token from local storage. 
