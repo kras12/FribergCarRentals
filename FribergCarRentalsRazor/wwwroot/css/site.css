@@ -782,15 +782,15 @@ dd
 }
 
 /* Flex container - row gap */
-.flex-container__row-gap__4-rem
+.flex-container__row-gap__3-rem
 {
-  row-gap: 2rem;
+  row-gap: 3rem;
 }
 
 /* Flex container - row gap */
 .flex-container__row-gap__4-rem
 {
-  row-gap: 2rem;
+  row-gap: 4rem;
 }
 
 /* Flex container - row gap */
