@@ -1,0 +1,45 @@
+﻿<div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
+    <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
+        <ul>
+            <li>
+                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+                <NotAuthorized>
+                    <li>
+                        <a asp-area="" asp-controller="CustomerOrder" asp-action="Book">Book</a>
+                    </li>
+                </NotAuthorized>
+            </AuthorizeView>
+            <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+                <Authorized>
+                    <li>
+                        <a asp-area="" asp-controller="CustomerOrder" asp-action="List">Orders</a>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+            <div class="menu-group right-aligned">
+                <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+                    <Authorized>
+                        <li>
+                            <a href="/customer/logout">Logout</a>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>                        
+                        <li>
+                            <a href="/customer/authenticate" asp-area="" asp-controller="Customer" asp-action="Authenticate">Register/Login</a>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+                    <li>
+                        <a href="/admin/">Account</a>
+                    </li>
+                    <li>
+                        <a href="/admin/logout">Logout</a>
+                    </li>
+                </AuthorizeView>
+            </div>
+        </ul>
+    </nav>
+</div>

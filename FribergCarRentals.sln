@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsApi", "FribergCarRentalsApi\FribergCarRentalsApi.csproj", "{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsBlazor", "FribergCarRentalsBlazor\FribergCarRentalsBlazor.csproj", "{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Models", "FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj", "{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Shared.Mapping", "FribergCarRentals.Shared.Mapping\FribergCarRentals.Shared.Mapping.csproj", "{6C2D0D93-70AD-4505-B63F-BCE22D593BA3}"
@@ -59,6 +61,10 @@ Global
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU

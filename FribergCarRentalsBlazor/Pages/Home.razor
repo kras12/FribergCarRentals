@@ -1,0 +1,13 @@
+﻿@page "/"
+@using FribergCarRentalsBlazor.Components
+
+<PageTitle>Home</PageTitle>
+
+<h1>Browse our cars</h1>
+<div class="vertical-flex-container flex-container__justify-content__center flex-container__align-items-center flex-container__row-gap__1-rem">
+    <div>
+        <BlazorImageSlideShow Images="ImageSlides.Models" ShowNavigationalDots="true"></BlazorImageSlideShow>
+    </div>
+    <p class="text-align-center no-margin">We have a fine selection of cars that you can rent right away.</p>
+    <a class="button" href="order/book">Find your car</a>
+</div>
