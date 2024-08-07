@@ -12,7 +12,6 @@ using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using FribergCarRentals.Shared.Types.Enums;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
-using System.Runtime.Intrinsics.X86;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
