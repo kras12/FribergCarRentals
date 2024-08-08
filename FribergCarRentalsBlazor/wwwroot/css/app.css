@@ -233,6 +233,17 @@
   --max-content-width: 80rem;
 
   /*==================================================*/
+  /* Login - Modal box
+  /*==================================================*/ 
+
+  /* The background color for the customer login modal box content */
+  --customer-login-button-modal-box-content-background-color: #50575d;
+  --customer-login-button-modal-box-content-background-color: #918f8f;
+
+  /* The text color in the customer login modal box content */
+  --customer-login-button-modal-box-text-color: var(--navigation-link-text-color);
+
+  /*==================================================*/
   /* Links                                            */
   /*==================================================*/  
 

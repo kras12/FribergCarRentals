@@ -1,0 +1,26 @@
+﻿/*===========================================================*/
+/* Global Variables Example for overriding stiles in app.css */
+/*===========================================================*/
+/*
+:root {
+
+    The background color for the modal box content
+    --customer-login-button-modal-box-content-background-color: #50575d;
+
+    The text color in the modal box content
+    --customer-login-button-modal-box-text-color: #ffffff;
+}
+*/
+
+/* Modal content */
+.modal-content 
+{
+    background: var(--customer-login-button-modal-box-content-background-color, #50575d);
+    color: var(--customer-login-button-modal-box-text-color, #ffffff);
+}
+
+/* Modal content - close button */
+.modal-content .btn-close
+{
+    color: var(--customer-login-button-modal-box-text-color, #ffffff);
+}
