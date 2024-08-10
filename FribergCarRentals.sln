@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Ty
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Models.Mvc", "FribergCarRentals.Shared.Models.Mvc\FribergCarRentals.Shared.Models.Mvc.csproj", "{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Shared.Mapping.Mvc", "FribergCarRentals.Shared.Mapping.Mvc\FribergCarRentals.Shared.Mapping.Mvc.csproj", "{6714B57C-2C6C-41D6-A7D4-4E08B5EF9D59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Mapping.Mvc", "FribergCarRentals.Shared.Mapping.Mvc\FribergCarRentals.Shared.Mapping.Mvc.csproj", "{6714B57C-2C6C-41D6-A7D4-4E08B5EF9D59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
