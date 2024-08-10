@@ -19,7 +19,7 @@
                 </Authorized>
             </AuthorizeView>
             <div class="menu-group right-aligned">
-                <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+                <AuthorizeView Context="AdminContext" Policy="@ApplicationUserPolicies.Admin">
                     <Authorized>
                         <li>
                             <a href="/admin">Account</a>
@@ -27,7 +27,19 @@
                         @* TODO - Show admin logout button *@
                     </Authorized>
                     <NotAuthorized>
-                        <CustomerLoginButton></CustomerLoginButton>
+                        <AuthorizeView Context="CustomerContext" Policy="@ApplicationUserPolicies.Customer">
+                            <Authorized>
+                                <li>
+                                    <a href="/customer" class="nav-link"><i class='fas fa-user'></i></a>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+                        <li>
+                            <CustomerLoginButton></CustomerLoginButton>
+                        </li>
+                        <li>
+                            <a href="/customer/register" class="nav-link">Register</a>
+                        </li>
                     </NotAuthorized>
                 </AuthorizeView>
             </div>
