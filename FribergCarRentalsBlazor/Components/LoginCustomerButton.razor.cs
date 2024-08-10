@@ -7,7 +7,7 @@ namespace FribergCarRentalsBlazor.Components
     /// <summary>
     /// A component that handles both login and logout functionality for customers.
     /// </summary>
-    public partial class CustomerLoginButton : ComponentBase
+    public partial class LoginCustomerButton : ComponentBase
     {
         #region Fields
 
