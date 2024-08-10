@@ -25,7 +25,7 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 		/// <summary>
 		/// The customer by ID API endpoint address.
 		/// </summary>
-		private const string CustomerByIdApiEndpoint = $"{ApiBase}/customer/{IdPlaceHolder}";
+		private const string CustomerByIdApiEndpoint = $"{ApiBase}/{IdPlaceHolder}";
 
 		/// <summary>
 		/// The customer login API endoint address.
@@ -39,7 +39,7 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 		/// <summary>
 		/// The customer API base address.
 		/// </summary>
-		private const string ApiBase = "customer-api";
+		private const string ApiBase = "customer-api/customer";
 
 		/// <summary>
 		/// The ID placeholder used in API endpoint addresses.
@@ -105,7 +105,7 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 		/// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="LoginUserResponseDto"/> object if successful.</returns>
 		public async Task<ApiValueResponseDto<LoginUserResponseDto>> LoginCustomer(LoginCustomerDto loginCustomerDto)
 		{
-			var response = await _httpClient.PostAsJsonAsync(CreateCustomerApiEndoint, loginCustomerDto);
+            var response = await _httpClient.PostAsJsonAsync(LoginCustomerApiEndpoint, loginCustomerDto);
 			var result = await response.Content.ReadFromJsonAsync<ApiValueResponseDto<LoginUserResponseDto>>();
 			return EnsureNotNull(result, "Failed to serialize the API response.");
 		}
