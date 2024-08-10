@@ -1,7 +1,3 @@
-﻿using AutoMapper;
-using Blazored.SessionStorage;
-using FribergCarRentals.Shared.Models.Dto.Customer;
-using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentalsBlazor.Services.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -26,11 +22,6 @@ namespace FribergCarRentalsBlazor.Components
         #region Fields
 
         /// <summary>
-        /// A collection of validation errors returned from the API.
-        /// </summary>
-        private List<string> _apiValidationErrors = new List<string>();
-
-        /// <summary>
         /// The id of the modal dialog. 
         /// </summary>
         private readonly string _modalDialogId = Guid.NewGuid().ToString();
@@ -38,12 +29,6 @@ namespace FribergCarRentalsBlazor.Components
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// The injected Auto Mapper service. 
-        /// </summary>
-        [Inject]
-        private IMapper AutoMapper { get; set; } = default!;
 
         /// <summary>
         /// HTML classes to use for the login button
@@ -58,10 +43,10 @@ namespace FribergCarRentalsBlazor.Components
         private ICustomerAuthenticationService CustomerAuthenticationService { get; set; } = default!;
 
         /// <summary>
-        /// The data binding property for the login form. 
+        /// The injected navigation manager. 
         /// </summary>
-        [SupplyParameterFromForm]
-        public LoginCustomerViewModel FormInput { get; set; } = new();
+        [Inject]
+        private NavigationManager NavigationManager { get; set; } = default!;
 
         /// <summary>
         /// The injected JavaScript runtime. 
@@ -69,21 +54,18 @@ namespace FribergCarRentalsBlazor.Components
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = default!;
 
-        /// <summary>
-        /// The injected navigation manager. 
-        /// </summary>
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
-
-        /// <summary>
-        /// The injected session storage service.
-        /// </summary>
-        [Inject]
-        private ISessionStorageService SessionStorageService { get; set; } = default!;
-
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Event handler for the login successful event in the <see cref="LoginCustomer"/> component.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing an async operation.</returns>
+        private async Task OnLoginSuccessful()
+        {
+            await JSRuntime.InvokeVoidAsync("HideCustomerLoginModal", _modalDialogId);
+        }
 
         /// <summary>
         /// Event handler for when the logout button was clicked. 
@@ -92,42 +74,7 @@ namespace FribergCarRentalsBlazor.Components
         private async Task OnLogoutButtonClicked()
         {
             await CustomerAuthenticationService.Logout();
-            NavigationManager.NavigateToLogout("/");
-        }
-
-        /// <summary>
-        /// Event handler for the form submit button. 
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing an async operation.</returns>
-        private async Task OnValidSubmit()
-        {
-            _apiValidationErrors.Clear();
-            await JSRuntime.InvokeVoidAsync("HideCustomerLoginModal", _modalDialogId);
-            var response = await CustomerAuthenticationService.Login(AutoMapper.Map<LoginCustomerDto>(FormInput));
-
-            if (response.Success)
-            {
-                FormInput = new LoginCustomerViewModel();
-                // TODO - Replace with customer back office url?
-                string navigateToUrl = "/";
-
-                if (await SessionStorageService.ContainKeyAsync(RedirectUrlStorageKey))
-                {
-                    string redirectToUrl = await SessionStorageService.GetItemAsStringAsync(RedirectUrlStorageKey);
-                    await SessionStorageService.RemoveItemAsync(RedirectUrlStorageKey);
-                    navigateToUrl = redirectToUrl;
-                }
-
-                NavigationManager.NavigateTo(navigateToUrl);
-            }
-            else
-            {
-                _apiValidationErrors = response.Errors.Select(x => x.Value).ToList();
-
-                // The framework needs some time it seems
-                await Task.Delay(200);
-                await JSRuntime.InvokeVoidAsync("ShowCustomerLoginModal", _modalDialogId);
-            }
+            NavigationManager.NavigateTo("/");
         }
 
         #endregion

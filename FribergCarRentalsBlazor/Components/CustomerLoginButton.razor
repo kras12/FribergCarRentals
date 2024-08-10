@@ -15,36 +15,7 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <EditForm class="vertical-form" Context="EditFormContext" Model="FormInput" OnValidSubmit="OnValidSubmit">
-                            <DataAnnotationsValidator></DataAnnotationsValidator>
-                            <div class="vertical-form-field flex-container__row-gap__1-rem flex-container__align-self-center">
-                                @if (_apiValidationErrors.Count > 0)
-                                {
-                                    <ul>
-                                        @{
-                                            foreach (var error in _apiValidationErrors)
-                                            {
-                                                <li class="text-danger">@error</li>
-                                            }
-                                        }
-                                    </ul>
-                                }
-                                <div class="vertical-form-field">
-                                    <label for="email">Email</label>
-                                    <InputText name="email" @bind-Value="FormInput.Email"></InputText>
-                                    <ValidationMessage For="@(() => FormInput.Email)" />
-                                </div>
-                                <div class="vertical-form-field">
-                                    <label for="password">Password</label>
-                                    <InputText type="password" name="password" @bind-Value="FormInput.Password"></InputText>
-                                    <ValidationMessage For="@(() => FormInput.Password)" />
-                                </div>
-                                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                                    <button type="submit" class="btn btn-success">Login</button>
-                                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
-                                </div>
-                            </div>
-                        </EditForm>
+                        <LoginCustomer OnLoginSuccessful="OnLoginSuccessful"></LoginCustomer>
                     </div>
                     <div class="modal-footer">
                     </div>

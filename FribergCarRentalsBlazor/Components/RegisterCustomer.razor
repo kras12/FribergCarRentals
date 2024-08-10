@@ -1,0 +1,39 @@
+﻿<EditForm class="vertical-form" Context="EditFormContext" Model="FormInput" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="vertical-form-field flex-container__row-gap__1-rem flex-container__align-self-center">
+        @if (_apiValidationErrors.Count > 0)
+        {
+            <ul>
+                @{
+                    foreach (var error in _apiValidationErrors)
+                    {
+                        <li class="error-text">@error</li>
+                    }
+                }
+            </ul>
+        }
+        <div class="vertical-form-field">
+            <label for="first-name">First name</label>
+            <InputText name="first-name" @bind-Value="FormInput.FirstName"></InputText>
+            <ValidationMessage For="@(() => FormInput.FirstName)" class="error-text" />
+        </div>
+        <div class="vertical-form-field">
+            <label for="last-name">Last name</label>
+            <InputText name="last-name" @bind-Value="FormInput.LastName"></InputText>
+            <ValidationMessage For="@(() => FormInput.LastName)" class="error-text" />
+        </div>
+        <div class="vertical-form-field">
+            <label for="email">Email</label>
+            <InputText name="email" @bind-Value="FormInput.Email"></InputText>
+            <ValidationMessage For="@(() => FormInput.Email)" class="error-text" />
+        </div>
+        <div class="vertical-form-field">
+            <label for="password">Password</label>
+            <InputText name="password" @bind-Value="FormInput.Password"></InputText>
+            <ValidationMessage For="@(() => FormInput.Password)" class="error-text" />
+        </div>
+        <div class="vertical-form-field">
+            <button type="submit" class="btn btn-success">Register</button>
+        </div>
+    </div>
+</EditForm>
