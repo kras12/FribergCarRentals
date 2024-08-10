@@ -1,8 +1,6 @@
 ﻿using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.Dto.User;
-using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FribergCarRentalsBlazor.Services.Authentication
 {
@@ -11,12 +9,12 @@ namespace FribergCarRentalsBlazor.Services.Authentication
 	/// </summary>
 	public interface ICustomerAuthenticationService
 	{
-		/// <summary>
-		/// Attempts to login a customer.
-		/// </summary>
-		/// <param name="loginDto">The login credentials.</param>
-		/// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="LoginUserResponseDto"/> object if successful.</returns>
-		public Task<ApiValueResponseDto<LoginUserResponseDto>> Login(LoginCustomerDto loginDto);
+        /// <summary>
+        /// Attempts to login a customer.
+        /// </summary>
+        /// <param name="loginDto">The login credentials.</param>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="LoginUserResponseDto"/> object if successful.</returns>
+        public Task<ApiValueResponseDto<LoginUserResponseDto>> LoginCustomer(LoginCustomerDto loginDto);
 
 		/// <summary>
 		/// Logs out the customer.

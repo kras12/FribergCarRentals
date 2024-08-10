@@ -38,16 +38,16 @@ namespace FribergCarRentalsBlazor.Services.Authentication
 			_customerApiService = customerApiService;
 		}
 
-		#endregion
+        #endregion
 
-		#region Methods
+        #region Methods
 
-		/// <summary>
-		/// Attempts to login a customer.
-		/// </summary>
-		/// <param name="loginDto">The login credentials.</param>
-		/// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="LoginUserResponseDto"/> object if successful.</returns>
-		public async Task<ApiValueResponseDto<LoginUserResponseDto>> Login(LoginCustomerDto loginDto)
+        /// <summary>
+        /// Attempts to login a customer.
+        /// </summary>
+        /// <param name="loginDto">The login credentials.</param>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="LoginUserResponseDto"/> object if successful.</returns>
+        public async Task<ApiValueResponseDto<LoginUserResponseDto>> LoginCustomer(LoginCustomerDto loginDto)
 		{
 			var response = await _customerApiService.LoginCustomer(loginDto);
 
