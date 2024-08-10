@@ -1,6 +1,5 @@
-using FribergCarRentalsBlazor.Services.Authentication;
+﻿using FribergCarRentalsBlazor.Services.Authentication;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.JSInterop;
 
 namespace FribergCarRentalsBlazor.Components
@@ -10,15 +9,6 @@ namespace FribergCarRentalsBlazor.Components
     /// </summary>
     public partial class CustomerLoginButton : ComponentBase
     {
-        #region Constants
-
-        /// <summary>
-        /// The key where the component looks for redirect url targets after logging in. 
-        /// </summary>
-        public const string RedirectUrlStorageKey = "RedirectUrlAfterLoginKey";
-
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -75,7 +65,7 @@ namespace FribergCarRentalsBlazor.Components
         {
             await CustomerAuthenticationService.Logout();
             NavigationManager.NavigateTo("/");
-        }
+        }        
 
         #endregion
     }

@@ -1,7 +1,6 @@
 ﻿using Blazored.SessionStorage;
-using FribergCarRentalsBlazor.Components;
+using FribergCarRentalsBlazor.Pages.Customer;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace FribergCarRentalsBlazor.Layout
 {
@@ -46,10 +45,10 @@ namespace FribergCarRentalsBlazor.Layout
 		{
 			if (!string.IsNullOrEmpty(ReturnToUrl))
 			{
-				await SessionStorageService.SetItemAsStringAsync(CustomerLoginButton.RedirectUrlStorageKey, ReturnToUrl);
+				await SessionStorageService.SetItemAsStringAsync(Authenticate.RedirectUrlStorageKey, ReturnToUrl);
 			}
 
-			NavigationManager.NavigateToLogin("login");
+            NavigationManager.NavigateTo("/customer/login");
 		}
 
 		#endregion

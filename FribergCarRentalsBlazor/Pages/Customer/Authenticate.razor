@@ -1,0 +1,17 @@
+﻿@page "/customer/authenticate"
+@using FribergCarRentalsBlazor.Components
+
+<AuthorizeView>
+	<Authorized>
+			<RedirectToUrl Url="/customer"></RedirectToUrl>
+	</Authorized>
+	<NotAuthorized>		
+		<div class="vertical-page-container">
+			<h1>You have to login in before you continue!</h1>
+			<div class="vertical-flex-container flex-container__row-gap__2-rem">
+				<LoginCustomer RedirectUrl="_redirectUrl"></LoginCustomer>
+				<RegisterCustomer RedirectUrl="_redirectUrl"></RegisterCustomer>
+			</div>
+		</div>		
+	</NotAuthorized>
+</AuthorizeView>
