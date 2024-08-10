@@ -3,17 +3,10 @@
 
 <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
     <Authorized>
-        <li>
-            <button type="button" @onclick="OnLogoutButtonClicked">Logout</button>
-        </li>
-        <li>
-            <a href="member" class="nav-link"><i class='fas fa-user'></i></a>
-        </li>
+        <button type="button" @onclick="OnLogoutButtonClicked">Logout</button>
     </Authorized>
     <NotAuthorized>
-        <li>
-            <a type="button" id="@(_modalDialogId)-toggle" data-bs-toggle="modal" data-bs-target="#@_modalDialogId">Login</a>
-        </li>
+        <a class="login-modal-toggle @LoginButtonCssClasses" id="@(_modalDialogId)-toggle" data-bs-toggle="modal" data-bs-target="#@_modalDialogId">Login</a>
         <div class="modal fade" id="@_modalDialogId" tabindex="-1" aria-labelledby="@(_modalDialogId)-label" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -22,9 +15,9 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <EditForm Context="EditFormContext" Model="FormInput" OnValidSubmit="OnValidSubmit">
+                        <EditForm class="vertical-form" Context="EditFormContext" Model="FormInput" OnValidSubmit="OnValidSubmit">
                             <DataAnnotationsValidator></DataAnnotationsValidator>
-                            <div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-self-center">
+                            <div class="vertical-form-field flex-container__row-gap__1-rem flex-container__align-self-center">
                                 @if (_apiValidationErrors.Count > 0)
                                 {
                                     <ul>
@@ -36,12 +29,12 @@
                                         }
                                     </ul>
                                 }
-                                <div class="vertical-flex-container">
+                                <div class="vertical-form-field">
                                     <label for="email">Email</label>
                                     <InputText name="email" @bind-Value="FormInput.Email"></InputText>
                                     <ValidationMessage For="@(() => FormInput.Email)" />
                                 </div>
-                                <div class="vertical-flex-container">
+                                <div class="vertical-form-field">
                                     <label for="password">Password</label>
                                     <InputText type="password" name="password" @bind-Value="FormInput.Password"></InputText>
                                     <ValidationMessage For="@(() => FormInput.Password)" />

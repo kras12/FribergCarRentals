@@ -24,3 +24,15 @@
 {
     color: var(--customer-login-button-modal-box-text-color, #ffffff);
 }
+
+/* Modal content - H1 */
+.modal-header h1
+{
+    margin-top: 0;
+}
+
+/* Modal toggle button */
+.login-modal-toggle
+{
+    cursor: pointer;
+}

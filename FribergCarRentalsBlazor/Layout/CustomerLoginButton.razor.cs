@@ -2,8 +2,6 @@
 using Blazored.SessionStorage;
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
-using FribergCarRentals.Shared.Models.ViewModels.Other;
-using FribergCarRentals.Shared.Models.ViewModels.User;
 using FribergCarRentalsBlazor.Pages;
 using FribergCarRentalsBlazor.Services.Authentication;
 using Microsoft.AspNetCore.Components;
@@ -47,6 +45,12 @@ namespace FribergCarRentalsBlazor.Layout
         /// </summary>
         [Inject]
         private IMapper AutoMapper { get; set; } = default!;
+
+        /// <summary>
+        /// HTML classes to use for the login button
+        /// </summary>
+        [Parameter]
+        public string LoginButtonCssClasses { get; set; } = "";
 
         /// <summary>
         /// The injected customer authentication service. 
