@@ -27,6 +27,12 @@ namespace FribergCarRentalsBlazor.Components
         public string LoginButtonCssClasses { get; set; } = "";
 
         /// <summary>
+        /// HTML classes to use for the logout button
+        /// </summary>
+        [Parameter]
+        public string LogoutButtonCssClasses { get; set; } = "";
+
+        /// <summary>
         /// The injected customer authentication service. 
         /// </summary>
         [Inject]
@@ -49,12 +55,23 @@ namespace FribergCarRentalsBlazor.Components
         #region Methods
 
         /// <summary>
-        /// Event handler for the login successful event in the <see cref="LoginCustomer"/> component.
+        /// An event handler for the before login event in the <see cref="LoginCustomer"/> component.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing an async operation.</returns>
-        private async Task OnLoginSuccessful()
+        private async Task OnBeforeLogin()
         {
             await JSRuntime.InvokeVoidAsync("HideCustomerLoginModal", _modalDialogId);
+        }
+
+        /// <summary>
+        /// Event handler for the login failed event in the <see cref="LoginCustomer"/> component.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing an async operation.</returns>
+        private async Task OnLoginFailed()
+        {
+            // Frameworks needs a bit time.
+            await Task.Delay(200);
+            await JSRuntime.InvokeVoidAsync("ShowCustomerLoginModal", _modalDialogId);
         }
 
         /// <summary>

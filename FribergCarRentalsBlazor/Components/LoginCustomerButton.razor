@@ -3,7 +3,7 @@
 
 <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
     <Authorized>
-        <button type="button" @onclick="OnLogoutButtonClicked">Logout</button>
+        <a class="@LogoutButtonCssClasses" type="button" @onclick="OnLogoutButtonClicked">Logout</a>
     </Authorized>
     <NotAuthorized>
         <a class="login-modal-toggle @LoginButtonCssClasses" id="@(_modalDialogId)-toggle" data-bs-toggle="modal" data-bs-target="#@_modalDialogId">Login</a>
@@ -15,7 +15,7 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <LoginCustomer OnLoginSuccessful="OnLoginSuccessful"></LoginCustomer>
+                        <LoginCustomer OnBeforeLogin="OnBeforeLogin" OnLoginFailed="OnLoginFailed"></LoginCustomer>
                     </div>
                     <div class="modal-footer">
                     </div>

@@ -34,6 +34,12 @@ namespace FribergCarRentalsBlazor.Components
         [Parameter]
         public EventCallback OnLoginSuccessful { get; set; }
 
+        /// <summary>
+        /// An event that triggers when the user submits the login form and before the login process starts. 
+        /// </summary>
+        [Parameter]
+        public EventCallback OnBeforeLogin { get; set; }
+
         #endregion
 
         #region Properties
@@ -78,6 +84,7 @@ namespace FribergCarRentalsBlazor.Components
         /// <returns>A <see cref="Task"/> representing an async operation.</returns>
         private async Task OnValidSubmit()
         {
+            await OnBeforeLogin.InvokeAsync();
             _apiValidationErrors.Clear();
             var response = await CustomerAuthenticationService.LoginCustomer(AutoMapper.Map<LoginCustomerDto>(FormInput));
 
