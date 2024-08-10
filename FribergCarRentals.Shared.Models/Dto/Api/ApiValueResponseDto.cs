@@ -1,4 +1,6 @@
-﻿namespace FribergCarRentals.Shared.Models.Dto.Api
+﻿using System.Text.Json.Serialization;
+
+namespace FribergCarRentals.Shared.Models.Dto.Api
 {
     /// <summary>
     /// API response class having a value of type <see cref="T"/>.
@@ -6,6 +8,15 @@
     public class ApiValueResponseDto<T> : ApiResponseDto where T : class
     {
         #region Constructors
+
+        /// <summary>
+        /// A constructor intended for JSON deserializers.
+        /// </summary>
+        [JsonConstructor]
+        private ApiValueResponseDto()
+        {
+            
+        }
 
         /// <summary>
         /// Constructor for a successful response.
@@ -43,7 +54,8 @@
         /// <summary>
         /// The value for a successful response.
         /// </summary>
-        public T? Value { get; }
+        [JsonInclude]
+        public T? Value { get; private set; }
 
         #endregion
 

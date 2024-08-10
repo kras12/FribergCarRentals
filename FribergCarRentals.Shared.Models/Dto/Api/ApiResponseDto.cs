@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
 
 namespace FribergCarRentals.Shared.Models.Dto.Api
 {
@@ -8,6 +9,15 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
     public class ApiResponseDto
     {
         #region Constructors
+
+        /// <summary>
+        /// A constructor intended for JSON deserializers.
+        /// </summary>
+        [JsonConstructor]
+        public ApiResponseDto()
+        {
+
+        }
 
         /// <summary>
         /// Constructor.
@@ -46,12 +56,14 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <summary>
         /// A collection of errors. 
         /// </summary>
-        public List<KeyValuePair<string, string>> Errors { get; } = new();
+        [JsonInclude]
+        public List<KeyValuePair<string, string>> Errors { get; private set; } = new();
 
         /// <summary>
         /// True if operation was successful.
         /// </summary>
-        public bool Success { get; }
+        [JsonInclude]
+        public bool Success { get; private set; }
 
         #endregion
 
