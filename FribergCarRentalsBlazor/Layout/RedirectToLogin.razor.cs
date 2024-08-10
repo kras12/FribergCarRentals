@@ -1,13 +1,14 @@
 ﻿using Blazored.SessionStorage;
+using FribergCarRentalsBlazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace FribergCarRentalsBlazor.Layout
 {
-	/// <summary>
-	/// A component that redirects the user to the login page. 
-	/// </summary>
-	public partial class RedirectToLogin : ComponentBase
+    /// <summary>
+    /// A component that redirects the user to the login page. 
+    /// </summary>
+    public partial class RedirectToLogin : ComponentBase
 	{
 		#region Properties
 

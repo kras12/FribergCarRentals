@@ -2,25 +2,24 @@
 using Blazored.SessionStorage;
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
-using FribergCarRentalsBlazor.Pages;
 using FribergCarRentalsBlazor.Services.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.JSInterop;
 
-namespace FribergCarRentalsBlazor.Layout
+namespace FribergCarRentalsBlazor.Components
 {
-	/// <summary>
-	/// A component that handles both login and logout functionality for customers.
-	/// </summary>
-	public partial class CustomerLoginButton : ComponentBase
-	{
-		#region Constants
+    /// <summary>
+    /// A component that handles both login and logout functionality for customers.
+    /// </summary>
+    public partial class CustomerLoginButton : ComponentBase
+    {
+        #region Constants
 
-		/// <summary>
-		/// The key where the component looks for redirect url targets after logging in. 
-		/// </summary>
-		public const string RedirectUrlStorageKey = "RedirectUrlAfterLoginKey";
+        /// <summary>
+        /// The key where the component looks for redirect url targets after logging in. 
+        /// </summary>
+        public const string RedirectUrlStorageKey = "RedirectUrlAfterLoginKey";
 
         #endregion
 
