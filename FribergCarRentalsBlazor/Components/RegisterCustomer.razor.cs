@@ -2,6 +2,7 @@
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentalsBlazor.Services.Authentication;
+using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
 using Microsoft.AspNetCore.Components;
 
 namespace FribergCarRentalsBlazor.Components
@@ -75,6 +76,12 @@ namespace FribergCarRentalsBlazor.Components
         private IMapper AutoMapper { get; set; } = default!;
 
         /// <summary>
+        /// The injected customer API service.
+        /// </summary>
+        [Inject]
+        private ICustomerApiService CustomerApiService { get; set; } = default!;
+
+        /// <summary>
         /// The injected customer authentication service. 
         /// </summary>
         [Inject]
@@ -118,7 +125,7 @@ namespace FribergCarRentalsBlazor.Components
         private async Task OnValidSubmit()
         {
             _apiValidationErrors.Clear();
-            var response = await CustomerAuthenticationService.CreateCustomer(AutoMapper.Map<CreateCustomerDto>(FormInput));
+            var response = await CustomerApiService.CreateCustomer(AutoMapper.Map<CreateCustomerDto>(FormInput));
 
             if (response.Success)
             {
