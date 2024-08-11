@@ -11,6 +11,14 @@ namespace FribergCarRentals.Shared.Models.ViewModels.CarCategory
         #region Constructors
 
         /// <summary>
+        /// A constructor.
+        /// </summary>
+        public CarCategoryViewModel()
+        {
+            
+        }
+
+        /// <summary>
         /// A constructor
         /// </summary>
         /// <param name="categoryId">The ID for the category.</param>
@@ -18,7 +26,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.CarCategory
         /// <param name="carCount">The number of cars using this category.</param>
         public CarCategoryViewModel(int categoryId, string categoryName, int? carCount = null)
         {
-            CategoryId = categoryId;
+            CarCategoryId = categoryId;
             CategoryName = categoryName;
             CarCount = carCount;
         }
@@ -37,7 +45,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.CarCategory
         /// The ID for the category.
         /// </summary>
         [DisplayName("Category ID")]
-        public int CategoryId { get; set; }
+        public int CarCategoryId { get; set; }
 
         /// <summary>
         /// The number of cars using this category. 

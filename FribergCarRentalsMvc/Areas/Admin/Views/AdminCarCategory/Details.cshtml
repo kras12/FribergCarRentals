@@ -9,13 +9,13 @@
 }
 
 <h1>Details</h1>
-<h2>@($"#{Model.CategoryId} - {Model.CategoryName}")</h2>
+<h2>@($"#{Model.CarCategoryId} - {Model.CategoryName}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
         <a asp-area="@AdminControllerBase.Area" asp-action="List" class="button navigational-button">View Categories</a>
-        <a asp-area="@AdminControllerBase.Area" asp-action="Edit" asp-route-id="@Model.CategoryId" class="button function-button">Edit</a>
+        <a asp-area="@AdminControllerBase.Area" asp-action="Edit" asp-route-id="@Model.CarCategoryId" class="button function-button">Edit</a>
         <form asp-area="@AdminControllerBase.Area" asp-action="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
-            <input type="hidden" name="id" value="@Model.CategoryId" asp-for="CategoryId" />
+            <input type="hidden" name="id" value="@Model.CarCategoryId" asp-for="CarCategoryId" />
             <button type="submit" class="negative-button">Delete</button>
         </form>
     </div>
@@ -23,10 +23,10 @@
     <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
         <dl>
             <dt>
-                @Html.DisplayNameFor(model => Model.CategoryId)
+                @Html.DisplayNameFor(model => Model.CarCategoryId)
             </dt>
             <dd>
-                @Html.DisplayFor(model => Model.CategoryId)
+                @Html.DisplayFor(model => Model.CarCategoryId)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => Model.CategoryName)

@@ -78,7 +78,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// <summary>
         /// Cars available to rent 
         /// </summary>
-        public List<CarViewModel> AvailableCars { get; } = new();
+        public List<CarViewModel> AvailableCars { get; set; } = new();
 
         /// <summary>
         /// A collection of car categories that can be used as filters when searching for cars to rent.
@@ -88,7 +88,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// <summary>
         /// Returns true if the user have performed a car search. 
         /// </summary>
-        public bool HavePerformedCarSearch { get; }
+        public bool HavePerformedCarSearch { get; set; }
 
         /// <summary>
         /// The car category filter to use when searching for cars. 

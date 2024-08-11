@@ -35,7 +35,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         protected CreateCarViewModelBase(IEnumerable<CarCategoryViewModel> categories) : this()
         {
             Categories = categories.ToList();
-            SelectedCategoryId = Categories.FirstOrDefault()?.CategoryId;
+            SelectedCategoryId = Categories.FirstOrDefault()?.CarCategoryId;
         }
 
         #endregion

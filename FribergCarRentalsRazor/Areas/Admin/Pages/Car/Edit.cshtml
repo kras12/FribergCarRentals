@@ -49,7 +49,7 @@ else
             </div>
             <div class="vertical-form-field">
                 <label asp-for="EditCarViewModel.SelectedCategoryId" class="control-label">Category</label>
-                <select class="form-input-box form-control" asp-for="EditCarViewModel.SelectedCategoryId" asp-items="@(new SelectList(Model.EditCarViewModel.Categories, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.EditCarViewModel.SelectedCategoryId))"></select>
+                <select class="form-input-box form-control" asp-for="EditCarViewModel.SelectedCategoryId" asp-items="@(new SelectList(Model.EditCarViewModel.Categories, nameof(CarCategoryViewModel.CarCategoryId), nameof(CarCategoryViewModel.CategoryName), Model.EditCarViewModel.SelectedCategoryId))"></select>
                 <span asp-validation-for="EditCarViewModel.SelectedCategoryId" class="text-danger"></span>
             </div>
             <div class="vertical-form-field">

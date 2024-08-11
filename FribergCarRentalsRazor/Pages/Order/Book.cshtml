@@ -15,7 +15,7 @@
             <div class="vertical-flex-container">
                 <label asp-for="BookCarViewModel.SelectedCarCategoryFilter"></label>
                 <select asp-for="BookCarViewModel.SelectedCarCategoryFilter"
-                        asp-items="@(new SelectList(Model.BookCarViewModel.AvailableCarCategoryFilters, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.BookCarViewModel.SelectedCarCategoryFilter))"></select>
+                        asp-items="@(new SelectList(Model.BookCarViewModel.AvailableCarCategoryFilters, nameof(CarCategoryViewModel.CarCategoryId), nameof(CarCategoryViewModel.CategoryName), Model.BookCarViewModel.SelectedCarCategoryFilter))"></select>
                 <span asp-validation-for="BookCarViewModel.SelectedCarCategoryFilter" class="error-text"></span>
             </div>
             <div class="vertical-flex-container">
