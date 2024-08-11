@@ -56,7 +56,7 @@ namespace FribergCarRentals.Data.Repositories
             #endregion
 
             // Create user
-            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.NewPassword!);
+            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.Password!);
             IdentityResult? addRoleResult = null;
 
             if (!createUserResult.Succeeded)
@@ -249,9 +249,9 @@ namespace FribergCarRentals.Data.Repositories
         {
             _databaseContext.Customers.Update(customer);
 
-            if (!string.IsNullOrEmpty(customer.User.NewPassword))
+            if (!string.IsNullOrEmpty(customer.User.Password))
             {
-                await UpdatePasswordAsync(customer.CustomerId, customer.User.NewPassword);
+                await UpdatePasswordAsync(customer.CustomerId, customer.User.Password);
             }
 
             await _databaseContext.SaveChangesAsync();
