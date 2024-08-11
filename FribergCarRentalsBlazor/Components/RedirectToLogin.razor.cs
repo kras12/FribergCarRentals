@@ -7,7 +7,7 @@ namespace FribergCarRentalsBlazor.Components
     /// <summary>
     /// A component that redirects the user to the login page. 
     /// </summary>
-    public partial class RedirectToCustomerLogin : ComponentBase
+    public partial class RedirectToLogin : ComponentBase
     {
         #region Properties
 
@@ -15,17 +15,13 @@ namespace FribergCarRentalsBlazor.Components
         /// The injected navigation manager. 
         /// </summary>
         [Inject]
-#pragma warning disable CS8618
-        NavigationManager NavigationManager { get; set; }
-#pragma warning restore CS8618
+        NavigationManager NavigationManager { get; set; } = default!;
 
         /// <summary>
         /// The injected session storage service.
         /// </summary>
         [Inject]
-#pragma warning disable CS8618
-        private ISessionStorageService SessionStorageService { get; set; }
-#pragma warning restore CS8618
+        private ISessionStorageService SessionStorageService { get; set; } = default!;
 
         /// <summary>
         /// The url to return to after login. 
@@ -48,7 +44,18 @@ namespace FribergCarRentalsBlazor.Components
                 await SessionStorageService.SetItemAsStringAsync(Authenticate.RedirectUrlStorageKey, ReturnToUrl);
             }
 
-            NavigationManager.NavigateTo("/customer/login");
+            if (NavigationManager.Uri.Contains("/admin"))
+            {
+                NavigationManager.NavigateTo("/admin/login");
+            }
+            else if (NavigationManager.Uri.Contains("/customer"))
+            {
+                NavigationManager.NavigateTo("/customer/login");
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/");
+            }
         }
 
         #endregion
