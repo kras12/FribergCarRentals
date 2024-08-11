@@ -23,20 +23,6 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
     [ApiController]
     public class CustomerOrderController : ApiControllerBase
     {
-        #region ErrorMessages
-
-        /// <summary>
-        /// Error message for when the pickup date is not in the future. 
-        /// </summary>
-        private const string PickupDateMustBeInFutureErrorMessage = "The pickup date must be at least one day into the future.";
-
-        /// <summary>
-        /// Error message for when the return date occurrs before the pickup date.
-        /// </summary>
-        private const string ReturnDateOccursBeforePickupDateErrorMessage = "The return date can't occur before the pickup date.";
-
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -161,13 +147,13 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             if (!ValidatePickupDate(createCarOrderDto.PickupDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    PickupDateMustBeInFutureErrorMessage));
+                    ValidationMessages.PickupDateMustBeInFutureErrorMessage));
             }
 
             if (!ValidateReturnDate(createCarOrderDto.PickupDateLocalTime, createCarOrderDto.ReturnDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    ReturnDateOccursBeforePickupDateErrorMessage));
+                    ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage));
             }
 
             if (createCarOrderDto.CarId <= 0)
@@ -283,12 +269,12 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             if (!ValidatePickupDate(carRentalSearchDto.PickupDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    PickupDateMustBeInFutureErrorMessage));
+                    ValidationMessages.PickupDateMustBeInFutureErrorMessage));
             }
             else if (!ValidateReturnDate(carRentalSearchDto.PickupDateLocalTime, carRentalSearchDto.ReturnDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    ReturnDateOccursBeforePickupDateErrorMessage));
+                    ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage));
             }
             else if (carRentalSearchDto.SelectedCarCategoryFilter != null && !await _carCategoryRepository.CategoryExists(carRentalSearchDto.SelectedCarCategoryFilter.Value))
             {

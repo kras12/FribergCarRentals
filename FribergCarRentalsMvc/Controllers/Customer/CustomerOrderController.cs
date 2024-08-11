@@ -51,20 +51,6 @@ namespace FribergCarRentals.Controllers.Customer
 
         #endregion
 
-        #region ErrorMessages
-
-        /// <summary>
-        /// Error message for when the pickup date is not in the future. 
-        /// </summary>
-        private const string PickupDateMustBeInFutureErrorMessage = "The pickup date must be at least one day into the future.";
-
-        /// <summary>
-        /// Error message for when the return date occurrs before the pickup date.
-        /// </summary>
-        private const string ReturnDateOccursBeforePickupDateErrorMessage = "The return date can't occur before the pickup date.";
-
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -157,12 +143,12 @@ namespace FribergCarRentals.Controllers.Customer
                 if (!ValidatePickupDate(bookCarViewModel.PickupDateLocalTime))
                 {
                     ModelState.AddModelError($"{nameof(BookCarViewModel.PickupDateLocalTime)}",
-                        PickupDateMustBeInFutureErrorMessage);
+                        ValidationMessages.PickupDateMustBeInFutureErrorMessage);
                 }
                 else if (!ValidateReturnDate(bookCarViewModel.PickupDateLocalTime, bookCarViewModel.ReturnDateLocalTime))
                 {
                     ModelState.AddModelError($"{nameof(BookCarViewModel.ReturnDateLocalTime)}",
-                        ReturnDateOccursBeforePickupDateErrorMessage);
+                        ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage);
                 }
                 else
                 {
@@ -372,11 +358,11 @@ namespace FribergCarRentals.Controllers.Customer
             {
                 if (!ValidatePickupDate(createOrderViewModel.PickupDateLocalTime))
                 {
-                    throw new Exception(PickupDateMustBeInFutureErrorMessage);
+                    throw new Exception(ValidationMessages.PickupDateMustBeInFutureErrorMessage);
                 }
                 else if (!ValidateReturnDate(createOrderViewModel.PickupDateLocalTime, createOrderViewModel.ReturnDateLocalTime))
                 {
-                    throw new Exception(ReturnDateOccursBeforePickupDateErrorMessage);
+                    throw new Exception(ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage);
                 }
 
                 TempDataHelper.Set(TempData, PendingOrderTempDataKey, createOrderViewModel);
