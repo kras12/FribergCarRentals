@@ -10,17 +10,17 @@
         /// <summary>
         /// The description for the propulsion system.
         /// </summary>
-        public string PropulsionDescription { get; private set; } = "";
+        public string PropulsionDescription { get; set; } = "";
 
         /// <summary>
         /// The name for the propulsion system.
         /// </summary>
-        public string PropulsionName { get; private set; } = "";
+        public string PropulsionName { get; set; } = "";
 
         /// <summary>
         /// The ID for the entity.
         /// </summary>
-        public int VehiclePropulsionId { get; private set; }
+        public int VehiclePropulsionId { get; set; }
 
         #endregion
     }

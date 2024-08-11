@@ -33,7 +33,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Order
         /// <summary>
         /// Cars available to rent 
         /// </summary>
-        public List<CarDto> AvailableCars { get; } = new();
+        public List<CarDto> AvailableCars { get; set; } = new();
 
         #endregion
     }
