@@ -45,6 +45,16 @@ namespace FribergCarRentalsBlazor.Services.Authentication
         /// <summary>
         /// Attempts to login a customer.
         /// </summary>
+        /// <param name="token">The JWT token.</param>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="LoginUserResponseDto"/> object if successful.</returns>
+        public async Task LoginCustomer(string token)
+		{
+            await ((ApiUserAuthenticationStateProvider)_authenticationStateProvider).SetTokenAsync(token);
+        }
+
+        /// <summary>
+        /// Attempts to login a customer.
+        /// </summary>
         /// <param name="loginDto">The login credentials.</param>
         /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="LoginUserResponseDto"/> object if successful.</returns>
         public async Task<ApiValueResponseDto<LoginUserResponseDto>> LoginCustomer(LoginCustomerDto loginDto)

@@ -36,6 +36,5 @@ namespace FribergCarRentals.Shared.Models.Dto.User
         public string LastName { get; set; } = "";
 
         #endregion
-
     }
 }

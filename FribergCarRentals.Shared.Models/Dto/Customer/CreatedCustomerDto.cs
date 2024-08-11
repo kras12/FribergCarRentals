@@ -10,9 +10,9 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
         #region Properties
 
         /// <summary>
-        /// The link to confirm the email account.
+        /// Contains the information needed to confirm the email account.
         /// </summary>
-        public string? ConfirmEmailLink { get; set; } = null;
+        public ConfirmEmailDto? ConfirmEmailData { get; set; } = null;
 
         /// <summary>
 		/// The user associated with the admin.

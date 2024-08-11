@@ -29,6 +29,7 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 		public void CreateMappingsForCustomers()
 		{
 			CreateMap<LoginCustomerViewModel, LoginCustomerDto>();
+			CreateMap<RegisterCustomerViewModel, CreateCustomerDto>();
 		}
 
 		#endregion

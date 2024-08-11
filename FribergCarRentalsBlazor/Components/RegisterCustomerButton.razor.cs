@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using static FribergCarRentalsBlazor.Components.RegisterCustomer;
 
 namespace FribergCarRentalsBlazor.Components
 {
@@ -39,9 +40,12 @@ namespace FribergCarRentalsBlazor.Components
         /// Event handler for the registration successful event in the <see cref="RegisterCustomer"/> component.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing an async operation.</returns>
-        private async Task OnRegistrationSuccessful()
+        private async Task OnRegistrationSuccessful(RegistrationStatus registrationStatus)
         {
-            await JSRuntime.InvokeVoidAsync("HideCustomerRegistrationModal", _modalDialogId);
+            if (registrationStatus == RegistrationStatus.Completed)
+            {
+				await JSRuntime.InvokeVoidAsync("HideCustomerRegistrationModal", _modalDialogId);
+			}
         }      
 
         #endregion

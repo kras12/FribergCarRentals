@@ -141,7 +141,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                     {
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(customer.User);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        createdCustomerDto.ConfirmEmailLink = Url.Action(nameof(ConfirmEmail), new { userId = customer.User.Id, code = code });
+                        createdCustomerDto.ConfirmEmailData = new ConfirmEmailDto(code, customer.User.Email!);
                     }
                     else
                     {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Shared.Models.Dto.Customer;
+using FribergCarRentals.Shared.Models.Dto.User;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
-using FribergCarRentalsBlazor.Services.Authentication;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
 using Microsoft.AspNetCore.Components;
 
@@ -12,6 +12,19 @@ namespace FribergCarRentalsBlazor.Components
     /// </summary>
     public partial class RegisterCustomer : ComponentBase
     {
+        #region Enums
+
+        /// <summary>
+        /// Statuses for a registration.
+        /// </summary>
+        public enum RegistrationStatus
+        {
+            ConfirmEmail,
+            Completed
+        }
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -19,21 +32,15 @@ namespace FribergCarRentalsBlazor.Components
         /// </summary>
         private List<string> _apiValidationErrors = new List<string>();
 
+        /// <summary>
+        /// Contains data to confirm the email account for a new customer.
+        /// </summary>
+        /// <remarks>Showing the link is needed because this demo application does not support sending emails.</remarks>
+        private ConfirmEmailDto? _confirmEmailData = null;
+
         #endregion
 
         #region Events
-
-        /// <summary>
-        /// An event that triggers when the user failed to login.
-        /// </summary>
-        [Parameter]
-        public EventCallback OnLoginFailed { get; set; }
-
-        /// <summary>
-        /// An event that triggers when the user logged in successfully. 
-        /// </summary>
-        [Parameter]
-        public EventCallback OnLoginSuccessful { get; set; }
 
         /// <summary>
         /// An event that triggers when the customer registration failed.
@@ -45,7 +52,7 @@ namespace FribergCarRentalsBlazor.Components
         /// An event that triggers when the customer registration was successful.
         /// </summary>
         [Parameter]
-        public EventCallback OnRegistrationSuccessful { get; set; }
+        public EventCallback<RegistrationStatus> OnRegistrationSuccessful { get; set; }
 
         #endregion
 
@@ -58,16 +65,15 @@ namespace FribergCarRentalsBlazor.Components
         public RegisterCustomerViewModel FormInput { get; set; } = new();
 
         /// <summary>
-        /// True if the user should be logged in after a successful registration.
+        /// Returns true if the email account needs to be confirmed.
         /// </summary>
-        [Parameter]
-        public bool LoginAfterRegistration { get; set; }
-
-        /// <summary>
-        /// An optional URL to redirect the user to after a successful login.
-        /// </summary>
-        [Parameter]
-        public string? RedirectUrl { get; set; } = null;
+        public bool HaveConfirmEmailData
+        {
+            get
+            {
+                return _confirmEmailData != null;
+            }
+        }
 
         /// <summary>
         /// The injected Auto Mapper service. 
@@ -82,12 +88,6 @@ namespace FribergCarRentalsBlazor.Components
         private ICustomerApiService CustomerApiService { get; set; } = default!;
 
         /// <summary>
-        /// The injected customer authentication service. 
-        /// </summary>
-        [Inject]
-        private ICustomerAuthenticationService CustomerAuthenticationService { get; set; } = default!;
-
-        /// <summary>
         /// The injected navigation manager. 
         /// </summary>
         [Inject]
@@ -98,24 +98,19 @@ namespace FribergCarRentalsBlazor.Components
         #region Methods
 
         /// <summary>
-        /// Logins in the new customer.
+        /// Event handler for when the user clicks the confirm email link. 
         /// </summary>
-        /// <param name="createdCustomerDto">The new customer to login.</param>
         /// <returns>A <see cref="Task"/> representing an async operation.</returns>
-        private async Task Login(CreatedCustomerDto createdCustomerDto)
+        private async Task OnConfirmEmailLinkClicked()
         {
-            _apiValidationErrors.Clear();
-            var response = await CustomerAuthenticationService.LoginCustomer(AutoMapper.Map<LoginCustomerDto>(createdCustomerDto));
+            await OnRegistrationSuccessful.InvokeAsync(RegistrationStatus.Completed);
+            IReadOnlyDictionary<string, object?> parameters = new Dictionary<string, object?>()
+            {
+                { "code", _confirmEmailData!.Code },
+                { "email", _confirmEmailData.Email }
+            };
 
-            if (response.Success)
-            {
-                await OnLoginSuccessful.InvokeAsync();
-            }
-            else
-            {
-                _apiValidationErrors = response.Errors.Select(x => x.Value).ToList();
-                await OnLoginFailed.InvokeAsync();
-            }
+			NavigationManager.NavigateTo(NavigationManager.GetUriWithQueryParameters("/customer/confirm-email", parameters));
         }
 
         /// <summary>
@@ -129,19 +124,8 @@ namespace FribergCarRentalsBlazor.Components
 
             if (response.Success)
             {
-                await OnRegistrationSuccessful.InvokeAsync();
-
-                if (LoginAfterRegistration)
-                {
-                    await Login(response.Value!);
-                }
-
-                if (!string.IsNullOrEmpty(RedirectUrl))
-                {
-                    NavigationManager.NavigateTo(RedirectUrl);
-                }
-
-                // TODO - Check how to update the application state if not redirected.
+                _confirmEmailData = response.Value!.ConfirmEmailData;
+                await OnRegistrationSuccessful.InvokeAsync(HaveConfirmEmailData ? RegistrationStatus.ConfirmEmail : RegistrationStatus.Completed);
             }
             else
             {
