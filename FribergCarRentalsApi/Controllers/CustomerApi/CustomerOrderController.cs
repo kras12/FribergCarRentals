@@ -217,7 +217,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// </summary>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet("car-categories")]
-        [ProducesResponseType<ApiValueResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiValueResponseDto<List<CarCategoryDto>>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCarCategories()
         {
             var carCategories = _mapper.Map<List<CarCategoryDto>>(await _carCategoryRepository.GetAllAsync());
