@@ -55,6 +55,11 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         private readonly ICarOrderRepository _orderRepository;
 
         /// <summary>
+        /// The injected image download service.
+        /// </summary>
+        private readonly IImageDownloadService _imageDownloadService;
+
+        /// <summary>
         /// The injected image upload service.
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
@@ -62,32 +67,36 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 		// The injected Auto Mapper.
 		private readonly IMapper _mapper;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="orderRepository">The injected order repository.</param>
-		/// <param name="authorizationService">The injected authorization service.</param>
-		/// <param name="signInManager">The injected signin manager.</param>
-		/// <param name="imageUploadService">The injected image upload service.</param>
-		/// <param name="mapper">The injected Auto Mapper.</param>
-		public AdminOrderController(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
-		{
-			_orderRepository = orderRepository;
-			_imageUploadService = imageUploadService;
-			_mapper = mapper;
-		}
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="orderRepository">The injected order repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
+        public AdminOrderController(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper, 
+            IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
+        {
+            _orderRepository = orderRepository;
+            _imageUploadService = imageUploadService;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
+        }
 
-		#endregion
+        #endregion
 
-		#region Actions
+        #region Actions
 
-		// POST: AdminOrder/Complete/5
-		[ActionName(nameof(Complete))]
+        // POST: AdminOrder/Complete/5
+        [ActionName(nameof(Complete))]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Complete(int id)
@@ -247,7 +256,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 		/// <param name="imageViewModels">A collection of image view models to process.</param>
 		private void SetImageUrls(List<ImageViewModel> imageViewModels)
 		{
-			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
 		}
 
 		#endregion

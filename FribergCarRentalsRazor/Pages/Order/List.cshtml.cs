@@ -28,37 +28,37 @@ namespace FribergCarRentals.Pages.Order
         private readonly ICustomerRepository _customerRepository;
 
         /// <summary>
-        /// The injected image upload service.
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
 
-		// The injected Auto Mapper.
-		private readonly IMapper _mapper;
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
 
-		#endregion
+        #endregion
 
-		/// <summary>
-		/// A constructor.
-		/// </summary>
-		/// <param name="authorizationService">The injected authorization service.</param>
-		/// <param name="signInManager">The injected signin manager.</param>
-		/// <param name="customerRepository">The injected customer repository.</param>
-		/// <param name="imageUploadService">The injected image upload service.</param>
-		/// <param name="mapper">The injected Auto Mapper.</param>
-		public ListModel(IAuthorizationService authorizationService,
-			SignInManager<ApplicationUser> signInManager, ICustomerRepository customerRepository, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
-		{
-			_customerRepository = customerRepository;
-			_imageUploadService = imageUploadService;
-			_mapper = mapper;
-		}
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="customerRepository">The injected customer repository.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
+        public ListModel(IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, ICustomerRepository customerRepository, IMapper mapper, IImageDownloadService imageDownloadService) : base(authorizationService, signInManager)
+        {
+            _customerRepository = customerRepository;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
+        }
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// View model used for listing customer orders. 
-		/// </summary>
-		public ListViewModel<OrderViewModel> OrderListViewModel { get; private set; } = new();
+        /// <summary>
+        /// View model used for listing customer orders. 
+        /// </summary>
+        public ListViewModel<OrderViewModel> OrderListViewModel { get; private set; } = new();
 
         #endregion
 
@@ -104,7 +104,7 @@ namespace FribergCarRentals.Pages.Order
 		/// <param name="imageViewModels">A collection of image view models to process.</param>
 		private void SetImageUrls(List<ImageViewModel> imageViewModels)
 		{
-			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
 		}
 
 		#endregion

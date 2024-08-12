@@ -23,6 +23,11 @@ namespace FribergCarRentals.Controllers
         private readonly ICarRepository _carRepository;
 
         /// <summary>
+        /// The injected image download service.
+        /// </summary>
+        private readonly IImageDownloadService _imageDownloadService;
+
+        /// <summary>
         /// The injected image upload service
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
@@ -38,11 +43,14 @@ namespace FribergCarRentals.Controllers
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="imageUploadService">The injected image upload service</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public HomeController(ICarRepository carRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _imageUploadService = imageUploadService;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -61,7 +69,7 @@ namespace FribergCarRentals.Controllers
                 var image = car.Images.First();
 
                 images.Add(new SlideShowImageViewModel(
-                    _imageUploadService.GetImageUrl(image.FileName), image.FileName, image.ImageId,
+                    _imageDownloadService.GetImageUrl(image.FileName), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
                     linksToPage: Url.Action(
                         action: nameof(CustomerOrderController.Book),

@@ -69,6 +69,11 @@ namespace FribergCarRentals.Controllers.Customer
         private readonly ICustomerRepository _customerRepository;
 
         /// <summary>
+        /// The injected image download service.
+        /// </summary>
+        private readonly IImageDownloadService _imageDownloadService;
+
+        /// <summary>
         /// The injected image upload service.
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
@@ -81,41 +86,44 @@ namespace FribergCarRentals.Controllers.Customer
 		/// </summary>
 		private readonly ICarOrderRepository _orderRepository;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="orderRepository">The injected order repository.</param>
-		/// <param name="customerRepository">The injected customer repository.</param>
-		/// <param name="carRepository">The injected car repository.</param>
-		/// <param name="carCategoryRepository">The injected car category repository.</param>
-		/// <param name="authorizationService"></param>
-		/// <param name="signInManager"></param>
-		/// <param name="authorizationService">The injected authorization service.</param>
-		/// <param name="signInManager">The injected signin manager.</param>
-		/// <param name="imageUploadService">The injected image upload service.</param>
-		/// <param name="mapper">The injected Auto Mapper.</param>
-		public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository,
-			ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
-		{
-			_orderRepository = orderRepository;
-			_customerRepository = customerRepository;
-			_carRepository = carRepository;
-			_carCategoryRepository = carCategoryRepository;
-			_imageUploadService = imageUploadService;
-			_mapper = mapper;
-		}
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="orderRepository">The injected order repository.</param>
+        /// <param name="customerRepository">The injected customer repository.</param>
+        /// <param name="carRepository">The injected car repository.</param>
+        /// <param name="carCategoryRepository">The injected car category repository.</param>
+        /// <param name="authorizationService"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
+        public CustomerOrderController(ICarOrderRepository orderRepository, ICustomerRepository customerRepository,
+            ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper, IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
+        {
+            _orderRepository = orderRepository;
+            _customerRepository = customerRepository;
+            _carRepository = carRepository;
+            _carCategoryRepository = carCategoryRepository;
+            _imageUploadService = imageUploadService;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
+        }
 
-		#endregion
+        #endregion
 
-		#region Actions
+        #region Actions
 
-		// GET: CustomerOrderController/Book
-		[HttpGet]
+        // GET: CustomerOrderController/Book
+        [HttpGet]
         public async Task<IActionResult> Book(int? carCategoryId)
         {
             if (carCategoryId < 0)
@@ -400,7 +408,7 @@ namespace FribergCarRentals.Controllers.Customer
 		/// <param name="imageViewModels">A collection of image view models to process.</param>
 		private void SetImageUrls(List<ImageViewModel> imageViewModels)
 		{
-			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
 		}
 
 		/// <summary>

@@ -46,6 +46,11 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         private readonly ICarRepository _carRepository;
 
         /// <summary>
+        /// The injected image download service.
+        /// </summary>
+        private readonly IImageDownloadService _imageDownloadService;
+
+        /// <summary>
         /// The injected image upload service.
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
@@ -66,13 +71,16 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
         /// <param name="imageUploadService">The injected image upload service.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public EditModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService, IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
             _mapper = mapper;
             _imageUploadService = imageUploadService;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -200,7 +208,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 		/// <param name="imageViewModels">A collection of image view models to process.</param>
 		private void SetImageUrls(List<ImageViewModel> imageViewModels)
 		{
-			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
 		}
 
 		#endregion

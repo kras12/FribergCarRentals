@@ -34,42 +34,41 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         private readonly ICarRepository _carRepository;
 
         /// <summary>
-        /// The injected image upload service.
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
-
+        private readonly IImageDownloadService _imageDownloadService;
 
 		// The injected Auto Mapper.
 		private readonly IMapper _mapper;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		/// <summary>
-		/// A constructor.
-		/// </summary>
-		/// <param name="carRepository">Injected car repository.</param>
-		/// <param name="authorizationService">The injected authorization service.</param>
-		/// <param name="signInManager">The injected signin manager.</param>
-		/// <param name="imageUploadService">The injected image upload service.</param>
-		/// <param name="mapper">The injected Auto Mapper.</param>
-		public DetailsModel(ICarRepository carRepository, IAuthorizationService authorizationService,
-			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
-		{
-			_carRepository = carRepository;
-			_imageUploadService = imageUploadService;
-			_mapper = mapper;
-		}
+        /// <summary>
+        /// A constructor.
+        /// </summary>
+        /// <param name="carRepository">Injected car repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
+        public DetailsModel(ICarRepository carRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageDownloadService imageDownloadService) : base(authorizationService, signInManager)
+        {
+            _carRepository = carRepository;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
+        }
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// The view model used for showing car details. 
-		/// </summary>
-		public CarViewModel CarViewModel { get; set; } = null!;
+        /// <summary>
+        /// The view model used for showing car details. 
+        /// </summary>
+        public CarViewModel CarViewModel { get; set; } = null!;
 
         #endregion
 
@@ -123,7 +122,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 		/// <param name="imageViewModels">A collection of image view models to process.</param>
 		private void SetImageUrls(List<ImageViewModel> imageViewModels)
 		{
-			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
 		}
 
 		#endregion

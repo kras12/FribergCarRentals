@@ -26,41 +26,41 @@ namespace FribergCarRentals.Pages.Order
         private readonly ICarOrderRepository _orderRepository;
 
         /// <summary>
-        /// The injected image upload service.
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
 
-		// The injected Auto Mapper.
-		private readonly IMapper _mapper;
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		/// <summary>
-		/// A constructor. 
-		/// </summary>
-		/// <param name="orderRepository">Injected order repository.</param>
-		/// <param name="authorizationService">The injected authorization service.</param>
-		/// <param name="signInManager">The injected signin manager.</param>
-		/// <param name="imageUploadService">The injected image upload service.</param>
-		/// <param name="mapper">The injected Auto Mapper.</param>
-		public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
-		{
-			_orderRepository = orderRepository;
-			_imageUploadService = imageUploadService;
-			_mapper = mapper;
-		}
+        /// <summary>
+        /// A constructor. 
+        /// </summary>
+        /// <param name="orderRepository">Injected order repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="signInManager">The injected signin manager.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
+        public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageDownloadService imageDownloadService) : base(authorizationService, signInManager)
+        {
+            _orderRepository = orderRepository;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
+        }
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// The view model to use when presenting order details. 
-		/// </summary>
-		public OrderViewModel OrderViewModel { get; set; } 
+        /// <summary>
+        /// The view model to use when presenting order details. 
+        /// </summary>
+        public OrderViewModel OrderViewModel { get; set; } = default!;
 
         #endregion
 
@@ -124,7 +124,7 @@ namespace FribergCarRentals.Pages.Order
 		/// <param name="imageViewModels">A collection of image view models to process.</param>
 		private void SetImageUrls(List<ImageViewModel> imageViewModels)
 		{
-			imageViewModels.ForEach(x => x.Url = _imageUploadService.GetImageUrl(x.FileName));
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
 		}
 
 		#endregion

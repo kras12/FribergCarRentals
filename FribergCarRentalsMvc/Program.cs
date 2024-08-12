@@ -32,6 +32,7 @@ namespace FribergCarRentals
             // Images
             // ==================================================================================================================
             builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
+            builder.Services.AddScoped<IImageDownloadService, ImageDownloadService>();
 
             // ==================================================================================================================
             // Mapping

@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace MvcRazorPages.Shared.Services
@@ -36,14 +35,9 @@ namespace MvcRazorPages.Shared.Services
         private readonly IConfiguration _configuration;
 
         /// <summary>
-        /// The URL route for the image uploads.
-        /// </summary>
-        private readonly string _imageUploadsRoute;
-
-        /// <summary>
         /// The path to the image folder on the local disk.
         /// </summary>
-        private readonly string _localDiskImageUploadFolderPath;
+        private readonly string _ImageFolderPath;
 
         #endregion
 
@@ -56,10 +50,8 @@ namespace MvcRazorPages.Shared.Services
         public ImageUploadService(IConfiguration configuration)
         {
             _configuration = configuration;
-            _imageUploadsRoute = _configuration["PublicResources:ImageUploadsRoute"]!;
-            _localDiskImageUploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), 
-                _configuration["LocalResources:WwwRootFolderName"]!,
-                _configuration["LocalResources:ImageUploadsFolderName"]!);
+            _ImageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), 
+                _configuration["ImageUploadService:ImageUploadsFolderPath"]!);
         }
 
         #endregion
@@ -71,7 +63,7 @@ namespace MvcRazorPages.Shared.Services
         /// </summary>
         public void ClearAllImagesFromDisk()
         {
-            foreach (var image in Directory.EnumerateFiles(_localDiskImageUploadFolderPath))
+            foreach (var image in Directory.EnumerateFiles(_ImageFolderPath))
             {
                 File.Delete(image);
             }
@@ -104,18 +96,8 @@ namespace MvcRazorPages.Shared.Services
 
             foreach (var imageFileName in imageFileNames)
             {
-                File.Delete(Path.Combine(_localDiskImageUploadFolderPath, imageFileName));
+                File.Delete(Path.Combine(_ImageFolderPath, imageFileName));
             }
-        }
-
-		/// <summary>
-		/// Returns the url for the image.
-		/// </summary>
-		/// <param name="fileName">The filename of the image to retrive the url for.</param>
-		/// <returns>The url of the image.</returns>
-		public string GetImageUrl(string fileName)
-        {
-            return $"{_imageUploadsRoute}/{fileName}";
         }
 
         /// <summary>
@@ -154,9 +136,9 @@ namespace MvcRazorPages.Shared.Services
             {
                 var random = new Random();
 
-                if (!Directory.Exists(_localDiskImageUploadFolderPath))
+                if (!Directory.Exists(_ImageFolderPath))
                 {
-                    Directory.CreateDirectory(_localDiskImageUploadFolderPath);
+                    Directory.CreateDirectory(_ImageFolderPath);
                 }
 
                 foreach (var imageFile in imageFiles)
@@ -168,7 +150,7 @@ namespace MvcRazorPages.Shared.Services
                     for (int i = 0; i < MaxDiskSaveAttemptsPerFile; i++)
                     {
                         fileName = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}-{random.Next(MinFileNumberSuffix, MaxFileNumberSuffix)}{fileInfo.Extension}";
-                        filePath = Path.Combine(_localDiskImageUploadFolderPath, fileName);
+                        filePath = Path.Combine(_ImageFolderPath, fileName);
 
                         if (!File.Exists(filePath))
                         {

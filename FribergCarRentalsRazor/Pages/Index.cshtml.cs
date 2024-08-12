@@ -21,9 +21,9 @@ namespace FribergCarRentals.Pages
         private readonly ICarRepository _carRepository;
 
         /// <summary>
-        /// The injected image upload service
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
 
         #endregion
 
@@ -33,11 +33,11 @@ namespace FribergCarRentals.Pages
         /// A constructor.
         /// </summary>
         /// <param name="carRepository">Injected car repository.</param>
-        /// <param name="imageUploadService"> The injected image upload service</param>
-        public IndexModel(ICarRepository carRepository, IImageUploadService imageUploadService)
+        /// <param name="imageDownloadService">The injected image download service.</param>
+        public IndexModel(ICarRepository carRepository, IImageDownloadService imageDownloadService)
         {
             _carRepository = carRepository;
-            _imageUploadService = imageUploadService;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace FribergCarRentals.Pages
                 var image = car.Images.First();
 
                 images.Add(new SlideShowImageViewModel(
-                    _imageUploadService.GetImageUrl(image.FileName), image.FileName, image.ImageId,
+                    _imageDownloadService.GetImageUrl(image.FileName), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
                     linksToPage: Url.Page(
                         pageName: "Order/Book",

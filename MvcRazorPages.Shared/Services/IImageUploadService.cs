@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Data.EntityClasses;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace MvcRazorPages.Shared.Services
 {
@@ -25,13 +24,6 @@ namespace MvcRazorPages.Shared.Services
         /// <param name="imageFileNames">A collection of images to delete.</param>
         /// <exception cref="ArgumentException"></exception>
         public void DeleteImagesFromDisk(IEnumerable<string> imageFileNames);
-
-        /// <summary>
-        /// Returns the url for the image.
-        /// </summary>
-        /// <param name="fileName">The filename of the image to retrive the url for.</param>
-        /// <returns>The url of the image.</returns>
-        public string GetImageUrl(string fileName);
 
 		/// <summary>
 		/// Saves an uploaded image to the local disk. 
