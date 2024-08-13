@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.Dto.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using FribergCarRentals.Shared.Models.Dto.Order;
 
 namespace FribergCarRentals.Shared.Mapping.AutoMapper
 {
@@ -16,17 +18,26 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 		/// </summary>
 		public ViewModelToDtoAutoMapperProfile()
 		{
+			CreateMappingsForCars();
 			CreateMappingsForCustomers();
 		}
 
-		#endregion
+        #endregion
 
-		#region Methods
+        #region Methods
 
 		/// <summary>
-		/// Creates mappings for customers.
+		/// Creates mappings for cars.
 		/// </summary>
-		public void CreateMappingsForCustomers()
+        public void CreateMappingsForCars()
+		{
+			CreateMap<BookCarViewModel, CarRentalSearchDto>();
+        }
+
+        /// <summary>
+        /// Creates mappings for customers.
+        /// </summary>
+        public void CreateMappingsForCustomers()
 		{
 			CreateMap<LoginCustomerViewModel, LoginCustomerDto>();
 			CreateMap<RegisterCustomerViewModel, CreateCustomerDto>();

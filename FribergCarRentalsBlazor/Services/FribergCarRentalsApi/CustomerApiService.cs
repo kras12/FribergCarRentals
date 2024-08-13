@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 {
 	/// <summary>
-	/// A service to fetch data from Friberg Car Rentals Customer API endpoints.
+	/// A service for managing customer data from Friberg Car Rentals Customer API endpoints.
 	/// </summary>
 	public class CustomerApiService : ApiServiceBase, ICustomerApiService
 	{

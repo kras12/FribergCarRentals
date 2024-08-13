@@ -1,14 +1,13 @@
 ﻿using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.Dto.User;
-using System.Net.Http;
 
 namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 {
-	// <summary>
-	/// An interface for a service to fetch data from Friberg Car Rentals Customer API endpoints.
-	/// </summary>
-	public interface ICustomerApiService
+    // <summary>
+    /// An interface for a service for managing customer data for Friberg Car Rentals Customer API endpoints.
+    /// </summary>
+    public interface ICustomerApiService
 	{
 		/// <summary>
 		/// Confirms the email of a customer.

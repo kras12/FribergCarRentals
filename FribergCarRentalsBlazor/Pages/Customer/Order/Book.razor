@@ -1,0 +1,115 @@
+﻿@page "/customer/order/book"
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentals.Shared.Models.ViewModels.Car
+@using FribergCarRentals.Shared.Models.ViewModels.Order
+<h1>Book Car</h1>
+<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+    <EditForm Model="BookCarViewModel" class="vertical-form" OnValidSubmit="SearchCars">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="vertical-form-field flex-container__row-gap__1-rem flex-container__align-self-center">
+            @if (_apiValidationErrors.Count > 0)
+            {
+                <ul>
+                    @{
+                        foreach (var error in _apiValidationErrors)
+                        {
+                            <li class="error-text">@error</li>
+                        }
+                    }
+                </ul>
+            }            
+        </div>
+        <div class="horizontal-flex-container flex-container__align-items-start flex-container__column-gap__0-5-rem">
+            <div class="vertical-flex-container">
+                <label for="selected-category-filter">Category</label>
+                <InputSelect id="selected-category-filter" @bind-Value="BookCarViewModel.SelectedCarCategoryFilter">
+                    @foreach (var category in BookCarViewModel.AvailableCarCategoryFilters)
+                    {
+                        <option value="@category.CarCategoryId">@category.CategoryName</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => BookCarViewModel.SelectedCarCategoryFilter)" class="error-text" />
+            </div>
+            <div class="vertical-flex-container">
+                <label for="pickup-date-local-time">Pickup Date</label>
+                <InputDate id="pickup-date-local-time" @bind-Value="BookCarViewModel.PickupDateLocalTime"></InputDate>
+                <ValidationMessage For="@(() => BookCarViewModel.PickupDateLocalTime)" class="error-text" />
+            </div>
+            <div class="vertical-flex-container">
+                <label for="return-date-local-time">Return Date</label>
+                <InputDate id="return-date-local-time" @bind-Value="BookCarViewModel.ReturnDateLocalTime"></InputDate>
+                <ValidationMessage For="@(() => BookCarViewModel.ReturnDateLocalTime)" class="error-text" />
+            </div>
+            <div class="vertical-flex-container align-self-end">
+                <button type="submit">Find</button>
+            </div>
+        </div>
+    </EditForm>
+    <div></div>
+    <div class="vertical-flex-container flex-container__row-gap__2-rem">
+        @if (BookCarViewModel.AvailableCars.Count > 0)
+        {
+            @foreach (var car in BookCarViewModel.AvailableCars)
+            {
+                <div class="vertical-flex-container filled-container flex-container__padding__1-rem flex-container__row-gap__1-rem">
+                    <h2>@($"{car.CarInfo}")</h2>
+                    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                        <button class="function-button" @onclick="@(() => PrepareBooking(car))">Book</button>
+                    </div>
+                    <dl>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => car.Category)
+                        </dt>
+                        <dd>
+                            @car.Category.CategoryName
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => car.Brand)
+                        </dt>
+                        <dd>
+                            @car.Brand
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => car.Model)
+                        </dt>
+                        <dd>
+                            @car.Model
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => car.ModelYear)
+                        </dt>
+                        <dd>
+                            @car.ModelYear
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => car.Color)
+                        </dt>
+                        <dd>
+                            @car.Color
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => car.PropulsionSystem)
+                        </dt>
+                        <dd>
+                            @car.PropulsionSystem.PropulsionName
+                        </dd>
+                    </dl>
+                    <div class="tiled-image-gallery">
+                        @foreach (var image in car.Images)
+                        {
+                            <figure>
+                                <div class="vertical-flex-container">
+                                    <img src="@image.Url" />
+                                </div>
+                            </figure>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else if (BookCarViewModel.HavePerformedCarSearch)
+        {
+            <p class="text-align-center">No cars found.</p>
+        }
+    </div>
+</div>
