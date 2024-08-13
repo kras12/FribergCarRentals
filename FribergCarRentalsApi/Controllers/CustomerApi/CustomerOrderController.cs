@@ -7,11 +7,14 @@ using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
+using FribergCarRentals.Shared.Models.Dto.Image;
 using FribergCarRentals.Shared.Models.Dto.Order;
 using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentalsApi.Controllers.AdminApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MvcRazorPages.Shared.Services;
 using System.Security.Claims;
 
 namespace FribergCarRentalsApi.Controllers.CustomerApi
@@ -45,6 +48,11 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         private readonly ICustomerRepository _customerRepository;
 
         /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
+
+        /// <summary>
         ///The injected Auto Mapper. 
         /// </summary>
         private readonly IMapper _mapper;
@@ -73,10 +81,12 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// <param name="carCategoryRepository">The injected car category repository.</param>
         /// <param name="carRepository">The injected car repository.</param>
         /// <param name="orderRepository">The injected order repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public CustomerOrderController(ICustomerRepository customerRepository, SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IMapper mapper, ICarCategoryRepository carCategoryRepository, ICarRepository carRepository, ICarOrderRepository orderRepository, 
-            IAuthorizationService authorizationService)
+            IMapper mapper, ICarCategoryRepository carCategoryRepository, ICarRepository carRepository, ICarOrderRepository orderRepository,
+            IAuthorizationService authorizationService, IImageUploadService imageUploadService)
             : base(authorizationService)
         {
             _customerRepository = customerRepository;
@@ -86,6 +96,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             _carCategoryRepository = carCategoryRepository;
             _carRepository = carRepository;
             _orderRepository = orderRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -183,7 +194,13 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                     returnDateUTC: createCarOrderDto.ReturnDateLocalTime.Date));
             await _orderRepository.AddAsync(order);
 
-            return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
+            var result = _mapper.Map<CarOrderDto>(order);
+            SetImageUrls(result
+                .CarBookings
+                .SelectMany(booking => booking.Car.Images.Select(image => image))
+                .ToList());
+
+            return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(result));
         }
 
         /// <summary>
@@ -209,7 +226,12 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                 return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Customer was not found."));
             }
 
-            return Ok(ApiValueResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarOrderDto>>(customer.Orders)));
+            var result = _mapper.Map<List<CarOrderDto>>(customer.Orders);
+            SetImageUrls(result
+                .SelectMany(order => order.CarBookings.SelectMany(booking => booking.Car.Images.Select(image => image)))
+                .ToList());
+
+            return Ok(ApiValueResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(result));
         }
 
         /// <summary>
@@ -250,7 +272,13 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
 
             if (order is not null)
             {
-                return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
+                var result = _mapper.Map<CarOrderDto>(order);
+                SetImageUrls(result
+                .CarBookings
+                .SelectMany(booking => booking.Car.Images.Select(image => image))
+                .ToList());
+
+                return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(result));
             }
 
             return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Order was not found."));
@@ -282,15 +310,27 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                     "Failed to find the car category"));
             }
 
-            var cars = (await _carRepository.GetRentableCarsAsync(carRentalSearchDto.PickupDateLocalTime, carRentalSearchDto.ReturnDateLocalTime,
+            var carEntities = (await _carRepository.GetRentableCarsAsync(carRentalSearchDto.PickupDateLocalTime, carRentalSearchDto.ReturnDateLocalTime,
                 carRentalSearchDto.SelectedCarCategoryFilter)).ToList();
 
-            return Ok(ApiValueResponseDto<CarRentalSearchResultDto>.CreateSuccessfulResponse(new CarRentalSearchResultDto(_mapper.Map<List<CarDto>>(cars))));
+            var cars = _mapper.Map<List<CarDto>>(carEntities);
+            SetImageUrls(cars.SelectMany(x => x.Images).ToList());
+
+            return Ok(ApiValueResponseDto<CarRentalSearchResultDto>.CreateSuccessfulResponse(new CarRentalSearchResultDto(cars)));
         }
 
         #endregion
 
         #region OtherMethods
+
+        /// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="images">A collection of image DTOs to process.</param>
+		private void SetImageUrls(List<CarImageDto> images)
+        {
+            images.ForEach(x => x.Url = CustomerFileController.GetImageUrl(HttpContext, x.FileName));
+        }
 
         /// <summary>
         /// Validates the pickup date for car rentals.

@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using FribergCarRentals.Helpers;
 using FribergCarRentals.Shared;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using FribergCarRentals.Shared.Models.Dto.Image;
-using FribergCarRentalsApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MvcRazorPages.Shared.Services;
@@ -37,7 +35,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <summary>
         /// The injected image download service.
         /// </summary>
-        private readonly IImageDownloadService _imageDownloadService;
+        private readonly IImageApiDownloadService _imageDownloadService;
 
         /// <summary>
         /// The injected image upload service.
@@ -63,7 +61,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="imageUploadService">The injected image upload service.</param>
         /// <param name="imageDownloadService">The injected image download service.</param>
         public AdminCarController(IAuthorizationService authorizationService, IMapper mapper, ICarRepository carRepository,
-            ICarCategoryRepository carCategoryRepository, IImageUploadService imageUploadService, IImageDownloadService imageDownloadService)
+            ICarCategoryRepository carCategoryRepository, IImageUploadService imageUploadService, IImageApiDownloadService imageDownloadService)
             : base(authorizationService)
         {
             _mapper = mapper;
@@ -259,9 +257,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             await _carRepository.UpdateAsync(car);            
 
             var finalCar = _mapper.Map<CarDto>(car);
-            finalCar.Images.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(
-                Url.Action(nameof(AdminFileController.GetImageFile), ControllerHelper.GetControllerName<AdminFileController>())!,
-                x.FileName));
+            SetImageUrls(finalCar.Images);
 
             return Ok(ApiValueResponseDto<CarDto>.CreateSuccessfulResponse(finalCar));
         }
@@ -296,9 +292,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             var finalCar = _mapper.Map<CarDto>(car);
-            finalCar.Images.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(
-                Url.Action(nameof(AdminFileController.GetImageFile), ControllerHelper.GetControllerName<AdminFileController>())!,
-                x.FileName));
+            SetImageUrls(finalCar.Images);
 
             return Ok(ApiValueResponseDto<CarDto>.CreateSuccessfulResponse(finalCar));
         }
@@ -320,12 +314,22 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             var cars = _mapper.Map<List<CarDto>>((await _carRepository.GetAllAsync()).ToList());
 
             var finalCars = _mapper.Map<List<CarDto>>(cars);
-            finalCars.ForEach(car => 
-                car.Images.ForEach(image => image.Url = _imageDownloadService.GetImageUrl(
-                    Url.Action(nameof(AdminFileController.GetImageFile), ControllerHelper.GetControllerName<AdminFileController>())!,
-                    image.FileName)));
+            SetImageUrls(finalCars.SelectMany(x => x.Images).ToList());
 
             return Ok(ApiValueResponseDto<List<CarDto>>.CreateSuccessfulResponse(finalCars));
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="images">A collection of image DTOs to process.</param>
+		private void SetImageUrls(List<CarImageDto> images)
+        {
+            images.ForEach(x => x.Url = CustomerFileController.GetImageUrl(HttpContext, x.FileName));
         }
 
         #endregion

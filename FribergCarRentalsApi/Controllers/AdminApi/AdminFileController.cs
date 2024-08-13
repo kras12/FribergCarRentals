@@ -1,9 +1,9 @@
 ﻿using FribergCarRentals.Shared;
-using FribergCarRentalsApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.Dto.Api;
+using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {
@@ -19,7 +19,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <summary>
         /// The injected image download service.
         /// </summary>
-        private readonly IImageDownloadService _imageDownloadService;
+        private readonly IImageApiDownloadService _imageDownloadService;
 
         #endregion
 
@@ -30,7 +30,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// </summary>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="imageDownloadService">The injected image download service.</param>
-        public AdminFileController(IAuthorizationService authorizationService, IImageDownloadService imageDownloadService)
+        public AdminFileController(IAuthorizationService authorizationService, IImageApiDownloadService imageDownloadService)
             : base(authorizationService)
         {
             _imageDownloadService = imageDownloadService;
@@ -56,7 +56,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return Unauthorized(CreateUnauthorizedResponse());
             }
 
-            var fileResult = await _imageDownloadService.PrepareImageFileDownloadAsync(fileName);
+            var fileResult = await _imageDownloadService.CreateImageFileDownloadResultAsync(fileName);
 
             if (fileResult != null)
             {
