@@ -14,9 +14,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Order
         /// <summary>
         /// The car category filter to use when searching for cars. 
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         [Range(1, int.MaxValue)]
-        [DefaultValue(1)]
         public int? SelectedCarCategoryFilter { get; set; } = null;
 
         /// <summary>
