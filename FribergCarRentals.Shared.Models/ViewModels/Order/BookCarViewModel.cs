@@ -15,9 +15,14 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         #region Constants
 
         /// <summary>
-        /// A constant text string to represent all car categories.
+        /// The text string to represent all car categories.
         /// </summary>
         public const string AllCarCategoriesText = "All";
+
+        /// <summary>
+        /// The value to represent all car categories.
+        /// </summary>
+        public const int AllCarCategoriesValue = int.MaxValue;
 
         #endregion
 
@@ -28,7 +33,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// </summary>
         public BookCarViewModel()
         {
-
+            ResetCarCategoriesFilters();
         }
 
         /// <summary>
@@ -99,7 +104,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         [DisplayName("Category")]
         [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         [Range(1, int.MaxValue)]
-        public int SelectedCarCategoryFilter { get; set; }
+        public int SelectedCarCategoryFilter { get; set; } = AllCarCategoriesValue;
 
         /// <summary>
         /// The pickup date filter to use when searching for cars.
@@ -122,12 +127,21 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         #region Methods
 
         /// <summary>
+        /// Resets the car categories filters collection so that only the all car categories filter is present. 
+        /// </summary>
+        private void ResetCarCategoriesFilters()
+        {
+            AvailableCarCategoryFilters = new List<CarCategoryViewModel>() { new CarCategoryViewModel(AllCarCategoriesValue, AllCarCategoriesText) };
+        }
+
+        /// <summary>
         /// Sets the car category filters that can be used as filters when searching for cars to rent.
         /// </summary>
         /// <param name="availableCarCategoryFilters">The categories to set.</param>
         public void SetAvailableCarCategoryFilters(IEnumerable<CarCategoryViewModel> availableCarCategoryFilters)
         {
-            AvailableCarCategoryFilters = availableCarCategoryFilters.Prepend(new CarCategoryViewModel(0, AllCarCategoriesText)).ToList();
+            ResetCarCategoriesFilters();
+            AvailableCarCategoryFilters.AddRange(availableCarCategoryFilters);
         }
 
         #endregion

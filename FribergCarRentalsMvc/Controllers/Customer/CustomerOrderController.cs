@@ -162,7 +162,7 @@ namespace FribergCarRentals.Controllers.Customer
                 {
                     int? selectedCarCategoryFilter = null;
 
-                    if (bookCarViewModel.SelectedCarCategoryFilter > 0)
+                    if (bookCarViewModel.SelectedCarCategoryFilter != BookCarViewModel.AllCarCategoriesValue)
                     {
                         if (!await _carCategoryRepository.CategoryExists(bookCarViewModel.SelectedCarCategoryFilter))
                         {

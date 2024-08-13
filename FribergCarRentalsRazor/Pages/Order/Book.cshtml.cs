@@ -162,7 +162,7 @@ namespace FribergCarRentals.Pages.Order
                 {
                     int? selectedCarCategoryFilter = null;
 
-                    if (BookCarViewModel.SelectedCarCategoryFilter > 0)
+                    if (BookCarViewModel.SelectedCarCategoryFilter != BookCarViewModel.AllCarCategoriesValue)
                     {
                         if (!await _carCategoryRepository.CategoryExists(BookCarViewModel.SelectedCarCategoryFilter))
                         {
