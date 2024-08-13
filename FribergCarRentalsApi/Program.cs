@@ -70,7 +70,7 @@ namespace FribergCarRentalsApi
             // Images
             // ==================================================================================================================
             builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
-            builder.Services.AddScoped<IImageDownloadService, ImageDownloadService>();
+            builder.Services.AddScoped<IImageApiDownloadService, ImageApiDownloadService>();
 
             // ==================================================================================================================
             // Mapping
