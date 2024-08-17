@@ -33,8 +33,14 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
         /// Gets an order. 
         /// </summary>
         /// <param name="orderId">The ID of the order.</param>
-        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarOrderDto"/> object if successful.</returns>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarOrderDto"/> object if successful.</returns>
         public Task<ApiValueResponseDto<CarOrderDto>> GetOrderAsync(int orderId);
+
+        /// <summary>
+        /// Gets all orders.
+        /// </summary>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarOrderDto"/> object if successful.</returns>
+        public Task<ApiValueResponseDto<List<CarOrderDto>>> GetOrdersAsync();
 
         /// <summary>
         /// Searches for rentable cars.

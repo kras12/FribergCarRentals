@@ -1,0 +1,99 @@
+﻿@inherits CustomerPageComponentBase
+@page "/customer/order/list"
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+	<Authorized>
+        @if (_orders != null)
+        {
+            <h1>Orders</h1>
+            @if (_orders.Models.Count > 0)
+            {
+                <div class="vertical-flex-container flex-container__row-gap__1-rem">
+                    <UserMessages Messages="_orders.Messages"></UserMessages>
+                    <table class="colored-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].CarOrderId)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].OrderStatusName)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].OrderDateLocal)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].CarBooking.Car.CarInfoWithRegistrationNumber)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].CarBooking.CarPickupDate)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].CarBooking.CarReturnDate)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].CarBooking.RentalCostPerDay)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].OrderSum)
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in _orders.Models)
+                            {
+                                <tr>
+                                    <td>
+                                        @order.CarOrderId
+                                    </td>
+                                    <td>
+                                        @order.OrderStatusName
+                                    </td>
+                                    <td>
+                                        @order.OrderDateLocal
+                                    </td>
+                                    <td>
+                                        @order.CarBooking.Car.CarInfo
+                                    </td>
+                                    <td>
+                                        @order.CarBooking.CarPickupDate
+                                    </td>
+                                    <td>
+                                        @order.CarBooking.CarReturnDate
+                                    </td>
+                                    <td>
+                                        @order.CarBooking.RentalCostPerDay
+                                    </td>
+                                    <td>
+                                        @order.OrderSum
+                                    </td>
+                                    <td>
+                                        <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                            <a href="@($"/customer/order/details/{order.CarOrderId}")" class="button navigational-button">Details</a>
+                                            @if (order.IsCancelable)
+                                            {
+                                                <button class="negative-button" @onclick="@(() => CancelOrder(order))">Cancel Order</button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-align-center">You have not placed any orders yet.</p>
+            }
+        }        
+	</Authorized>
+	<NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

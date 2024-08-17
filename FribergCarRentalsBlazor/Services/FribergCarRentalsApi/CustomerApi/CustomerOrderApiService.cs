@@ -97,11 +97,22 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
         /// Gets an order. 
         /// </summary>
         /// <param name="orderId">The ID of the order.</param>
-        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarOrderDto"/> object if successful.</returns>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarOrderDto"/> object if successful.</returns>
         public async Task<ApiValueResponseDto<CarOrderDto>>GetOrderAsync(int orderId)
         {
             await SetAuthorizationHeaderAsync();
             var result = await _httpClient.GetFromJsonAsync<ApiValueResponseDto<CarOrderDto>>(OrderByIdApiEndpoint.Replace(IdPlaceHolder, orderId.ToString()));
+            return EnsureNotNull(result, "Failed to serialize the API response.");
+        }
+
+        /// <summary>
+        /// Gets all orders.
+        /// </summary>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarOrderDto"/> object if successful.</returns>
+        public async Task<ApiValueResponseDto<List<CarOrderDto>>> GetOrdersAsync()
+        {
+            await SetAuthorizationHeaderAsync();
+            var result = await _httpClient.GetFromJsonAsync<ApiValueResponseDto<List<CarOrderDto>>> (OrderApiEndpoint);
             return EnsureNotNull(result, "Failed to serialize the API response.");
         }
 
