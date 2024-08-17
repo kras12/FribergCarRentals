@@ -13,7 +13,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
     /// <summary>
     /// Handles admin related activites for car categories.
     /// </summary>
-    [Route("api/admin/car/category")]
+    [Route("admin-api/car/category")]
     [ApiController]
     public class AdminCarCategoryController : ApiControllerBase
     {

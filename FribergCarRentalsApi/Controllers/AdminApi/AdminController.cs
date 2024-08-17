@@ -17,7 +17,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
     /// <summary>
     /// Handles admin related activites like login and fetching user data.
     /// </summary>
-    [Route("api/admin")]
+    [Route("admin-api/admin")]
     [ApiController]
     public class AdminController : ApiControllerBase
     {
