@@ -5,7 +5,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
     /// <summary>
     /// A DTO class created customers.
     /// </summary>
-    public class CreatedCustomerDto
+    public class CreatedCustomerDto : UserDto
     {
         #region Properties
 
@@ -13,11 +13,6 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
         /// Contains the information needed to confirm the email account.
         /// </summary>
         public ConfirmEmailDto? ConfirmEmailData { get; set; } = null;
-
-        /// <summary>
-		/// The user associated with the admin.
-		/// </summary>
-        public required UserDto User { get; set; }
 
         /// <summary>
         /// The JWT token.

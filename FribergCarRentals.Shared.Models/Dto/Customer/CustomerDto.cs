@@ -6,7 +6,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
     /// <summary>
     /// An DTO class for a customer.
     /// </summary>
-    public class CustomerDto
+    public class CustomerDto : UserDto
     {
         #region Properties
 
@@ -19,11 +19,6 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
         /// A collection of orders for the customer. 
         /// </summary>
         public List<CarOrderDto> Orders { get; } = new();
-
-        /// <summary>
-		/// The user associated with the customer.
-		/// </summary>
-        public required UserDto User { get; set; }
 
         #endregion
     }

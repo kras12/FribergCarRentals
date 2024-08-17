@@ -1,16 +1,14 @@
-﻿using FribergCarRentals.Shared.Models.Dto.Customer;
-
-namespace FribergCarRentals.Shared.Models.Dto.Order
+﻿namespace FribergCarRentals.Shared.Models.Dto.Order
 {
     /// <summary>
-    /// A DTO class for car orders.
+    /// A DTO class that contains specific details for a car order.
     /// </summary>
-    public class CarOrderDto
+    public class CarOrderDetailsDto
     {
         #region Properties
 
         /// <summary>
-        /// The car booking tied to the order.
+        /// The car bookings tied to the order.
         /// </summary>
         public CarBookingDto CarBooking { get; set; } = new();
 
@@ -22,7 +20,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Order
         /// <summary>
         /// The customer that rented the car.
         /// </summary>
-        public CarOrderCustomerDto Customer { get; set; } = default!;
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// The order date.

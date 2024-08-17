@@ -1,26 +1,25 @@
 ﻿using AutoMapper;
-using Blazored.SessionStorage;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.Dto.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
-using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
-using Microsoft.AspNetCore.Authorization;
+using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using System.Text.Json;
-
 namespace FribergCarRentalsBlazor.Pages.Customer.Order
 {
-    public partial class Book : ComponentBase
+    /// <summary>
+    /// The page component class for searching rentable cars to book. 
+    /// </summary>
+    public partial class Book : CustomerPageComponentBase
     {
         #region Constants
 
         /// <summary>
-        /// The storage key for data used to create a car booking. 
+        /// The key for storing the pending order to be confirmed by the customer.
         /// </summary>
-        public const string PrepareCarBookingStorageKey = "PrepareCarBookingStorageKey";
+        public const string PendingOrderTempDataKey = "CustomerOrderPendingOrder";
 
         #endregion
 
@@ -34,18 +33,6 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// The cascaded authentication state task.
-        /// </summary>
-        [CascadingParameter]
-        private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
-
-        /// <summary>
-        /// The injected authorization service.
-        /// </summary>
-        [Inject]
-        private IAuthorizationService AuthorizationService { get; set; } = default!;
 
         /// <summary>
         /// The injected Auto Mapper service. 
@@ -64,18 +51,6 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         [Inject]
         private ICustomerOrderApiService CustomerOrderApiService { get; set; } = default!;
 
-        /// <summary>
-        /// The injected navigation manager. 
-        /// </summary>
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
-
-        /// <summary>
-        /// The injected session storage service.
-        /// </summary>
-        [Inject]
-        private ISessionStorageService SessionStorageService { get; set; } = default!;
-
         #endregion
 
         #region Methods
@@ -87,7 +62,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         {
             await base.OnInitializedAsync();
 
-            var result = await CustomerOrderApiService.GetCarCategories();
+            var result = await CustomerOrderApiService.GetCarCategoriesAsync();
 
             if (result.Success)
             {
@@ -107,17 +82,15 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         private async Task PrepareBooking(CarViewModel car)
         {
             CreateOrderViewModel newOrder = new CreateOrderViewModel(car, BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime);
-            await SessionStorageService.SetItemAsStringAsync(PrepareCarBookingStorageKey, JsonSerializer.Serialize(newOrder));
-            var authResult = await AuthorizationService.AuthorizeAsync((await AuthenticationStateTask).User, ApplicationUserPolicies.Customer);
+            await SessionStorageService.SetItemAsStringAsync(PendingOrderTempDataKey, JsonSerializer.Serialize(newOrder));
 
-            if (authResult.Succeeded)
+            if (await IsCustomerLoggedIn())
             {
                 NavigationManager.NavigateTo("/customer/order/confirm");
             }
             else
             {
-                await SessionStorageService.SetItemAsStringAsync(Authenticate.RedirectUrlStorageKey, "/customer/order/confirm");
-                NavigationManager.NavigateTo("/customer/login");
+                await RedirectToLogin("/customer/order/confirm");
             }
         }
 
@@ -144,7 +117,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
                     searchData.SelectedCarCategoryFilter = null;
                 }
 
-                var result = await CustomerOrderApiService.SearchRentableCars(searchData);
+                var result = await CustomerOrderApiService.SearchRentableCarsAsync(searchData);
 
                 if (result.Success)
                 {

@@ -2,14 +2,15 @@
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.Dto.User;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
+using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FribergCarRentalsBlazor.Services.Authentication
 {
-	/// <summary>
-	/// Authentication service for customers.
-	/// </summary>
-	public class CustomerAuthenticationService : ICustomerAuthenticationService
+    /// <summary>
+    /// Authentication service for customers.
+    /// </summary>
+    public class CustomerAuthenticationService : ICustomerAuthenticationService
 	{
 		#region Fields
 

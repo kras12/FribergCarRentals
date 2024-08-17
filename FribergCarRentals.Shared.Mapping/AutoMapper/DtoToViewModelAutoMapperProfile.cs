@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
+using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.Dto.Image;
+using FribergCarRentals.Shared.Models.Dto.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
 
 namespace FribergCarRentals.Shared.Mapping.AutoMapper
 {
@@ -20,24 +24,45 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 		/// </summary>
 		public DtoToViewModelAutoMapperProfile()
 		{
-			CreateMappingsForCars();
+			CreateMappingsForCarOrders();
+			CreateMappingsForCustomers();
+            CreateMappingsForCars();
 		}
 
-		#endregion
+        #endregion
 
-		#region Methods
+        #region Methods
 
 		/// <summary>
-		/// Creates mappings for cars.
+		/// Creates mappings for car orders.
 		/// </summary>
-		public void CreateMappingsForCars()
+        public void CreateMappingsForCarOrders()
+        {
+			CreateMap<OrderStatusDto, OrderStatusViewModel>();
+            CreateMap<CarOrderDto, OrderViewModel>();
+
+            CreateMap<CarBookingDto, CarBookingViewModel>()
+				.ForMember(dest => dest.CarPickupDate, opt => opt.MapFrom(src => src.PickupDateUtc))
+				.ForMember(dest => dest.CarReturnDate, opt => opt.MapFrom(src => src.ReturnDateUtc));
+        }
+
+		public void CreateMappingsForCustomers()
+		{
+			CreateMap<CustomerDto, CustomerViewModel>();
+			CreateMap<CarOrderCustomerDto, CarOrderCustomerViewModel>();
+		}
+
+        /// <summary>
+        /// Creates mappings for cars.
+        /// </summary>
+        public void CreateMappingsForCars()
 		{
 			CreateMap<CarCategoryDto, CarCategoryViewModel>();
 			CreateMap<CarDto, CarViewModel>();
 			CreateMap<VehiclePropulsionDto, VehiclePropulsionViewModel>();
 			CreateMap<CarRentalStatusDto, CarRentalStatusViewModel>();
 			CreateMap<CarImageDto, ImageViewModel>();
-		}
+		}		
 
 		#endregion
 	}

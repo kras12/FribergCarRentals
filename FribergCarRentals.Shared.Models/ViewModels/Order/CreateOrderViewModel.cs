@@ -54,8 +54,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// Description of the car.
         /// </summary>
         [DisplayName("Car")]
-        [Required(ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
-        public virtual string CarDescription { get; private set; } = "";
+        public virtual string CarDescription { get; set; } = "";
 
         /// <summary>
         /// The ID of the car for the order.

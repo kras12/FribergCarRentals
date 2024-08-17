@@ -8,45 +8,8 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
     /// <summary>
     /// A view model class that handles data for a customer.
     /// </summary>
-    public class CustomerViewModel : UserViewModel
+    public class CustomerViewModel : UserViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        ///  A constructor.
-        /// </summary>
-        /// <param name="userId">The user ID.</param>
-        /// <param name="userId">The customer ID.</param>
-        /// <param name="firstName">The first name for the user.</param>
-        /// <param name="lastName">The last name for the user.</param>
-        /// <param name="email">The email address for the user.</param>
-        /// <param name="isEmailConfirmed">Set to true if the email address is confirmed.</param>
-        /// <param name="orderCount">The number of orders the customer has.</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        public CustomerViewModel(string userId, int customerId, string firstName, string lastName, string email, bool isEmailConfirmed, int orderCount)
-            : base(userId, firstName, lastName, email, isEmailConfirmed)
-        {
-
-            #region Checks
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{userId}' can't null or empty.");
-            }
-
-            if (customerId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{customerId}' must be larger than zero.");
-            }
-
-            #endregion
-
-            CustomerId = customerId;
-            OrderCount = orderCount;
-        }
-
-        #endregion
 
         #region Properties
 
@@ -67,6 +30,11 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
                 return base.FullName;
             }
         }
+
+        /// <summary>
+        /// Returns true if the email address is confirmed.
+        /// </summary>
+        public bool IsEmailConfirmed { get; }
 
         /// <summary>
         /// The number of orders the customer have.

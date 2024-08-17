@@ -11,39 +11,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
     /// </summary>
     public class OrderViewModel : ViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        public OrderViewModel()
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="carOrderId">The ID of the order.</param>
-        /// <param name="orderDateUtc">The order date in UTC time.</param>
-        /// <param name="orderStatus">The order status.</param>
-        /// <param name="customer">The customer that placed the order.</param>
-        /// <param name="carBooking">The car booking tied to the order.</param>
-        /// <param name="payments">A collection of payments tied to the order.</param>
-        /// <param name="isNewOrder">True if the order was just created.</param>
-        public OrderViewModel(int carOrderId, DateTime orderDateUtc, OrderStatusViewModel orderStatus, CustomerViewModel customer,
-            CarBookingViewModel carBooking, List<PaymentViewModel> payments, bool isNewOrder)
-        {
-            CarOrderId = carOrderId;
-            OrderDateUtc = orderDateUtc;
-            OrderStatus = orderStatus;
-            Customer = customer;
-            CarBooking = carBooking;
-            Payments = payments;
-            IsNewOrder = isNewOrder;
-        }
-
-        #endregion
 
         #region Properties
 
@@ -62,7 +29,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// <summary>
         /// The car booking tied to the order.
         /// </summary>
-        public CarBookingViewModel CarBooking { get; set; }
+        public CarBookingViewModel CarBooking { get; set; } = default!;
 
         /// <summary>
         /// The ID of the order.
@@ -73,7 +40,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// <summary>
         /// The customer that placed the order.
         /// </summary>
-        public CustomerViewModel Customer { get; set; }
+        public CarOrderCustomerViewModel Customer { get; set; } = default!;
 
         /// <summary>
         /// Returns true if the order can be cancelled.
@@ -162,7 +129,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// <summary>
         /// The order status.
         /// </summary>
-        public OrderStatusViewModel OrderStatus { get; set; }
+        public OrderStatusViewModel OrderStatus { get; set; } = default!;
 
         #endregion
     }

@@ -10,17 +10,17 @@
         /// <summary>
         /// The ID for the status.
         /// </summary>
-        public int OrderStatusId { get; private set; }
+        public int OrderStatusId { get; set; }
 
         /// <summary>
         /// The description for the status.
         /// </summary>
-        public string StatusDescription { get; private set; } = "";
+        public string StatusDescription { get; set; } = "";
 
         /// <summary>
         /// The name for the status.
         /// </summary>
-        public string StatusName { get; private set; } = "";
+        public string StatusName { get; set; } = "";
 
         #endregion
     }

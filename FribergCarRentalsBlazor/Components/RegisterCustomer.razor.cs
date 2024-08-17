@@ -2,7 +2,7 @@
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.Dto.User;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
-using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
+using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components;
 
 namespace FribergCarRentalsBlazor.Components

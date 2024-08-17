@@ -11,29 +11,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
     /// </summary>
     public class CarBookingViewModel : ViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="carBookingId">The ID of the car booking.</param>
-        /// <param name="order">The order the booking belongs to.</param>
-        /// <param name="car">The car in the booking.</param>
-        /// <param name="rentalCostPerDay">The rental cost per day.</param>
-        /// <param name="pickupDateUTC">The car pickup date (UTC) for the booking.</param>
-        /// <param name="returnDateUTC">The return pickup date (UTC) for the booking.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public CarBookingViewModel(int carBookingId, OrderViewModel order, CarViewModel car, decimal rentalCostPerDay, DateTime pickupDateUTC, DateTime returnDateUTC)
-        {
-            CarBookingId = carBookingId;
-            Order = order;
-            Car = car;
-            RentalCostPerDay = rentalCostPerDay;
-            CarPickupDate = pickupDateUTC;
-            CarReturnDate = returnDateUTC;
-        }
-
-        #endregion
 
         #region Properties
 
@@ -53,7 +30,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         /// The order the booking belongs to.
         /// </summary>
         [DisplayName("Order")]
-        public OrderViewModel Order { get; set; }
+        public OrderViewModel Order { get; set; } = default!;
 
         /// <summary>
         /// The car pickup date.

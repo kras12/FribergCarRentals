@@ -22,7 +22,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
     /// <summary>
     /// Handles customer related activites like booking a car and place an order for the booking.
     /// </summary>
-    [Route("customer-api/customer/order")]
+    [Route("customer-api/order")]
     [ApiController]
     public class CustomerOrderController : ApiControllerBase
     {
@@ -108,7 +108,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// </summary>
         /// <param name="id">The ID of the order.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
-        [HttpPost("{id}/cancel")]
+        [HttpPut("{id}/cancel")]
         [ProducesResponseType<ApiValueResponseDto<CarOrderDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
@@ -132,6 +132,11 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             if (await _orderRepository.TryCancelOrderAsync(id))
             {
                 var order = _mapper.Map<CarOrderDto>(await _orderRepository.GetByIdAsync(id));
+                SetImageUrls(order
+                    .CarBooking
+                    .Car.Images.Select(image => image)
+                    .ToList());
+
                 return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(order));
             }
 
@@ -196,8 +201,8 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
 
             var result = _mapper.Map<CarOrderDto>(order);
             SetImageUrls(result
-                .CarBookings
-                .SelectMany(booking => booking.Car.Images.Select(image => image))
+                .CarBooking
+                .Car.Images.Select(image => image)
                 .ToList());
 
             return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(result));
@@ -228,7 +233,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
 
             var result = _mapper.Map<List<CarOrderDto>>(customer.Orders);
             SetImageUrls(result
-                .SelectMany(order => order.CarBookings.SelectMany(booking => booking.Car.Images.Select(image => image)))
+                .SelectMany(order => order.CarBooking.Car.Images.Select(image => image))
                 .ToList());
 
             return Ok(ApiValueResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(result));
@@ -274,8 +279,8 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             {
                 var result = _mapper.Map<CarOrderDto>(order);
                 SetImageUrls(result
-                .CarBookings
-                .SelectMany(booking => booking.Car.Images.Select(image => image))
+                .CarBooking
+                .Car.Images.Select(image => image)
                 .ToList());
 
                 return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(result));

@@ -4,6 +4,7 @@ using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Mapping.AutoMapper;
 using FribergCarRentalsBlazor.Services.Authentication;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
+using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

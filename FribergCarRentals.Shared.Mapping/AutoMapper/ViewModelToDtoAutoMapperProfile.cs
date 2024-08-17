@@ -20,7 +20,8 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 		{
 			CreateMappingsForCars();
 			CreateMappingsForCustomers();
-		}
+			CreateMappingsForCarOrders();
+        }
 
         #endregion
 
@@ -43,6 +44,14 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 			CreateMap<RegisterCustomerViewModel, CreateCustomerDto>();
 		}
 
-		#endregion
-	}
+        /// <summary>
+        /// Creates mappings for car orders.
+        /// </summary>
+        public void CreateMappingsForCarOrders()
+        {
+			CreateMap<CreateOrderViewModel, CreateCarOrderDto>();
+        }
+
+        #endregion
+    }
 }

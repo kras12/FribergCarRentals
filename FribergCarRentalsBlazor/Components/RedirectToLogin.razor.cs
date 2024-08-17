@@ -50,7 +50,7 @@ namespace FribergCarRentalsBlazor.Components
             }
             else if (NavigationManager.Uri.Contains("/customer"))
             {
-                NavigationManager.NavigateTo("/customer/login");
+                NavigationManager.NavigateTo("/customer/authenticate");
             }
             else
             {
