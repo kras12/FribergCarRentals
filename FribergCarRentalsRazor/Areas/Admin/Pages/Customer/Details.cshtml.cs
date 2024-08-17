@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -97,12 +98,12 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
 
                     if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCustomerIdTempDataKey, out int createdCustomerId))
                     {
-                        CustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
+                        CustomerViewModel.Messages.Add(MessageViewModelHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
                     }
 
                     if (TempDataHelper.TryGet(TempData, ResendConfirmEmailLinkModel.ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
                     {
-                        CustomerViewModel.Messages.Add(UserMesssageHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
+                        CustomerViewModel.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
                     }
 
                     return Page();

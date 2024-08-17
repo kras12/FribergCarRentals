@@ -11,6 +11,7 @@ using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -199,7 +200,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                     // ============================================================================================================
                     if (TempDataHelper.TryGet(TempData, CompletedOrderIdTempDataKey, out int completedOrderId))
                     {
-                        orderViewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
+                        orderViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
                     }
 
                     return View(orderViewModel);
@@ -235,12 +236,12 @@ namespace FribergCarRentals.Areas.Admin.Controllers
             // ============================================================================================================
             if (TempDataHelper.TryGet(TempData, CompletedOrderIdTempDataKey, out int completedOrderId))
             {
-                viewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
+                viewModel.Messages.Add(MessageViewModelHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
             }
 
             if (TempDataHelper.TryGet(TempData, DeletedOrderIdTempDataKey, out int deletedOrderId))
             {
-                viewModel.Messages.Add(UserMesssageHelper.CreateOrderDeletionSuccessMessage(deletedOrderId));
+                viewModel.Messages.Add(MessageViewModelHelper.CreateOrderDeletionSuccessMessage(deletedOrderId));
             }
 
             return View(viewModel);

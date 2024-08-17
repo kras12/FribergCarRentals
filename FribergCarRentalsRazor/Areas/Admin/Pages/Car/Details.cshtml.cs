@@ -9,6 +9,7 @@ using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
@@ -102,7 +103,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 
 					if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCarIdTempDataKey, out int carId))
                     {
-                        CarViewModel.Messages.Add(UserMesssageHelper.CreateCarCreationSuccessMessage(carId));
+                        CarViewModel.Messages.Add(MessageViewModelHelper.CreateCarCreationSuccessMessage(carId));
                     }
 
                     return Page();

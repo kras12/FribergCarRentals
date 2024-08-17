@@ -10,6 +10,7 @@ using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
@@ -96,7 +97,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedCarIdTempDataKey, out int deletedCarId))
             {
-                CarListViewModel.Messages.Add(UserMesssageHelper.CreateCarDeletionSuccessMessage(deletedCarId));
+                CarListViewModel.Messages.Add(MessageViewModelHelper.CreateCarDeletionSuccessMessage(deletedCarId));
             }
 
             return Page();

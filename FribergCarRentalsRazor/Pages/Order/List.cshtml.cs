@@ -12,6 +12,7 @@ using FribergCarRentals.Shared.Models.ViewModels.Other;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -84,7 +85,7 @@ namespace FribergCarRentals.Pages.Order
 
             if (TempDataHelper.TryGet(TempData, CancelModel.CanceledOrderIdTempDataKey, out int canceledOrderId))
             {
-                OrderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
+                OrderListViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
             }
 
             TempDataHelper.Set(TempData, CancelModel.CanceledOrderRedirectToPageTempDataKey, new RedirectToPageData(

@@ -16,6 +16,7 @@ using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Controllers.Customer
 {
@@ -319,7 +320,7 @@ namespace FribergCarRentals.Controllers.Customer
 
                     if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))
                     {
-                        orderViewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
+                        orderViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
                     }
 
                     return View(orderViewModel);
@@ -349,7 +350,7 @@ namespace FribergCarRentals.Controllers.Customer
 
             if (TempDataHelper.TryGet(TempData, CanceledOrderIdTempDataKey, out int canceledOrderId))
             {
-                orderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
+                orderListViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
             }
 
             SaveRedirectBackInstructionsForCancelOrderAction(nameof(List));

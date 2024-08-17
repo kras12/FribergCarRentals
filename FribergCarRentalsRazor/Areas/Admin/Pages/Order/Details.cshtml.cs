@@ -10,6 +10,7 @@ using FribergCarRentals.Areas.Admin.Pages.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Order
 {
@@ -107,7 +108,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
 
                     if (TempDataHelper.TryGet(TempData, CompleteModel.CompletedOrderIdTempDataKey, out int completedOrderId))
                     {
-                        OrderViewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
+                        OrderViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
                     }
                     
                     return Page();

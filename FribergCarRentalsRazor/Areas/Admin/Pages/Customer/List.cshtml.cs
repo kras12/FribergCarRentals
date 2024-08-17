@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -82,7 +83,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedCustomerIdTempDataKey, out int deletedCustomerId))
             {
-                CustomerListViewModel.Messages.Add(UserMesssageHelper.CreateCustomerDeletionSuccessMessage(deletedCustomerId));
+                CustomerListViewModel.Messages.Add(MessageViewModelHelper.CreateCustomerDeletionSuccessMessage(deletedCustomerId));
             }            
 
             return Page();

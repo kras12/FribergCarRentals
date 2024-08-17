@@ -11,6 +11,7 @@ using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
@@ -180,7 +181,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 				EditCarViewModel = _mapper.Map<EditCarViewModel>(car);
 				EditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
 				SetImageUrls(EditCarViewModel.Images);
-                EditCarViewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
+                EditCarViewModel.Messages.Add(MessageViewModelHelper.CreateCarUpdateSuccessMessage(id));
 
                 return Page();
             }

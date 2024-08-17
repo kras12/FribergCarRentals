@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 {
@@ -126,7 +127,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
                 var category = _mapper.Map<CarCategoryEntity>(EditCarCategoryViewModel);
                 await _carCategoryRepository.UpdateAsync(category);
                 EditCarCategoryViewModel = _mapper.Map<EditCarCategoryViewModel>(category);
-                EditCarCategoryViewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
+                EditCarCategoryViewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
                 return Page();
             }
 

@@ -9,6 +9,7 @@ using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Order
 {
@@ -97,12 +98,12 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
 
             if (TempDataHelper.TryGet(TempData, CompleteModel.CompletedOrderIdTempDataKey, out int completedOrderId))
             {
-                OrderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
+                OrderListViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
             }
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedOrderIdTempDataKey, out int deletedOrderId))
             {
-                OrderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderDeletionSuccessMessage(deletedOrderId));
+                OrderListViewModel.Messages.Add(MessageViewModelHelper.CreateOrderDeletionSuccessMessage(deletedOrderId));
             }
             
             return Page();

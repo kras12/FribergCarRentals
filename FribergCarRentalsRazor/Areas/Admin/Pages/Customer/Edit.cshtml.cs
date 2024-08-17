@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -144,7 +145,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
 
                 var customer = await _customerRepository.GetByUserIdAsync(user.Id) ?? throw new Exception($"Failed to find customer with ID: {EditCustomerViewModel.AccountId}");
                 EditCustomerViewModel = _mapper.Map<EditCustomerViewModel>(customer);
-				EditCustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
+				EditCustomerViewModel.Messages.Add(MessageViewModelHelper.CreateCustomerUpdateSuccessMessage(id));
 
                 return Page();
             }

@@ -14,6 +14,7 @@ using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -218,7 +219,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                     if (TempDataHelper.TryGet(TempData, CreatedCarIdTempDataKey, out int carId))
                     {
-                        carViewModel.Messages.Add(UserMesssageHelper.CreateCarCreationSuccessMessage(carId));
+                        carViewModel.Messages.Add(MessageViewModelHelper.CreateCarCreationSuccessMessage(carId));
                     }
 
                     return View(carViewModel);
@@ -303,7 +304,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 await _carRepository.UpdateAsync(car);
                 EditCarViewModel newEditCarViewModel = _mapper.Map<EditCarViewModel>(car);
                 newEditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
-				newEditCarViewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
+				newEditCarViewModel.Messages.Add(MessageViewModelHelper.CreateCarUpdateSuccessMessage(id));
 
                 return View(newEditCarViewModel);
             }
@@ -338,7 +339,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
             if (TempDataHelper.TryGet(TempData, DeletedCarIdTempDataKey, out int deletedCarId))
             {
-                carListViewModel.Messages.Add(UserMesssageHelper.CreateCarDeletionSuccessMessage(deletedCarId));
+                carListViewModel.Messages.Add(MessageViewModelHelper.CreateCarDeletionSuccessMessage(deletedCarId));
             }
 
             return View(carListViewModel);

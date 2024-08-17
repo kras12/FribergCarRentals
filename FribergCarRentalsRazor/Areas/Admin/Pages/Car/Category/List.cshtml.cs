@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 {
@@ -83,7 +84,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedCarCategoryIdTempDataKey, out int deletedCarCategoryId))
             {
-                CarCategoryListViewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryDeletionSuccessMessage(deletedCarCategoryId));
+                CarCategoryListViewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryDeletionSuccessMessage(deletedCarCategoryId));
             }
 
             return Page();

@@ -1,11 +1,9 @@
-﻿using FribergCarRentals.Shared.Models.ViewModels.Message;
-
-namespace MvcRazorPages.Shared.Helpers
+﻿namespace FribergCarRentals.Shared.Models.ViewModels.Message
 {
     /// <summary>
-    /// A class that handles user messages.
+    /// A class that cretes user messages in the form of <see cref="MessageViewModel"/> objects. 
     /// </summary>
-    public static class UserMesssageHelper
+    public static class MessageViewModelHelper
     {
         #region CarCategories
 

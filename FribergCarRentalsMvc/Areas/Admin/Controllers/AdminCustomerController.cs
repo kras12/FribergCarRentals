@@ -11,6 +11,7 @@ using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -194,12 +195,12 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                     if (TempDataHelper.TryGet(TempData, CreatedCustomerIdTempDataKey, out int createdCustomerId))
                     {
-                        viewModel.Messages.Add(UserMesssageHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
+                        viewModel.Messages.Add(MessageViewModelHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
                     }
 
                     if (TempDataHelper.TryGet(TempData, ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
                     {
-                        viewModel.Messages.Add(UserMesssageHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
+                        viewModel.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
                     }
 
                     return View(viewModel);
@@ -266,7 +267,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 await _customerRepository.UpdateAsync(customer);
 
                 EditCustomerViewModel viewModel = _mapper.Map<EditCustomerViewModel>(customer);
-                viewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
+                viewModel.Messages.Add(MessageViewModelHelper.CreateCustomerUpdateSuccessMessage(id));
 
                 return View(viewModel);
             }
@@ -297,7 +298,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
             if (TempDataHelper.TryGet(TempData, DeletedCustomerIdTempDataKey, out int deletedCustomerId))
             {
-                viewModel.Messages.Add(UserMesssageHelper.CreateCustomerDeletionSuccessMessage(deletedCustomerId));
+                viewModel.Messages.Add(MessageViewModelHelper.CreateCustomerDeletionSuccessMessage(deletedCustomerId));
             }
 
             return View(viewModel);

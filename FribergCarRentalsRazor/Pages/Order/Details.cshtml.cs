@@ -10,6 +10,7 @@ using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -102,7 +103,7 @@ namespace FribergCarRentals.Pages.Order
 
                     if (TempDataHelper.TryGet(TempData, CancelModel.CanceledOrderIdTempDataKey, out int canceledOrderId))
                     {
-                        OrderViewModel.Messages.Add(UserMesssageHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
+                        OrderViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(canceledOrderId));
                     }
                     
                     return Page();
