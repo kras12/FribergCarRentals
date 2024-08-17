@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentalsBlazor.Services.Authentication;
 using Microsoft.AspNetCore.Components;
 
@@ -16,7 +17,7 @@ namespace FribergCarRentalsBlazor.Components
         /// <summary>
         /// A collection of validation errors returned from the API.
         /// </summary>
-        private List<string> _apiValidationErrors = new List<string>();
+        private List<MessageViewModel> _apiValidationErrors = new();
 
         #endregion
 
@@ -86,9 +87,9 @@ namespace FribergCarRentalsBlazor.Components
         {
             await OnBeforeLogin.InvokeAsync();
             _apiValidationErrors.Clear();
-            var response = await CustomerAuthenticationService.LoginCustomer(AutoMapper.Map<LoginCustomerDto>(FormInput));
+            var result = await CustomerAuthenticationService.LoginCustomer(AutoMapper.Map<LoginCustomerDto>(FormInput));
 
-            if (response.Success)
+            if (result.Success)
             {
                 await OnLoginSuccessful.InvokeAsync();
 
@@ -101,7 +102,7 @@ namespace FribergCarRentalsBlazor.Components
             }
             else
             {
-                _apiValidationErrors = response.Errors.Select(x => x.Value).ToList();
+                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
                 await OnLoginFailed.InvokeAsync();
             }
         }

@@ -61,7 +61,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Other
         /// <summary>
         /// Messages that can be shown to the user.
         /// </summary>
-        public List<MessageViewModel> Messages { get; } = new();
+        public List<MessageViewModel> Messages { get; set;  } = new();
 
         /// <summary>
         /// An optional page sub title for the page. 

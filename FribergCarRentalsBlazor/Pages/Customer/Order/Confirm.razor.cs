@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components;
@@ -25,7 +26,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// <summary>
         /// A collection of validation errors returned from the API.
         /// </summary>
-        private List<string> _apiValidationErrors = new List<string>();
+        private List<MessageViewModel> _apiValidationErrors = new();
 
         /// <summary>
         /// The view model used to bind order creation data. 
@@ -73,7 +74,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
             }
             else
             {
-                _apiValidationErrors = result.Errors.Select(x => x.Value).ToList();
+                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
             }
         }
 

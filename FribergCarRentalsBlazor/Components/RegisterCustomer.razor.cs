@@ -2,6 +2,7 @@
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.Dto.User;
 using FribergCarRentals.Shared.Models.ViewModels.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components;
 
@@ -30,7 +31,7 @@ namespace FribergCarRentalsBlazor.Components
         /// <summary>
         /// A collection of validation errors returned from the API.
         /// </summary>
-        private List<string> _apiValidationErrors = new List<string>();
+        private List<MessageViewModel> _apiValidationErrors = new();
 
         /// <summary>
         /// Contains data to confirm the email account for a new customer.
@@ -120,16 +121,16 @@ namespace FribergCarRentalsBlazor.Components
         private async Task OnValidSubmit()
         {
             _apiValidationErrors.Clear();
-            var response = await CustomerApiService.CreateCustomer(AutoMapper.Map<CreateCustomerDto>(FormInput));
+            var result = await CustomerApiService.CreateCustomer(AutoMapper.Map<CreateCustomerDto>(FormInput));
 
-            if (response.Success)
+            if (result.Success)
             {
-                _confirmEmailData = response.Value!.ConfirmEmailData;
+                _confirmEmailData = result.Value!.ConfirmEmailData;
                 await OnRegistrationSuccessful.InvokeAsync(HaveConfirmEmailData ? RegistrationStatus.ConfirmEmail : RegistrationStatus.Completed);
             }
             else
             {
-                _apiValidationErrors = response.Errors.Select(x => x.Value).ToList();
+                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
                 await OnRegistrationFailed.InvokeAsync();
             }
         }

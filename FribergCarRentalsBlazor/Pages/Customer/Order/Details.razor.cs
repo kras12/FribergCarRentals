@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components;
@@ -25,12 +26,12 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// <summary>
         /// A collection of validation errors returned from the API.
         /// </summary>
-        private List<string> _apiValidationErrors = new List<string>();
+        private List<MessageViewModel> _apiValidationErrors = new();
 
         /// <summary>
         /// The model for the car order.
         /// </summary>
-        private OrderViewModel _carOrder = default!;
+        private OrderViewModel _order = default!;
 
         #endregion
 
@@ -72,15 +73,16 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         {
             if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to cancel this order?"))
             {
-                var result = await CustomerOrderApiService.CancelOrderAsync(_carOrder.CarOrderId);
+                var result = await CustomerOrderApiService.CancelOrderAsync(_order.CarOrderId);
 
                 if (result.Success)
                 {
-                    _carOrder = AutoMapper.Map<OrderViewModel>(result.Value!);
+                    _order = AutoMapper.Map<OrderViewModel>(result.Value!);
+                    _order.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(_order.CarOrderId));
                 }
                 else
                 {
-                    _apiValidationErrors.AddRange(result.Errors.Select(x => $"{x.Key}: {x.Value}").ToList());
+                    _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
                 }
             }
         }
@@ -101,16 +103,16 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
 
             if (result.Success)
             {
-                _carOrder = AutoMapper.Map<OrderViewModel>(result.Value!);
+                _order = AutoMapper.Map<OrderViewModel>(result.Value!);
                 
                 if (await SessionStorageService.ContainKeyAsync(Confirm.IsNewOrderTempDataKey))
                 {
-                    _carOrder.IsNewOrder = await SessionStorageService.GetItemAsync<bool>(Confirm.IsNewOrderTempDataKey);
+                    _order.IsNewOrder = await SessionStorageService.GetItemAsync<bool>(Confirm.IsNewOrderTempDataKey);
                 }
             }
             else
             {
-                _apiValidationErrors = result.Errors.Select(x => x.Value).ToList();
+                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
             }            
         }
 

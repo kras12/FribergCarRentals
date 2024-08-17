@@ -3,14 +3,7 @@
     <div class="vertical-form-field flex-container__row-gap__1-rem flex-container__align-self-center">
         @if (_apiValidationErrors.Count > 0)
         {
-            <ul>
-                @{
-                    foreach (var error in _apiValidationErrors)
-                    {
-                        <li class="error-text">@error</li>
-                    }
-                }
-            </ul>
+            <UserMessages Messages="_apiValidationErrors"></UserMessages>
         }
         <div class="vertical-form-field">
             <label for="email">Email</label>

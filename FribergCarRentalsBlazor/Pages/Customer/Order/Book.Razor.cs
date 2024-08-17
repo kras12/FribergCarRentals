@@ -3,6 +3,7 @@ using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.Dto.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components;
@@ -28,7 +29,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// <summary>
         /// A collection of validation errors returned from the API.
         /// </summary>
-        private List<string> _apiValidationErrors = new List<string>();
+        private List<MessageViewModel> _apiValidationErrors = new();
 
         #endregion
 
@@ -70,7 +71,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
             }
             else
             {
-                _apiValidationErrors.AddRange(result.Errors.Select(x => $"{x.Key}: {x.Value}").ToList());
+                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
             }            
         }
 
@@ -102,11 +103,11 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         {
             if (!ValidatePickupDate(BookCarViewModel.PickupDateLocalTime))
             {
-                _apiValidationErrors.Add(ValidationMessages.PickupDateMustBeInFutureErrorMessage);
+                _apiValidationErrors.Add(new MessageViewModel(MessageType.Error, ValidationMessages.PickupDateMustBeInFutureErrorMessage));
             }
             else if (!ValidateReturnDate(BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime))
             {
-                _apiValidationErrors.Add(ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage);
+                _apiValidationErrors.Add(new MessageViewModel(MessageType.Error, ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage));
             }
             else
             {
@@ -126,7 +127,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
                 }
                 else
                 {
-                    _apiValidationErrors.AddRange(result.Errors.Select(x => $"{x.Key}: {x.Value}").ToList());
+                    _apiValidationErrors.AddRange(result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList());
                     BookCarViewModel.AvailableCars.Clear();
                 }
             }
