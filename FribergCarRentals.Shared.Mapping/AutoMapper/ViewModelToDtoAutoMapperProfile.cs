@@ -3,6 +3,8 @@ using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Models.ViewModels.Admin;
+using FribergCarRentals.Shared.Models.Dto.Admin;
 
 namespace FribergCarRentals.Shared.Mapping.AutoMapper
 {
@@ -21,6 +23,8 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 			CreateMappingsForCars();
 			CreateMappingsForCustomers();
 			CreateMappingsForCarOrders();
+
+            CreateMappingsForAdmins();
         }
 
         #endregion
@@ -28,6 +32,14 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
         #region Methods
 
 		/// <summary>
+        /// Creates mappings for admins.
+        /// </summary>
+        public void CreateMappingsForAdmins()
+        {
+            CreateMap<LoginAdminViewModel, LoginAdminDto>();
+        }
+
+        /// <summary>
 		/// Creates mappings for cars.
 		/// </summary>
         public void CreateMappingsForCars()

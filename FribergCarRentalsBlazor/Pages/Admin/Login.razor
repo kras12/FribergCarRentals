@@ -1,0 +1,19 @@
+﻿@page "/admin/login"
+@using FribergCarRentalsBlazor.Components
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+		<RedirectToUrl Url="/admin"></RedirectToUrl>
+	</Authorized>
+	<NotAuthorized>
+		<div class="vertical-flex-container flex-container__row-gap__2-rem">
+			<div>
+				<h1>Authorization required!</h1>
+				<p class="text-align-center">You have to login before you continue.</p>
+			</div>
+			<div class="authenticate-container">
+				<LoginAdmin RedirectUrl="@_redirectUrl"></LoginAdmin>
+			</div>
+		</div>
+	</NotAuthorized>
+</AuthorizeView>
