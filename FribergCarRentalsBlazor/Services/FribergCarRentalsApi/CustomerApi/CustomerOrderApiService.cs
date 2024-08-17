@@ -9,34 +9,39 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
     /// <summary>
     /// A service service for managing customer order data for Friberg Car Rentals Customer API endpoints.
     /// </summary>
-    public class CustomerOrderApiService : CustomerApiServiceBase, ICustomerOrderApiService
+    public class CustomerOrderApiService : ApiServiceBase, ICustomerOrderApiService
     {
         #region CustomerConstants        
 
         /// <summary>
+        /// The relative API base address.
+        /// </summary>
+        private const string ApiBaseAddress = "customer-api/order";
+
+        /// <summary>
         /// The cancel order API endpoint address.
         /// </summary>
-        private const string CancelOrderApiEndpoint = $"{ApiBase}/order/{IdPlaceHolder}/cancel";
+        private const string CancelOrderApiEndpoint = $"{ApiBaseAddress}/{IdPlaceHolder}/cancel";
 
         /// <summary>
         /// The car categories API endpoint address.
         /// </summary>
-        private const string CarCategoriesApiEndpoint = $"{ApiBase}/order/car-categories";
+        private const string CarCategoriesApiEndpoint = $"{ApiBaseAddress}/car-categories";
 
         /// <summary>
         /// The create order API endpoint address.
         /// </summary>
-        private const string OrderApiEndpoint = $"{ApiBase}/order";
+        private const string OrderApiEndpoint = $"{ApiBaseAddress}";
 
         /// <summary>
         /// The create order API endpoint address.
         /// </summary>
-        private const string OrderByIdApiEndpoint = $"{ApiBase}/order/{IdPlaceHolder}";
+        private const string OrderByIdApiEndpoint = $"{ApiBaseAddress}/{IdPlaceHolder}";
 
         /// <summary>
         /// The search cars API endpoint address.
         /// </summary>
-        private const string SearchCarsApiEndPoint = $"{ApiBase}/order/search-cars";
+        private const string SearchCarsApiEndPoint = $"{ApiBaseAddress}/search-cars";
 
         #endregion
 

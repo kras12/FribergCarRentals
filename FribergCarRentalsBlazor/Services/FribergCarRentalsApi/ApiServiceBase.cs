@@ -1,43 +1,60 @@
-﻿using System.Text;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using System.Text;
 
 namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 {
 	/// <summary>
 	/// Base class for all Friberg Car Rentals API services.
 	/// </summary>
-	public class ApiServiceBase
+	public abstract class ApiServiceBase
 	{
+        #region Constants
+
+        /// <summary>
+        /// The ID placeholder used in API endpoint addresses.
+        /// </summary>
+        protected const string IdPlaceHolder = "{id}";
+
+		#endregion
+
 		#region Fields
 
 		/// <summary>
-		/// The injected HTTP client.
+		/// The injected autenthication state provider.
 		/// </summary>
-		protected readonly HttpClient _httpClient;
+		protected readonly AuthenticationStateProvider _authenticationStateProvider;
 
-		#endregion
+        /// <summary>
+        /// The injected HTTP client.
+        /// </summary>
+        protected readonly HttpClient _httpClient;
 
-		#region Constructors
+        #endregion
 
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="httpClient">The injected HTTP client.</param>
-		protected ApiServiceBase(HttpClient httpClient)
-		{
-			_httpClient = httpClient;
-		}
+        #region Constructors
 
-		#endregion
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="httpClient">The injected HTTP client.</param>
+		/// <param name="authenticationStateProvider">The injected autenthication state provider.</param>
+        protected ApiServiceBase(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider)
+        {
+            _httpClient = httpClient;
+            _authenticationStateProvider = authenticationStateProvider;
+        }
 
-		#region Methods
+        #endregion
 
-		/// <summary>
-		/// Builds the query string to send with a request. 
-		/// </summary>
-		/// <param name="queries">A collection of key value pairs for the queries to include.</param>
-		/// <returns>A formatted query <see cref="string"/>, or an empty string if the collection is empty.</returns>
-		/// <exception cref="ArgumentException"></exception>
-		protected string BuildQueryString(List<KeyValuePair<string, string>> queries)
+        #region Methods
+
+        /// <summary>
+        /// Builds the query string to send with a request. 
+        /// </summary>
+        /// <param name="queries">A collection of key value pairs for the queries to include.</param>
+        /// <returns>A formatted query <see cref="string"/>, or an empty string if the collection is empty.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        protected string BuildQueryString(List<KeyValuePair<string, string>> queries)
 		{
 			#region Checks
 
@@ -97,6 +114,20 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 			return targetObject;
 		}
 
-		#endregion
-	}
+        /// <summary>
+        /// Sets the authorization header data for logged in users. 
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing an async operation.</returns>
+        protected async Task SetAuthorizationHeaderAsync()
+        {
+            var token = await ((ApiUserAuthenticationStateProvider)_authenticationStateProvider).GetTokenAsync();
+
+            if (token != null)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+
+        #endregion
+    }
 }

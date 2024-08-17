@@ -9,29 +9,34 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
     /// <summary>
     /// A service for managing customer data from Friberg Car Rentals Customer API endpoints.
     /// </summary>
-    public class CustomerApiService : CustomerApiServiceBase, ICustomerApiService
+    public class CustomerApiService : ApiServiceBase, ICustomerApiService
     {
         #region CustomerConstants
 
         /// <summary>
+        /// The relative API base address.
+        /// </summary>
+        private const string ApiBaseAddress = "customer-api/customer";
+
+        /// <summary>
         /// The confirm email API endpoint address
         /// </summary>
-        private const string ConfirmEmailApiEndPoint = $"{ApiBase}/customer/confirm-email";
+        private const string ConfirmEmailApiEndPoint = $"{ApiBaseAddress}/confirm-email";
 
         /// <summary>
         /// The create customer API endpoint address
         /// </summary>
-        private const string CreateCustomerApiEndoint = $"{ApiBase}/customer/create";
+        private const string CreateCustomerApiEndoint = $"{ApiBaseAddress}/create";
 
         /// <summary>
         /// The customer by ID API endpoint address.
         /// </summary>
-        private const string CustomerByIdApiEndpoint = $"{ApiBase}/customer/{IdPlaceHolder}";
+        private const string CustomerByIdApiEndpoint = $"{ApiBaseAddress}/{IdPlaceHolder}";
 
         /// <summary>
         /// The customer login API endoint address.
         /// </summary>
-        private const string LoginCustomerApiEndpoint = $"{ApiBase}/customer/login";
+        private const string LoginCustomerApiEndpoint = $"{ApiBaseAddress}/login";
 
         #endregion
 
@@ -42,7 +47,8 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
         /// </summary>
         /// <param name="httpClient">The injected HTTP client.</param>
 		/// <param name="authenticationStateProvider">The injected autenthication state provider.</param>
-        public CustomerApiService(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider) : base(httpClient, authenticationStateProvider)
+        public CustomerApiService(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider) 
+            : base(httpClient, authenticationStateProvider)
         {
 
         }
