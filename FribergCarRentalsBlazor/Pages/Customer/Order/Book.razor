@@ -3,6 +3,7 @@
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentals.Shared.Models.ViewModels.Car
 @using FribergCarRentals.Shared.Models.ViewModels.Order
+@using FribergCarRentalsBlazor.Components
 <h1>Book Car</h1>
 <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
     <EditForm Model="BookCarViewModel" class="vertical-form" OnValidSubmit="SearchCars">
@@ -10,14 +11,7 @@
         <div class="vertical-form-field flex-container__row-gap__1-rem flex-container__align-self-center">
             @if (_apiValidationErrors.Count > 0)
             {
-                <ul>
-                    @{
-                        foreach (var error in _apiValidationErrors)
-                        {
-                            <li class="error-text">@error</li>
-                        }
-                    }
-                </ul>
+                <UserMessages Messages="_apiValidationErrors"></UserMessages>
             }            
         </div>
         <div class="horizontal-flex-container flex-container__align-items-start flex-container__column-gap__0-5-rem">
