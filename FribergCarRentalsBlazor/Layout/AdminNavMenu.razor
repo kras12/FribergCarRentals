@@ -1,28 +1,28 @@
-﻿<div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
-    <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
-        <ul>
-            <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+﻿<AuthorizeView Context="OuterContext" Policy="@ApplicationUserPolicies.Admin">
+    <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
+        <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
+            <ul>
                 <li>
                     <a href="/admin">Home</a>
                 </li>
                 <li>
-                    <a href="/admin/car/category">Car Categories</a>
+                    <a href="/admin/car/categories/list">Car Categories</a>
                 </li>
                 <li>
-                    <a href="/admin/car">Cars</a>
+                    <a href="/admin/cars/list">Cars</a>
                 </li>
                 <li>
-                    <a href="/admin/customer">Customers</a>
+                    <a href="/admin/customers/list">Customers</a>
                 </li>
                 <li>
-                    <a href="/admin/order">Orders</a>
+                    <a href="/admin/orders/list">Orders</a>
                 </li>
                 <div class="menu-group right-aligned">
                     <li>
                         <a href="/admin/logout">Logout</a>
-                    </li>                
+                    </li>
                 </div>
-            </AuthorizeView>
-        </ul>
-    </nav>
-</div>
+            </ul>
+        </nav>
+    </div>
+</AuthorizeView>

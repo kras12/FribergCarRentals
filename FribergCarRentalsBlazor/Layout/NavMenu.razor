@@ -1,33 +1,24 @@
 ﻿@using FribergCarRentalsBlazor.Components
-<div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
-    <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
-        <ul>
-            <li>
-                <a href="/">Home</a>
-            </li>
-            <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
-                <NotAuthorized>
+
+<AuthorizeView Context="OuterContext" Policy="@ApplicationUserPolicies.Admin">
+    <NotAuthorized>
+        <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
+            <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
+                <ul>
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
                     <li>
                         <a href="/customer/order/book">Book</a>
                     </li>
-                </NotAuthorized>
-            </AuthorizeView>
-            <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
-                <Authorized>
-                    <li>
-                        <a href="/customer/order/list">Orders</a>
-                    </li>
-                </Authorized>
-            </AuthorizeView>
-            <div class="menu-group right-aligned">
-                <AuthorizeView Context="AdminContext" Policy="@ApplicationUserPolicies.Admin">
-                    <Authorized>
-                        <li>
-                            <a href="/admin">Account</a>
-                        </li>
-                        @* TODO - Show admin logout button *@
-                    </Authorized>
-                    <NotAuthorized>
+                    <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+                        <Authorized>
+                            <li>
+                                <a href="/customer/order/list">Orders</a>
+                            </li>
+                        </Authorized>
+                    </AuthorizeView>
+                    <div class="menu-group right-aligned">
                         <AuthorizeView Context="CustomerContext" Policy="@ApplicationUserPolicies.Customer">
                             <Authorized>
                                 <li>
@@ -38,12 +29,16 @@
                         <li>
                             <LoginCustomerButton></LoginCustomerButton>
                         </li>
-                        <li>
-                            <RegisterCustomerButton></RegisterCustomerButton>
-                        </li>
-                    </NotAuthorized>
-                </AuthorizeView>
-            </div>
-        </ul>
-    </nav>
-</div>
+                        <AuthorizeView Context="CustomerContext" Policy="@ApplicationUserPolicies.Customer">
+                            <NotAuthorized>
+                                <li>
+                                    <RegisterCustomerButton></RegisterCustomerButton>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
