@@ -45,6 +45,7 @@ namespace FribergCarRentalsApi.AutoMapper
         private void CreateCarMappings()
         {
             CreateMap<CarCategoryEntity, CarCategoryDto>();
+            CreateMap<CarCategoryEntity, CarCategoryStatisticsDto>();
             CreateMap<VehiclePropulsionEntity, VehiclePropulsionDto>();
             CreateMap<CarRentalStatusEntity, CarRentalStatusDto>();
             CreateMap<CarEntity, CarDto>();

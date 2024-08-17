@@ -1,16 +1,11 @@
 ﻿namespace FribergCarRentals.Shared.Models.Dto.CarCategory
 {
     /// <summary>
-    /// A DTO class that handles data for creation of a car category.
+    /// A DTO class that contains statistics for a car category. 
     /// </summary>
-    public class CarCategoryStatisticsDto
+    public class CarCategoryStatisticsDto : CarCategoryDto
     {
         #region Properties
-
-        /// <summary>
-        /// The car category.
-        /// </summary>
-        public CarCategoryDto CarCategory { get; set; } = null!;
 
         /// <summary>
         /// The number of cars using this category. 

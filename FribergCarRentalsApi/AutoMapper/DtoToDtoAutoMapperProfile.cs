@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.DTO;
+using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 
 namespace FribergCarRentalsApi.AutoMapper
@@ -29,7 +30,7 @@ namespace FribergCarRentalsApi.AutoMapper
         private void CreateCarCategoryMappins()
         {
             CreateMap<CarCategoryCountDto, CarCategoryStatisticsDto>()
-                .ForMember(dest => dest.CarCategory, opt => opt.MapFrom(src => src.CarCategoryEntity));
+                .IncludeMembers(src => src.CarCategoryEntity);
         }
 
         #endregion
