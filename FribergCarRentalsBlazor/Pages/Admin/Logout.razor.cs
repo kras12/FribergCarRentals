@@ -6,7 +6,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin
     /// <summary>
     /// A component for logging out an admin.
     /// </summary>
-    public partial class Logout : ComponentBase
+    public partial class Logout : AdminPageComponentBase
     {
 		#region Constants
 
@@ -36,6 +36,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin
         {
             await base.OnInitializedAsync();
             await AdminAuthenticationService.Logout();
+            NavigationManager.NavigateTo(Pages.Home.PageUrl);
         }
 
         #endregion
