@@ -15,9 +15,14 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         #region Constants
 
         /// <summary>
-        /// The base url for the page. 
+        /// The base URL for the page without the order ID.
         /// </summary>
-        public const string PageBaseUrl = "/customer/order/details";
+        public const string PageUrlBase = "/customer/order/details";
+
+        /// <summary>
+        /// The url for the page. 
+        /// </summary>
+        public const string PageUrl = PageUrlBase + "/{OrderId:int}";
 
         #endregion
 
@@ -47,19 +52,19 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// The injected customer order API service.
         /// </summary>
         [Inject]
-        private ICustomerOrderApiService CustomerOrderApiService { get; set; } = default!;
-
-        /// <summary>
-        /// The order ID to show details for.
-        /// </summary>
-        [Parameter]
-        public int Id { get; set; }
+        private ICustomerOrderApiService CustomerOrderApiService { get; set; } = default!;        
 
         /// <summary>
         /// The injected JavaScript runtime. 
         /// </summary>
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = default!;
+
+        /// <summary>
+        /// The order ID to show details for.
+        /// </summary>
+        [Parameter]
+        public int OrderId { get; set; }
 
         #endregion
 
@@ -88,18 +93,28 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         }
 
         /// <summary>
+        /// Gets the page URL for an order.
+        /// </summary>
+        /// <param name="orderId">The ID of the order.</param>
+        /// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+        public static string GetPageUrl(int orderId)
+        {
+            return $"{PageUrlBase}/{orderId}";
+        }
+
+        /// <summary>
         /// <inheritdoc/>
         /// </summary>
         protected async override Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
-            if (Id < 0)
+            if (OrderId < 0)
             {
-                throw new Exception($"Invalid ID: {Id}");
+                throw new Exception($"Invalid ID: {OrderId}");
             }
 
-            var result = await CustomerOrderApiService.GetOrderAsync(Id);
+            var result = await CustomerOrderApiService.GetOrderAsync(OrderId);
 
             if (result.Success)
             {

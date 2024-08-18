@@ -12,12 +12,12 @@ namespace FribergCarRentalsBlazor.Components
     /// </summary>
     public partial class LoginAdmin : ComponentBase
     {
-        #region Fields
+		#region Fields
 
-        /// <summary>
-        /// A collection of validation errors returned from the API.
-        /// </summary>
-        private List<MessageViewModel> _apiValidationErrors = new();
+		/// <summary>
+		/// A collection of validation errors returned from the API.
+		/// </summary>
+		private List<MessageViewModel> _apiValidationErrors = new();
 
         #endregion
 

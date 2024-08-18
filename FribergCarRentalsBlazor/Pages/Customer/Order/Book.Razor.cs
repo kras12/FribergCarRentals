@@ -18,6 +18,11 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         #region Constants
 
         /// <summary>
+        /// The url for the page. 
+        /// </summary>
+        public const string PageUrl = "/customer/order/book";
+
+        /// <summary>
         /// The key for storing the pending order to be confirmed by the customer.
         /// </summary>
         public const string PendingOrderTempDataKey = "CustomerOrderPendingOrder";
@@ -87,11 +92,11 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
 
             if (await IsCustomerLoggedIn())
             {
-                NavigationManager.NavigateTo("/customer/order/confirm");
+                NavigationManager.NavigateTo(Confirm.PageUrl);
             }
             else
             {
-                await RedirectToLogin("/customer/order/confirm");
+                await RedirectToLogin(Confirm.PageUrl);
             }
         }
 

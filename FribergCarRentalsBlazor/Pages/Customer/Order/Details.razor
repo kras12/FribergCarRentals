@@ -1,5 +1,5 @@
 ﻿@inherits CustomerPageComponentBase
-@page "/customer/order/details/{id:int}"
+@attribute [Route(PageUrl)]
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
 
@@ -27,7 +27,7 @@
         }
         <div class="vertical-flex-container flex-container__row-gap__1-rem">
             <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                <a href="/customer/order/list" asp-action="List" class="button navigational-button">View Orders</a>
+                <a href="@Pages.Customer.Order.List.PageUrl" class="button navigational-button">View Orders</a>
                 @if (_order.IsCancelable)
                 {
                     <button class="negative-button" @onclick="@(() => CancelOrder())">Cancel Order</button>

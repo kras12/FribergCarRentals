@@ -13,6 +13,15 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
     /// </summary>
     public partial class List : CustomerPageComponentBase
     {
+        #region Constants
+
+        /// <summary>
+        /// The url for the page. 
+        /// </summary>
+        public const string PageUrl = "/customer/order/list";
+
+        #endregion
+
         #region Fields
 
         /// <summary>

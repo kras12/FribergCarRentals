@@ -6,14 +6,23 @@ namespace FribergCarRentalsBlazor.Pages.Admin
     /// <summary>
     /// A component for logging out an admin.
     /// </summary>
-    public partial class LogoutAdmin : ComponentBase
+    public partial class Logout : ComponentBase
     {
-        #region Properties
+		#region Constants
 
-        /// <summary>
-        /// The injected admin authentication service. 
-        /// </summary>
-        [Inject]
+		/// <summary>
+		/// The url for the page. 
+		/// </summary>
+		public const string PageUrl = "/admin/logout";
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// The injected admin authentication service. 
+		/// </summary>
+		[Inject]
         private IAdminAuthenticationService AdminAuthenticationService { get; set; } = default!;
 
         #endregion

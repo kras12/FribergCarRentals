@@ -9,6 +9,15 @@ namespace FribergCarRentalsBlazor.Pages
     /// </summary>
     public partial class Home : ComponentBase
     {
+        #region Constants
+
+        /// <summary>
+        /// The url for the page. 
+        /// </summary>
+        public const string PageUrl = "/";
+
+        #endregion
+
         #region Properties
 
         /// <summary>

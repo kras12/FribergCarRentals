@@ -19,6 +19,11 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// </summary>
         public const string IsNewOrderTempDataKey = "CustomerOrderIsNewOrder";
 
+        /// <summary>
+        /// The url for the page. 
+        /// </summary>
+        public const string PageUrl = "/customer/order/confirm";
+
         #endregion
 
         #region Fields
@@ -61,7 +66,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                await RedirectToLogin("/customer/order/booking");
+                await RedirectToLogin(Book.PageUrl);
             }
 
             var result = await CustomerOrderApiService.CreateOrderAsync(AutoMapper.Map<CreateCarOrderDto>(_createOrderViewModel));
@@ -70,7 +75,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
             {
                 await SessionStorageService.RemoveItemAsync(Book.PendingOrderTempDataKey);
                 await SessionStorageService.SetItemAsync(IsNewOrderTempDataKey, true);
-                NavigationManager.NavigateTo($"{Details.PageBaseUrl}/{result.Value!.CarOrderId}");
+                NavigationManager.NavigateTo(Details.GetPageUrl(result.Value!.CarOrderId));
             }
             else
             {
@@ -88,7 +93,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
 
             if (!await IsCustomerLoggedIn())
             {
-                await RedirectToLogin("/customer/order/booking");
+                await RedirectToLogin(Book.PageUrl);
             }
 
             _createOrderViewModel = await SessionStorageService.GetItemAsync<CreateOrderViewModel>(Book.PendingOrderTempDataKey);

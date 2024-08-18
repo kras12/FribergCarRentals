@@ -46,15 +46,15 @@ namespace FribergCarRentalsBlazor.Components
 
             if (NavigationManager.Uri.Contains("/admin"))
             {
-                NavigationManager.NavigateTo("/admin/login");
+                NavigationManager.NavigateTo(Pages.Admin.Login.PageUrl);
             }
             else if (NavigationManager.Uri.Contains("/customer"))
             {
-                NavigationManager.NavigateTo("/customer/authenticate");
+                NavigationManager.NavigateTo(Pages.Customer.Authenticate.PageUrl);
             }
             else
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo(Pages.Home.PageUrl);
             }
         }
 

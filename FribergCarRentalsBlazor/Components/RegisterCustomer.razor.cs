@@ -111,7 +111,7 @@ namespace FribergCarRentalsBlazor.Components
                 { "email", _confirmEmailData.Email }
             };
 
-			NavigationManager.NavigateTo(NavigationManager.GetUriWithQueryParameters("/customer/confirm-email", parameters));
+			NavigationManager.NavigateTo(NavigationManager.GetUriWithQueryParameters(Pages.Customer.ConfirmEmail.PageUrl, parameters));
         }
 
         /// <summary>

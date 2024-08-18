@@ -12,6 +12,15 @@ namespace FribergCarRentalsBlazor.Pages.Customer
     /// </summary>
     public partial class ConfirmEmail : ComponentBase
     {
+        #region Constants
+
+        /// <summary>
+        /// The url for the page. 
+        /// </summary>
+        public const string PageUrl = "/customer/confirm-email";
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -105,7 +114,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer
                 }
                 else
                 {
-                    NavigationManager.NavigateTo("/");
+                    NavigationManager.NavigateTo(Home.PageUrl);
                 }
             }
             else

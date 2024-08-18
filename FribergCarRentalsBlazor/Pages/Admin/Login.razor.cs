@@ -11,6 +11,11 @@ namespace FribergCarRentalsBlazor.Pages.Admin
         #region Constants
 
         /// <summary>
+        /// The url for the page. 
+        /// </summary>
+        public const string PageUrl = "/admin/login";
+
+        /// <summary>
         /// The key where the component looks for redirect url targets after logging in. 
         /// </summary>
         public const string RedirectUrlStorageKey = "AdminLoginRedirectToPage";
