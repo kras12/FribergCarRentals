@@ -22,6 +22,15 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
         /// <returns>An <see cref="ApiResponseDto"/>.</returns>
         public Task<ApiResponseDto> DeleteCarCategoryAsync(int carCategoryId);
 
+
+        /// <summary>
+        /// Edits a car category. 
+        /// </summary>
+        /// <param name="categoryId">The ID of the category.</param>
+        /// <param name="category">The new data for the category.</param>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarCategoryDto"/> object if successful.</returns>
+        public Task<ApiValueResponseDto<CarCategoryDto>> EditCarCategoryAsync(int categoryId, EditCarCategoryDto category);
+
         /// <summary>
         /// Gets all car categories. 
         /// </summary>
@@ -33,12 +42,19 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
         /// </summary>
         /// <param name="categoryId">The ID of the car category.</param>
         /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarCategoryDto"/> object if successful.</returns>
-        public Task<ApiValueResponseDto<CarCategoryDto>> GetCarCategoryAsync(int categoryId);
+        public Task<ApiValueResponseDto<CarCategoryDto>> GetCarCategoryByIdAsync(int categoryId);
 
         /// <summary>
         /// Gets statistics for all car categories. 
         /// </summary>
         /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarCategoryStatisticsDto"/> object if successful.</returns>
         public Task<ApiValueResponseDto<List<CarCategoryStatisticsDto>>> GetCarCategoryStatisticsAsync();
+
+        /// <summary>
+        /// Gets statistics for a car category.
+        /// </summary>
+        /// <param name="categoryId">The ID of the car category.</param>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarCategoryStatisticsDto"/> object if successful.</returns>
+        public Task<ApiValueResponseDto<CarCategoryStatisticsDto>> GetCarCategoryStatisticsByIdAsync(int categoryId);
     }
 }

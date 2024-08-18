@@ -33,6 +33,11 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
         private const string CarCategoryStatisticsApiEndpoint = $"{ApiBaseAddress}/statistics";
 
         /// <summary>
+        /// The car category statistics by ID API endpoint address.
+        /// </summary>
+        private const string CarCategoryStatisticsByIdApiEndpoint = $"{ApiBaseAddress}/{IdPlaceHolder}/statistics";
+
+        /// <summary>
         /// The create car category API endpoint address.
         /// </summary>
         private const string CreateCarCategoryApiEndpoint = $"{ApiBaseAddress}";
@@ -41,6 +46,11 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
         /// The delete car category API endpoint address.
         /// </summary>
         private const string DeleteCarCategoryApiEndpoint = $"{ApiBaseAddress}/{IdPlaceHolder}";
+
+        /// <summary>
+        /// The edit car category API endpoint address.
+        /// </summary>
+        private const string EditCarCategoryApiEndpoint = $"{ApiBaseAddress}/{IdPlaceHolder}";
 
         #endregion
 
@@ -87,6 +97,20 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
         }
 
         /// <summary>
+        /// Edits a car category. 
+        /// </summary>
+        /// <param name="categoryId">The ID of the category.</param>
+        /// <param name="category">The new data for the category.</param>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarCategoryDto"/> object if successful.</returns>
+        public async Task<ApiValueResponseDto<CarCategoryDto>> EditCarCategoryAsync(int categoryId, EditCarCategoryDto category)
+        {
+            await SetAuthorizationHeaderAsync();
+            var response = await _httpClient.PutAsJsonAsync(EditCarCategoryApiEndpoint.Replace(IdPlaceHolder, categoryId.ToString()), category);
+            var result = await response.Content.ReadFromJsonAsync<ApiValueResponseDto<CarCategoryDto>>();
+            return EnsureNotNull(result, "Failed to serialize the API response.");
+        }
+
+        /// <summary>
         /// Gets all car categories. 
         /// </summary>
         /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarCategoryDto"/> object if successful.</returns>
@@ -102,7 +126,7 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
         /// </summary>
         /// <param name="categoryId">The ID of the car category.</param>
         /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarCategoryDto"/> object if successful.</returns>
-        public async Task<ApiValueResponseDto<CarCategoryDto>> GetCarCategoryAsync(int categoryId)
+        public async Task<ApiValueResponseDto<CarCategoryDto>> GetCarCategoryByIdAsync(int categoryId)
         {
             await SetAuthorizationHeaderAsync();
             var result = await _httpClient.GetFromJsonAsync<ApiValueResponseDto<CarCategoryDto>>(CarCategoryByIdApiEndpoint.Replace(IdPlaceHolder, categoryId.ToString()));
@@ -119,6 +143,18 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
             var result = await _httpClient.GetFromJsonAsync<ApiValueResponseDto<List<CarCategoryStatisticsDto>>>(CarCategoryStatisticsApiEndpoint);
             return EnsureNotNull(result, "Failed to serialize the API response.");
         }
+
+        /// <summary>
+        /// Gets statistics for a car category.
+        /// </summary>
+        /// <param name="categoryId">The ID of the car category.</param>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a <see cref="CarCategoryStatisticsDto"/> object if successful.</returns>
+        public async Task<ApiValueResponseDto<CarCategoryStatisticsDto>> GetCarCategoryStatisticsByIdAsync(int categoryId)
+        {
+            await SetAuthorizationHeaderAsync();
+            var result = await _httpClient.GetFromJsonAsync<ApiValueResponseDto<CarCategoryStatisticsDto>>(CarCategoryStatisticsByIdApiEndpoint.Replace(IdPlaceHolder, categoryId.ToString()));
+            return EnsureNotNull(result, "Failed to serialize the API response.");
+        }        
 
         #endregion
     }

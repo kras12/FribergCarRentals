@@ -2,9 +2,9 @@
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
+using FribergCarRentalsBlazor.Components.Admin;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
 {
@@ -15,10 +15,22 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
     {
         #region Constants
 
+        // TODO - Find a better solution for storing this ID, as this page does not have the primary responsibility for deleting a category. 
+        /// <summary>
+        /// The key for the ID of the car category that was created. 
+        /// </summary>
+        public const string CreatedCarCategoryIdStorageDataKey = "AdminCreatedCarCategoryId";
+
+        // TODO - Find a better solution for storing this ID, as this page does not have the primary responsibility for deleting a category. 
+        /// <summary>
+        /// The key for the ID of the car category that was deleted. 
+        /// </summary>
+        public const string DeletedCarCategoryIdStorageDataKey = "AdminDeletedCarCategoryId";
+
         /// <summary>
         /// The url for the page. 
         /// </summary>
-        public const string PageUrl = "/admin/car/categories/list";
+        public const string PageUrl = "/admin/car/category/list";        
 
         #endregion
 
@@ -50,37 +62,26 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         [Inject]
         private IAdminCarCategoryApiService AdminCarCategoryApiService { get; set; } = default!;
 
-        /// <summary>
-        /// The injected JavaScript runtime. 
-        /// </summary>
-        [Inject]
-        private IJSRuntime JSRuntime { get; set; } = default!;
-
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Deletes a car category
+        /// Event callback for a delete category operation.
         /// </summary>
-        /// <param name="category">The category to delete.</param>
+        /// <param name="result">The result of the operation</param>
         /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private async Task DeleteCategory(CarCategoryViewModel category)
+        private void OnDeleteCategory(DeleteCategoryEventCallbackArgs result)
         {
-            if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this category?"))
+            if (result.ApiResponse.Success)
             {
-                var result = await AdminCarCategoryApiService.DeleteCarCategoryAsync(category.CarCategoryId);
-
-                if (result.Success)
-                {
-                    _categories.Messages.Add(MessageViewModelHelper.CreateCarCategoryDeletionSuccessMessage(category.CarCategoryId));
-                    _categories.Models.Remove(category);
-                    StateHasChanged();
-                }
-                else
-                {
-                    _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
-                }
+                _categories.Messages.Add(MessageViewModelHelper.CreateCarCategoryDeletionSuccessMessage(result.CarCategory.CarCategoryId));
+                _categories.Models.Remove(result.CarCategory);
+                StateHasChanged();
+            }
+            else
+            {
+                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
             }
         }
 
@@ -94,6 +95,20 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
             if (result.Success)
             {
                 _categories = new ListViewModel<CarCategoryViewModel>(AutoMapper.Map<List<CarCategoryViewModel>>(result.Value!));
+
+                if (await SessionStorageService.ContainKeyAsync(CreatedCarCategoryIdStorageDataKey))
+                {
+                    var categoryId = await SessionStorageService.GetItemAsync<int>(CreatedCarCategoryIdStorageDataKey);
+                    await SessionStorageService.RemoveItemAsync(CreatedCarCategoryIdStorageDataKey);
+                    _categories.Messages.Add(MessageViewModelHelper.CreateCarCategoryCreationSuccessMessage(categoryId));
+                }                
+
+                if (await SessionStorageService.ContainKeyAsync(DeletedCarCategoryIdStorageDataKey))
+                {
+                    var categoryId = await SessionStorageService.GetItemAsync<int>(DeletedCarCategoryIdStorageDataKey);
+                    await SessionStorageService.RemoveItemAsync(DeletedCarCategoryIdStorageDataKey);
+                    _categories.Messages.Add(MessageViewModelHelper.CreateCarCategoryDeletionSuccessMessage(categoryId));
+                }
             }
             else
             {

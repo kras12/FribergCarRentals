@@ -3,6 +3,8 @@ using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.Dto.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Models.Dto.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Admin;
 using FribergCarRentals.Shared.Models.Dto.Admin;
 
@@ -31,7 +33,7 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 
         #region Methods
 
-		/// <summary>
+        /// <summary>
         /// Creates mappings for admins.
         /// </summary>
         public void CreateMappingsForAdmins()
@@ -40,11 +42,13 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
         }
 
         /// <summary>
-		/// Creates mappings for cars.
-		/// </summary>
+        /// Creates mappings for cars.
+        /// </summary>
         public void CreateMappingsForCars()
 		{
 			CreateMap<BookCarViewModel, CarRentalSearchDto>();
+			CreateMap<CreateCarCategoryViewModel, CreateCarCategoryDto>();
+            CreateMap<EditCarCategoryViewModel, EditCarCategoryDto>();
         }
 
         /// <summary>

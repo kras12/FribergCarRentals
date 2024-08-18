@@ -1,6 +1,7 @@
-﻿@page "/admin/car/categories/list"
+﻿@attribute [Route(PageUrl)]
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
 @inherits AdminPageComponentBase
 
 <AuthorizeView Policy="@ApplicationUserPolicies.Admin">
@@ -14,10 +15,9 @@
                     <p class="text-align-center">No categories found.</p>
                 }
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <a href="@("/admin/cars/categories/create/")" class="button function-button">Create Category</a>
+                    <a href="@Pages.Admin.Car.Category.Create.PageUrl" class="button function-button">Create Category</a>
                 </div>
-
-                <partial name="/Pages/Shared/_UserMessages.cshtml" for="CarCategoryListViewModel.Messages" />
+                <UserMessages Messages="_categories.Messages"></UserMessages>
                 @if (_categories.Count > 0)
                 {
                     <table class="slim-table colored-table">
@@ -52,12 +52,9 @@
                                     </td>
                                     <td>
                                         <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
-                                            <a href="@($"/admin/cars/categories/details/{item.CarCategoryId}")" class="button navigational-button">Details</a>
-                                            <a href="@($"/admin/cars/categories/edit/{item.CarCategoryId}")" class="button function-button">Edit</a>
-                                            @if (item.HaveCarCount && item.CarCount == 0)
-                                            {
-                                                <button class="negative-button" @onclick="@(() => DeleteCategory(item))">Delete</button>
-                                            }
+                                            <a href="@Pages.Admin.Car.Category.Details.GetPageUrl(item.CarCategoryId)" class="button navigational-button">Details</a>
+                                            <a href="@Pages.Admin.Car.Category.Edit.GetPageUrl(item.CarCategoryId)" class="button function-button">Edit</a>
+                                            <DeleteCarCategoryButton CarCategory="item" OnDeletedCategory="OnDeleteCategory"></DeleteCarCategoryButton>
                                         </div>
                                     </td>
                                 </tr>

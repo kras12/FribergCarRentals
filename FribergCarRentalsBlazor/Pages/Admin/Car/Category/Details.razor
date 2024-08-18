@@ -1,0 +1,53 @@
+﻿@attribute [Route(PageUrl)]
+@inherits AdminPageComponentBase
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (CarCategory != null)
+        {
+            <h1>Details</h1>
+            <h2>@($"#{CarCategory.CarCategoryId} - {CarCategory.CategoryName}")</h2>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem">
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Car.Category.List.PageUrl" class="button navigational-button">View Categories</a>
+                    <a href="@Pages.Admin.Car.Category.Edit.GetPageUrl(CarCategory.CarCategoryId)" class="button function-button">Edit</a>
+                    <DeleteCarCategoryButton CarCategory="CarCategory" OnDeletedCategory="@OnDeleteCategory"></DeleteCarCategoryButton>
+                </div>
+                <UserMessages Messages="CarCategory.Messages"></UserMessages>
+                <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+                    <dl>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => CarCategory.CarCategoryId)
+                        </dt>
+                        <dd>
+                            @CarCategory.CarCategoryId
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => CarCategory.CategoryName)
+                        </dt>
+                        <dd>
+                            @CarCategory.CategoryName
+                        </dd>
+                        @{
+                            if (CarCategory.HaveCarCount)
+                            {
+                                <dt>
+                                    @AttributeHelper.GetDisplayName(() => CarCategory.CarCount)
+                                </dt>
+                                <dd>
+                                    @CarCategory.CarCount
+                                </dd>
+                            }
+                        }
+                    </dl>
+                </div>
+            </div>
+        }        
+    </Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

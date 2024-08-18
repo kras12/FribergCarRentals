@@ -58,12 +58,16 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
         public void CreateMappingsForCars()
 		{
 			CreateMap<CarCategoryDto, CarCategoryViewModel>();
+            CreateMap<CarCategoryDto, EditCarCategoryViewModel>();
+            CreateMap<EditCarCategoryDto, CarCategoryViewModel>();
             CreateMap<CarCategoryStatisticsDto, CarCategoryViewModel>();
-			CreateMap<CarDto, CarViewModel>();
+            CreateMap<CarCategoryStatisticsDto, EditCarCategoryViewModel>();
+            CreateMap<CarDto, CarViewModel>();
 			CreateMap<VehiclePropulsionDto, VehiclePropulsionViewModel>();
 			CreateMap<CarRentalStatusDto, CarRentalStatusViewModel>();
 			CreateMap<CarImageDto, ImageViewModel>();
-		}		
+			CreateMap<CreateCarCategoryDto, CreateCarCategoryViewModel>();
+        }		
 
 		#endregion
 	}
