@@ -103,7 +103,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
 
                     if (TempDataHelper.TryGet(TempData, ResendConfirmEmailLinkModel.ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
                     {
-                        CustomerViewModel.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
+                        CustomerViewModel.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerSuccessMessage(resentConfirmEmailLinkCustomerId));
                     }
 
                     return Page();

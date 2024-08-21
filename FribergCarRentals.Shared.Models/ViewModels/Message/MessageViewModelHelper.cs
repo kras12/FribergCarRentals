@@ -149,7 +149,7 @@
         /// </summary>
         /// <param name="customerId">The ID of the customer that was created.</param>
         /// <returns>A <see cref="MessageViewModel"/>.</returns>
-        public static MessageViewModel CreateResentConfirmEmailLinkToCustomerMessage(int customerId)
+        public static MessageViewModel CreateResentConfirmEmailLinkToCustomerSuccessMessage(int customerId)
         {
             return new MessageViewModel(MessageType.Success, $"An email should have been sent to customer #{customerId}. But since this app does not currently have a real email sender registered, the email address was automatically confirmed. ", "Email Sent");
         }

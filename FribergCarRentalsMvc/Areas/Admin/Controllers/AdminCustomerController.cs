@@ -200,7 +200,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                     if (TempDataHelper.TryGet(TempData, ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
                     {
-                        viewModel.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
+                        viewModel.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerSuccessMessage(resentConfirmEmailLinkCustomerId));
                     }
 
                     return View(viewModel);
