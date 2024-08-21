@@ -56,7 +56,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         private IMapper AutoMapper { get; set; } = default!;
 
         /// <summary>
-        /// The view model used for car creation.
+        /// The view model for car categories.
         /// </summary>
         private CarCategoryViewModel? CarCategory { get; set; } = null;
 

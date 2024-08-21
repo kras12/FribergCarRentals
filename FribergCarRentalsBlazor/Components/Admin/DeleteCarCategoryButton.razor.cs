@@ -20,7 +20,7 @@ namespace FribergCarRentalsBlazor.Components.Admin
         private IAdminCarCategoryApiService AdminCarCategoryApiService { get; set; } = default!;
 
         /// <summary>
-        /// The view model used for car creation.
+        /// The car category to delete. 
         /// </summary>
         [Parameter]
         public CarCategoryViewModel CarCategory { get; set; } = new CarCategoryViewModel();
