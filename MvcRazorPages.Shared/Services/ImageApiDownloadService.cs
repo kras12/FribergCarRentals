@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Shared;
+﻿using FribergCarRentals.Shared.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.IO.Compression;
@@ -56,7 +56,7 @@ namespace MvcRazorPages.Shared.Services
                 throw new IOException($"The file '{imageFileName}' doesn't exists");
             }
 
-            return new FileContentResult(await File.ReadAllBytesAsync(filePath), GetImageContentType(GetImageType(imageFileName)))
+            return new FileContentResult(await File.ReadAllBytesAsync(filePath), ImageTypeHelper.GetMimeTypeFromImageFileName(imageFileName))
             {
                 FileDownloadName = imageFileName
             };
@@ -103,52 +103,6 @@ namespace MvcRazorPages.Shared.Services
             {
                 FileDownloadName = $"images-{DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss_fff")}-{new Random().Next(100_000, 1_000_000)}.zip"
             };
-        }
-
-        /// <summary>
-		/// Gets the extension for the image type.
-		/// </summary>
-		/// <param name="imageType">The image type.</param>
-		/// <returns>The image type as a <see cref="string"/>.</returns>
-		private string GetImageContentType(SupportedImageTypes imageType)
-        {
-            switch (imageType)
-            {
-                case SupportedImageTypes.Jpeg:
-                    return "application/jpg";
-
-                case SupportedImageTypes.Png:
-                    return "application/png";
-
-                case SupportedImageTypes.Webp:
-                    return "application/webp";
-
-                default:
-                    throw new NotSupportedException($"The image type is not supported: {imageType}");
-            }
-        }
-
-        /// <summary>
-        /// Gets the image type from a file name.
-        /// </summary>
-        /// <param name="fileName">The file name.</param>
-        /// <returns><see cref="ImageTypes"/>.</returns>
-        private SupportedImageTypes GetImageType(string fileName)
-        {
-            switch (Path.GetExtension(fileName.ToLower()))
-            {
-                case ".jpg":
-                    return SupportedImageTypes.Jpeg;
-
-                case ".png":
-                    return SupportedImageTypes.Png;
-
-                case ".webp":
-                    return SupportedImageTypes.Webp;
-
-                default:
-                    throw new NotSupportedException($"The file extension is not supported: {Path.GetExtension(fileName)}");
-            }
         }
 
         #endregion  
