@@ -19,11 +19,6 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
         #region Constants
 
         /// <summary>
-        /// The key for the ID of the customer that was created.
-        /// </summary>
-        public const string CreatedCustomerIdTempDataKey = "AdminCreatedCustomerId";
-
-        /// <summary>
         /// The page URL relative to the login page
         /// </summary>
         public const string PageUrlRelativeToLoginPage = "Customer/Details";
