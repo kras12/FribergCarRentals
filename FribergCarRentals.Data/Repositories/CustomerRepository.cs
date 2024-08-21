@@ -272,7 +272,7 @@ namespace FribergCarRentals.Data.Repositories
                 throw new ArgumentException("Customer ID must be larger than zero.", nameof(customerId));
             }
 
-            if (!string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
                 throw new ArgumentException("Password can't be null or empty.", nameof(password));
             }
