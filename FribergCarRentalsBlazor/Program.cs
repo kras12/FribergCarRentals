@@ -36,7 +36,8 @@ namespace FribergCarRentalsBlazor
 				client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
 			});
 
-            builder.Services.AddHttpClient<ICustomerOrderApiService, CustomerOrderApiService>(client =>
+			// Add API services with typed http clients
+			builder.Services.AddHttpClient<ICustomerOrderApiService, CustomerOrderApiService>(client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
             });
@@ -53,10 +54,16 @@ namespace FribergCarRentalsBlazor
                 client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
             });
 
-            // ==================================================================================================================
-            // Security (authentication, authorization)
-            // ==================================================================================================================
-            builder.Services.AddAuthorizationCore(options =>
+			// Add API services with typed http clients
+			builder.Services.AddHttpClient<IAdminCustomerApiService, AdminCustomerApiService>(client =>
+			{
+				client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
+			});
+
+			// ==================================================================================================================
+			// Security (authentication, authorization)
+			// ==================================================================================================================
+			builder.Services.AddAuthorizationCore(options =>
             {
 				options.AddPolicy(ApplicationUserPolicies.Admin, policy =>
 					policy.RequireClaim(ApplicationUserClaims.UserRole, ApplicationUserRoles.Admin));

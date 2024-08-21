@@ -68,7 +68,8 @@ namespace FribergCarRentalsApi.AutoMapper
                 .IncludeMembers(src => src.User);
 
             CreateMap<CustomerEntity, CustomerDto>()
-                .IncludeMembers(src => src.User);
+                .IncludeMembers(src => src.User)
+                .ForMember(dest => dest.OrderCount, opt => opt.MapFrom(src => src.Orders.Count));
 
             CreateMap<CustomerEntity, CreatedCustomerDto>()
                 .IncludeMembers(src => src.User);

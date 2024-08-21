@@ -17,7 +17,7 @@ namespace FribergCarRentals.Shared.Models.Dto.User
         [DataType(DataType.Password)]
         [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
         [DefaultValue("Aa1!123456789")]
-        public string? NewPassword { get; set; }
+        public string? Password { get; set; }
 
         #endregion
     }

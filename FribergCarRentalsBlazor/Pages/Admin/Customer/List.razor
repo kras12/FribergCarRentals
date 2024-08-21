@@ -1,0 +1,83 @@
+﻿@attribute [Route(PageUrl)]
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+@inherits AdminPageComponentBase
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (_customers != null)
+        {
+            <h1>Customers</h1>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-items-center">
+                @if (_customers.Count <= 0)
+                {
+                    <p class="text-align-center">No customers found.</p>
+                }
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Customer.Create.PageUrl" class="button function-button">Create Customer</a>
+                </div>
+                <UserMessages Messages="_customers.Messages"></UserMessages>
+                @if (_customers.Count > 0)
+                {
+                    <table class="slim-table colored-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _customers.Models[0].CustomerId)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _customers.Models[0].FirstName)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _customers.Models[0].LastName)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _customers.Models[0].Email)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _customers.Models[0].OrderCount)
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in _customers.Models)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.CustomerId
+                                    </td>
+                                    <td>
+                                        @item.FirstName
+                                    </td>
+                                    <td>
+                                        @item.LastName
+                                    </td>
+                                    <td>
+                                        @item.Email
+                                    </td>
+                                    <td>
+                                        @item.OrderCount
+                                    </td>
+                                    <td>
+                                        <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                            <a href="@Pages.Admin.Customer.Details.GetPageUrl(item.CustomerId)" class="button navigational-button">Details</a>
+                                            <a href="@Pages.Admin.Customer.Edit.GetPageUrl(item.CustomerId)" class="button function-button">Edit</a>
+                                            <DeleteCustomerButton Customer="item" OnDeletedCustomer="OnDeleteCustomer"></DeleteCustomerButton>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }        
+</Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

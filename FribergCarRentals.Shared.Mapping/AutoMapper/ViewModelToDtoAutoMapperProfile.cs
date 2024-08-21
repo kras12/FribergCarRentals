@@ -58,6 +58,7 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 		{
 			CreateMap<LoginCustomerViewModel, LoginCustomerDto>();
 			CreateMap<RegisterCustomerViewModel, CreateCustomerDto>();
+            CreateMap<EditCustomerViewModel, EditCustomerDto>();
 		}
 
         /// <summary>

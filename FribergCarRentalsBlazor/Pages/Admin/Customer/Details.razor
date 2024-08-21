@@ -1,0 +1,65 @@
+﻿@attribute [Route(PageUrl)]
+@inherits AdminPageComponentBase
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (Customer != null)
+        {
+            <h1>@($"Customer - #{Customer.CustomerId}")</h1>
+            <h2>@($"#{Customer.CustomerId} - {Customer.FullName}")</h2>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem">
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Customer.List.PageUrl" class="button navigational-button">View Customers</a>
+                    <a href="@Pages.Admin.Customer.Edit.GetPageUrl(Customer.CustomerId)" class="button function-button">Edit</a>
+                    @if (!Customer.IsEmailConfirmed)
+                    {
+                        <button class="button function-button" @onclick="ResendConfirmEmailLink">Resend Confirm Email Link</button>
+                    }
+                    <DeleteCustomerButton Customer="Customer" OnDeletedCustomer="@OnDeleteCustomer"></DeleteCustomerButton>
+                </div>
+                <UserMessages Messages="Customer.Messages"></UserMessages>
+                <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+                    <dl>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Customer.CustomerId)
+                        </dt>
+                        <dd>
+                            @Customer.CustomerId
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Customer.FirstName)
+                        </dt>
+                        <dd>
+                            @Customer.FirstName
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Customer.LastName)
+                        </dt>
+                        <dd>
+                            @Customer.LastName
+                        </dd>
+
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Customer.Email)
+                        </dt>
+                        <dd>
+                            @Customer.Email
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Customer.OrderCount)
+                        </dt>
+                        <dd>
+                            @Customer.OrderCount
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        }  
+    </Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

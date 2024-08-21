@@ -49,8 +49,11 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
 		public void CreateMappingsForCustomers()
 		{
 			CreateMap<CustomerDto, CustomerViewModel>();
-			CreateMap<CarOrderCustomerDto, CarOrderCustomerViewModel>();
-		}
+            CreateMap<CarOrderCustomerDto, CarOrderCustomerViewModel>();
+            
+			CreateMap<CustomerDto, EditCustomerViewModel>()
+				.ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.CustomerId));
+        }
 
         /// <summary>
         /// Creates mappings for cars.

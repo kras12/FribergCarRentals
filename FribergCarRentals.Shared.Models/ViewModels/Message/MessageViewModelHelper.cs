@@ -145,6 +145,16 @@
         }
 
         /// <summary>
+        /// Creates a resent confirm email link to customer failure message.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer that was created.</param>
+        /// <returns>A <see cref="MessageViewModel"/>.</returns>
+        public static MessageViewModel CreateResentConfirmEmailLinkToCustomerFailureMessage(int customerId)
+        {
+            return new MessageViewModel(MessageType.Success, $"Failed to send a confirm email link to customer #{customerId}.", "Error");
+        }
+
+        /// <summary>
         /// Creates a resent confirm email link to customer success message.
         /// </summary>
         /// <param name="customerId">The ID of the customer that was created.</param>

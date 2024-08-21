@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Shared.Models.Dto.Order;
-using FribergCarRentals.Shared.Models.Dto.User;
+﻿using FribergCarRentals.Shared.Models.Dto.User;
 
 namespace FribergCarRentals.Shared.Models.Dto.Customer
 {
@@ -16,9 +15,9 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
         public int CustomerId { get; set; }
 
         /// <summary>
-        /// A collection of orders for the customer. 
+        /// The number of orders the customer have.
         /// </summary>
-        public List<CarOrderDto> Orders { get; } = new();
+        public int OrderCount { get; set; }
 
         #endregion
     }
