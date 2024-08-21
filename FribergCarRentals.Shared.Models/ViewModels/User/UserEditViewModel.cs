@@ -39,14 +39,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.User
 
         #region Properties
 
-        /// <summary>
-        /// The password for the user.
-        /// </summary>
-        [DisplayName("New Password")]
-        [DataType(DataType.Password)]
-        [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
-        public string? NewPassword { get; set; }
-
         // TODO - Give better name?
         /// <summary>
         /// The ID for the admin/customer account.
@@ -54,6 +46,14 @@ namespace FribergCarRentals.Shared.Models.ViewModels.User
         [DisplayName("ID")]
         [Range(1, int.MaxValue, ErrorMessage = "The value must be a positive number larger than 1.")]
         public int AccountId { get; set; }
+
+        /// <summary>
+        /// The password for the user.
+        /// </summary>
+        [DisplayName("New Password")]
+        [DataType(DataType.Password)]
+        [StringLength(maximumLength: ValidationRules.PasswordLengthMaximum, MinimumLength = ValidationRules.PasswordLengthMinium, ErrorMessage = ValidationMessages.PasswordLengthValidationMessage)]
+        public string? Password { get; set; }
 
         #endregion
     }

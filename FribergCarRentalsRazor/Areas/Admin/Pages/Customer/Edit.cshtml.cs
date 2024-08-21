@@ -137,10 +137,10 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
                 _mapper.Map(EditCustomerViewModel, user);
                 await _userManager.UpdateAsync(user);
 
-                if (!string.IsNullOrEmpty(EditCustomerViewModel.NewPassword))
+                if (!string.IsNullOrEmpty(EditCustomerViewModel.Password))
                 {
                     await _userManager.RemovePasswordAsync(user);
-                    await _userManager.AddPasswordAsync(user, EditCustomerViewModel.NewPassword!);
+                    await _userManager.AddPasswordAsync(user, EditCustomerViewModel.Password!);
                 }
 
                 var customer = await _customerRepository.GetByUserIdAsync(user.Id) ?? throw new Exception($"Failed to find customer with ID: {EditCustomerViewModel.AccountId}");
