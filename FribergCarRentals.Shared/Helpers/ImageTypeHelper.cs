@@ -2,12 +2,27 @@
 namespace FribergCarRentals.Shared.Helpers
 {
     // TODO - Find a better way to manage supported image file types for the projects. 
+    // The types should be configured in appsettings.
 
     /// <summary>
     /// Helper class for managing image types.
     /// </summary>
     public static class ImageTypeHelper
     {
+        #region Fields
+
+        /// <summary>
+        ///  A collection of MIMEs for supported image types.
+        /// </summary>
+        private static List<string> _supportedImageTypeMimes = new List<string>()
+        {
+            "application/jpg",
+            "application/png",
+            "application/webp"
+        };
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -19,22 +34,15 @@ namespace FribergCarRentals.Shared.Helpers
         /// <exception cref="ArgumentException"></exception>
         public static string GetMimeTypeFromImageFileName(string fileName)
         {
-            var fileExtenstion = Path.GetExtension(fileName).ToLower();
+            var fileExtenstion = Path.GetExtension(fileName).Replace(".", "").ToLower();
+            string? result = _supportedImageTypeMimes.Find(x => x == $"application/{fileExtenstion}");
 
-            switch (fileExtenstion)
+            if (result == null)
             {
-                case ".jpg":
-                    return "application/jpg";
-
-                case ".png":
-                    return "application/png";
-
-                case ".webp":
-                    return "application/webp";
-
-                default:
-                    throw new NotSupportedException($"The file extension is not supported: {fileExtenstion}");
+                throw new NotSupportedException($"The file extension is not supported: {fileExtenstion}");
             }
+
+            return result;  
         }
 
         /// <summary>
@@ -44,15 +52,18 @@ namespace FribergCarRentals.Shared.Helpers
         /// <returns>True if the file is a supported image file.</returns>
         public static bool IsSupportedImageFile(string fileName)
         {
-            try
-            {
-                GetMimeTypeFromImageFileName(fileName);
-                return true;
-            }
-            catch (NotSupportedException)
-            {
-                return false;
-            }
+            var fileExtenstion = Path.GetExtension(fileName).Replace(".", "").ToLower();
+            return _supportedImageTypeMimes.Any(x => x == $"application/{fileExtenstion}");
+        }
+
+        /// <summary>
+        /// Returns true if the provided MIME data represnts a supported image file.
+        /// </summary>
+        /// <param name="mimeData">The MIME data to compare.</param>
+        /// <returns>True if the MIME data is supported.</returns>
+        public static bool IsSupportedImageMime(string mimeData)
+        {
+            return _supportedImageTypeMimes.Any(x => x == mimeData);
         }
 
         #endregion
