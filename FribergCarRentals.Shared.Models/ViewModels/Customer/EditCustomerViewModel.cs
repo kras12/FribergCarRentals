@@ -29,7 +29,11 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
         public EditCustomerViewModel(int userId, string firstName, string lastName, string email) :
             base(userId, firstName, lastName, email)
         {
-            PageSubTitle = $"#{AccountId} - {FullName}";
+            // TODO - Remove titles from view models?
+            if (AccountId > 0 && !string.IsNullOrEmpty(FullName))
+            {
+                PageSubTitle = $"#{AccountId} - {FullName}";
+            }            
         }
 
         #endregion
