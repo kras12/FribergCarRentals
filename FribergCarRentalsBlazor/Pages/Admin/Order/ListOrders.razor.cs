@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using FribergCarRentals.Shared.Models.ViewModels.Car;
-using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 using FribergCarRentalsBlazor.Components.Admin;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FribergCarRentalsBlazor.Pages.Admin.Order
 {
@@ -103,22 +102,27 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
         /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            var result = await AdminOrderApiService.GetOrdersAsync();
+            var authorizationResult = await AuthorizationService.AuthorizeAsync((await AuthenticationStateTask).User, ApplicationUserPolicies.Admin);
 
-            if (result.Success)
+            if (authorizationResult.Succeeded)
             {
-                _orders = new ListViewModel<OrderViewModel>(AutoMapper.Map<List<OrderViewModel>>(result.Value!));
+                var result = await AdminOrderApiService.GetOrdersAsync();
 
-                if (await SessionStorageService.ContainKeyAsync(DeleteOrderButton.DeletedOrderIdStorageDataKey))
+                if (result.Success)
                 {
-                    var orderId = await SessionStorageService.GetItemAsync<int>(DeleteOrderButton.DeletedOrderIdStorageDataKey);
-                    await SessionStorageService.RemoveItemAsync(DeleteOrderButton.DeletedOrderIdStorageDataKey);
-                    _orders.Messages.Add(MessageViewModelHelper.CreateOrderDeletionSuccessMessage(orderId));
+                    _orders = new ListViewModel<OrderViewModel>(AutoMapper.Map<List<OrderViewModel>>(result.Value!));
+
+                    if (await SessionStorageService.ContainKeyAsync(DeleteOrderButton.DeletedOrderIdStorageDataKey))
+                    {
+                        var orderId = await SessionStorageService.GetItemAsync<int>(DeleteOrderButton.DeletedOrderIdStorageDataKey);
+                        await SessionStorageService.RemoveItemAsync(DeleteOrderButton.DeletedOrderIdStorageDataKey);
+                        _orders.Messages.Add(MessageViewModelHelper.CreateOrderDeletionSuccessMessage(orderId));
+                    }
                 }
-            }
-            else
-            {
-                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+                else
+                {
+                    _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+                }
             }
         }        
 
