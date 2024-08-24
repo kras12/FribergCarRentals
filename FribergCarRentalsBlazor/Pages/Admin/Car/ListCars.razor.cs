@@ -61,6 +61,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
         /// </summary>
         [Inject]
         private IMapper AutoMapper { get; set; } = default!;
+
         #endregion
 
         #region Methods
@@ -107,7 +108,6 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
             {
                 _cars.Messages.Add(MessageViewModelHelper.CreateCarDeletionSuccessMessage(result.Car.CarId));
                 _cars.Models.Remove(result.Car);
-                StateHasChanged();
             }
             else
             {

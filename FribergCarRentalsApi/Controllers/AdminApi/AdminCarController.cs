@@ -336,7 +336,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         #region Methods
 
         /// <summary>
-		/// Sets the image urls for image view models.
+		/// Sets the image urls for image DTOs.
 		/// </summary>
 		/// <param name="images">A collection of image DTOs to process.</param>
 		private void SetImageUrls(List<CarImageDto> images)
