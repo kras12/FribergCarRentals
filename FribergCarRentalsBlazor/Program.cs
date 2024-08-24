@@ -86,7 +86,8 @@ namespace FribergCarRentalsBlazor
 			});
 
 			builder.Services.AddScoped<AuthenticationStateProvider, ApiUserAuthenticationStateProvider>();
-			builder.Services.AddTransient<ICustomerAuthenticationService, CustomerAuthenticationService>();
+            builder.Services.AddScoped<IApiUserAuthenticationStateProvider, ApiUserAuthenticationStateProvider>();
+            builder.Services.AddTransient<ICustomerAuthenticationService, CustomerAuthenticationService>();
             builder.Services.AddTransient<IAdminAuthenticationService, AdminAuthenticationService>();
 
 			// ==================================================================================================================

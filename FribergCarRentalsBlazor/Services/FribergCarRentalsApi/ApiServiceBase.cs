@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-using System.Text;
+﻿using System.Text;
 
 namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
 {
@@ -15,14 +14,14 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
         /// </summary>
         protected const string IdPlaceHolder = "{id}";
 
-		#endregion
+        #endregion
 
-		#region Fields
+        #region Fields
 
-		/// <summary>
-		/// The injected autenthication state provider.
-		/// </summary>
-		protected readonly AuthenticationStateProvider _authenticationStateProvider;
+        /// <summary>
+        /// The injected authentication state provider.
+        /// </summary>
+        protected readonly IApiUserAuthenticationStateProvider _authenticationStateProvider;
 
         /// <summary>
         /// The injected HTTP client.
@@ -37,8 +36,8 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
         /// Constructor.
         /// </summary>
         /// <param name="httpClient">The injected HTTP client.</param>
-		/// <param name="authenticationStateProvider">The injected autenthication state provider.</param>
-        protected ApiServiceBase(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider)
+		/// <param name="authenticationStateProvider">The injected authentication state provider.</param>
+        protected ApiServiceBase(HttpClient httpClient, IApiUserAuthenticationStateProvider authenticationStateProvider)
         {
             _httpClient = httpClient;
             _authenticationStateProvider = authenticationStateProvider;

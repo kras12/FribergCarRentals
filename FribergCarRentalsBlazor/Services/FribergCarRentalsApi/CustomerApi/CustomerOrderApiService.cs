@@ -52,7 +52,7 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
         /// </summary>
         /// <param name="httpClient">The injected HTTP client.</param>
         /// <param name="authenticationStateProvider">The injected autenthication state provider.</param>
-        public CustomerOrderApiService(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider) 
+        public CustomerOrderApiService(HttpClient httpClient, IApiUserAuthenticationStateProvider authenticationStateProvider) 
             : base(httpClient, authenticationStateProvider)
         {
 

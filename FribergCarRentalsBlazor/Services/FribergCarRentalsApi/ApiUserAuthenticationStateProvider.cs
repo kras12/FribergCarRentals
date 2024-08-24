@@ -9,7 +9,7 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi
     /// <summary>
     /// A service that provides information about the authentication state of the current user.
     /// </summary>
-    public class ApiUserAuthenticationStateProvider : AuthenticationStateProvider
+    public class ApiUserAuthenticationStateProvider : AuthenticationStateProvider, IApiUserAuthenticationStateProvider
     {
         #region Constants
 
