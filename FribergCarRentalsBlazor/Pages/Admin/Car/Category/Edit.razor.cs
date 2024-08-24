@@ -67,32 +67,11 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         /// The view model for editing the car category. 
         /// </summary>
         [FromForm]
-        private EditCarCategoryViewModel EditCarCategory { get; set; } = new EditCarCategoryViewModel();
+        private EditCarCategoryViewModel EditCarCategoryViewModel { get; set; } = new EditCarCategoryViewModel();
 
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Edits a car category
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private async Task EditCategory()
-        {
-            var result = await AdminCarCategoryApiService.EditCarCategoryAsync(EditCarCategory.CarCategoryId, AutoMapper.Map<EditCarCategoryDto>(EditCarCategory));
-
-            if (result.Success)
-            {
-                AutoMapper.Map(result.Value, _carCategory);
-                AutoMapper.Map(result.Value, EditCarCategory);
-                EditCarCategory.Messages.Add(MessageViewModelHelper.CreateCarCategoryUpdateSuccessMessage(EditCarCategory.CarCategoryId));
-                StateHasChanged();
-            }
-            else
-            {
-                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
-            }
-        }
 
         /// <summary>
         /// Gets the page URL for a category.
@@ -105,24 +84,6 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         }
 
         /// <summary>
-        /// Event callback for a delete category operation.
-        /// </summary>
-        /// <param name="result">The result of the operation</param>
-        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private async Task OnDeleteCategory(DeleteCategoryEventCallbackArgs result)
-        {
-            if (result.ApiResponse.Success)
-            {
-                await SessionStorageService.SetItemAsStringAsync(List.DeletedCarCategoryIdStorageDataKey, EditCarCategory.CarCategoryId.ToString());
-                NavigationManager.NavigateTo(List.PageUrl);
-            }
-            else
-            {
-                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
-            }
-        }
-
-        /// <summary>
         /// <inheritdoc/>
         /// </summary>
         protected override async Task OnInitializedAsync()
@@ -132,7 +93,46 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
             if (result.Success)
             {
                 _carCategory = AutoMapper.Map<CarCategoryViewModel>(result.Value!);
-                EditCarCategory = AutoMapper.Map<EditCarCategoryViewModel>(result.Value!);
+                EditCarCategoryViewModel = AutoMapper.Map<EditCarCategoryViewModel>(result.Value!);
+            }
+            else
+            {
+                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Event callback for a delete category operation.
+        /// </summary>
+        /// <param name="result">The result of the operation</param>
+        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
+        private async Task OnDeleteCategory(DeleteCategoryEventCallbackArgs result)
+        {
+            if (result.ApiResponse.Success)
+            {
+                await SessionStorageService.SetItemAsStringAsync(List.DeletedCarCategoryIdStorageDataKey, EditCarCategoryViewModel.CarCategoryId.ToString());
+                NavigationManager.NavigateTo(List.PageUrl);
+            }
+            else
+            {
+                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Event callback for the edit category form submission.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
+        private async Task OnEditCategory()
+        {
+            var result = await AdminCarCategoryApiService.EditCarCategoryAsync(EditCarCategoryViewModel.CarCategoryId, AutoMapper.Map<EditCarCategoryDto>(EditCarCategoryViewModel));
+
+            if (result.Success)
+            {
+                AutoMapper.Map(result.Value, _carCategory);
+                AutoMapper.Map(result.Value, EditCarCategoryViewModel);
+                EditCarCategoryViewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryUpdateSuccessMessage(EditCarCategoryViewModel.CarCategoryId));
+                StateHasChanged();
             }
             else
             {
@@ -141,7 +141,5 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         }
 
         #endregion
-
-
     }
 }

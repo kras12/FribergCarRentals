@@ -6,23 +6,23 @@
 <AuthorizeView Context="AuthorizeContext" Policy="@ApplicationUserPolicies.Admin">
 	<Authorized>
         <h1>Edit</h1>
-        @if (EditCarCategory.HavePageSubTitle)
+        @if (EditCarCategoryViewModel.HavePageSubTitle)
         {
-            <h2>@EditCarCategory.PageSubTitle</h2>
+            <h2>@EditCarCategoryViewModel.PageSubTitle</h2>
         }
         else
         {
-            <h2>@($"#{EditCarCategory.CarCategoryId} - {EditCarCategory.CategoryName}")</h2>
+            <h2>@($"#{EditCarCategoryViewModel.CarCategoryId} - {EditCarCategoryViewModel.CategoryName}")</h2>
         }
         <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
             <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
                 <a href="@Pages.Admin.Car.Category.List.PageUrl" class="button navigational-button">View Categories</a>
                 <DeleteCarCategoryButton CarCategory="_carCategory" OnDeletedCategory="OnDeleteCategory"></DeleteCarCategoryButton>
             </div>
-            <UserMessages Messages="EditCarCategory.Messages"></UserMessages>
+            <UserMessages Messages="EditCarCategoryViewModel.Messages"></UserMessages>
             <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem filled-container flex-container__padding__1-rem full-width">
                 <h2>Details</h2>
-                <EditForm Model="EditCarCategory" class="vertical-form full-width" OnValidSubmit="EditCategory">
+                <EditForm Model="EditCarCategoryViewModel" class="vertical-form full-width" OnValidSubmit="OnEditCategory">
                     <DataAnnotationsValidator></DataAnnotationsValidator>
                     @if (_apiValidationErrors.Count > 0)
                     {
@@ -30,8 +30,8 @@
                     }
                     <div class="vertical-form-field">
                         <label for="category-name">Category name</label>
-                        <InputText id="category-name" @bind-Value="EditCarCategory.CategoryName"></InputText>
-                        <ValidationMessage For="@(() => EditCarCategory.CategoryName)" class="error-text" />
+                        <InputText id="category-name" @bind-Value="EditCarCategoryViewModel.CategoryName"></InputText>
+                        <ValidationMessage For="@(() => EditCarCategoryViewModel.CategoryName)" class="error-text" />
                     </div>
                     <div class="vertical-form-field">
                         <button type="submit">Save</button>
