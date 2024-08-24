@@ -1,7 +1,6 @@
 ﻿using FribergCarRentals.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.Dto.Api;
 using MvcRazorPages.Shared.Services;
 
@@ -10,10 +9,24 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
     /// <summary>
     /// Handles file transfers for the admin API.
     /// </summary>
-    [Route("api/admin/file/")]
+    [Route(ApiControllerRoute)]
     [ApiController]
     public class AdminFileController : ApiControllerBase
     {
+        #region Constants
+
+        /// <summary>
+        /// The route for the API controller.
+        /// </summary>
+        private const string ApiControllerRoute = "admin-api/file";
+
+        /// <summary>
+        /// The relative route for the image file endpoint
+        /// </summary>
+        private const string ImageFileEndpointRelativeRoute = "image";
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -45,17 +58,12 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// </summary>
         /// <param name="fileName">The file name of the image to fetch.</param>
         /// <returns>An embedded <see cref="FileResult"/> object.</returns>
-        [HttpGet("image/{fileName}")]
+        [HttpGet(ImageFileEndpointRelativeRoute + "/{fileName}")]
         [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetImageFile(string fileName)
         {
-            if (!await IsAuthorized(ApplicationUserPolicies.Admin))
-            {
-                return Unauthorized(CreateUnauthorizedResponse());
-            }
-
             var fileResult = await _imageDownloadService.CreateImageFileDownloadResultAsync(fileName);
 
             if (fileResult != null)
@@ -66,6 +74,21 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             {
                 return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "The image doesn't exists"));
             }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Returns the url for fetching an image from this controller.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context.</param>
+        /// <param name="fileName">The filename of the image.</param>
+        /// <returns>The url of the image as a <see cref="string"/>.</returns>
+        public static string GetImageUrl(HttpContext httpContext, string fileName)
+        {
+            return $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/{ApiControllerRoute}/{ImageFileEndpointRelativeRoute}/{fileName}";
         }
 
         #endregion

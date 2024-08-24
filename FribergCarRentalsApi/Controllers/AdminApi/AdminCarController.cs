@@ -341,7 +341,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
 		/// <param name="images">A collection of image DTOs to process.</param>
 		private void SetImageUrls(List<CarImageDto> images)
         {
-            images.ForEach(x => x.Url = CustomerFileController.GetImageUrl(HttpContext, x.FileName));
+            images.ForEach(x => x.Url = AdminFileController.GetImageUrl(HttpContext, x.FileName));
         }
 
         #endregion
