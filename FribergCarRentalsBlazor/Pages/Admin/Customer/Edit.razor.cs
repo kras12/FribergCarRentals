@@ -83,10 +83,9 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 
             if (result.Success)
             {
-                AutoMapper.Map(result.Value, _customer);
-                AutoMapper.Map(result.Value, EditCustomerViewModel);
+                _customer = AutoMapper.Map<CustomerViewModel>(result.Value);
+                EditCustomerViewModel = AutoMapper.Map<EditCustomerViewModel>(result.Value);
                 EditCustomerViewModel.Messages.Add(MessageViewModelHelper.CreateCustomerUpdateSuccessMessage(EditCustomerViewModel.AccountId));
-                StateHasChanged();
             }
             else
             {

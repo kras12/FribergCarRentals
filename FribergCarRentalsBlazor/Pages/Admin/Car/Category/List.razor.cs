@@ -77,7 +77,6 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
             {
                 _categories.Messages.Add(MessageViewModelHelper.CreateCarCategoryDeletionSuccessMessage(result.CarCategory.CarCategoryId));
                 _categories.Models.Remove(result.CarCategory);
-                StateHasChanged();
             }
             else
             {

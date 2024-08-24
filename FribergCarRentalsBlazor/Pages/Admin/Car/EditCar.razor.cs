@@ -210,11 +210,8 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
             _car = AutoMapper.Map<CarViewModel>(fetchCarResult.Value);
             EditCarViewModel = AutoMapper.Map<EditCarViewModel>(fetchCarResult.Value);
             EditCarViewModel.Categories = categories;
-
             EditCarViewModel.Messages.Clear();
             EditCarViewModel.Messages.Add(MessageViewModelHelper.CreateCarUpdateSuccessMessage(EditCarViewModel.CarId));
-
-            StateHasChanged();
         }
 
         /// <summary>

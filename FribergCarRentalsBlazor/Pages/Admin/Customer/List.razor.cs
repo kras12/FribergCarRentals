@@ -77,7 +77,6 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
             {
                 _customers.Messages.Add(MessageViewModelHelper.CreateCustomerDeletionSuccessMessage(result.Customer.CustomerId));
                 _customers.Models.Remove(result.Customer);
-                StateHasChanged();
             }
             else
             {

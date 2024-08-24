@@ -75,7 +75,6 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
                 {
                     AutoMapper.Map(result.Value!, order);
                     _orders.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(order.CarOrderId));
-                    StateHasChanged();
                 }
                 else
                 {

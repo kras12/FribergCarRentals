@@ -129,10 +129,9 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
 
             if (result.Success)
             {
-                AutoMapper.Map(result.Value, _carCategory);
-                AutoMapper.Map(result.Value, EditCarCategoryViewModel);
+                _carCategory = AutoMapper.Map<CarCategoryViewModel>(result.Value);
+                EditCarCategoryViewModel = AutoMapper.Map<EditCarCategoryViewModel>(result.Value);
                 EditCarCategoryViewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryUpdateSuccessMessage(EditCarCategoryViewModel.CarCategoryId));
-                StateHasChanged();
             }
             else
             {
