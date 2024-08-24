@@ -76,11 +76,11 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         [DisplayName("Category")]
         public int? SelectedCategoryId { get; set; }
 
-		/// <summary>
-		/// The images to upload
-		/// </summary>
-		[DisplayName("Upload Images")]
-		public List<TUploadedImage>? UploadImages { get; set; } = null;
+        /// <summary>
+        /// The images to upload
+        /// </summary>
+        [DisplayName("Upload Images")]
+        public List<TUploadedImage> UploadImages { get; set; } = new();
 
 		#endregion
 	}

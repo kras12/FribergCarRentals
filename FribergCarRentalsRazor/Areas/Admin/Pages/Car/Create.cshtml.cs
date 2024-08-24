@@ -121,7 +121,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                 var selectedCategory = await _carCategoryRepository.GetByIdAsync(CreateCarViewModel.SelectedCategoryId!.Value);
                 car.Category = selectedCategory;
 
-                if (CreateCarViewModel.UploadImages is not null && CreateCarViewModel.UploadImages.Count > 0)
+                if (CreateCarViewModel.UploadImages.Count > 0)
                 {
                     var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(CreateCarViewModel.UploadImages);
 
