@@ -284,13 +284,13 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 car.Category = await _carCategoryRepository.GetByIdAsync(editCarViewModel.SelectedCategoryId);
                 car.Images.AddRange(carImages);
 
-                if (editCarViewModel.UploadImages is not null && editCarViewModel.UploadImages.Count > 0)
+                if editCarViewModel.UploadImages.Count > 0)
                 {
                     var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(editCarViewModel.UploadImages!);
                     car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
 
-                if (editCarViewModel.DeleteImages is not null && editCarViewModel.DeleteImages.Count > 0)
+                if (editCarViewModel.DeleteImages.Count > 0)
                 {
                     var imagesToDelete = car.Images.IntersectBy(editCarViewModel.DeleteImages, x => x.ImageId).ToList();
 

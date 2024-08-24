@@ -72,7 +72,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// The images to delete.
         /// </summary>
         [DisplayName("Delete Images")]
-        public List<int>? DeleteImages { get; set; } = new();
+        public List<int> DeleteImages { get; set; } = new();
 
         /// <summary>
         /// A collection of images for the car.

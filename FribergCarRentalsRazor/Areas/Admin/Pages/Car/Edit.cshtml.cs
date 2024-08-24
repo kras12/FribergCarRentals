@@ -165,7 +165,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                     car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
 
-                if (EditCarViewModel.DeleteImages is not null && EditCarViewModel.DeleteImages.Count > 0)
+                if (EditCarViewModel.DeleteImages.Count > 0)
                 {
                     var imagesToDelete = car.Images.IntersectBy(EditCarViewModel.DeleteImages, x => x.ImageId).ToList();
 
