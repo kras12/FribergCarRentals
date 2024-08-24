@@ -12,8 +12,8 @@
             <h2>@($"#{CarCategory.CarCategoryId} - {CarCategory.CategoryName}")</h2>
             <div class="vertical-flex-container flex-container__row-gap__1-rem">
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <a href="@Pages.Admin.Car.Category.List.PageUrl" class="button navigational-button">View Categories</a>
-                    <a href="@Pages.Admin.Car.Category.Edit.GetPageUrl(CarCategory.CarCategoryId)" class="button function-button">Edit</a>
+                    <a href="@Pages.Admin.Car.Category.ListCategories.PageUrl" class="button navigational-button">View Categories</a>
+                    <a href="@Pages.Admin.Car.Category.EditCategory.GetPageUrl(CarCategory.CarCategoryId)" class="button function-button">Edit</a>
                     <DeleteCarCategoryButton CarCategory="CarCategory" OnDeletedCategory="@OnDeleteCategory"></DeleteCarCategoryButton>
                 </div>
                 <UserMessages Messages="CarCategory.Messages"></UserMessages>

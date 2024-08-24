@@ -10,7 +10,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
     /// <summary>
     /// The page component class for showing car category details.
     /// </summary>
-    public partial class Details : AdminPageComponentBase
+    public partial class CategoryDetails : AdminPageComponentBase
     {
         #region Constants
 
@@ -73,8 +73,8 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         {
             if (result.ApiResponse.Success)
             {
-                await SessionStorageService.SetItemAsStringAsync(List.DeletedCarCategoryIdStorageDataKey, CarCategory.CarCategoryId.ToString());
-                NavigationManager.NavigateTo(List.PageUrl); 
+                await SessionStorageService.SetItemAsStringAsync(ListCategories.DeletedCarCategoryIdStorageDataKey, CarCategory.CarCategoryId.ToString());
+                NavigationManager.NavigateTo(ListCategories.PageUrl); 
             }
             else
             {

@@ -11,7 +11,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 	/// <summary>
 	/// The page component class for creating customers.
 	/// </summary>
-	public partial class Create : AdminPageComponentBase
+	public partial class CreateCustomer : AdminPageComponentBase
 	{
         #region Constants
 
@@ -64,14 +64,14 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 		/// Creates a customer
 		/// </summary>
 		/// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-		private async Task CreateCustomer()
+		private async Task OnCreateCustomer()
 		{
 			var result = await AdminCustomerApiService.CreateCustomerAsync(AutoMapper.Map<CreateCustomerDto>(CreateCustomerViewModel));
 
 			if (result.Success)
 			{
-				await SessionStorageService.SetItemAsStringAsync(List.CreatedCustomerIdStorageDataKey, result.Value!.CustomerId.ToString());
-				NavigationManager.NavigateTo(List.PageUrl);
+				await SessionStorageService.SetItemAsStringAsync(ListCustomers.CreatedCustomerIdStorageDataKey, result.Value!.CustomerId.ToString());
+				NavigationManager.NavigateTo(ListCustomers.PageUrl);
 			}
 			else
 			{

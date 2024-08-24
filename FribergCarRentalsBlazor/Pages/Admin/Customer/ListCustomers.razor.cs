@@ -11,7 +11,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
     /// <summary>
     /// The page component class for listing customers.
     /// </summary>
-    public partial class List : AdminPageComponentBase
+    public partial class ListCustomers : AdminPageComponentBase
     {
         #region Constants
 

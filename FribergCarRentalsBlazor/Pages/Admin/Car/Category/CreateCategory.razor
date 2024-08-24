@@ -8,10 +8,10 @@
         <h1>Create Car Category</h1>
         <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
             <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                <a href="@List.PageUrl" class="button navigational-button">View Categories</a>
+                <a href="@ListCategories.PageUrl" class="button navigational-button">View Categories</a>
             </div>
             <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
-                <EditForm Context="EditForm" Model="CreateCarCategoryViewModel" class="vertical-form" OnValidSubmit="CreateCategory">
+                <EditForm Context="EditForm" Model="CreateCarCategoryViewModel" class="vertical-form" OnValidSubmit="OnCreateCategory">
                     <DataAnnotationsValidator></DataAnnotationsValidator>
                     @if (_apiValidationErrors.Count > 0)
                     {

@@ -11,7 +11,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
     /// <summary>
     /// The page component class for showing customer details.
     /// </summary>
-    public partial class Details : AdminPageComponentBase
+    public partial class CustomerDetails : AdminPageComponentBase
     {
         #region Constants
 
@@ -80,8 +80,8 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         {
             if (result.ApiResponse.Success)
             {
-                await SessionStorageService.SetItemAsStringAsync(List.DeletedCustomerIdStorageDataKey, Customer!.CustomerId.ToString());
-                NavigationManager.NavigateTo(List.PageUrl);
+                await SessionStorageService.SetItemAsStringAsync(ListCustomers.DeletedCustomerIdStorageDataKey, Customer!.CustomerId.ToString());
+                NavigationManager.NavigateTo(ListCustomers.PageUrl);
             }
             else
             {
@@ -110,9 +110,9 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
             {
                 Customer = AutoMapper.Map<CustomerViewModel>(result.Value!);
 
-                if (await SessionStorageService.ContainKeyAsync(Create.CreatedCustomerIdTempDataKey))
+                if (await SessionStorageService.ContainKeyAsync(CreateCustomer.CreatedCustomerIdTempDataKey))
                 {
-                    int? createdCustomerId = await SessionStorageService.GetItemAsync<int>(Create.CreatedCustomerIdTempDataKey);
+                    int? createdCustomerId = await SessionStorageService.GetItemAsync<int>(CreateCustomer.CreatedCustomerIdTempDataKey);
                     Customer.Messages.Add(MessageViewModelHelper.CreateCustomerCreationSuccessMessage(createdCustomerId.Value));
                 }
             }

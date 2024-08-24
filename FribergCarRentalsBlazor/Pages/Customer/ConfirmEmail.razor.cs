@@ -114,7 +114,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer
                 }
                 else
                 {
-                    NavigationManager.NavigateTo(Home.PageUrl);
+                    NavigationManager.NavigateTo(CustomerHome.PageUrl);
                 }
             }
             else

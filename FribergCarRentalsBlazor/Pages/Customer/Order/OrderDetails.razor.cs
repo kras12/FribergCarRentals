@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
-using FribergCarRentals.Shared.Models.ViewModels.Other;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -9,16 +8,21 @@ using Microsoft.JSInterop;
 namespace FribergCarRentalsBlazor.Pages.Customer.Order
 {
     /// <summary>
-    /// The page component class for listing customer orders.
+    /// Page component for showing order details. 
     /// </summary>
-    public partial class List : CustomerPageComponentBase
+    public partial class OrderDetails : CustomerPageComponentBase
     {
         #region Constants
 
         /// <summary>
+        /// The base URL for the page without the order ID.
+        /// </summary>
+        public const string PageUrlBase = "/customer/order/details";
+
+        /// <summary>
         /// The url for the page. 
         /// </summary>
-        public const string PageUrl = "/customer/order/list";
+        public const string PageUrl = PageUrlBase + "/{OrderId:int}";
 
         #endregion
 
@@ -30,9 +34,9 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         private List<MessageViewModel> _apiValidationErrors = new();
 
         /// <summary>
-        /// The orders to list on the page. 
+        /// The model for the car order.
         /// </summary>
-        private ListViewModel<OrderViewModel> _orders = default!;
+        private OrderViewModel _order = default!;
 
         #endregion
 
@@ -48,7 +52,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// The injected customer order API service.
         /// </summary>
         [Inject]
-        private ICustomerOrderApiService CustomerOrderApiService { get; set; } = default!;
+        private ICustomerOrderApiService CustomerOrderApiService { get; set; } = default!;        
 
         /// <summary>
         /// The injected JavaScript runtime. 
@@ -56,25 +60,30 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = default!;
 
+        /// <summary>
+        /// The order ID to show details for.
+        /// </summary>
+        [Parameter]
+        public int OrderId { get; set; }
+
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Cancels an order.
+        /// Cancels the order.
         /// </summary>
-        /// <param name="order">The order to cancel.</param>
         /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private async Task CancelOrder(OrderViewModel order)
+        private async Task CancelOrder()
         {
             if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to cancel this order?"))
             {
-                var result = await CustomerOrderApiService.CancelOrderAsync(order.CarOrderId);
+                var result = await CustomerOrderApiService.CancelOrderAsync(_order.CarOrderId);
 
                 if (result.Success)
                 {
-                    AutoMapper.Map(result.Value!, order);
-                    _orders.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(order.CarOrderId));
+                    _order = AutoMapper.Map<OrderViewModel>(result.Value!);
+                    _order.Messages.Add(MessageViewModelHelper.CreateOrderCancellationSuccessMessage(_order.CarOrderId));
                 }
                 else
                 {
@@ -84,20 +93,42 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         }
 
         /// <summary>
+        /// Gets the page URL for an order.
+        /// </summary>
+        /// <param name="orderId">The ID of the order.</param>
+        /// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+        public static string GetPageUrl(int orderId)
+        {
+            return $"{PageUrlBase}/{orderId}";
+        }
+
+        /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        protected override async Task OnInitializedAsync()
+        protected async override Task OnInitializedAsync()
         {
-            var result = await CustomerOrderApiService.GetOrdersAsync();
+            await base.OnInitializedAsync();
+
+            if (OrderId < 0)
+            {
+                throw new Exception($"Invalid ID: {OrderId}");
+            }
+
+            var result = await CustomerOrderApiService.GetOrderAsync(OrderId);
 
             if (result.Success)
             {
-                _orders = new ListViewModel<OrderViewModel>(AutoMapper.Map<List<OrderViewModel>>(result.Value!));
+                _order = AutoMapper.Map<OrderViewModel>(result.Value!);
+                
+                if (await SessionStorageService.ContainKeyAsync(ConfirmOrder.IsNewOrderTempDataKey))
+                {
+                    _order.IsNewOrder = await SessionStorageService.GetItemAsync<bool>(ConfirmOrder.IsNewOrderTempDataKey);
+                }
             }
             else
             {
                 _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
-            }
+            }            
         }
 
         #endregion

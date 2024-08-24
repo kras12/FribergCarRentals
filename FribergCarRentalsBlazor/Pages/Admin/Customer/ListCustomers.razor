@@ -15,7 +15,7 @@
                     <p class="text-align-center">No customers found.</p>
                 }
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <a href="@Pages.Admin.Customer.Create.PageUrl" class="button function-button">Create Customer</a>
+                    <a href="@Pages.Admin.Customer.CreateCustomer.PageUrl" class="button function-button">Create Customer</a>
                 </div>
                 <UserMessages Messages="_customers.Messages"></UserMessages>
                 @if (_customers.Count > 0)
@@ -64,8 +64,8 @@
                                     </td>
                                     <td>
                                         <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
-                                            <a href="@Pages.Admin.Customer.Details.GetPageUrl(item.CustomerId)" class="button navigational-button">Details</a>
-                                            <a href="@Pages.Admin.Customer.Edit.GetPageUrl(item.CustomerId)" class="button function-button">Edit</a>
+                                            <a href="@Pages.Admin.Customer.CustomerDetails.GetPageUrl(item.CustomerId)" class="button navigational-button">Details</a>
+                                            <a href="@Pages.Admin.Customer.EditCustomer.GetPageUrl(item.CustomerId)" class="button function-button">Edit</a>
                                             <DeleteCustomerButton Customer="item" OnDeletedCustomer="OnDeleteCustomer"></DeleteCustomerButton>
                                         </div>
                                     </td>

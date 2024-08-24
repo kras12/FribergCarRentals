@@ -81,7 +81,7 @@ namespace FribergCarRentalsBlazor.Components
         private async Task OnLogoutButtonClicked()
         {
             await CustomerAuthenticationService.Logout();
-            NavigationManager.NavigateTo(Pages.Home.PageUrl);
+            NavigationManager.NavigateTo(Pages.CustomerHome.PageUrl);
         }        
 
         #endregion

@@ -13,7 +13,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
     /// <summary>
     /// The page component class for searching rentable cars to book. 
     /// </summary>
-    public partial class Book : CustomerPageComponentBase
+    public partial class BookCar : CustomerPageComponentBase
     {
         #region Constants
 
@@ -92,11 +92,11 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
 
             if (await IsCustomerLoggedIn())
             {
-                NavigationManager.NavigateTo(Confirm.PageUrl);
+                NavigationManager.NavigateTo(ConfirmOrder.PageUrl);
             }
             else
             {
-                await RedirectToLogin(Confirm.PageUrl);
+                await RedirectToLogin(ConfirmOrder.PageUrl);
             }
         }
 

@@ -7,7 +7,7 @@ namespace FribergCarRentalsBlazor.Pages
     /// <summary>
     /// Component for the home page.
     /// </summary>
-    public partial class Home : ComponentBase
+    public partial class CustomerHome : ComponentBase
     {
         #region Constants
 

@@ -11,7 +11,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
     /// <summary>
     /// The page component class for listing car categories.
     /// </summary>
-    public partial class List : AdminPageComponentBase
+    public partial class ListCategories : AdminPageComponentBase
     {
         #region Constants
 

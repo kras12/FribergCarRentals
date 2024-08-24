@@ -6,7 +6,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin
     /// <summary>
     /// A page component for admin login.
     /// </summary>
-    public partial class Login : ComponentBase
+    public partial class AdminLogin : ComponentBase
     {
         #region Constants
 

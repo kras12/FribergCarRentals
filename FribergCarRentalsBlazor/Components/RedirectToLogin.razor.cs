@@ -43,10 +43,10 @@ namespace FribergCarRentalsBlazor.Components
             {
                 if (!string.IsNullOrEmpty(ReturnToUrl))
                 {
-                    await SessionStorageService.SetItemAsStringAsync(Pages.Admin.Login.RedirectUrlStorageKey, ReturnToUrl);
+                    await SessionStorageService.SetItemAsStringAsync(Pages.Admin.AdminLogin.RedirectUrlStorageKey, ReturnToUrl);
                 }
 
-                NavigationManager.NavigateTo(Pages.Admin.Login.PageUrl);
+                NavigationManager.NavigateTo(Pages.Admin.AdminLogin.PageUrl);
             }
             else if (NavigationManager.Uri.Contains("/customer"))
             {
@@ -59,7 +59,7 @@ namespace FribergCarRentalsBlazor.Components
             }
             else
             {
-                NavigationManager.NavigateTo(Pages.Home.PageUrl);
+                NavigationManager.NavigateTo(Pages.CustomerHome.PageUrl);
             }
         }
 

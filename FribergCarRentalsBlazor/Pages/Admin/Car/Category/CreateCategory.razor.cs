@@ -11,7 +11,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
     /// <summary>
     /// The page component class for creating car categories.
     /// </summary>
-    public partial class Create : AdminPageComponentBase
+    public partial class CreateCategory : AdminPageComponentBase
     {
         #region Constants
 
@@ -59,14 +59,14 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         /// Creates a car category
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private async Task CreateCategory()
+        private async Task OnCreateCategory()
         {
             var result = await AdminCarCategoryApiService.CreateCarCategoryAsync(AutoMapper.Map<CreateCarCategoryDto>(CreateCarCategoryViewModel));
 
             if (result.Success)
             {
-                await SessionStorageService.SetItemAsStringAsync(List.CreatedCarCategoryIdStorageDataKey, result.Value!.CarCategoryId.ToString());
-                NavigationManager.NavigateTo(List.PageUrl);
+                await SessionStorageService.SetItemAsStringAsync(ListCategories.CreatedCarCategoryIdStorageDataKey, result.Value!.CarCategoryId.ToString());
+                NavigationManager.NavigateTo(ListCategories.PageUrl);
             }
             else
             {

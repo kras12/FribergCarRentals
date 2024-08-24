@@ -12,7 +12,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
     /// <summary>
     /// The page component class for editing a customer.
     /// </summary>
-    public partial class Edit : AdminPageComponentBase
+    public partial class EditCustomer : AdminPageComponentBase
     {
         #region Constants
 
@@ -77,7 +77,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         /// Edits a customer.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private async Task EditCustomer()
+        private async Task OnEditCustomer()
         {
             var result = await AdminCustomerApiService.EditCustomerAsync(EditCustomerViewModel.AccountId, AutoMapper.Map<EditCustomerDto>(EditCustomerViewModel));
 
@@ -112,8 +112,8 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         {
             if (result.ApiResponse.Success)
             {
-                await SessionStorageService.SetItemAsStringAsync(List.DeletedCustomerIdStorageDataKey, EditCustomerViewModel.AccountId.ToString());
-                NavigationManager.NavigateTo(List.PageUrl);
+                await SessionStorageService.SetItemAsStringAsync(ListCustomers.DeletedCustomerIdStorageDataKey, EditCustomerViewModel.AccountId.ToString());
+                NavigationManager.NavigateTo(ListCustomers.PageUrl);
             }
             else
             {

@@ -12,7 +12,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
     /// <summary>
     /// The page component class for editing a car category.
     /// </summary>
-    public partial class Edit : AdminPageComponentBase
+    public partial class EditCategory : AdminPageComponentBase
     {
         #region Constants
 
@@ -110,8 +110,8 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         {
             if (result.ApiResponse.Success)
             {
-                await SessionStorageService.SetItemAsStringAsync(List.DeletedCarCategoryIdStorageDataKey, EditCarCategoryViewModel.CarCategoryId.ToString());
-                NavigationManager.NavigateTo(List.PageUrl);
+                await SessionStorageService.SetItemAsStringAsync(ListCategories.DeletedCarCategoryIdStorageDataKey, EditCarCategoryViewModel.CarCategoryId.ToString());
+                NavigationManager.NavigateTo(ListCategories.PageUrl);
             }
             else
             {

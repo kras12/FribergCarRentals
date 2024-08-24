@@ -10,7 +10,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
     /// <summary>
     /// The page component for confirming a car order.
     /// </summary>
-    public partial class Confirm : CustomerPageComponentBase
+    public partial class ConfirmOrder : CustomerPageComponentBase
     {
         #region Constants
 
@@ -66,16 +66,16 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                await RedirectToLogin(Book.PageUrl);
+                await RedirectToLogin(BookCar.PageUrl);
             }
 
             var result = await CustomerOrderApiService.CreateOrderAsync(AutoMapper.Map<CreateCarOrderDto>(_createOrderViewModel));
             
             if (result.Success)
             {
-                await SessionStorageService.RemoveItemAsync(Book.PendingOrderTempDataKey);
+                await SessionStorageService.RemoveItemAsync(BookCar.PendingOrderTempDataKey);
                 await SessionStorageService.SetItemAsync(IsNewOrderTempDataKey, true);
-                NavigationManager.NavigateTo(Details.GetPageUrl(result.Value!.CarOrderId));
+                NavigationManager.NavigateTo(OrderDetails.GetPageUrl(result.Value!.CarOrderId));
             }
             else
             {
@@ -93,10 +93,10 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
 
             if (!await IsCustomerLoggedIn())
             {
-                await RedirectToLogin(Book.PageUrl);
+                await RedirectToLogin(BookCar.PageUrl);
             }
 
-            _createOrderViewModel = await SessionStorageService.GetItemAsync<CreateOrderViewModel>(Book.PendingOrderTempDataKey);
+            _createOrderViewModel = await SessionStorageService.GetItemAsync<CreateOrderViewModel>(BookCar.PendingOrderTempDataKey);
 
             if (_createOrderViewModel == null)
             {
