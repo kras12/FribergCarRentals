@@ -39,17 +39,22 @@ namespace FribergCarRentalsBlazor.Components
         /// </summary>
         protected async override Task OnInitializedAsync()
         {
-            if (!string.IsNullOrEmpty(ReturnToUrl))
-            {
-                await SessionStorageService.SetItemAsStringAsync(Authenticate.RedirectUrlStorageKey, ReturnToUrl);
-            }
-
             if (NavigationManager.Uri.Contains("/admin"))
             {
+                if (!string.IsNullOrEmpty(ReturnToUrl))
+                {
+                    await SessionStorageService.SetItemAsStringAsync(Pages.Admin.Login.RedirectUrlStorageKey, ReturnToUrl);
+                }
+
                 NavigationManager.NavigateTo(Pages.Admin.Login.PageUrl);
             }
             else if (NavigationManager.Uri.Contains("/customer"))
             {
+                if (!string.IsNullOrEmpty(ReturnToUrl))
+                {
+                    await SessionStorageService.SetItemAsStringAsync(Authenticate.RedirectUrlStorageKey, ReturnToUrl);
+                }
+
                 NavigationManager.NavigateTo(Pages.Customer.Authenticate.PageUrl);
             }
             else
