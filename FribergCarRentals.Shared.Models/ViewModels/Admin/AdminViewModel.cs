@@ -14,7 +14,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Admin
         /// The ID for the Admin.
         /// </summary>
         [DisplayName("Admin ID")]
-        public int AdminId { get; }
+        public int AdminId { get; set; }
 
         #endregion
     }

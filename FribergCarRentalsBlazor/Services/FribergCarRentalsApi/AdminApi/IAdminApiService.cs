@@ -2,7 +2,7 @@
 using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.User;
 
-namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
+namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
 {
     /// <summary>
     /// An interface for a service for managing admin data for Friberg Car Rentals Admin API endpoints.

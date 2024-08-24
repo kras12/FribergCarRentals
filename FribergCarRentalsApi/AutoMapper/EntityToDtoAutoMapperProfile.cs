@@ -34,9 +34,14 @@ namespace FribergCarRentalsApi.AutoMapper
 
         #region Methods
 
+        /// <summary>
+        /// Creates mappings for admins. 
+        /// </summary>
         private void CreateAdminMappings()
         {
-            CreateMap<AdminEntity, AdminDto>();
+            CreateMap<ApplicationUser, AdminDto>();
+            CreateMap<AdminEntity, AdminDto>()
+                .IncludeMembers(src => src.User);
         }
 
         /// <summary>

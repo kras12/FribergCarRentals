@@ -1,10 +1,9 @@
 ﻿using FribergCarRentals.Shared.Models.Dto.Admin;
 using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.User;
-using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 
-namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
+namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi
 {
     /// <summary>
     /// A service for managing admin data from Friberg Car Rentals Admin API endpoints.
