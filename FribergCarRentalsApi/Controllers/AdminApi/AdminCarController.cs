@@ -16,7 +16,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
     /// <summary>
     /// Handles admin related activites for cars.
     /// </summary>
-    [Route("api/admin/car/")]
+    [Route("admin-api/car")]
     [ApiController]
     public class AdminCarController : ApiControllerBase
     {
@@ -116,7 +116,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
-        [HttpPost("{id}/images")]
+        [HttpPost("{id}/image")]
         public async Task<IActionResult> CreateCarImages(int id, [FromForm] IFormFileCollection files)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -151,7 +151,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteCar(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
@@ -183,15 +183,15 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <summary>
         /// Deletes car images.
         /// </summary>
-        /// <param name="id">The ID for the car.</param>
+        /// <param name="carId">The ID for the car.</param>
         /// <param name="deleteCarImagesDto">Contains a collection of IDs for the images to delete.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
-        [HttpDelete("{id}/images")]
-        public async Task<IActionResult> DeleteImages(int id, DeleteCarImagesDto deleteCarImagesDto)
+        [HttpDelete("{carId:int}/image")]
+        public async Task<IActionResult> DeleteCarImages(int carId, DeleteCarImagesDto deleteCarImagesDto)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
@@ -203,17 +203,17 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"The collection of images to delete is empty."));
             }
 
-            if (id <= 0)
+            if (carId <= 0)
             {
-                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid car id: {id}"));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid car id: {carId}"));
             }
 
-            if (!await _carRepository.CarExists(id))
+            if (!await _carRepository.CarExists(carId))
             {
-                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {id}"));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {carId}"));
             }
 
-            await _carRepository.DeleteCarImages(id, deleteCarImagesDto.ImageIds);
+            await _carRepository.DeleteCarImages(carId, deleteCarImagesDto.ImageIds);
 
             return Ok(ApiResponseDto.CreateSuccessfulResponse());
         }
@@ -248,6 +248,18 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             _mapper.Map(editCarDto, car);
+
+            if (car.Category!.CarCategoryId != editCarDto.CategoryId)
+            {
+                var category = await _carCategoryRepository.GetByIdAsync(editCarDto.CategoryId);
+
+                if (category == null)
+                {
+                    return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car category with ID: {editCarDto.CategoryId}"));
+                }
+
+                car.Category = category;
+            }
 
             if (editCarDto.DeleteImages != null && editCarDto.DeleteImages.Count > 0)
             {

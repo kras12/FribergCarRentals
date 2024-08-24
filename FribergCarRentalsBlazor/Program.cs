@@ -23,7 +23,8 @@ namespace FribergCarRentalsBlazor
             // ==================================================================================================================
             // Mapping
             // ==================================================================================================================
-            builder.Services.AddAutoMapper(typeof(ViewModelToDtoAutoMapperProfile), typeof(DtoToViewModelAutoMapperProfile));
+            builder.Services.AddAutoMapper(typeof(ViewModelToDtoAutoMapperProfile), typeof(DtoToViewModelAutoMapperProfile),
+                typeof(AutoMapper.DtoToViewModelAutoMapperProfile), typeof(AutoMapper.ViewModelToDtoAutoMapperProfile));
 
             // ==================================================================================================================
             // Network (API Service, data transfers)
@@ -44,6 +45,12 @@ namespace FribergCarRentalsBlazor
 
             // Add API services with typed http clients
             builder.Services.AddHttpClient<IAdminApiService, AdminApiService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
+            });
+
+            // Add API services with typed http clients
+            builder.Services.AddHttpClient<IAdminCarApiService, AdminCarApiService>(client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
             });

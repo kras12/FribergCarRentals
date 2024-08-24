@@ -16,9 +16,9 @@ namespace FribergCarRentals.Shared.Helpers
         /// </summary>
         private static List<string> _supportedImageTypeMimes = new List<string>()
         {
-            "application/jpg",
-            "application/png",
-            "application/webp"
+            "image/jpg",
+            "image/png",
+            "image/webp"
         };
 
         #endregion
@@ -35,7 +35,7 @@ namespace FribergCarRentals.Shared.Helpers
         public static string GetMimeTypeFromImageFileName(string fileName)
         {
             var fileExtenstion = Path.GetExtension(fileName).Replace(".", "").ToLower();
-            string? result = _supportedImageTypeMimes.Find(x => x == $"application/{fileExtenstion}");
+            string? result = _supportedImageTypeMimes.Find(x => x == $"image/{fileExtenstion}");
 
             if (result == null)
             {

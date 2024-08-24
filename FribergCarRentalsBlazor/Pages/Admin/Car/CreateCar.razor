@@ -1,0 +1,116 @@
+﻿@attribute [Route(PageUrl)]
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@inherits AdminPageComponentBase
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        <h1>Create Car</h1>
+        <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+            <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                <a href="@ListCars.PageUrl" class="button navigational-button">View Cars</a>
+            </div>
+            <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
+                @if (_apiValidationErrors.Count > 0)
+                {
+                    <UserMessages Messages="_apiValidationErrors"></UserMessages>
+                }
+                @if (CreateCarViewModel != null)
+                {
+                    @if (CreateCarViewModel.HaveCategories)
+                    {
+                        <EditForm Context="EditForm" Model="CreateCarViewModel" class="vertical-form" OnValidSubmit="OnCreateCar">
+                            <DataAnnotationsValidator></DataAnnotationsValidator>
+                            <div class="vertical-form-field">
+                                <label for="rental-status">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.RentalStatuses))</label>
+                                <InputSelect id="rental-status" @bind-Value:set="OnRentalStatusChanged" @bind-Value:get="CreateCarViewModel.RentalStatus.CarRentalStatusId">
+                                    @foreach (var status in CreateCarViewModel.RentalStatuses)
+                                    {
+                                        <!option value="@status.CarRentalStatusId" selected="@(status.CarRentalStatusId == CreateCarViewModel.RentalStatus.CarRentalStatusId)">
+                                            @(status.StatusName)
+                                        </!option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => CreateCarViewModel.RentalStatus)" class="error-text" />
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-category" class="control-label">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.SelectedCategoryId))</label>
+                                <InputSelect id="car-category" @bind-Value="CreateCarViewModel.SelectedCategoryId">
+                                    @foreach (var category in CreateCarViewModel.Categories)
+                                    {
+                                        <!option value="@category.CarCategoryId">
+                                            @(category.CategoryName)
+                                        </!option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => CreateCarViewModel.Categories)" class="error-text" />
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-brand">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.Brand))</label>
+                                <InputText id="car-brand" @bind-Value="CreateCarViewModel.Brand"></InputText>
+                                <span asp-validation-for="CreateCarViewModel.Brand" class="error-text"></span>
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-model">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.Model))</label>
+                                <InputText id="car-model" @bind-Value="CreateCarViewModel.Model"></InputText>
+                                <span asp-validation-for="CreateCarViewModel.Model" class="error-text"></span>
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-model-year">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.ModelYear))</label>
+                                <InputNumber id="car-model-year" @bind-Value="CreateCarViewModel.ModelYear"></InputNumber>
+                                <span asp-validation-for="CreateCarViewModel.ModelYear" class="error-text"></span>
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-color">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.Color))</label>
+                                <InputText id="car-color" @bind-Value="CreateCarViewModel.Color"></InputText>
+                                <span asp-validation-for="CreateCarViewModel.Color" class="error-text"></span>
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-reg-number">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.RegistrationNumber))</label>
+                                <InputText id="car-reg-number" @bind-Value="CreateCarViewModel.RegistrationNumber"></InputText>
+                                <span asp-validation-for="CreateCarViewModel.RegistrationNumber" class="error-text"></span>
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-propulsion" class="control-label">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.PropulsionSystem))</label>
+                                <InputSelect id="car-propulsion" @bind-Value:set="OnVehiclePropulsionChanged" @bind-Value:get="CreateCarViewModel.PropulsionSystem.VehiclePropulsionId">
+                                    @foreach (var propulsion in CreateCarViewModel.VehiclePropulsions)
+                                    {
+                                        <!option value="@propulsion.VehiclePropulsionId" selected="@(propulsion.VehiclePropulsionId == CreateCarViewModel.PropulsionSystem.VehiclePropulsionId)">
+                                            @(propulsion.PropulsionName)
+                                        </!option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => CreateCarViewModel.PropulsionSystem)" class="error-text" />
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-rental-cost">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.RentalCostPerDay))</label>
+                                <InputNumber id="car-rental-cost" step="0.01" @bind-Value="CreateCarViewModel.RentalCostPerDay"></InputNumber>
+                                <span asp-validation-for="CreateCarViewModel.RentalCostPerDay" class="error-text"></span>
+                            </div>
+                            <div class="vertical-form-field">
+                                <label for="car-upload-images">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.UploadImages))</label>
+                                <InputFile OnChange="OnFileUploadChanged" multiple></InputFile>
+                                <span asp-validation-for="CreateCarViewModel.UploadImages" class="error-text"></span>
+                            </div>
+                            <div class="vertical-form-field">
+                                <button type="submit">Create</button>
+                            </div>
+                        </EditForm>
+                    }
+                    else
+                    {
+                        <div class="vertical-flex-container">
+                            <p>No car categories were found. Create a category first.</p>
+                            <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                                <a href="@Pages.Admin.Car.Category.Create.PageUrl" class="button function-button">Create Category</a>
+                            </div>
+                        </div>
+                    }
+                }                
+            </div>
+        </div>
+	</Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

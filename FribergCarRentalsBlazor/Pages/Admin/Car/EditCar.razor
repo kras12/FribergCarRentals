@@ -1,0 +1,135 @@
+﻿@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+@attribute [Route(PageUrl)]
+@inherits AdminPageComponentBase
+
+<AuthorizeView Context="AuthorizeContext" Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        <h1>Edit</h1>
+        @if (EditCarViewModel.HavePageSubTitle)
+        {
+            <h2>@EditCarViewModel.PageSubTitle</h2>
+        }
+        else
+        {
+            <h2>@($"#{EditCarViewModel.CarId} - {EditCarViewModel.CarInfo}")</h2>
+        }
+        <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+            <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                <a href="@Pages.Admin.Car.ListCars.PageUrl" class="button navigational-button">View Cars</a>
+                <DeleteCarButton Car="_car" OnDeletedCar="@OnDeleteCar"></DeleteCarButton>
+            </div>
+            <UserMessages Messages="EditCarViewModel.Messages"></UserMessages>
+            <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem filled-container flex-container__padding__1-rem full-width">
+                <h2>Details</h2>
+                <EditForm Model="EditCarViewModel" class="vertical-form full-width" OnValidSubmit="OnEditCar">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
+                    @if (_apiValidationErrors.Count > 0)
+                    {
+                        <UserMessages Messages="_apiValidationErrors"></UserMessages>
+                    }
+                    <div class="vertical-form-field">
+                        <label for="rental-status">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.RentalStatuses))</label>
+                        <InputSelect id="rental-status" @bind-Value:set="OnRentalStatusChanged" @bind-Value:get="EditCarViewModel.RentalStatus.CarRentalStatusId">
+                            @foreach (var status in EditCarViewModel.RentalStatuses)
+                            {
+                                <!option value="@status.CarRentalStatusId" selected="@(status.CarRentalStatusId == EditCarViewModel.RentalStatus.CarRentalStatusId)">
+                                    @(status.StatusName)
+                                </!option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => EditCarViewModel.RentalStatus)" class="error-text" />
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-category" class="control-label">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.Categories))</label>
+                        <InputSelect id="car-category" @bind-Value="EditCarViewModel.SelectedCategoryId">
+                            @foreach (var category in EditCarViewModel.Categories)
+                            {
+                                <!option value="@category.CarCategoryId" selected="@(category.CarCategoryId == EditCarViewModel.SelectedCategoryId)">
+                                    @(category.CategoryName)
+                                </!option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => EditCarViewModel.Categories)" class="error-text" />
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-brand">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.Brand))</label>
+                        <InputText id="car-brand" @bind-Value="EditCarViewModel.Brand"></InputText>
+                        <span asp-validation-for="EditCarViewModel.Brand" class="error-text"></span>
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-model">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.Model))</label>
+                        <InputText id="car-model" @bind-Value="EditCarViewModel.Model"></InputText>
+                        <span asp-validation-for="EditCarViewModel.Model" class="error-text"></span>
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-model-year">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.ModelYear))</label>
+                        <InputNumber id="car-model-year" @bind-Value="EditCarViewModel.ModelYear"></InputNumber>
+                        <span asp-validation-for="EditCarViewModel.ModelYear" class="error-text"></span>
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-color">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.Color))</label>
+                        <InputText id="car-color" @bind-Value="EditCarViewModel.Color"></InputText>
+                        <span asp-validation-for="EditCarViewModel.Color" class="error-text"></span>
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-reg-number">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.RegistrationNumber))</label>
+                        <InputText id="car-reg-number" @bind-Value="EditCarViewModel.RegistrationNumber"></InputText>
+                        <span asp-validation-for="EditCarViewModel.RegistrationNumber" class="error-text"></span>
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-propulsion" class="control-label">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.PropulsionSystem))</label>
+                        <InputSelect id="car-propulsion" @bind-Value:set="OnRentalStatusChanged" @bind-Value:get="EditCarViewModel.RentalStatus.CarRentalStatusId">
+                            @foreach (var propulsion in EditCarViewModel.VehiclePropulsions)
+                            {
+                                <!option value="@propulsion.VehiclePropulsionId" selected="@(propulsion.VehiclePropulsionId == EditCarViewModel.PropulsionSystem.VehiclePropulsionId)">
+                                    @(propulsion.PropulsionName)
+                                </!option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => EditCarViewModel.PropulsionSystem)" class="error-text" />
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-rental-cost">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.RentalCostPerDay))</label>
+                        <InputNumber id="car-rental-cost" step="0.01" @bind-Value="EditCarViewModel.RentalCostPerDay"></InputNumber>
+                        <span asp-validation-for="EditCarViewModel.RentalCostPerDay" class="error-text"></span>
+                    </div>
+                    <div class="vertical-form-field">
+                        <label for="car-upload-images">@(AttributeHelper.GetDisplayName(() => EditCarViewModel.UploadImages))</label>
+                        <InputFile OnChange="OnFileUploadChanged" multiple></InputFile>
+                        <span asp-validation-for="EditCarViewModel.UploadImages" class="error-text"></span>
+                    </div>
+                    @if (EditCarViewModel.Images.Count > 0)
+                    {
+                        <h3 class="text-align-center">Existing Images</h3>
+                        <div class="tiled-image-gallery tiled-image-gallery__auto-rows tiled-image-gallery__image-size_medium full-width">
+                            @foreach (var imageFile in EditCarViewModel.Images)
+                            {
+                                <div class="vertical-flex-container flex-container__align-items-center">
+                                    <figure class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem">
+                                        <img src="@(imageFile.Url)" />
+                                        <figcaption>@imageFile.FileName</figcaption>
+                                        <div class="horizontal-flex-container">
+                                            @{
+                                                var currentImage = imageFile;
+                                            }
+                                            <InputCheckbox ValueChanged="@((isChecked) => OnDeleteCarImagesChanged(currentImage, isChecked))" ValueExpression="@(() => _dummy)"></InputCheckbox>
+                                            <span>Delete</span>
+                                        </div>
+                                    </figure>
+                                </div>
+                            }
+                        </div>
+                    }
+                    <div class="vertical-form-field">
+                        <button type="submit">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>
