@@ -1291,6 +1291,7 @@ img.cover-image
     box-shadow: var(--default-box-shadow);
     display: flex;
     height: 100%;
+    justify-content: center;
     margin: 0px;
     padding: 10px;
 }
