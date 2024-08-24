@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Admin\Order\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FribergCarRentals.Shared.Mapping\FribergCarRentals.Shared.Mapping.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared\FribergCarRentals.Shared.csproj" />

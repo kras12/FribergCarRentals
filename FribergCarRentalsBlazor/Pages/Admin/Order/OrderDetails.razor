@@ -1,0 +1,169 @@
+﻿@attribute [Route(PageUrl)]
+@inherits AdminPageComponentBase
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (Order != null)
+        {
+            <h1>@($"Order - #{Order.CarOrderId}")</h1>
+            <h2>@($"{Order.Customer.FullName} - {Order.CarBooking.Car.CarInfo}")</h2>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem">
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Customer.Details.GetPageUrl(Order.Customer.CustomerId)" class="button function-button">View Customer</a>
+                    <a href="@Pages.Admin.Car.CarDetails.GetPageUrl(Order.CarBooking.Car.CarId)" class="button function-button">View Car</a>
+                    <a href="@Pages.Admin.Order.ListOrders.PageUrl" class="button function-button">View Orders</a>
+                    <CompleteOrderButton Order="Order" OnCompletedOrder="OnCompletedOrder"></CompleteOrderButton>
+                    <DeleteOrderButton Order="Order" OnDeletedOrder="OnDeletedOrder" StoreDeletedOrderIdInLocalStorage="true"></DeleteOrderButton>
+                </div>
+                <UserMessages Messages="Order.Messages"></UserMessages>
+                <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+                    <div class="vertical-flex-container flex-container__padding__1-rem">
+                        <h2>Order details</h2>
+                        <dl>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarOrderId)
+                            </dt>
+                            <dd>
+                                @Order.CarOrderId
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.OrderStatusName)
+                            </dt>
+                            <dd>
+                                @Order.OrderStatusName
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.OrderDateLocal)
+                            </dt>
+                            <dd>
+                                @Order.OrderDateLocal
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.CarPickupDate)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.CarPickupDate
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.CarReturnDate)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.CarReturnDate
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.DebitedRentalDays)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.DebitedRentalDays
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.RentalCostPerDay)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.RentalCostPerDay
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.OrderSum)
+                            </dt>
+                            <dd>
+                                @Order.OrderSum)
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="vertical-flex-container flex-container__padding__1-rem">
+                        <h2>Customer</h2>
+                        <dl>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.Customer.CustomerId)
+                            </dt>
+                            <dd>
+                                @Order.Customer.CustomerId
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.Customer.FullName)
+                            </dt>
+                            <dd>
+                                @Order.Customer.FullName
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.Customer.Email)
+                            </dt>
+                            <dd>
+                                @Order.Customer.Email
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="vertical-flex-container flex-container__padding__1-rem">
+                        <h2>Booked Car</h2>
+                        <dl>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.CarId)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.CarId
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.Category.CategoryName)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.Category.CategoryName
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.Brand)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.Brand
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.Model)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.Model
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.ModelYear)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.ModelYear
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.Color)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.Color
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.PropulsionSystem)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.PropulsionSystem.PropulsionName
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => Order.CarBooking.Car.RegistrationNumber)
+                            </dt>
+                            <dd>
+                                @Order.CarBooking.Car.RegistrationNumber
+                            </dd>
+                        </dl>
+                        <div class="tiled-image-gallery">
+                            @foreach (var image in Order.CarBooking.Car.Images)
+                            {
+                                <figure>
+                                    <div class="vertical-flex-container">
+                                        <img src="@image.Url" />
+                                    </div>
+                                </figure>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }  
+    </Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

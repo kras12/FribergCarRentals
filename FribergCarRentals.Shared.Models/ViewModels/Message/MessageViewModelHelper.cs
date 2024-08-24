@@ -169,6 +169,26 @@
         #region Orders
 
         /// <summary>
+        /// Creates an order already completed error message.
+        /// </summary>
+        /// <param name="orderId">The ID of the order.</param>
+        /// <returns>A <see cref="MessageViewModel"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static MessageViewModel CreateOrderAlreadyCompletedErrorMessage(int orderId)
+        {
+            #region Checks
+
+            if (orderId < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(orderId), $"The value of parameter '{nameof(orderId)}' can't be negative.");
+            }
+
+            #endregion
+
+            return new MessageViewModel(MessageType.Error, $"Order #{orderId} is already completed.", "Already Completed");
+        }
+
+        /// <summary>
         /// Creates an order cancellation success message.
         /// </summary>
         /// <param name="orderId">The ID of the order that was canceled.</param>

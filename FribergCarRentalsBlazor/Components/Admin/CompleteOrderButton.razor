@@ -1,0 +1,6 @@
+﻿<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+    @if (Order.CanBeCompleted)
+    {
+        <button @onclick="@(() => CompleteOrder())" class="button positive-button">Complete</button>
+    }
+</AuthorizeView>
