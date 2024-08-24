@@ -101,7 +101,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// The images to upload
         /// </summary>
         [DisplayName("Upload Images")]
-        public List<TUploadedImage>? UploadImages { get; set; } = null;
+        public List<TUploadedImage> UploadImages { get; set; } = new();
 
         #endregion
 

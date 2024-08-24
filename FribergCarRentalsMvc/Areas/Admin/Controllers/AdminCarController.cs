@@ -284,7 +284,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 car.Category = await _carCategoryRepository.GetByIdAsync(editCarViewModel.SelectedCategoryId);
                 car.Images.AddRange(carImages);
 
-                if editCarViewModel.UploadImages.Count > 0)
+                if (editCarViewModel.UploadImages.Count > 0)
                 {
                     var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(editCarViewModel.UploadImages!);
                     car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
