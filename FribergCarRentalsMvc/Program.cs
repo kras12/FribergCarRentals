@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Identity;
 using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Mapping.AutoMapper;
+using FribergCarRentals.Shared.Mapping.Mvc.AutoMapper;
 
 namespace FribergCarRentals
 {
-	public class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
@@ -37,7 +38,10 @@ namespace FribergCarRentals
             // ==================================================================================================================
             // Mapping
             // ==================================================================================================================
-            builder.Services.AddAutoMapper(typeof(ViewModelToEntityAutoMapperProfile));
+            builder.Services.AddAutoMapper(
+                typeof(Shared.Mapping.AutoMapper.ViewModelToEntityAutoMapperProfile), 
+                typeof(Shared.Mapping.Mvc.AutoMapper.ViewModelToEntityAutoMapperProfile),                 
+                typeof(EntityToViewModelAutoMapperProfile), typeof(DtoToViewModelAutoMapperProfile));
 
             // ==================================================================================================================
             //  Repositories

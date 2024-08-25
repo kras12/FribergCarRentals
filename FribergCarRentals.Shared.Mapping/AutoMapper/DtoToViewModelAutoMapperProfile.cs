@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FribergCarRentals.Data.DTO;
 using FribergCarRentals.Shared.Models.Dto.Admin;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
@@ -72,6 +73,7 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
             CreateMap<CarRentalStatusDto, CarRentalStatusViewModel>();
             CreateMap<CarImageDto, ImageViewModel>();
             CreateMap<CreateCarCategoryDto, CreateCarCategoryViewModel>();
+            CreateMap<CarCategoryCountDto, CarCategoryViewModel>();
         }
 
         /// <summary>

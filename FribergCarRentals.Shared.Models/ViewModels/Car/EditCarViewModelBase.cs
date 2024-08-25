@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using FribergCarRentals.Shared.Types.Attributes;
 using FribergCarRentals.Shared.Types.Enums;
 using FribergCarRentals.Shared.Types.Extensions;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Shared.Models.ViewModels.Car
 {
@@ -39,12 +40,15 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// <param name="rentalStatus">The rental status for the car.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        protected EditCarViewModelBase(int carId, int carCategory, string brand, string color, string model, int modelYear, VehiclePropulsionViewModel propulsionSystem,
-            string registrationNumber, decimal rentalCostPerDay, CarRentalStatusViewModel rentalStatus)
-            : base(brand, color, model, modelYear, propulsionSystem, registrationNumber, rentalCostPerDay, rentalStatus)
+        protected EditCarViewModelBase(int carId, int carCategory, string brand, string color, string model, int modelYear, int propulsionSystem,
+            string registrationNumber, decimal rentalCostPerDay, int rentalStatus)
+            : base(brand, color, model, modelYear, registrationNumber, rentalCostPerDay)
         {
             CarId = carId;
             SelectedCategoryId = carCategory;
+            SelectedPropulsionSystemId = propulsionSystem;
+            SelectedRentalStatusId = rentalStatus;
+
             PageSubTitle = $"#{CarId} - {CarInfo}";
 
             InitRentalStatuses();
@@ -98,10 +102,26 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         public int SelectedCategoryId { get; set; }
 
         /// <summary>
+        /// The ID of the selected propulsion system.
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(1, int.MaxValue)]
+        [DisplayName("Propulsion")]
+        public int SelectedPropulsionSystemId { get; set; } = new();
+
+        /// <summary>
+        /// The ID of the selected rental status. 
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(1, int.MaxValue)]
+        [DisplayName("Status")]
+        public int SelectedRentalStatusId { get; set; } = new();
+
+        /// <summary>
         /// The images to upload
         /// </summary>
         [DisplayName("Upload Images")]
-        public List<TUploadedImage> UploadImages { get; set; } = new();
+        public List<TUploadedImage>? UploadImages { get; set; } = new();
 
         #endregion
 

@@ -52,7 +52,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// <summary>
         /// The ID for the status.
         /// </summary>
-        public int CarRentalStatusId { get; private set; }
+        public int CarRentalStatusId { get; set; }
 
         /// <summary>
         /// Returns true if the status is 'None' (no rental status).
@@ -68,12 +68,12 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// <summary>
         /// The description for the status.
         /// </summary>
-        public string StatusDescription { get; private set; } = "";
+        public string StatusDescription { get; set; } = "";
 
         /// <summary>
         /// The name for the status.
         /// </summary>
-        public string StatusName { get; private set; } = "";
+        public string StatusName { get; set; } = "";
 
         #endregion
     }

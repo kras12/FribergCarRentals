@@ -101,6 +101,16 @@ namespace FribergCarRentals.Data.EntityClasses
         /// <summary>
         /// Creates a new entity that represents an entity stored in the database.
         /// </summary>
+        /// <param name="propulsionId">The ID of the propulsion type.</param>
+        /// <returns>A <see cref="VehiclePropulsionEntity"/> object.</returns>
+        public static VehiclePropulsionEntity CreateFromId(int propulsionId)
+        {
+            return new VehiclePropulsionEntity((VehiclePropulsionType)propulsionId);
+        }
+
+        /// <summary>
+        /// Creates a new entity that represents an entity stored in the database.
+        /// </summary>
         /// <param name="propulsionType">The propulsion type for the new object.</param>
         /// <returns>A <see cref="VehiclePropulsionEntity"/> object.</returns>
         public static VehiclePropulsionEntity CreateFromType(VehiclePropulsionType propulsionType)

@@ -36,16 +36,16 @@ else
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>            
             <div class="vertical-form-field">
-                <label asp-for="EditCarViewModel.RentalStatus"></label>
-                <select asp-for="EditCarViewModel.RentalStatus">
+                <label asp-for="EditCarViewModel.SelectedRentalStatusId"></label>
+                <select asp-for="EditCarViewModel.SelectedRentalStatusId">
                     @foreach (var status in Model.EditCarViewModel.RentalStatuses)
                     {
-                        <!option value="@status.CarRentalStatusId" @(status.IsStatusNone ? "selected" : "")>
+                        <!option value="@status.CarRentalStatusId" @(status.CarRentalStatusId == Model.EditCarViewModel.SelectedRentalStatusId ? "selected" : "")>
                             @(status.StatusName)
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="EditCarViewModel.RentalStatus" class="error-text"></span>
+                <span asp-validation-for="EditCarViewModel.SelectedRentalStatusId" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="EditCarViewModel.SelectedCategoryId" class="control-label">Category</label>
@@ -78,16 +78,16 @@ else
                 <span asp-validation-for="EditCarViewModel.RegistrationNumber" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="EditCarViewModel.PropulsionSystem"></label>
-                <select asp-for="EditCarViewModel.PropulsionSystem">
+                <label asp-for="EditCarViewModel.SelectedPropulsionSystemId"></label>
+                <select asp-for="EditCarViewModel.SelectedPropulsionSystemId">
                     @foreach (var propulsion in Model.EditCarViewModel.VehiclePropulsions)
                     {
-                        <!option value="@propulsion.VehiclePropulsionId" @(propulsion.IsStatusNone ? "selected" : "")>
+                        <!option value="@propulsion.VehiclePropulsionId" @(propulsion.VehiclePropulsionId == Model.EditCarViewModel.SelectedPropulsionSystemId ? "selected" : "")>
                             @(propulsion.PropulsionName)
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="EditCarViewModel.PropulsionSystem" class="error-text"></span>
+                <span asp-validation-for="EditCarViewModel.SelectedPropulsionSystemId" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="EditCarViewModel.RentalCostPerDay"></label>

@@ -131,7 +131,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
         /// <param name="newId">The ID of the new rental status.</param>
         private void OnRentalStatusChanged(int newId)
         {
-            CreateCarViewModel!.RentalStatus = CreateCarViewModel.RentalStatuses.Single(x => x.CarRentalStatusId == newId);
+            CreateCarViewModel!.SelectedRentalStatusId = CreateCarViewModel.RentalStatuses.Single(x => x.CarRentalStatusId == newId).CarRentalStatusId;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
         /// <param name="newId">The ID of the new propulsion system.</param>
         private void OnVehiclePropulsionChanged(int newId)
         {
-            CreateCarViewModel!.PropulsionSystem = CreateCarViewModel.VehiclePropulsions.Single(x => x.VehiclePropulsionId == newId);
+            CreateCarViewModel!.SelectedPropulsionSystemId = CreateCarViewModel.VehiclePropulsions.Single(x => x.VehiclePropulsionId == newId).VehiclePropulsionId;
         }
 
         #endregion

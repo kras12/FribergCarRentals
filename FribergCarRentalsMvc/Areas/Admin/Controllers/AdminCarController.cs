@@ -252,6 +252,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                     EditCarViewModel editCarViewModel = _mapper.Map<EditCarViewModel>(car);
                     editCarViewModel.Categories = _mapper.Map <List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
 					TempDataHelper.Set(TempData, PageSubTitleTempDataKey, editCarViewModel.PageSubTitle!);
+                    SetImageUrls(editCarViewModel.Images);
 
                     return View(editCarViewModel);
                 }
@@ -305,6 +306,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 EditCarViewModel newEditCarViewModel = _mapper.Map<EditCarViewModel>(car);
                 newEditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
 				newEditCarViewModel.Messages.Add(MessageViewModelHelper.CreateCarUpdateSuccessMessage(id));
+                SetImageUrls(newEditCarViewModel.Images);
 
                 return View(newEditCarViewModel);
             }

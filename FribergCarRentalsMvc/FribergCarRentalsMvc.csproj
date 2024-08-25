@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FribergCarRentals.Data\FribergCarRentals.Data.csproj" />
+    <ProjectReference Include="..\FribergCarRentals.Shared.Mapping.Mvc\FribergCarRentals.Shared.Mapping.Mvc.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared.Mapping\FribergCarRentals.Shared.Mapping.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared.Models.Mvc\FribergCarRentals.Shared.Models.Mvc.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj" />

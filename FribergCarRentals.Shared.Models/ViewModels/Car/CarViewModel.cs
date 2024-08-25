@@ -36,10 +36,12 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public CarViewModel(int carId, CarCategoryViewModel category, string brand, string color, string model, int modelYear, VehiclePropulsionViewModel propulsionSystem,
             string registrationNumber, decimal rentalCostPerDay, CarRentalStatusViewModel rentalStatus, List<ImageViewModel>? images = null)
-            : base(brand, color, model, modelYear, propulsionSystem, registrationNumber, rentalCostPerDay, rentalStatus)
+            : base(brand, color, model, modelYear, registrationNumber, rentalCostPerDay)
         {
             CarId = carId;
             Category = category;
+            PropulsionSystem = propulsionSystem;
+            RentalStatus = rentalStatus;
 
             if (images != null)
             {
@@ -70,11 +72,25 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         public List<ImageViewModel> Images { get; set; } = new();
 
         /// <summary>
+        /// The propulsion system for the car.
+        /// </summary>
+        [DisplayName("Propulsion")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        public virtual VehiclePropulsionViewModel PropulsionSystem { get; set; } = new();
+
+        /// <summary>
         /// The rental cost per day.
         /// </summary>
         [DisplayName("Cost per day")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DefaultPriceOutputFormatString)]
         public override decimal RentalCostPerDay { get; set; }
+
+        /// <summary>
+        /// The rental status for the car.
+        /// </summary>
+        [DisplayName("Status")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        public virtual CarRentalStatusViewModel RentalStatus { get; set; } = new();
 
         #endregion
     }

@@ -94,6 +94,16 @@ namespace FribergCarRentals.Data.EntityClasses
         /// <summary>
         /// Creates a new entity that represents an entity stored in the database.
         /// </summary>
+        /// <param name="rentalStatusId">The ID of the rental status type.</param>
+        /// <returns>A <see cref="VehiclePropulsionEntity"/> object.</returns>
+        public static CarRentalStatusEntity CreateFromId(int rentalStatusId)
+        {
+            return new CarRentalStatusEntity((RentalCarStatus)rentalStatusId);
+        }
+
+        /// <summary>
+        /// Creates a new entity that represents an entity stored in the database.
+        /// </summary>
         /// <param name="rentalStatusType">The rental status type for the new object.</param>
         /// <returns>A <see cref="CarRentalStatusEntity"/> object.</returns>
         public static CarRentalStatusEntity CreateFromType(RentalCarStatus rentalStatusType)

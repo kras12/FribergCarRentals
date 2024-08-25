@@ -30,13 +30,13 @@ namespace FribergCarRentalsBlazor.AutoMapper
         {
             CreateMap<CreateCarViewModel, CreateCarDto>()
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.SelectedCategoryId))
-                .ForMember(dest => dest.RentalStatusId, opt => opt.MapFrom(src => src.RentalStatus.CarRentalStatusId))
-                .ForMember(dest => dest.PropulsionSystemId, opt => opt.MapFrom(src => src.PropulsionSystem.VehiclePropulsionId));
+                .ForMember(dest => dest.RentalStatusId, opt => opt.MapFrom(src => src.SelectedRentalStatusId))
+                .ForMember(dest => dest.PropulsionSystemId, opt => opt.MapFrom(src => src.SelectedPropulsionSystemId));
 
             CreateMap<EditCarViewModel, EditCarDto>()
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.SelectedCategoryId))
-                .ForMember(dest => dest.RentalStatusId, opt => opt.MapFrom(src => src.RentalStatus.CarRentalStatusId))
-                .ForMember(dest => dest.PropulsionSystemId, opt => opt.MapFrom(src => src.PropulsionSystem.VehiclePropulsionId));
+                .ForMember(dest => dest.RentalStatusId, opt => opt.MapFrom(src => src.SelectedRentalStatusId))
+                .ForMember(dest => dest.PropulsionSystemId, opt => opt.MapFrom(src => src.SelectedPropulsionSystemId));
         }        
 
         #endregion

@@ -23,15 +23,15 @@
                             <DataAnnotationsValidator></DataAnnotationsValidator>
                             <div class="vertical-form-field">
                                 <label for="rental-status">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.RentalStatuses))</label>
-                                <InputSelect id="rental-status" @bind-Value:set="OnRentalStatusChanged" @bind-Value:get="CreateCarViewModel.RentalStatus.CarRentalStatusId">
+                                <InputSelect id="rental-status" @bind-Value:set="OnRentalStatusChanged" @bind-Value:get="CreateCarViewModel.SelectedRentalStatusId">
                                     @foreach (var status in CreateCarViewModel.RentalStatuses)
                                     {
-                                        <!option value="@status.CarRentalStatusId" selected="@(status.CarRentalStatusId == CreateCarViewModel.RentalStatus.CarRentalStatusId)">
+                                        <!option value="@status.CarRentalStatusId" selected="@(status.CarRentalStatusId == CreateCarViewModel.SelectedRentalStatusId)">
                                             @(status.StatusName)
                                         </!option>
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => CreateCarViewModel.RentalStatus)" class="error-text" />
+                                <ValidationMessage For="@(() => CreateCarViewModel.SelectedRentalStatusId)" class="error-text" />
                             </div>
                             <div class="vertical-form-field">
                                 <label for="car-category" class="control-label">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.SelectedCategoryId))</label>
@@ -71,16 +71,16 @@
                                 <span asp-validation-for="CreateCarViewModel.RegistrationNumber" class="error-text"></span>
                             </div>
                             <div class="vertical-form-field">
-                                <label for="car-propulsion" class="control-label">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.PropulsionSystem))</label>
-                                <InputSelect id="car-propulsion" @bind-Value:set="OnVehiclePropulsionChanged" @bind-Value:get="CreateCarViewModel.PropulsionSystem.VehiclePropulsionId">
+                                <label for="car-propulsion" class="control-label">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.SelectedPropulsionSystemId))</label>
+                                <InputSelect id="car-propulsion" @bind-Value:set="OnVehiclePropulsionChanged" @bind-Value:get="CreateCarViewModel.SelectedPropulsionSystemId">
                                     @foreach (var propulsion in CreateCarViewModel.VehiclePropulsions)
                                     {
-                                        <!option value="@propulsion.VehiclePropulsionId" selected="@(propulsion.VehiclePropulsionId == CreateCarViewModel.PropulsionSystem.VehiclePropulsionId)">
+                                        <!option value="@propulsion.VehiclePropulsionId" selected="@(propulsion.VehiclePropulsionId == CreateCarViewModel.SelectedPropulsionSystemId)">
                                             @(propulsion.PropulsionName)
                                         </!option>
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => CreateCarViewModel.PropulsionSystem)" class="error-text" />
+                                <ValidationMessage For="@(() => CreateCarViewModel.SelectedPropulsionSystemId)" class="error-text" />
                             </div>
                             <div class="vertical-form-field">
                                 <label for="car-rental-cost">@(AttributeHelper.GetDisplayName(() => CreateCarViewModel.RentalCostPerDay))</label>

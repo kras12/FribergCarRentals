@@ -11,6 +11,14 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Image
         #region Constructors
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ImageViewModel()
+        {
+            
+        }
+
+        /// <summary>
         /// A constructor
         /// </summary>
         /// <param name="url">The url for the image.</param>

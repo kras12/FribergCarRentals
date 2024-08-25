@@ -38,8 +38,8 @@ namespace FribergCarRentalsApi.Models.Car
         /// <param name="images">The images for the car.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public EditCarViewModel(int carId, int carCategory, string brand, string color, string model, int modelYear, VehiclePropulsionViewModel propulsionSystem,
-            string registrationNumber, decimal rentalCostPerDay, CarRentalStatusViewModel rentalStatus, IEnumerable<CarCategoryViewModel> categories, IEnumerable<ImageViewModel> images)
+        public EditCarViewModel(int carId, int carCategory, string brand, string color, string model, int modelYear, int propulsionSystem,
+            string registrationNumber, decimal rentalCostPerDay, int rentalStatus, IEnumerable<CarCategoryViewModel> categories, IEnumerable<ImageViewModel> images)
             : base(carId, carCategory, brand, color, model, modelYear, propulsionSystem, registrationNumber, rentalCostPerDay, rentalStatus)
         {
             Categories = categories.ToList();

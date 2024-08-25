@@ -34,8 +34,8 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// <param name="rentalStatus">The rental status for the car.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        protected CarViewModelBase(string brand, string color, string model, int modelYear, VehiclePropulsionViewModel propulsionSystem,
-            string registrationNumber, decimal rentalCostPerDay, CarRentalStatusViewModel rentalStatus)
+        protected CarViewModelBase(string brand, string color, string model, int modelYear, 
+            string registrationNumber, decimal rentalCostPerDay)
         {
             #region Checks            
 
@@ -75,10 +75,8 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
             Color = color;
             Model = model;
             ModelYear = modelYear;
-            PropulsionSystem = propulsionSystem;
             RegistrationNumber = registrationNumber;
             RentalCostPerDay = rentalCostPerDay;
-            RentalStatus = rentalStatus;
         }
 
         #endregion
@@ -145,13 +143,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         public virtual int ModelYear { get; set; }
 
         /// <summary>
-        /// The propulsion system for the car.
-        /// </summary>
-        [DisplayName("Propulsion")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
-        public virtual VehiclePropulsionViewModel PropulsionSystem { get; set; } = new();
-
-        /// <summary>
         /// The registration number for the car.
         /// </summary>
         [DisplayName("Reg Nr")]
@@ -168,13 +159,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         [Range(ValidationRules.RentalCostPerDayMinimum, ValidationRules.RentalCostPerDayMaximum)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = ValidationRules.DefaultFloatNumberInputFormatString)]
         public virtual decimal RentalCostPerDay { get; set; }
-
-        /// <summary>
-        /// The rental status for the car.
-        /// </summary>
-        [DisplayName("Status")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
-        public virtual CarRentalStatusViewModel RentalStatus { get; set; } = new();
 
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Types.Attributes;
 using FribergCarRentals.Shared.Types.Enums;
@@ -71,17 +72,33 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// <summary>
         /// The ID of the selected category.
         /// </summary>
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
         [Range(1, int.MaxValue)]
         [DisplayName("Category")]
         public int? SelectedCategoryId { get; set; }
 
         /// <summary>
+        /// The ID of the selected propulsion system.
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(1, int.MaxValue)]
+        [DisplayName("Propulsion")]
+        public int SelectedPropulsionSystemId { get; set; } = new();
+
+        /// <summary>
+        /// The ID of the selected rental status. 
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = ValidationMessages.MandatoryFieldValidationMessage)]
+        [Range(1, int.MaxValue)]
+        [DisplayName("Status")]
+        public virtual int SelectedRentalStatusId { get; set; } = new();
+
+        /// <summary>
         /// The images to upload
         /// </summary>
         [DisplayName("Upload Images")]
-        public List<TUploadedImage> UploadImages { get; set; } = new();
+        public List<TUploadedImage>? UploadImages { get; set; } = new();
 
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -14,25 +14,25 @@ namespace FribergCarRentals.Shared.Models.ViewModels.User
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="userId">The ID of the user.</param>
+        /// <param name="accountId">The ID of the account.</param>
         /// <param name="firstName">The first name of the user.</param>
         /// <param name="lastName">The last name of the user.</param>
         /// <param name="email">The email of the user.</param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        protected UserEditViewModel(int userId, string firstName, string lastName, string email) :
+        protected UserEditViewModel(int accountId, string firstName, string lastName, string email) :
             base(firstName, lastName, email)
         {
             #region Checks
 
-            if (userId < 0)
+            if (accountId < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(userId), $"The value of parameter '{userId}' can't be negative.");
+                throw new ArgumentOutOfRangeException(nameof(accountId), $"The value of parameter '{accountId}' can't be negative.");
             }
 
             #endregion
 
-            AccountId = userId;
+            AccountId = accountId;
         }
 
         #endregion

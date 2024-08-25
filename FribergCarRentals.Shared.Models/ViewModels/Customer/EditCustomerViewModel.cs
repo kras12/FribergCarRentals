@@ -22,12 +22,12 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
         /// <summary>
         /// A constructor.
         /// </summary>
-        /// <param name="userId">The ID for the customer.</param>
+        /// <param name="accountId">The ID for the customer.</param>
         /// <param name="firstName">The first name for the customer.</param>
         /// <param name="lastName">The last name for the customer.</param>
         /// <param name="email">The email for the customer.</param>
-        public EditCustomerViewModel(int userId, string firstName, string lastName, string email) :
-            base(userId, firstName, lastName, email)
+        public EditCustomerViewModel(int accountId, string firstName, string lastName, string email) :
+            base(accountId, firstName, lastName, email)
         {
             // TODO - Remove titles from view models?
             if (AccountId > 0 && !string.IsNullOrEmpty(FullName))
