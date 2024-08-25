@@ -6,6 +6,7 @@ using FribergCarRentalsBlazor.Services.Authentication;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi;
+using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.DemoApi;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -69,6 +70,12 @@ namespace FribergCarRentalsBlazor
 
             // Add API services with typed http clients
             builder.Services.AddHttpClient<IAdminOrderApiService, AdminOrderApiService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
+            });
+
+            // Add API services with typed http clients
+            builder.Services.AddHttpClient<IDemoApiService, DemoApiService>(client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["FribergCarRentalsApiBaseUrl"]!);
             });
