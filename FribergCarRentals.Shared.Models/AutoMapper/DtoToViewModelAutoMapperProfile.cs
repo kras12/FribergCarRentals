@@ -13,49 +13,49 @@ using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 
-namespace FribergCarRentals.Shared.Mapping.AutoMapper
+namespace FribergCarRentals.Shared.Models.AutoMapper
 {
-	/// <summary>
-	/// An auto mapper profile that contains mappings for converting DTO classes to view model classes.
-	/// </summary>
-	public class DtoToViewModelAutoMapperProfile : Profile
-	{
-		#region Constructors
+    /// <summary>
+    /// An auto mapper profile that contains mappings for converting DTO classes to view model classes.
+    /// </summary>
+    public class DtoToViewModelAutoMapperProfile : Profile
+    {
+        #region Constructors
 
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public DtoToViewModelAutoMapperProfile()
-		{
-			CreateMappingsForAdmins();
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public DtoToViewModelAutoMapperProfile()
+        {
+            CreateMappingsForAdmins();
             CreateMappingsForCarOrders();
-			CreateMappingsForCustomers();
+            CreateMappingsForCustomers();
             CreateMappingsForCars();
-		}
+        }
 
         #endregion
 
         #region Methods
 
-		/// <summary>
-		/// Creates mappings for admins.
-		/// </summary>
-		public void CreateMappingsForAdmins()
-		{
-			CreateMap<AdminDto, AdminViewModel>();
-		}
+        /// <summary>
+        /// Creates mappings for admins.
+        /// </summary>
+        public void CreateMappingsForAdmins()
+        {
+            CreateMap<AdminDto, AdminViewModel>();
+        }
 
-		/// <summary>
-		/// Creates mappings for car orders.
-		/// </summary>
+        /// <summary>
+        /// Creates mappings for car orders.
+        /// </summary>
         public void CreateMappingsForCarOrders()
         {
-			CreateMap<OrderStatusDto, OrderStatusViewModel>();
+            CreateMap<OrderStatusDto, OrderStatusViewModel>();
             CreateMap<CarOrderDto, OrderViewModel>();
 
             CreateMap<CarBookingDto, CarBookingViewModel>()
-				.ForMember(dest => dest.CarPickupDate, opt => opt.MapFrom(src => src.PickupDateUtc))
-				.ForMember(dest => dest.CarReturnDate, opt => opt.MapFrom(src => src.ReturnDateUtc));
+                .ForMember(dest => dest.CarPickupDate, opt => opt.MapFrom(src => src.PickupDateUtc))
+                .ForMember(dest => dest.CarReturnDate, opt => opt.MapFrom(src => src.ReturnDateUtc));
         }
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace FribergCarRentals.Shared.Mapping.AutoMapper
         /// Creates mappings for customers.
         /// </summary>
         public void CreateMappingsForCustomers()
-		{
-			CreateMap<CustomerDto, CustomerViewModel>();
+        {
+            CreateMap<CustomerDto, CustomerViewModel>();
             CreateMap<CarOrderCustomerDto, CarOrderCustomerViewModel>();
-            
-			CreateMap<CustomerDto, EditCustomerViewModel>()
-				.ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.CustomerId));
+
+            CreateMap<CustomerDto, EditCustomerViewModel>()
+                .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.CustomerId));
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

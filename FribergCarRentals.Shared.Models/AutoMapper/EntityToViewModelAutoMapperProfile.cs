@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.Admin;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
@@ -9,7 +8,7 @@ using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 
-namespace FribergCarRentals.Shared.Mapping.Mvc.AutoMapper
+namespace FribergCarRentals.Shared.Models.AutoMapper
 {
     /// <summary>
     /// An auto mapper profile that contains mappings for converting entity classes to view model classes.
@@ -53,10 +52,6 @@ namespace FribergCarRentals.Shared.Mapping.Mvc.AutoMapper
             CreateMap<CarRentalStatusEntity, CarRentalStatusViewModel>();
             CreateMap<ImageEntity, ImageViewModel>();
             CreateMap<CarEntity, CarViewModel>();
-
-            CreateMap<CarEntity, EditCarViewModel>()
-                .ForMember(dest => dest.SelectedPropulsionSystemId, opt => opt.MapFrom(src => src.PropulsionSystem!.VehiclePropulsionId))
-                .ForMember(dest => dest.SelectedRentalStatusId, opt => opt.MapFrom(src => src.RentalStatus!.CarRentalStatusId));
         }
 
         /// <summary>
@@ -89,7 +84,7 @@ namespace FribergCarRentals.Shared.Mapping.Mvc.AutoMapper
             CreateMap<CarBookingEntity, CarBookingViewModel>();
 
             CreateMap<CarOrderEntity, OrderViewModel>()
-                .ForMember(dest => dest.CarBooking, opt => opt.MapFrom(src => src.CarBookings.First()));            
+                .ForMember(dest => dest.CarBooking, opt => opt.MapFrom(src => src.CarBookings.First()));
         }
 
         #endregion

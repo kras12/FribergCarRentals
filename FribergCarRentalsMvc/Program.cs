@@ -5,10 +5,9 @@ using AppSettings.Shared.Settings;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Shared.Constants;
-using FribergCarRentals.Shared.Mapping.AutoMapper;
-using FribergCarRentals.Shared.Mapping.Mvc.AutoMapper;
 using FribergCarRentals.Shared.Mvc.ModelBinders;
 using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.AutoMapper;
 
 namespace FribergCarRentals
 {
@@ -39,9 +38,11 @@ namespace FribergCarRentals
             // Mapping
             // ==================================================================================================================
             builder.Services.AddAutoMapper(
-                typeof(Shared.Mapping.AutoMapper.ViewModelToEntityAutoMapperProfile), 
-                typeof(Shared.Mapping.Mvc.AutoMapper.ViewModelToEntityAutoMapperProfile),                 
-                typeof(EntityToViewModelAutoMapperProfile), typeof(DtoToViewModelAutoMapperProfile));
+                typeof(Shared.Models.AutoMapper.ViewModelToEntityAutoMapperProfile), 
+                typeof(Shared.Models.Mvc.AutoMapper.ViewModelToEntityAutoMapperProfile),
+                typeof(Shared.Models.AutoMapper.EntityToViewModelAutoMapperProfile),
+                typeof(Shared.Models.Mvc.AutoMapper.EntityToViewModelAutoMapperProfile),
+                typeof(DtoToViewModelAutoMapperProfile));
 
             // ==================================================================================================================
             //  Repositories

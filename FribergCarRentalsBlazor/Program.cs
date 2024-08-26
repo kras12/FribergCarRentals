@@ -1,7 +1,7 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using FribergCarRentals.Shared.Constants;
-using FribergCarRentals.Shared.Mapping.AutoMapper;
+using FribergCarRentals.Shared.Models.AutoMapper;
 using FribergCarRentalsBlazor.Services.Authentication;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
