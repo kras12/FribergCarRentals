@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
@@ -11,14 +12,13 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
     /// </summary>
     public class CarBookingViewModel : ViewModelBase
     {
-
         #region Properties
 
         /// <summary>
         /// The car that was rented.
         /// </summary>
         [DisplayName("Car")]
-        public CarViewModel Car { get; set; }
+        public CarViewModel Car { get; set; } = default!;
 
         /// <summary>
         /// The ID for the booking.

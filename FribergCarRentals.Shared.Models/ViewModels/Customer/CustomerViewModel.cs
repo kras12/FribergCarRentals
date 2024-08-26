@@ -10,7 +10,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
     /// </summary>
     public class CustomerViewModel : UserViewModelBase
     {
-
         #region Properties
 
         /// <summary>

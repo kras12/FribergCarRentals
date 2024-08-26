@@ -5,37 +5,8 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
     /// <summary>
     /// A view model class that handles data related to editing a customer.
     /// </summary>
-    public class EditCustomerViewModel : UserEditViewModel
+    public class EditCustomerViewModel : EditUserViewModel
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        public EditCustomerViewModel() : this(0, "", "", "")
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="accountId">The ID for the customer.</param>
-        /// <param name="firstName">The first name for the customer.</param>
-        /// <param name="lastName">The last name for the customer.</param>
-        /// <param name="email">The email for the customer.</param>
-        public EditCustomerViewModel(int accountId, string firstName, string lastName, string email) :
-            base(accountId, firstName, lastName, email)
-        {
-            // TODO - Remove titles from view models?
-            if (AccountId > 0 && !string.IsNullOrEmpty(FullName))
-            {
-                PageSubTitle = $"#{AccountId} - {FullName}";
-            }            
-        }
-
-        #endregion
+        
     }
 }

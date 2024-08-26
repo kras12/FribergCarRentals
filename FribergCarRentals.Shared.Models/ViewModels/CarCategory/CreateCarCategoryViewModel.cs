@@ -11,35 +11,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.CarCategory
     /// </summary>
     public class CreateCarCategoryViewModel : ViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor
-        public CreateCarCategoryViewModel()
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor
-        /// </summary>
-        /// <param name="categoryName">The name for the category.</param>
-        public CreateCarCategoryViewModel(string categoryName)
-        {
-            #region Checks
-
-            if (categoryName is null)
-            {
-                throw new ArgumentNullException(nameof(categoryName), $"The value of parameter '{nameof(categoryName)}' can't be null.");
-            }
-
-            #endregion
-
-            CategoryName = categoryName;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

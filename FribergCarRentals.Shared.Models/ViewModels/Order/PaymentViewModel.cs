@@ -5,33 +5,6 @@
     /// </summary>
     public class PaymentViewModel
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        public PaymentViewModel()
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="order">The order the payment belongs to.</param>
-        /// <param name="amount">The amount paid.</param>
-        /// <param name="paymentDetails">The details of the payment</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public PaymentViewModel(OrderViewModel order, decimal amount, string paymentDetails)
-        {
-            Order = order;
-            Amount = amount;
-            PaymentDetails = paymentDetails;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

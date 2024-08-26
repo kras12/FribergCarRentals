@@ -4,18 +4,6 @@ namespace FribergCarRentals.Models.Customer
 {
     public class RegisterOrLoginCustomerViewModel
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        public RegisterOrLoginCustomerViewModel()
-        {
-
-        }
-
-        #endregion
-
         #region Properties
 
         public RegisterCustomerViewModel RegisterCustomerViewModel { get; set; } = new();

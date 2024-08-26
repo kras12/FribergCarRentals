@@ -11,28 +11,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.CarCategory
     /// </summary>
     public class EditCarCategoryViewModel : ViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor
-        public EditCarCategoryViewModel()
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="carCategoryId">The ID of the category.</param>
-        /// <param name="categoryName">The name of the category.</param>
-        public EditCarCategoryViewModel(int carCategoryId, string categoryName)
-        {
-            CarCategoryId = carCategoryId;
-            CategoryName = categoryName;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

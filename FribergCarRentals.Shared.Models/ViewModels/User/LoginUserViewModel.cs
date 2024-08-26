@@ -11,44 +11,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.User
     /// </summary>
     public abstract class LoginUserViewModel : ViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor. 
-        /// </summary>
-        protected LoginUserViewModel()
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor. 
-        /// </summary>
-        /// <param name="email">The email for the user.</param>
-        /// <param name="password">The password for the user.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        protected LoginUserViewModel(string email, string password)
-        {
-            #region Checks
-
-            if (email is null)
-            {
-                throw new ArgumentNullException(nameof(email), $"The value of parameter '{email}' can't be null.");
-            }
-
-            if (password is null)
-            {
-                throw new ArgumentNullException(nameof(password), $"The value of parameter '{password}' can't be null.");
-            }
-
-            #endregion
-
-            Email = email;
-            Password = password;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

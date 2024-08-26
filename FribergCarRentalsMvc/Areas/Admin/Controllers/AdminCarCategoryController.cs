@@ -201,7 +201,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (category is not null)
                 {
-                    EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category.CarCategoryId, category.CategoryName);
+                    EditCarCategoryViewModel viewModel = _mapper.Map<EditCarCategoryViewModel>(category);
                     TempDataHelper.Set(TempData, PageSubTitleTempDataKey, viewModel.PageSubTitle!);
                     return View(viewModel);
                 }
@@ -229,7 +229,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
             {
                 var category = _mapper.Map<CarCategoryEntity>(editCarCategoryViewModel);
                 await _carCategoryRepository.UpdateAsync(category);
-                EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category.CarCategoryId, category.CategoryName);
+                EditCarCategoryViewModel viewModel = _mapper.Map<EditCarCategoryViewModel>(category);
                 viewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
                 return View(viewModel);
             }

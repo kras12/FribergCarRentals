@@ -7,36 +7,8 @@ namespace FribergCarRentals.Shared.Models.ViewModels.User
     /// <summary>
     /// A view model class that handles data related to editing an user. 
     /// </summary>
-    public abstract class UserEditViewModel : UserViewModelBase
+    public abstract class EditUserViewModel : UserViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="accountId">The ID of the account.</param>
-        /// <param name="firstName">The first name of the user.</param>
-        /// <param name="lastName">The last name of the user.</param>
-        /// <param name="email">The email of the user.</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        protected UserEditViewModel(int accountId, string firstName, string lastName, string email) :
-            base(firstName, lastName, email)
-        {
-            #region Checks
-
-            if (accountId < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(accountId), $"The value of parameter '{accountId}' can't be negative.");
-            }
-
-            #endregion
-
-            AccountId = accountId;
-        }
-
-        #endregion
-
         #region Properties
 
         // TODO - Give better name?

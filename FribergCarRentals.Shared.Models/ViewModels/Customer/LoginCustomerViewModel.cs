@@ -7,28 +7,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
     /// </summary>
     public class LoginCustomerViewModel : LoginUserViewModel
     {
-        #region Constructors
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <exception cref="ArgumentNullException"></exception>
-        public LoginCustomerViewModel() : base()
-        {
-
-        }
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="email">The email for the customer.</param>
-        /// <param name="password">The password for the customer.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public LoginCustomerViewModel(string email, string password) : base(email, password)
-        {
-
-        }
-
-        #endregion
     }
 }

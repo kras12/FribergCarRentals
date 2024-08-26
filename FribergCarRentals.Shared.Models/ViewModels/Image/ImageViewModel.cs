@@ -8,31 +8,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Image
     /// </summary>
     public class ImageViewModel : ViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ImageViewModel()
-        {
-            
-        }
-
-        /// <summary>
-        /// A constructor
-        /// </summary>
-        /// <param name="url">The url for the image.</param>
-        /// <param name="fileName">The filename for the image.</param>
-        /// <param name="imageId">The ID for the image.</param>
-        public ImageViewModel(string url, string fileName = "", int? imageId = null)
-        {
-            FileName = fileName;
-            Url = url;
-            ImageId = imageId;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

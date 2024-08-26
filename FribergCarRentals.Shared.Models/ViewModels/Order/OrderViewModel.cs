@@ -11,7 +11,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
     /// </summary>
     public class OrderViewModel : ViewModelBase
     {
-
         #region Properties
 
         /// <summary>

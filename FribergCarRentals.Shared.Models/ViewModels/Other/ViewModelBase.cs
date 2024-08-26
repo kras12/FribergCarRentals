@@ -7,22 +7,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Other
     /// </summary>
     public abstract class ViewModelBase
     {
-        #region Constructors
-
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="pageTitle">An optional title for the page.</param>
-        /// <param name="pageSubTitle">An optional page sub title for the page.</param>
-        /// <exception cref="ArgumentException"></exception>
-        protected ViewModelBase(string? pageTitle = null, string? pageSubTitle = null)
-        {
-            PageTitle = pageTitle;
-            PageSubTitle = pageSubTitle;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>
