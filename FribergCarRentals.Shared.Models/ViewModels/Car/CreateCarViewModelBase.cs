@@ -1,17 +1,17 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FribergCarRentals.Shared.Attributes;
 using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Enums;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
-using FribergCarRentals.Shared.Types.Attributes;
-using FribergCarRentals.Shared.Types.Enums;
-using FribergCarRentals.Shared.Types.Extensions;
+using FribergCarRentals.Shared.Extensions;
 
 namespace FribergCarRentals.Shared.Models.ViewModels.Car
 {
-	/// <summary>
-	///  A view model base class that handles data for creating a new car.
-	/// </summary>
-	public abstract class CreateCarViewModelBase<TUploadedImage> : CarViewModelBase where TUploadedImage : class
+    /// <summary>
+    ///  A view model base class that handles data for creating a new car.
+    /// </summary>
+    public abstract class CreateCarViewModelBase<TUploadedImage> : CarViewModelBase where TUploadedImage : class
 	{
         #region Constructors
 

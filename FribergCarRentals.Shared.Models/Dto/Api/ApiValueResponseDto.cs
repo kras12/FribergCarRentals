@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using FribergCarRentals.Shared.Enums;
+using System.Text.Json.Serialization;
 
 namespace FribergCarRentals.Shared.Models.Dto.Api
 {

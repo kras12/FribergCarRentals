@@ -3,7 +3,7 @@ using FribergCarRentals.Data.EntityClasses;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Identity;
-using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Enums;
 using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Data.DatabaseContexts

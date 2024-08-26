@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Enums;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using FribergCarRentals.Shared.Models.Dto.Customer;

@@ -1,5 +1,4 @@
-﻿using FribergCarRentals.Shared;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FribergCarRentals.Data.Repositories;
@@ -11,6 +10,7 @@ using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.Dto.Admin;
 using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.User;
+using FribergCarRentals.Shared.Enums;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {

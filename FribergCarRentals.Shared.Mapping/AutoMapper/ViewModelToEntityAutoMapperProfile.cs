@@ -8,7 +8,7 @@ using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.Admin;
 using FribergCarRentals.Shared.Models.ViewModels.Order;
 using FribergCarRentals.Data.DTO;
-using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Enums;
 
 namespace FribergCarRentals.Shared.Mapping.AutoMapper
 {

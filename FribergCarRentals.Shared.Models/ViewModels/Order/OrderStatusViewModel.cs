@@ -1,4 +1,4 @@
-﻿using FribergCarRentals.Shared.Types.Enums;
+﻿using FribergCarRentals.Shared.Enums;
 
 namespace FribergCarRentals.Shared.Models.ViewModels.Order
 {

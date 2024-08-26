@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
-using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Enums;
 
 namespace FribergCarRentals.Data.Repositories
 {

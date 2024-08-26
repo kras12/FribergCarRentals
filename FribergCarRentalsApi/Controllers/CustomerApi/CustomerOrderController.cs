@@ -2,15 +2,14 @@
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using FribergCarRentals.Shared;
 using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Enums;
 using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using FribergCarRentals.Shared.Models.Dto.Image;
 using FribergCarRentals.Shared.Models.Dto.Order;
 using FribergCarRentals.Shared.Mvc.Services;
-using FribergCarRentals.Shared.Types.Enums;
 using FribergCarRentalsApi.Controllers.AdminApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

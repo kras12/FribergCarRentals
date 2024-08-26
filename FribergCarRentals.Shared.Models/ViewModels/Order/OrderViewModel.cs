@@ -22,7 +22,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         {
             get
             {
-                return OrderStatus.StatusType == Types.Enums.OrderStatus.Created;
+                return OrderStatus.StatusType == Enums.OrderStatus.Created;
             }
         }
 
@@ -54,7 +54,7 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Order
         {
             get
             {
-                return OrderStatus.StatusType == Types.Enums.OrderStatus.Created && CarBooking.CarPickupDate.Date > DateTime.UtcNow.Date;
+                return OrderStatus.StatusType == Enums.OrderStatus.Created && CarBooking.CarPickupDate.Date > DateTime.UtcNow.Date;
             }
         }
 

@@ -4,7 +4,7 @@ using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using FribergCarRentals.Shared.Types.Enums;
+using FribergCarRentals.Shared.Enums;
 
 namespace FribergCarRentals.Shared.Mvc.Services
 {
