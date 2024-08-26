@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Controllers.Customer;
-using FribergCarRentals.Helpers;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 

@@ -1,7 +1,7 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcRazorPages.Shared.ModelBinders
+namespace FribergCarRentals.Shared.Mvc.ModelBinders
 {
     /// <summary>
     /// A model binder class that converts a text string to an instance of class <see cref="CarRentalStatusEntity"/>.

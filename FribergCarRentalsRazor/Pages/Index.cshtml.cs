@@ -1,8 +1,8 @@
-using MvcRazorPages.Shared.Data;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using FribergCarRentals.Shared.Models.ViewModels.Other;
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using FribergCarRentals.Shared.Types.Enums;
 
-namespace MvcRazorPages.Shared.Services
+namespace FribergCarRentals.Shared.Mvc.Services
 {
     /// <summary>
     /// Service for seeding mock data to the database. 

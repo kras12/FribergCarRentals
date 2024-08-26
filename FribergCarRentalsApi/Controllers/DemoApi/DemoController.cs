@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
 
 namespace FribergCarRentalsApi.Controllers.DemoApi
 {

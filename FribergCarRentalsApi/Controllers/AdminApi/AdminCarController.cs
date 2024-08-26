@@ -7,9 +7,9 @@ using FribergCarRentals.Shared.Models.Dto.Api;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using FribergCarRentals.Shared.Models.Dto.Image;
+using FribergCarRentals.Shared.Mvc.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {

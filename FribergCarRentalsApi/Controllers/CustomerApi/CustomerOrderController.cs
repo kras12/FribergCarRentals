@@ -9,12 +9,12 @@ using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using FribergCarRentals.Shared.Models.Dto.Image;
 using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Mvc.Services;
 using FribergCarRentals.Shared.Types.Enums;
 using FribergCarRentalsApi.Controllers.AdminApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MvcRazorPages.Shared.Services;
 using System.Security.Claims;
 
 namespace FribergCarRentalsApi.Controllers.CustomerApi

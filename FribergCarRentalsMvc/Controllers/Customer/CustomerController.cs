@@ -1,9 +1,9 @@
-﻿using MvcRazorPages.Shared.Helpers;
+﻿using FribergCarRentals.Shared.Mvc.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using FribergCarRentals.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;

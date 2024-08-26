@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace MvcRazorPages.Shared.Services
+namespace FribergCarRentals.Shared.Mvc.Services
 {
     /// <summary>
     /// Interface for a service that handles uploaded images on the storage disk. 
@@ -25,14 +25,14 @@ namespace MvcRazorPages.Shared.Services
         /// <exception cref="ArgumentException"></exception>
         public void DeleteImagesFromDisk(IEnumerable<string> imageFileNames);
 
-		/// <summary>
-		/// Saves an uploaded image to the local disk. 
-		/// </summary>
-		/// <param name="imageFile">The uploaded image to save to the disk.</param>
-		/// <returns>The file name of the saved file.</returns>
-		/// <exception cref="IOException"></exception>
-		/// <exception cref="ArgumentException"></exception>
-		public Task<string> SaveImageToDiskAsync(IFormFile imageFile);
+        /// <summary>
+        /// Saves an uploaded image to the local disk. 
+        /// </summary>
+        /// <param name="imageFile">The uploaded image to save to the disk.</param>
+        /// <returns>The file name of the saved file.</returns>
+        /// <exception cref="IOException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public Task<string> SaveImageToDiskAsync(IFormFile imageFile);
 
         /// <summary>
         /// Saves a collection of uploaded images to the local disk. 

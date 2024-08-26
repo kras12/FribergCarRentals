@@ -2,13 +2,13 @@ using FribergCarRentals.Data.DatabaseContexts;
 using FribergCarRentals.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using AppSettings.Shared.Settings;
-using MvcRazorPages.Shared.ModelBinders;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Mapping.AutoMapper;
 using FribergCarRentals.Shared.Mapping.Mvc.AutoMapper;
+using FribergCarRentals.Shared.Mvc.ModelBinders;
+using FribergCarRentals.Shared.Mvc.Services;
 
 namespace FribergCarRentals
 {

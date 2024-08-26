@@ -28,7 +28,7 @@
     <ProjectReference Include="..\FribergCarRentals.Shared.Mapping\FribergCarRentals.Shared.Mapping.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared.Models.Mvc\FribergCarRentals.Shared.Models.Mvc.csproj" />
     <ProjectReference Include="..\FribergCars.Shared\AppSettings.Shared.csproj" />
-    <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
+    <ProjectReference Include="..\MvcRazorPages.Shared\FribergCarRentals.Shared.Mvc.csproj" />
   </ItemGroup>
 
   <ItemGroup>

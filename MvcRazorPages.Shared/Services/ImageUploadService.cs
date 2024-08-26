@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace MvcRazorPages.Shared.Services
+namespace FribergCarRentals.Shared.Mvc.Services
 {
     /// <summary>
     /// A service that handles uploaded images on the storage disk. 
@@ -50,7 +50,7 @@ namespace MvcRazorPages.Shared.Services
         public ImageUploadService(IConfiguration configuration)
         {
             _configuration = configuration;
-            _ImageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), 
+            _ImageFolderPath = Path.Combine(Directory.GetCurrentDirectory(),
                 _configuration["ImageUploadService:ImageUploadsFolderPath"]!);
         }
 

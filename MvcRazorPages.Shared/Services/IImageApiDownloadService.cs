@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MvcRazorPages.Shared.Services
+namespace FribergCarRentals.Shared.Mvc.Services
 {
     /// <summary>
     /// A service that provides action results to facilitate image downloads from an API.

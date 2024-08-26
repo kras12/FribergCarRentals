@@ -1,4 +1,4 @@
-﻿namespace MvcRazorPages.Shared.Services
+﻿namespace FribergCarRentals.Shared.Mvc.Services
 {
     /// <summary>
     /// Interface for a service that provides action results to facilitate image downloads from a standard MVC controller. 

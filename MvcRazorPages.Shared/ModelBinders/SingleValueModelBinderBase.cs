@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcRazorPages.Shared.ModelBinders
+namespace FribergCarRentals.Shared.Mvc.ModelBinders
 {
     /// <summary>
     /// A base class for a model binder. 
@@ -20,7 +20,7 @@ namespace MvcRazorPages.Shared.ModelBinders
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             #region Checks
-            
+
             if (bindingContext == null)
             {
                 throw new ArgumentNullException(nameof(bindingContext));
