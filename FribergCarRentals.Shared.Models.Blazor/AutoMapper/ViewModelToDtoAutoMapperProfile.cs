@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using FribergCarRentalsBlazor.ViewModels.Car;
+using FribergCarRentals.Shared.Models.Blazor.ViewModels.Car;
 using FribergCarRentals.Shared.Models.Dto.Car;
 
-namespace FribergCarRentalsBlazor.AutoMapper
+namespace FribergCarRentals.Shared.Models.Blazor.AutoMapper
 {
     /// <summary>
     /// An auto mapper profile that contains mappings for converting view model classes to DTO classes.
@@ -37,7 +37,7 @@ namespace FribergCarRentalsBlazor.AutoMapper
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.SelectedCategoryId))
                 .ForMember(dest => dest.RentalStatusId, opt => opt.MapFrom(src => src.SelectedRentalStatusId))
                 .ForMember(dest => dest.PropulsionSystemId, opt => opt.MapFrom(src => src.SelectedPropulsionSystemId));
-        }        
+        }
 
         #endregion
     }

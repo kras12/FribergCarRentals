@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using FribergCarRentals.Shared.Constants;
 using FribergCarRentals.Shared.Models.AutoMapper;
+using FribergCarRentals.Shared.Models.Blazor.AutoMapper;
 using FribergCarRentalsBlazor.Services.Authentication;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
@@ -24,8 +25,12 @@ namespace FribergCarRentalsBlazor
             // ==================================================================================================================
             // Mapping
             // ==================================================================================================================
-            builder.Services.AddAutoMapper(typeof(ViewModelToDtoAutoMapperProfile), typeof(DtoToViewModelAutoMapperProfile),
-                typeof(AutoMapper.DtoToViewModelAutoMapperProfile), typeof(AutoMapper.ViewModelToDtoAutoMapperProfile));
+            builder.Services.AddAutoMapper(
+                typeof(FribergCarRentals.Shared.Models.AutoMapper.ViewModelToDtoAutoMapperProfile),
+                typeof(FribergCarRentals.Shared.Models.Blazor.AutoMapper.ViewModelToDtoAutoMapperProfile),
+                typeof(FribergCarRentals.Shared.Models.AutoMapper.DtoToViewModelAutoMapperProfile),
+                typeof(FribergCarRentals.Shared.Models.Blazor.AutoMapper.DtoToViewModelAutoMapperProfile)
+            );
 
             // ==================================================================================================================
             // Network (API Service, data transfers)

@@ -5,7 +5,6 @@ using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentalsBlazor.Components.Admin;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 {
@@ -66,7 +65,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         /// <summary>
         /// The view model for editing the customer.
         /// </summary>
-        [FromForm]
+        [SupplyParameterFromForm]
         private EditCustomerViewModel EditCustomerViewModel { get; set; } = default!;
 
         #endregion

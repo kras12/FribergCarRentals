@@ -17,7 +17,7 @@ namespace FribergCarRentalsApi.AutoMapper
         /// </summary>
         public DtoToDtoAutoMapperProfile()
         {
-            CreateCarCategoryMappins();
+            CreateCarCategoryMappings();
         }
 
         #endregion
@@ -27,7 +27,7 @@ namespace FribergCarRentalsApi.AutoMapper
         /// <summary>
         /// Creates mappings for car categories.
         /// </summary>
-        private void CreateCarCategoryMappins()
+        private void CreateCarCategoryMappings()
         {
             CreateMap<CarCategoryCountDto, CarCategoryStatisticsDto>()
                 .IncludeMembers(src => src.CarCategoryEntity);

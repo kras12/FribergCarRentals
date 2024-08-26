@@ -4,7 +4,6 @@ using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
 {
@@ -48,7 +47,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         /// <summary>
         /// The view model used for car category creation.
         /// </summary>
-        [FromForm]
+        [SupplyParameterFromForm]
         private CreateCarCategoryViewModel CreateCarCategoryViewModel { get; set; } = new CreateCarCategoryViewModel();
 
         #endregion

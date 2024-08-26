@@ -4,7 +4,6 @@ using FribergCarRentals.Shared.Models.ViewModels.Customer;
 using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 {
@@ -53,7 +52,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 		/// <summary>
 		/// The view model used for customer creation.
 		/// </summary>
-		[FromForm]
+		[SupplyParameterFromForm]
 		private RegisterCustomerViewModel CreateCustomerViewModel { get; set; } = new RegisterCustomerViewModel();
 
 		#endregion

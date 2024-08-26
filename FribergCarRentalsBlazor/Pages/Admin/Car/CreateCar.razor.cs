@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Shared.Helpers;
+using FribergCarRentals.Shared.Models.Blazor.ViewModels.Car;
 using FribergCarRentals.Shared.Models.Dto.Car;
-using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Message;
 using FribergCarRentalsBlazor.Services.FribergCarRentalsApi.AdminApi;
-using FribergCarRentalsBlazor.ViewModels.Car;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentalsBlazor.Pages.Admin.Car
 {
@@ -57,7 +55,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
         /// <summary>
         /// The view model used for car creation.
         /// </summary>
-        [FromForm]
+        [SupplyParameterFromForm]
         private CreateCarViewModel? CreateCarViewModel { get; set; } = null;
 
         #endregion

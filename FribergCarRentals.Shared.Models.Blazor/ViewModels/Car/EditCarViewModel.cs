@@ -3,9 +3,8 @@ using FribergCarRentals.Shared.Models.ViewModels.Car;
 using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
 using FribergCarRentals.Shared.Models.ViewModels.Image;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace FribergCarRentalsBlazor.ViewModels.Car
+namespace FribergCarRentals.Shared.Models.Blazor.ViewModels.Car
 {
     /// <summary>
     /// A view model class to handle data used for editing a car. 
@@ -55,14 +54,12 @@ namespace FribergCarRentalsBlazor.ViewModels.Car
         /// A collection of available car categories to choose from.
         /// </summary>
         [DisplayName("Categories")]
-        [BindNever]
         public override List<CarCategoryViewModel> Categories { get; set; } = new();
 
         /// <summary>
         /// A collection of images for the car.
         /// </summary>
         [DisplayName("Images")]
-        [BindNever]
         public override List<ImageViewModel> Images { get; set; } = new();
 
         #endregion

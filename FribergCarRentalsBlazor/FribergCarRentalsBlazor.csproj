@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FribergCarRentals.Shared.Models.Blazor\FribergCarRentals.Shared.Models.Blazor.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared\FribergCarRentals.Shared.csproj" />
   </ItemGroup>

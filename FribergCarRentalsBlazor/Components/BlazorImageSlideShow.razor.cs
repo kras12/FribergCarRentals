@@ -1,12 +1,12 @@
-﻿using FribergCarRentalsBlazor.ViewModels;
+﻿using FribergCarRentals.Shared.Models.Blazor.ViewModels;
 using Microsoft.AspNetCore.Components;
 
 namespace FribergCarRentalsBlazor.Components
 {
-	/// <summary>
-	/// Component for displaying image slide shows.
-	/// </summary>
-	public partial class BlazorImageSlideShow : ComponentBase
+    /// <summary>
+    /// Component for displaying image slide shows.
+    /// </summary>
+    public partial class BlazorImageSlideShow : ComponentBase
     {
 		#region Fields
 

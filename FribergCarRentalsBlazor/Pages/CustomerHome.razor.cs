@@ -1,5 +1,5 @@
-﻿using FribergCarRentals.Shared.Models.ViewModels.Other;
-using FribergCarRentalsBlazor.ViewModels;
+﻿using FribergCarRentals.Shared.Models.Blazor.ViewModels;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
 using Microsoft.AspNetCore.Components;
 
 namespace FribergCarRentalsBlazor.Pages

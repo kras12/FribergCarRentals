@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using FribergCarRentals.Shared.Models.Blazor.ViewModels.Car;
 using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.ViewModels.Car;
-using FribergCarRentalsBlazor.ViewModels.Car;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace FribergCarRentalsBlazor.AutoMapper
+namespace FribergCarRentals.Shared.Models.Blazor.AutoMapper
 {
     /// <summary>
     /// An auto mapper profile that contains mappings for converting DTO classes to view model classes.
