@@ -17,13 +17,13 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
         /// The ID for the car.
         /// </summary>
         [DisplayName("Car ID")]
-        public int CarId { get; }
+        public int CarId { get; set;  }
 
         /// <summary>
         /// The category for the car.
         /// </summary>
         [DisplayName("Category")]
-        public virtual CarCategoryViewModel Category { get; set; }
+        public virtual CarCategoryViewModel Category { get; set; } = default!;
 
         /// <summary>
         /// A collection of images for the car.
