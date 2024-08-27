@@ -25,36 +25,6 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Car
             InitVehiclePropulsions();
         }
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="carId">The ID of the car.</param>
-        /// <param name="carCategory">The ID of the car category.</param>
-        /// <param name="brand">The brand for the car.</param>
-        /// <param name="color">The color for the car.</param>
-        /// <param name="model">The model for the car.</param>
-        /// <param name="modelYear">The model year for the car.</param>
-        /// <param name="propulsionSystem">The propulsion system for the car.</param>
-        /// <param name="registrationNumber">The registration number for the car.</param>
-        /// <param name="rentalCostPerDay">The rental cost per day.</param>
-        /// <param name="rentalStatus">The rental status for the car.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        protected EditCarViewModelBase(int carId, int carCategory, string brand, string color, string model, int modelYear, int propulsionSystem,
-            string registrationNumber, decimal rentalCostPerDay, int rentalStatus)
-            : base(brand, color, model, modelYear, registrationNumber, rentalCostPerDay)
-        {
-            CarId = carId;
-            SelectedCategoryId = carCategory;
-            SelectedPropulsionSystemId = propulsionSystem;
-            SelectedRentalStatusId = rentalStatus;
-
-            PageSubTitle = $"#{CarId} - {CarInfo}";
-
-            InitRentalStatuses();
-            InitVehiclePropulsions();
-        }
-
         #endregion
 
         #region Properties

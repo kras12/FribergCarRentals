@@ -73,8 +73,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
 
             if (categoriesResult.Success)
             {
-                CreateCarViewModel = new CreateCarViewModel();
-                CreateCarViewModel.Categories = AutoMapper.Map<List<CarCategoryViewModel>>(categoriesResult.Value);
+                CreateCarViewModel = new CreateCarViewModel(AutoMapper.Map<List<CarCategoryViewModel>>(categoriesResult.Value));
             }
             else
             {
