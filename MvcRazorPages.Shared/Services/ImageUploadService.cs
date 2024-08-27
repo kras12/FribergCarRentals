@@ -15,16 +15,6 @@ namespace FribergCarRentals.Shared.Mvc.Services
         /// </summary>
         private const int MaxDiskSaveAttemptsPerFile = 1_000;
 
-        /// <summary>
-        /// The largest number number suffix for image files.
-        /// </summary>
-        private const int MaxFileNumberSuffix = 10_000;
-
-        /// <summary>
-        /// The smallest number number suffix for image files.
-        /// </summary>
-        private const int MinFileNumberSuffix = 1_000;
-
         #endregion
 
         #region Fields
@@ -134,8 +124,6 @@ namespace FribergCarRentals.Shared.Mvc.Services
 
             try
             {
-                var random = new Random();
-
                 if (!Directory.Exists(_ImageFolderPath))
                 {
                     Directory.CreateDirectory(_ImageFolderPath);
@@ -149,7 +137,7 @@ namespace FribergCarRentals.Shared.Mvc.Services
 
                     for (int i = 0; i < MaxDiskSaveAttemptsPerFile; i++)
                     {
-                        fileName = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}-{random.Next(MinFileNumberSuffix, MaxFileNumberSuffix)}{fileInfo.Extension}";
+                        fileName = $"{Guid.NewGuid()}-{fileInfo.Name}";
                         filePath = Path.Combine(_ImageFolderPath, fileName);
 
                         if (!File.Exists(filePath))
