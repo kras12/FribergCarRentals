@@ -62,7 +62,7 @@ namespace FribergCarRentals.Controllers
         {
             List<SlideShowImageViewModel> images = new();
 
-            var cars = (await _carRepository.GetFirstCarWithImagesByCategory()).ToList();
+            var cars = (await _carRepository.GetFirstCarPerCategory()).ToList();
 
             foreach (var car in cars)
             {

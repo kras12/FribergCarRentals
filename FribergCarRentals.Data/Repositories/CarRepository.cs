@@ -188,7 +188,7 @@ namespace FribergCarRentals.Data.Repositories
         /// Retrieves the first car with images in each car category. 
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> containing a collection containing the cars found.</returns>
-        public async Task<IEnumerable<CarEntity>> GetFirstCarWithImagesByCategory()
+        public async Task<IEnumerable<CarEntity>> GetFirstCarPerCategory()
         {
             return await _databaseContext.Cars
                .Where(x => x.Images.Count > 0)
