@@ -1,4 +1,4 @@
-﻿@attribute [Route(PageUrl)]
+﻿@attribute [Route(PageUrlTemplate)]
 @inherits AdminPageComponentBase
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
@@ -12,7 +12,7 @@
             <h2>@($"#{Customer.CustomerId} - {Customer.FullName}")</h2>
             <div class="vertical-flex-container flex-container__row-gap__1-rem">
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <a href="@Pages.Admin.Customer.ListCustomers.PageUrl" class="button navigational-button">View Customers</a>
+                    <a href="@Pages.Admin.Customer.ListCustomers.GetPageUrl()" class="button navigational-button">View Customers</a>
                     <a href="@Pages.Admin.Customer.EditCustomer.GetPageUrl(Customer.CustomerId)" class="button function-button">Edit</a>
                     @if (!Customer.IsEmailConfirmed)
                     {

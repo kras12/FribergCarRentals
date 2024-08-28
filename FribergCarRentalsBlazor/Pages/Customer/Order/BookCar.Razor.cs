@@ -15,17 +15,22 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
     /// </summary>
     public partial class BookCar : CustomerPageComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/customer/order/book";
+		/// <summary>
+		/// The key for storing the pending order to be confirmed by the customer.
+		/// </summary>
+		public const string PendingOrderTempDataKey = "CustomerOrderPendingOrder";
 
-        /// <summary>
-        /// The key for storing the pending order to be confirmed by the customer.
-        /// </summary>
-        public const string PendingOrderTempDataKey = "CustomerOrderPendingOrder";
+		/// <summary>
+		/// The base URL for the page without the customer ID.
+		/// </summary>
+		private const string PageUrlBase = "/customer/order/book";
+
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = PageUrlBase + "/{CarCategoryId:int?}";
 
         #endregion
 
@@ -36,30 +41,52 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// </summary>
         private List<MessageViewModel> _apiValidationErrors = new();
 
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        /// <summary>
-        /// The injected Auto Mapper service. 
-        /// </summary>
-        [Inject]
+		/// <summary>
+		/// An optional car category ID. 
+		/// </summary>
+		[Parameter]
+		public int? CarCategoryId { get; set; }
+
+		/// <summary>
+		/// The injected Auto Mapper service. 
+		/// </summary>
+		[Inject]
         private IMapper AutoMapper { get; set; } = default!;
 
         /// <summary>
         /// The view model used for booking a car.
         /// </summary>
         private BookCarViewModel BookCarViewModel { get; set; } = new();
-
-        /// <summary>
-        /// The injected customer order API service.
-        /// </summary>
-        [Inject]
+		/// <summary>
+		/// The injected customer order API service.
+		/// </summary>
+		[Inject]
         private ICustomerOrderApiService CustomerOrderApiService { get; set; } = default!;
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Gets the page URL.
+        /// </summary>
+        /// <param name="carCategoryId">An optional ID of the car category.</param>
+        /// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+        public static string GetPageUrl(int? carCategoryId = null)
+        {
+            if (carCategoryId == null)
+            {
+                return PageUrlBase;
+            }
+            else
+            {
+				return $"{PageUrlBase}/{carCategoryId}";
+			}           
+        }
 
         /// <summary>
         /// <inheritdoc/>
@@ -73,6 +100,11 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
             if (result.Success)
             {
                  BookCarViewModel.SetAvailableCarCategoryFilters(AutoMapper.Map<List<CarCategoryViewModel>>(result.Value!));
+
+                if (CarCategoryId != null)
+                {
+                    BookCarViewModel.SelectedCarCategoryFilter = CarCategoryId.Value;
+                }
             }
             else
             {
@@ -92,11 +124,11 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
 
             if (await IsCustomerLoggedIn())
             {
-                NavigationManager.NavigateTo(ConfirmOrder.PageUrl);
+                NavigationManager.NavigateTo(ConfirmOrder.GetPageUrl());
             }
             else
             {
-                await RedirectToLogin(ConfirmOrder.PageUrl);
+                await RedirectToLogin(ConfirmOrder.GetPageUrl());
             }
         }
 

@@ -46,7 +46,7 @@ namespace FribergCarRentalsBlazor.Components
                     await SessionStorageService.SetItemAsStringAsync(Pages.Admin.AdminLogin.RedirectUrlStorageKey, ReturnToUrl);
                 }
 
-                NavigationManager.NavigateTo(Pages.Admin.AdminLogin.PageUrl);
+                NavigationManager.NavigateTo(Pages.Admin.AdminLogin.GetPageUrl());
             }
             else if (NavigationManager.Uri.Contains("/customer"))
             {
@@ -55,11 +55,11 @@ namespace FribergCarRentalsBlazor.Components
                     await SessionStorageService.SetItemAsStringAsync(Authenticate.RedirectUrlStorageKey, ReturnToUrl);
                 }
 
-                NavigationManager.NavigateTo(Pages.Customer.Authenticate.PageUrl);
+                NavigationManager.NavigateTo(Pages.Customer.Authenticate.GetPageUrl());
             }
             else
             {
-                NavigationManager.NavigateTo(Pages.CustomerHome.PageUrl);
+                NavigationManager.NavigateTo(Pages.CustomerHome.GetPageUrl());
             }
         }
 

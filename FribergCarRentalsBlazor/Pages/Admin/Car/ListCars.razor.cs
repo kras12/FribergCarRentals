@@ -27,10 +27,10 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
         /// </summary>
         public const string DeletedCarIdStorageDataKey = "AdminDeletedCarId";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/admin/car/list";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/admin/car/list";
 
         #endregion
 
@@ -62,14 +62,23 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
         [Inject]
         private IMapper AutoMapper { get; set; } = default!;
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        protected override async Task OnInitializedAsync()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		protected override async Task OnInitializedAsync()
         {
             var result = await AdminCarApiService.GetCarsAsync();
 

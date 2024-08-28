@@ -8,12 +8,12 @@ namespace FribergCarRentalsBlazor.Pages.Customer
     /// </summary>
     public partial class Authenticate : ComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/customer/authenticate";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/customer/authenticate";
 
         /// <summary>
         /// The key where the component looks for redirect url targets after logging in. 
@@ -39,15 +39,24 @@ namespace FribergCarRentalsBlazor.Pages.Customer
         [Inject]
         private ISessionStorageService SessionStorageService { get; set; } = default!;
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
-        protected override async Task OnInitializedAsync()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns></returns>
+		protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 

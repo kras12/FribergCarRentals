@@ -16,9 +16,9 @@ namespace FribergCarRentalsBlazor.Pages.Admin
         #region Constants
 
         /// <summary>
-        /// The url for the page. 
+        /// The url template for the page. 
         /// </summary>
-        public const string PageUrl = "/admin";
+        private const string PageUrlTemplate = "/admin";
 
         #endregion
 

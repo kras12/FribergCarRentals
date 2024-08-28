@@ -6,15 +6,15 @@
             <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
                 <ul>
                     <li>
-                        <a href="@Pages.CustomerHome.PageUrl">Home</a>
+                        <a href="@Pages.CustomerHome.GetPageUrl()">Home</a>
                     </li>
                     <li>
-                        <a href="@Pages.Customer.Order.BookCar.PageUrl">Book</a>
+                        <a href="@Pages.Customer.Order.BookCar.GetPageUrl()">Book</a>
                     </li>
                     <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
                         <Authorized>
                             <li>
-                                <a href="@Pages.Customer.Order.ListOrders.PageUrl">Orders</a>
+                                <a href="@Pages.Customer.Order.ListOrders.GetPageUrl()">Orders</a>
                             </li>
                         </Authorized>
                     </AuthorizeView>

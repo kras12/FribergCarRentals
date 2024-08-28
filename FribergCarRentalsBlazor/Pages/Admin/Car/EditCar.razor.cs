@@ -18,17 +18,18 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
     /// </summary>
     public partial class EditCar : AdminPageComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = PageUrlBase + "/{CarId:int}";
+		/// <summary>
+		/// The base URL for the page without the car ID.
+		/// </summary>
+		private const string PageUrlBase = "/admin/car/edit";
 
-        /// <summary>
-        /// The base URL for the page without the car ID.
-        /// </summary>
-        public const string PageUrlBase = "/admin/car/edit";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = PageUrlBase + "/{CarId:int}";
+
         #endregion
 
         #region Fields
@@ -130,7 +131,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
             if (result.ApiResponse.Success)
             {
                 await SessionStorageService.SetItemAsStringAsync(ListCars.DeletedCarIdStorageDataKey, EditCarViewModel.CarId.ToString());
-                NavigationManager.NavigateTo(ListCars.PageUrl);
+                NavigationManager.NavigateTo(ListCars.GetPageUrl());
             }
             else
             {

@@ -19,10 +19,10 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// </summary>
         public const string IsNewOrderTempDataKey = "CustomerOrderIsNewOrder";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/customer/order/confirm";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/customer/order/confirm";
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         {
             if (!await IsCustomerLoggedIn())
             {
-                await RedirectToLogin(BookCar.PageUrl);
+                await RedirectToLogin(BookCar.GetPageUrl());
             }
 
             var result = await CustomerOrderApiService.CreateOrderAsync(AutoMapper.Map<CreateCarOrderDto>(_createOrderViewModel));
@@ -83,17 +83,26 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
             }
         }
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <exception cref="Exception"></exception>
-        protected async override Task OnInitializedAsync()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <exception cref="Exception"></exception>
+		protected async override Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
             if (!await IsCustomerLoggedIn())
             {
-                await RedirectToLogin(BookCar.PageUrl);
+                await RedirectToLogin(BookCar.GetPageUrl());
             }
 
             _createOrderViewModel = await SessionStorageService.GetItemAsync<CreateOrderViewModel>(BookCar.PendingOrderTempDataKey);

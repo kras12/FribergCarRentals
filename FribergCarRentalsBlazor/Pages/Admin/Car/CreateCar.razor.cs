@@ -15,12 +15,12 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
     /// </summary>
     public partial class CreateCar : AdminPageComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/admin/car/create";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/admin/car/create";
 
         #endregion
 
@@ -58,14 +58,23 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
         [SupplyParameterFromForm]
         private CreateCarViewModel? CreateCarViewModel { get; set; } = null;
 
-        #endregion
+		#endregion
 
-        #region Methods        
+		#region Methods       
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        protected async override Task OnInitializedAsync()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		protected async override Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
@@ -104,7 +113,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
                 }                
 
                 await SessionStorageService.SetItemAsStringAsync(ListCars.CreatedCarIdStorageDataKey, createCarResult.Value!.CarId.ToString());
-                NavigationManager.NavigateTo(ListCars.PageUrl);
+                NavigationManager.NavigateTo(ListCars.GetPageUrl());
             }
             else
             {

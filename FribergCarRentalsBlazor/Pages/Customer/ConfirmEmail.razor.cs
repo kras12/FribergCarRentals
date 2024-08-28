@@ -12,12 +12,12 @@ namespace FribergCarRentalsBlazor.Pages.Customer
     /// </summary>
     public partial class ConfirmEmail : ComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/customer/confirm-email";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/customer/confirm-email";
 
         #endregion
 
@@ -76,14 +76,23 @@ namespace FribergCarRentalsBlazor.Pages.Customer
         [SupplyParameterFromQuery]
         public string Email { get; set; } = "";
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        protected override async Task OnInitializedAsync()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
@@ -114,7 +123,7 @@ namespace FribergCarRentalsBlazor.Pages.Customer
                 }
                 else
                 {
-                    NavigationManager.NavigateTo(CustomerHome.PageUrl);
+                    NavigationManager.NavigateTo(CustomerHome.GetPageUrl());
                 }
             }
             else

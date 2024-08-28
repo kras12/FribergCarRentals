@@ -27,10 +27,10 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         /// </summary>
         public const string DeletedCustomerIdStorageDataKey = "AdminDeletedCustomerId";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/admin/customer/list";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/admin/customer/list";
 
         #endregion
 
@@ -62,16 +62,25 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         [Inject]
         private IAdminCustomerApiService AdminCustomerApiService { get; set; } = default!;
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Event callback for a delete customer operation.
-        /// </summary>
-        /// <param name="result">The result of the operation</param>
-        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private void OnDeleteCustomer(DeleteCustomerEventCallbackArgs result)
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// Event callback for a delete customer operation.
+		/// </summary>
+		/// <param name="result">The result of the operation</param>
+		/// <returns>A <see cref="Task"/> that represents an async operation.</returns>
+		private void OnDeleteCustomer(DeleteCustomerEventCallbackArgs result)
         {
             if (result.ApiResponse.Success)
             {

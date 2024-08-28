@@ -1,4 +1,4 @@
-﻿@attribute [Route(PageUrl)]
+﻿@attribute [Route(PageUrlTemplate)]
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
 @using FribergCarRentalsBlazor.Components.Admin
@@ -15,7 +15,7 @@
                     <p class="text-align-center">No customers found.</p>
                 }
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <a href="@Pages.Admin.Customer.CreateCustomer.PageUrl" class="button function-button">Create Customer</a>
+                    <a href="@Pages.Admin.Customer.CreateCustomer.GetPageUrl()" class="button function-button">Create Customer</a>
                 </div>
                 <UserMessages Messages="_customers.Messages"></UserMessages>
                 @if (_customers.Count > 0)

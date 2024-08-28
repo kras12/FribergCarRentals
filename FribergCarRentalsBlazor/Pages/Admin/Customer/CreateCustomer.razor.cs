@@ -19,10 +19,10 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         /// </summary>
         public const string CreatedCustomerIdTempDataKey = "AdminCreatedCustomerId";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/admin/customer/create";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/admin/customer/create";
 
 		#endregion
 
@@ -60,6 +60,15 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 		#region Methods
 
 		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
 		/// Creates a customer
 		/// </summary>
 		/// <returns>A <see cref="Task"/> that represents an async operation.</returns>
@@ -70,7 +79,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
 			if (result.Success)
 			{
 				await SessionStorageService.SetItemAsStringAsync(ListCustomers.CreatedCustomerIdStorageDataKey, result.Value!.CustomerId.ToString());
-				NavigationManager.NavigateTo(ListCustomers.PageUrl);
+				NavigationManager.NavigateTo(ListCustomers.GetPageUrl());
 			}
 			else
 			{

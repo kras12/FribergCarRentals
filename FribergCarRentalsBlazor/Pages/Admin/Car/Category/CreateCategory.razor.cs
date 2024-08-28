@@ -12,12 +12,12 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
     /// </summary>
     public partial class CreateCategory : AdminPageComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/admin/car/category/create";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/admin/car/category/create";
 
         #endregion
 
@@ -50,22 +50,31 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         [SupplyParameterFromForm]
         private CreateCarCategoryViewModel CreateCarCategoryViewModel { get; set; } = new CreateCarCategoryViewModel();
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Creates a car category
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private async Task OnCreateCategory()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// Creates a car category
+		/// </summary>
+		/// <returns>A <see cref="Task"/> that represents an async operation.</returns>
+		private async Task OnCreateCategory()
         {
             var result = await AdminCarCategoryApiService.CreateCarCategoryAsync(AutoMapper.Map<CreateCarCategoryDto>(CreateCarCategoryViewModel));
 
             if (result.Success)
             {
                 await SessionStorageService.SetItemAsStringAsync(ListCategories.CreatedCarCategoryIdStorageDataKey, result.Value!.CarCategoryId.ToString());
-                NavigationManager.NavigateTo(ListCategories.PageUrl);
+                NavigationManager.NavigateTo(ListCategories.GetPageUrl());
             }
             else
             {

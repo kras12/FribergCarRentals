@@ -17,12 +17,12 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
         /// <summary>
         /// The base URL for the page without the order ID.
         /// </summary>
-        public const string PageUrlBase = "/customer/order/details";
+        private const string PageUrlBase = "/customer/order/details";
 
         /// <summary>
         /// The url for the page. 
         /// </summary>
-        public const string PageUrl = PageUrlBase + "/{OrderId:int}";
+        private const string PageUrlTemplate = PageUrlBase + "/{OrderId:int}";
 
         #endregion
 

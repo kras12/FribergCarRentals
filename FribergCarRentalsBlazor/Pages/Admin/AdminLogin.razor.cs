@@ -11,9 +11,9 @@ namespace FribergCarRentalsBlazor.Pages.Admin
         #region Constants
 
         /// <summary>
-        /// The url for the page. 
+        /// The url template for the page. 
         /// </summary>
-        public const string PageUrl = "/admin/login";
+        private const string PageUrlTemplate = "/admin/login";
 
         /// <summary>
         /// The key where the component looks for redirect url targets after logging in. 
@@ -39,15 +39,24 @@ namespace FribergCarRentalsBlazor.Pages.Admin
         [Inject]
         private ISessionStorageService SessionStorageService { get; set; } = default!;
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
-        protected override async Task OnInitializedAsync()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns></returns>
+		protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 

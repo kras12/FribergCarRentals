@@ -16,12 +16,12 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
     /// </summary>
     public partial class ListOrders : AdminPageComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/admin/order/list";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/admin/order/list";
 
         #endregion
 
@@ -58,16 +58,25 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
         /// </summary>
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = default!;
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Event callback for the complete order button. 
-        /// </summary>
-        /// <param name="result">The result of the operation</param>
-        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private void OnCompletedOrder(CompleteOrderEventCallbackArgs result)
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// Event callback for the complete order button. 
+		/// </summary>
+		/// <param name="result">The result of the operation</param>
+		/// <returns>A <see cref="Task"/> that represents an async operation.</returns>
+		private void OnCompletedOrder(CompleteOrderEventCallbackArgs result)
         {
             if (result.ApiResponse.Success)
             {

@@ -13,12 +13,12 @@ namespace FribergCarRentalsBlazor.Pages
     /// </summary>
     public partial class CustomerHome : ComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/";
 
         #endregion
 
@@ -54,9 +54,18 @@ namespace FribergCarRentalsBlazor.Pages
 
 		#region Methods
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
 		protected override async Task OnInitializedAsync()
 		{
 			await base.OnInitializedAsync();

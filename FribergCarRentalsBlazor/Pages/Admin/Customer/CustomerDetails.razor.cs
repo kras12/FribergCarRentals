@@ -18,12 +18,12 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
         /// <summary>
         /// The base URL for the page without the customer ID.
         /// </summary>
-        public const string PageUrlBase = "/admin/customer/details";
+        private const string PageUrlBase = "/admin/customer/details";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = PageUrlBase + "/{CustomerId:int}";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = PageUrlBase + "/{CustomerId:int}";
 
         #endregion
 
@@ -81,7 +81,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
             if (result.ApiResponse.Success)
             {
                 await SessionStorageService.SetItemAsStringAsync(ListCustomers.DeletedCustomerIdStorageDataKey, Customer!.CustomerId.ToString());
-                NavigationManager.NavigateTo(ListCustomers.PageUrl);
+                NavigationManager.NavigateTo(ListCustomers.GetPageUrl());
             }
             else
             {

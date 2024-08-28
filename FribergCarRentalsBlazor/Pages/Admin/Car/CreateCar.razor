@@ -1,4 +1,4 @@
-﻿@attribute [Route(PageUrl)]
+﻿@attribute [Route(PageUrlTemplate)]
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
 @inherits AdminPageComponentBase
@@ -8,7 +8,7 @@
         <h1>Create Car</h1>
         <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
             <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                <a href="@ListCars.PageUrl" class="button navigational-button">View Cars</a>
+                <a href="@ListCars.GetPageUrl()" class="button navigational-button">View Cars</a>
             </div>
             <div class="horizontal-flex-container flex-container__justify-content__center filled-container flex-container__padding__1-rem">
                 @if (_apiValidationErrors.Count > 0)
@@ -102,7 +102,7 @@
                         <div class="vertical-flex-container">
                             <p>No car categories were found. Create a category first.</p>
                             <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                                <a href="@Pages.Admin.Car.Category.CreateCategory.PageUrl" class="button function-button">Create Category</a>
+                                <a href="@Pages.Admin.Car.Category.CreateCategory.GetPageUrl()" class="button function-button">Create Category</a>
                             </div>
                         </div>
                     }

@@ -9,12 +9,12 @@ namespace FribergCarRentalsBlazor.Pages.Demo
     /// </summary>
     public partial class Reset : ComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/demo/reset";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/demo/reset";
 
         #endregion
 

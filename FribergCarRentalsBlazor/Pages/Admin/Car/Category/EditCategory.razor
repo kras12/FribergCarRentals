@@ -1,6 +1,6 @@
 ﻿@using FribergCarRentalsBlazor.Components
 @using FribergCarRentalsBlazor.Components.Admin
-@attribute [Route(PageUrl)]
+@attribute [Route(PageUrlTemplate)]
 @inherits AdminPageComponentBase
 
 <AuthorizeView Context="AuthorizeContext" Policy="@ApplicationUserPolicies.Admin">
@@ -16,7 +16,7 @@
         }
         <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
             <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                <a href="@Pages.Admin.Car.Category.ListCategories.PageUrl" class="button navigational-button">View Categories</a>
+                <a href="@Pages.Admin.Car.Category.ListCategories.GetPageUrl()" class="button navigational-button">View Categories</a>
                 <DeleteCarCategoryButton CarCategory="_carCategory" OnDeletedCategory="OnDeleteCategory"></DeleteCarCategoryButton>
             </div>
             <UserMessages Messages="EditCarCategoryViewModel.Messages"></UserMessages>

@@ -27,10 +27,10 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         /// </summary>
         public const string DeletedCarCategoryIdStorageDataKey = "AdminDeletedCarCategoryId";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/admin/car/category/list";        
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/admin/car/category/list";        
 
         #endregion
 
@@ -62,16 +62,25 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
         [Inject]
         private IAdminCarCategoryApiService AdminCarCategoryApiService { get; set; } = default!;
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Event callback for a delete category operation.
-        /// </summary>
-        /// <param name="result">The result of the operation</param>
-        /// <returns>A <see cref="Task"/> that represents an async operation.</returns>
-        private void OnDeleteCategory(DeleteCategoryEventCallbackArgs result)
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// Event callback for a delete category operation.
+		/// </summary>
+		/// <param name="result">The result of the operation</param>
+		/// <returns>A <see cref="Task"/> that represents an async operation.</returns>
+		private void OnDeleteCategory(DeleteCategoryEventCallbackArgs result)
         {
             if (result.ApiResponse.Success)
             {

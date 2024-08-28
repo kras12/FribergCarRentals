@@ -1,4 +1,4 @@
-﻿@attribute [Route(PageUrl)]
+﻿@attribute [Route(PageUrlTemplate)]
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
 @using FribergCarRentalsBlazor.Components.Admin
@@ -15,7 +15,7 @@
                     <p class="text-align-center">No categories found.</p>
                 }
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-                    <a href="@Pages.Admin.Car.Category.CreateCategory.PageUrl" class="button function-button">Create Category</a>
+                    <a href="@Pages.Admin.Car.Category.CreateCategory.GetPageUrl()" class="button function-button">Create Category</a>
                 </div>
                 <UserMessages Messages="_categories.Messages"></UserMessages>
                 @if (_categories.Count > 0)

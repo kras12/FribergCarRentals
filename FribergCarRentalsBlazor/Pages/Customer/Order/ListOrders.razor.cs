@@ -13,12 +13,12 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
     /// </summary>
     public partial class ListOrders : CustomerPageComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = "/customer/order/list";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = "/customer/order/list";
 
         #endregion
 
@@ -83,10 +83,19 @@ namespace FribergCarRentalsBlazor.Pages.Customer.Order
             }
         }
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        protected override async Task OnInitializedAsync()
+		/// <summary>
+		/// Gets the page URL.
+		/// </summary>
+		/// <returns>A <see cref="string"/> that contains the URL of the page.</returns>
+		public static string GetPageUrl()
+		{
+			return PageUrlTemplate;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		protected override async Task OnInitializedAsync()
         {
             var result = await CustomerOrderApiService.GetOrdersAsync();
 

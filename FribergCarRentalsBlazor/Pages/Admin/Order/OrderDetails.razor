@@ -1,4 +1,4 @@
-﻿@attribute [Route(PageUrl)]
+﻿@attribute [Route(PageUrlTemplate)]
 @inherits AdminPageComponentBase
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
@@ -14,7 +14,7 @@
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
                     <a href="@Pages.Admin.Customer.CustomerDetails.GetPageUrl(Order.Customer.CustomerId)" class="button function-button">View Customer</a>
                     <a href="@Pages.Admin.Car.CarDetails.GetPageUrl(Order.CarBooking.Car.CarId)" class="button function-button">View Car</a>
-                    <a href="@Pages.Admin.Order.ListOrders.PageUrl" class="button function-button">View Orders</a>
+                    <a href="@Pages.Admin.Order.ListOrders.GetPageUrl()" class="button function-button">View Orders</a>
                     <CompleteOrderButton Order="Order" OnCompletedOrder="OnCompletedOrder"></CompleteOrderButton>
                     <DeleteOrderButton Order="Order" OnDeletedOrder="OnDeletedOrder" StoreDeletedOrderIdInLocalStorage="true"></DeleteOrderButton>
                 </div>

@@ -19,12 +19,12 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
         /// <summary>
         /// The base URL for the page without the order ID.
         /// </summary>
-        public const string PageUrlBase = "/admin/order/details";
+        private const string PageUrlBase = "/admin/order/details";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = PageUrlBase + "/{OrderId:int}";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = PageUrlBase + "/{OrderId:int}";
 
         #endregion
 
@@ -92,7 +92,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
         {
             if (result.ApiResponse.Success)
             {
-                NavigationManager.NavigateTo(ListOrders.PageUrl);
+                NavigationManager.NavigateTo(ListOrders.GetPageUrl());
             }
             else
             {

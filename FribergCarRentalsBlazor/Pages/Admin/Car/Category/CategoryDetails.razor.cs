@@ -12,17 +12,17 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
     /// </summary>
     public partial class CategoryDetails : AdminPageComponentBase
     {
-        #region Constants
+		#region Constants
 
-        /// <summary>
-        /// The base URL for the page without the category ID.
-        /// </summary>
-        public const string PageUrlBase = "/admin/car/category/details";
+		/// <summary>
+		/// The base URL for the page without the category ID.
+		/// </summary>
+		private const string PageUrlBase = "/admin/car/category/details";
 
-        /// <summary>
-        /// The url for the page. 
-        /// </summary>
-        public const string PageUrl = PageUrlBase + "/{CarCategoryId:int}";
+		/// <summary>
+		/// The url template for the page. 
+		/// </summary>
+		private const string PageUrlTemplate = PageUrlBase + "/{CarCategoryId:int}";
 
         #endregion
 
@@ -74,7 +74,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car.Category
             if (result.ApiResponse.Success)
             {
                 await SessionStorageService.SetItemAsStringAsync(ListCategories.DeletedCarCategoryIdStorageDataKey, CarCategory.CarCategoryId.ToString());
-                NavigationManager.NavigateTo(ListCategories.PageUrl); 
+                NavigationManager.NavigateTo(ListCategories.GetPageUrl()); 
             }
             else
             {
