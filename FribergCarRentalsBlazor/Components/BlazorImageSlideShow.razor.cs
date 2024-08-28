@@ -16,6 +16,11 @@ namespace FribergCarRentalsBlazor.Components
 		private int _currentSlideIndex = 0;
 
 		/// <summary>
+		/// The periodic timer for switching the image slide show.
+		/// </summary>
+		private Timer _imageSlidesShowPeriodicTimer = default!;
+
+		/// <summary>
 		/// The previous image slide index. 
 		/// </summary>
 		private int _previousSlideIndex = 0;
@@ -39,6 +44,20 @@ namespace FribergCarRentalsBlazor.Components
 		#endregion
 
 		#region Methods
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		protected override async Task OnInitializedAsync()
+		{
+			await base.OnInitializedAsync();
+
+			_imageSlidesShowPeriodicTimer = new Timer(async _ =>  
+			{
+				ShowNextSlide();
+				await InvokeAsync(StateHasChanged);
+			}, null, 0, 5000);
+		}
 
 		/// <summary>
 		/// Method invoked when the component has received parameters from its parent in

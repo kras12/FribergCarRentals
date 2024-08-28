@@ -251,6 +251,23 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         }
 
         /// <summary>
+        /// Gets all orders.
+        /// </summary>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
+        [HttpGet("first-car-per-category")]
+        [ProducesResponseType<ApiValueResponseDto<List<CarDto>>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetFirstCarPerCategory()
+        {
+            var cars = (await _carRepository.GetFirstCarPerCategory()).ToList();
+            var result = _mapper.Map<List<CarDto>>(cars);
+            SetImageUrls(result.SelectMany(x => x.Images).ToList());
+
+            return Ok(ApiValueResponseDto<List<CarDto>>.CreateSuccessfulResponse(result));
+        }
+
+        /// <summary>
         /// Gets an order by ID.
         /// </summary>
         /// <param name="id">The ID of the order.</param>

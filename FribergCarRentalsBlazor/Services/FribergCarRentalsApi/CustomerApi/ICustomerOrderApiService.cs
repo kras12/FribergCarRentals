@@ -1,4 +1,5 @@
 ﻿using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using FribergCarRentals.Shared.Models.Dto.Order;
 
@@ -28,6 +29,12 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
         /// </summary>
         /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarCategoryDto"/> object if successful.</returns>
         public Task<ApiValueResponseDto<List<CarCategoryDto>>> GetCarCategoriesAsync();
+
+        /// <summary>
+        /// Fetches the first car per category.
+        /// </summary>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarDto"/> object if successful.</returns>
+        public Task<ApiValueResponseDto<List<CarDto>>> GetFirstCarPerCategory();
 
         /// <summary>
         /// Gets an order. 

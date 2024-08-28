@@ -3,7 +3,8 @@
 	{
 		@foreach (var image in Images)
 		{
-			<div class="image-slide image-fade" @(image.IsActive hidden="@(!image.IsActive)">
+			string activeClass = image.IsActive ? "active" : "not-active";
+			<div class="image-slide image-fade @activeClass">
 				@if (image.Link is not null)
 				{
 					<a href="@image.Link">

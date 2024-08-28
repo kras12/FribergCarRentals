@@ -1,7 +1,7 @@
 ﻿using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.Car;
 using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using FribergCarRentals.Shared.Models.Dto.Order;
-using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 
 namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
@@ -27,6 +27,11 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
         /// The car categories API endpoint address.
         /// </summary>
         private const string CarCategoriesApiEndpoint = $"{ApiBaseAddress}/car-categories";
+
+        /// <summary>
+        /// The first car per category API endpoint address.
+        /// </summary>
+        private const string FirstCarPerCategoryApiEndpoint = $"{ApiBaseAddress}/first-car-per-category";
 
         /// <summary>
         /// The create order API endpoint address.
@@ -95,6 +100,17 @@ namespace FribergCarRentalsBlazor.Services.FribergCarRentalsApi.CustomerApi
         public async Task<ApiValueResponseDto<List<CarCategoryDto>>> GetCarCategoriesAsync()
         {
             var result = await _httpClient.GetFromJsonAsync<ApiValueResponseDto<List<CarCategoryDto>>>(CarCategoriesApiEndpoint);
+            return EnsureNotNull(result, "Failed to serialize the API response.");
+        }
+
+        /// <summary>
+        /// Fetches the first car per category.
+        /// </summary>
+        /// <returns>An <see cref="ApiValueResponseDto{T}"/> containing a collection of <see cref="CarDto"/> object if successful.</returns>
+        public async Task<ApiValueResponseDto<List<CarDto>>> GetFirstCarPerCategory()
+        {
+            await SetAuthorizationHeaderAsync();
+            var result = await _httpClient.GetFromJsonAsync<ApiValueResponseDto<List<CarDto>>>(FirstCarPerCategoryApiEndpoint);
             return EnsureNotNull(result, "Failed to serialize the API response.");
         }
 

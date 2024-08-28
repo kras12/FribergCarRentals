@@ -1097,6 +1097,12 @@ textarea
     row-gap: 0.5rem;
 }
 
+/* Slideshow container */
+.image-slideshow-container a
+{
+    text-decoration: none;
+}
+
 /* Slideshow container - Image */
 .image-slideshow-container image
 {
