@@ -86,7 +86,10 @@ namespace FribergCarRentals.Shared.Models.Mvc.AutoMapper
         private void CreateOrderMappings()
         {
             CreateMap<OrderStatusEntity, OrderStatusViewModel>();
-            CreateMap<CarBookingEntity, CarBookingViewModel>();
+
+            CreateMap<CarBookingEntity, CarBookingViewModel>()
+                .ForMember(dest => dest.CarPickupDate, opt => opt.MapFrom(src => src.PickupDateUtc.ToLocalTime()))
+                .ForMember(dest => dest.CarReturnDate, opt => opt.MapFrom(src => src.ReturnDateUtc.ToLocalTime()));
 
             CreateMap<CarOrderEntity, OrderViewModel>()
                 .ForMember(dest => dest.CarBooking, opt => opt.MapFrom(src => src.CarBookings.First()));
