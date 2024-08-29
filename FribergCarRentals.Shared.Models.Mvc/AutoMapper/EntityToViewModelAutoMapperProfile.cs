@@ -49,7 +49,8 @@ namespace FribergCarRentals.Shared.Models.Mvc.AutoMapper
         private void CreateCarMappings()
         {
             CreateMap<CarCategoryEntity, CarCategoryViewModel>();
-            CreateMap<VehiclePropulsionEntity, VehiclePropulsionViewModel>();
+			CreateMap<CarCategoryEntity, EditCarCategoryViewModel>();
+			CreateMap<VehiclePropulsionEntity, VehiclePropulsionViewModel>();
             CreateMap<CarRentalStatusEntity, CarRentalStatusViewModel>();
             CreateMap<ImageEntity, ImageViewModel>();
             CreateMap<CarEntity, CarViewModel>();
