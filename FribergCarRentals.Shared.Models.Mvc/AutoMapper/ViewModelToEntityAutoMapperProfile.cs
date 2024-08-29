@@ -69,9 +69,16 @@ namespace FribergCarRentals.Shared.Models.Mvc.AutoMapper
         public void CreateMappingsForCars()
         {
             CreateMap<CarViewModel, CarEntity>();
-            CreateMap<EditCarViewModel, CarEntity>();
 
-            CreateMap<VehiclePropulsionViewModel, VehiclePropulsionEntity>()
+            CreateMap<CreateCarViewModel, CarEntity>()
+                .ForMember(dest => dest.PropulsionSystem, opt => opt.MapFrom(src => VehiclePropulsionEntity.CreateFromId(src.SelectedPropulsionSystemId)))
+                .ForMember(dest => dest.RentalStatus, opt => opt.MapFrom(src => CarRentalStatusEntity.CreateFromId(src.SelectedRentalStatusId)));
+
+			CreateMap<EditCarViewModel, CarEntity>()
+				.ForMember(dest => dest.PropulsionSystem, opt => opt.MapFrom(src => VehiclePropulsionEntity.CreateFromId(src.SelectedPropulsionSystemId)))
+				.ForMember(dest => dest.RentalStatus, opt => opt.MapFrom(src => CarRentalStatusEntity.CreateFromId(src.SelectedRentalStatusId)));
+
+			CreateMap<VehiclePropulsionViewModel, VehiclePropulsionEntity>()
                 .ConstructUsing((vm, entity) => VehiclePropulsionEntity.CreateFromId(vm.VehiclePropulsionId));
 
             CreateMap<CarRentalStatusViewModel, CarRentalStatusEntity>()
