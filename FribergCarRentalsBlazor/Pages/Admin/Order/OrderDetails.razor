@@ -8,8 +8,8 @@
 	<Authorized>
         @if (Order != null)
         {
-            <h1>@($"Order - #{Order.CarOrderId}")</h1>
-            <h2>@($"{Order.Customer.FullName} - {Order.CarBooking.Car.CarInfo}")</h2>
+            <h1>Order</h1>
+            <h2>@($"#{Order.CarOrderId} - {Order.Customer.FullName} - {Order.CarBooking.Car.CarInfo}")</h2>
             <div class="vertical-flex-container flex-container__row-gap__1-rem">
                 <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
                     <a href="@Pages.Admin.Customer.CustomerDetails.GetPageUrl(Order.Customer.CustomerId)" class="button function-button">View Customer</a>
