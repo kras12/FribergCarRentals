@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
 using FribergCarRentals.Shared.Mvc.Data;
-using FribergCarRentals.Shared.Mvc.Helpers;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -153,17 +152,18 @@ namespace FribergCarRentals.Controllers
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginCustomerViewModel.Email, loginCustomerViewModel.Password, isPersistent: true, lockoutOnFailure: false);
+                if (await _customerRepository.CustomerExists(loginCustomerViewModel.Email))
+                {
+                    var result = await _signInManager.PasswordSignInAsync(loginCustomerViewModel.Email, loginCustomerViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (result.Succeeded)
-                {
-                    return TempDataOrHomeRedirect();
+                    if (result.Succeeded)
+                    {
+                        return TempDataOrHomeRedirect();
+                    }
                 }
-                else
-                {
-                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
-                    ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
-                }
+
+                // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
+                ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
             }
 
             return View(nameof(Authenticate), new RegisterOrLoginCustomerViewModel() { LoginCustomerViewModel = loginCustomerViewModel });

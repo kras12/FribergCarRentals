@@ -92,16 +92,17 @@ namespace FribergCarRentals.Areas.Admin.Pages
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(AdminLoginViewModel.Email, AdminLoginViewModel.Password, isPersistent: true, lockoutOnFailure: false);
+                if (await _adminRepository.AdminExistsAsync(AdminLoginViewModel.Email))
+                {
+                    var result = await _signInManager.PasswordSignInAsync(AdminLoginViewModel.Email, AdminLoginViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (result.Succeeded)
-                {
-                    return TempDataOrHomeRedirect();
-                }
-                else
-                {
-                    ModelState.AddModelError("", "No account matched the entered email/password.");
-                }
+                    if (result.Succeeded)
+                    {
+                        return TempDataOrHomeRedirect();
+                    }
+                } 
+                
+                ModelState.AddModelError("", "No account matched the entered email/password.");
             }
 
             return Page();

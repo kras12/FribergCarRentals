@@ -90,6 +90,16 @@ namespace FribergCarRentals.Data.Repositories
         }
 
         /// <summary>
+        /// Attempts to find an admin with a matching email address.
+        /// </summary>
+        /// <param name="email">The email of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing true if a matching admin was found.</returns>
+        public Task<bool> AdminExistsAsync(string email)
+        {
+            return _databaseContext.Admins.AnyAsync(x => x.User.Email == email.ToLower());
+        }
+
+        /// <summary>
         /// Returns true if there is any admins in the database.
         /// </summary>
         /// <returns>A <see cref="Task"/> object containing true if there is any admins in the database.</returns>
