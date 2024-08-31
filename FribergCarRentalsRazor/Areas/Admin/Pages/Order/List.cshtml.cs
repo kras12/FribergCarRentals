@@ -87,8 +87,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
             }
 
 			List<OrderViewModel> orderViewModels = _mapper.Map<List<OrderViewModel>>(await _orderRepository.GetAllAsync()).OrderByDescending(x => x.CarOrderId).ToList();
-
-			OrderListViewModel = new ListViewModel<OrderViewModel>();
+			OrderListViewModel = new ListViewModel<OrderViewModel>(orderViewModels);
             
             TempDataHelper.Set(TempData, CompleteModel.RedirectToPageAfterOrderCompletionTempDataKey, new RedirectToPageData(
                     "List", area: Area));
