@@ -10,6 +10,11 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
         #region Properties
 
         /// <summary>
+		/// The ID of the customer.
+		/// </summary>
+        public int CustomerId { get; set; }
+
+        /// <summary>
         /// Contains the information needed to confirm the email account.
         /// </summary>
         public ConfirmEmailDto? ConfirmEmailData { get; set; } = null;
