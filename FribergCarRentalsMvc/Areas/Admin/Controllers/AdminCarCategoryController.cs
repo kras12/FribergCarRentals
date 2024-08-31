@@ -167,7 +167,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (category is not null)
                 {
-                    CarCategoryViewModel viewModel = new CarCategoryViewModel(category.CarCategoryId, category.CategoryName);
+                    CarCategoryViewModel viewModel = _mapper.Map<CarCategoryViewModel>(category);
 
                     if (TempDataHelper.TryGet(TempData, CreatedCarCategoryIdTempDataKey, out int categoryId))
                     {
@@ -251,8 +251,8 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
             }
 
-            ListViewModel<CarCategoryViewModel> viewModel = new((await _carCategoryRepository.GetCategoryStatistics()).Select(x => new CarCategoryViewModel(x.CarCategoryEntity.CarCategoryId, x.CarCategoryEntity.CategoryName, x.CarCount)));
-            TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
+            ListViewModel<CarCategoryViewModel> viewModel = new(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetCategoryStatistics()));
+			TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
                 new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeletedCarCategoryIdTempDataKey, out int deletedCarCategoryId))
