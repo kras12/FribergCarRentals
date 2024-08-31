@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using FribergCarRentals.Data.Types;
-using FribergCarRentals.Data.Attributes;
-using FribergCarRentals.Data.Extensions;
+using FribergCarRentals.Shared.Enums;
+using FribergCarRentals.Shared.Attributes;
+using FribergCarRentals.Shared.Extensions;
 
 namespace FribergCarRentals.Data.EntityClasses
 {

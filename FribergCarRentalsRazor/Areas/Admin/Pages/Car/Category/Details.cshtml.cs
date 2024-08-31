@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.CarCategory;
-using MvcRazorPages.Shared.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 {
@@ -30,30 +32,35 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
         /// </summary>
         private readonly ICarCategoryRepository _carCategoryRepository;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor. 
-        /// </summary>
-        /// <param name="carCategoryRepository">The injected car category repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        public DetailsModel(ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
-        {
-            _carCategoryRepository = carCategoryRepository;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor. 
+		/// </summary>
+		/// <param name="carCategoryRepository">The injected car category repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public DetailsModel(ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_carCategoryRepository = carCategoryRepository;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// The view model used for showing car details. 
-        /// </summary>
-        public CarCategoryViewModel CarCategoryViewModel { get; set; } = null!;
+		#region Properties
+
+		/// <summary>
+		/// The view model used for showing car details. 
+		/// </summary>
+		public CarCategoryViewModel CarCategoryViewModel { get; set; } = null!;
 
         #endregion
 
@@ -82,11 +89,11 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 
                 if (category is not null)
                 {
-                    CarCategoryViewModel = new CarCategoryViewModel(category);
+                    CarCategoryViewModel = _mapper.Map<CarCategoryViewModel>(category);
 
                     if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCarCategoryIdTempDataKey, out int categoryId))
                     {
-                        CarCategoryViewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryCreationSuccessMessage(categoryId));
+                        CarCategoryViewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryCreationSuccessMessage(categoryId));
                     }
 
                     return Page();

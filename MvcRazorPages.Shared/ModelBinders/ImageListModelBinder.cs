@@ -1,7 +1,7 @@
 ﻿using FribergCarRentals.Data.EntityClasses;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcRazorPages.Shared.ModelBinders
+namespace FribergCarRentals.Shared.Mvc.ModelBinders
 {
     /// <summary>
     /// A model binder class that converts text strings to a collection of <see cref="ImageEntity"/> objects.

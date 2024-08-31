@@ -14,13 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Car\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FribergCarRentals.Data\FribergCarRentals.Data.csproj" />
+    <ProjectReference Include="..\FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj" />
     <ProjectReference Include="..\FribergCarRentals.Shared\FribergCarRentals.Shared.csproj" />
-    <ProjectReference Include="..\MvcRazorPages.Shared\MvcRazorPages.Shared.csproj" />
+    <ProjectReference Include="..\MvcRazorPages.Shared\FribergCarRentals.Shared.Mvc.csproj" />
   </ItemGroup>
 
   <ItemGroup>

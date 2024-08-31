@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Customer;
-using MvcRazorPages.Shared.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Data.Exceptions;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -122,7 +122,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
                     }
                     catch (CreateUserException ex)
                     {
-                        ModelState.AddModelError(string.Empty, ex.Message);
+                        ModelState.AddModelError("", ex.Message);
                     }
                 } 
             }

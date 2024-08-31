@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Order;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
 using FribergCarRentals.Areas.Admin.Pages.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Order
 {
@@ -33,9 +36,12 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
         private readonly ICarOrderRepository _orderRepository;
 
         /// <summary>
-        /// The injected image upload service.
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
+
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
         #endregion
 
@@ -47,12 +53,15 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
         /// <param name="orderRepository">Injected order repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public DetailsModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
         {
             _orderRepository = orderRepository;
-            _imageUploadService = imageUploadService;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -62,7 +71,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
         /// <summary>
         /// The view model used for presenting order details in the admin back office. 
         /// </summary>
-        public OrderViewModel OrderViewModel { get; set; }
+        public OrderViewModel OrderViewModel { get; set; } = default!;
 
         #endregion
 
@@ -91,14 +100,15 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
 
                 if (order is not null)
                 {
-                    OrderViewModel = new OrderViewModel(order, _imageUploadService);
+                    OrderViewModel = _mapper.Map<OrderViewModel>(order);
+                    SetImageUrls(OrderViewModel.CarBooking.Car.Images);
 
                     TempDataHelper.Set(TempData, CompleteModel.RedirectToPageAfterOrderCompletionTempDataKey, 
                         new RedirectToPageData("Details", new RouteValueDictionary(new { id = id }), area: Area));
 
                     if (TempDataHelper.TryGet(TempData, CompleteModel.CompletedOrderIdTempDataKey, out int completedOrderId))
                     {
-                        OrderViewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
+                        OrderViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
                     }
                     
                     return Page();
@@ -108,6 +118,19 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
             throw new Exception($"Failed to show the order with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region OtherMethods
+
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
+		}
+
+		#endregion
+	}
 }

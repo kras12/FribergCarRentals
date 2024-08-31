@@ -5,8 +5,8 @@
     ViewData["Title"] = "Order Details";
 }
 
-<h1>@($"Order - #{Model.OrderViewModel.CarOrderId}")</h1>
-<h2>@($"{Model.OrderViewModel.Customer.FullName} - {Model.OrderViewModel.CarBooking.Car.CarInfo}")</h2>
+<h1>Order</h1>
+<h2>@($"#{Model.OrderViewModel.CarOrderId} - {Model.OrderViewModel.Customer.FullName} - {Model.OrderViewModel.CarBooking.Car.CarInfo}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem flex-container__row-gap__0-5-rem flex-container__wrap">
         <a asp-area="@AdminPageModelBase.Area" asp-page="List" class="button navigational-button">View Orders</a>
@@ -99,12 +99,6 @@
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.OrderViewModel.Customer.Email)
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.OrderViewModel.Customer.OrderCount)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.OrderViewModel.Customer.OrderCount)
                 </dd>
             </dl>
         </div>

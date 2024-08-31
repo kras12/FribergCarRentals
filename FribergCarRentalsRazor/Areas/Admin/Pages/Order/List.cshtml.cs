@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Other;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.ViewModels.Order;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Order
 {
@@ -37,32 +39,37 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="orderRepository">Injected order repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service.</param>
-        public ListModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
-        {
-            _orderRepository = orderRepository;
-            _imageUploadService = imageUploadService;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor.
+		/// </summary>
+		/// <param name="orderRepository">Injected order repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="imageUploadService">The injected image upload service.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public ListModel(ICarOrderRepository orderRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_orderRepository = orderRepository;
+			_imageUploadService = imageUploadService;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// The view model used for listing customer orders. 
-        /// </summary>
-        public ListViewModel<OrderViewModel> OrderListViewModel { get; private set; } = new();
+		#region Properties
+
+		/// <summary>
+		/// The view model used for listing customer orders. 
+		/// </summary>
+		public ListViewModel<OrderViewModel> OrderListViewModel { get; private set; } = new();
 
         #endregion
 
@@ -79,7 +86,8 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
                 return RedirectToLogin(new RedirectToPageData(PageUrlRelativeToLoginPage, area: Area));
             }
 
-            OrderListViewModel = new ListViewModel<OrderViewModel>((await _orderRepository.GetAllAsync()).Select(x => new OrderViewModel(x, _imageUploadService)).OrderByDescending(x => x.CarOrderId));
+			List<OrderViewModel> orderViewModels = _mapper.Map<List<OrderViewModel>>(await _orderRepository.GetAllAsync()).OrderByDescending(x => x.CarOrderId).ToList();
+			OrderListViewModel = new ListViewModel<OrderViewModel>(orderViewModels);
             
             TempDataHelper.Set(TempData, CompleteModel.RedirectToPageAfterOrderCompletionTempDataKey, new RedirectToPageData(
                     "List", area: Area));
@@ -89,12 +97,12 @@ namespace FribergCarRentals.Areas.Admin.Pages.Order
 
             if (TempDataHelper.TryGet(TempData, CompleteModel.CompletedOrderIdTempDataKey, out int completedOrderId))
             {
-                OrderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
+                OrderListViewModel.Messages.Add(MessageViewModelHelper.CreateOrderCompletionSuccessMessage(completedOrderId));
             }
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedOrderIdTempDataKey, out int deletedOrderId))
             {
-                OrderListViewModel.Messages.Add(UserMesssageHelper.CreateOrderDeletionSuccessMessage(deletedOrderId));
+                OrderListViewModel.Messages.Add(MessageViewModelHelper.CreateOrderDeletionSuccessMessage(deletedOrderId));
             }
             
             return Page();

@@ -1,0 +1,20 @@
+﻿@attribute [Route(PageUrlTemplate)]
+@using FribergCarRentalsBlazor.Components
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+	<Authorized>
+		<RedirectToUrl Url="/customer"></RedirectToUrl>
+	</Authorized>
+	<NotAuthorized>
+		<div class="vertical-flex-container flex-container__row-gap__2-rem">
+			<div>
+				<h1>Authorization required!</h1>
+				<p class="text-align-center">You have to login before you continue. If you don't have an account you can create one below.</p>
+			</div>
+			<div class="authenticate-container">
+				<LoginCustomer RedirectUrl="@_redirectUrl"></LoginCustomer>
+				<RegisterCustomer></RegisterCustomer>
+			</div>
+		</div>		
+	</NotAuthorized>
+</AuthorizeView>

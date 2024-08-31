@@ -1,15 +1,15 @@
-﻿using MvcRazorPages.Shared.Helpers;
+﻿using FribergCarRentals.Shared.Mvc.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Other;
-using MvcRazorPages.Shared.ViewModels.CarCategory;
-using MvcRazorPages.Shared.Data;
-using FribergCarRentals.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using FribergCarRentals.Data.Entities;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -167,11 +167,11 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (category is not null)
                 {
-                    CarCategoryViewModel viewModel = new CarCategoryViewModel(category);
+                    CarCategoryViewModel viewModel = _mapper.Map<CarCategoryViewModel>(category);
 
                     if (TempDataHelper.TryGet(TempData, CreatedCarCategoryIdTempDataKey, out int categoryId))
                     {
-                        viewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryCreationSuccessMessage(categoryId));
+                        viewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryCreationSuccessMessage(categoryId));
                     }
 
                     return View(viewModel);
@@ -201,7 +201,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (category is not null)
                 {
-                    EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category);
+                    EditCarCategoryViewModel viewModel = _mapper.Map<EditCarCategoryViewModel>(category);
                     TempDataHelper.Set(TempData, PageSubTitleTempDataKey, viewModel.PageSubTitle!);
                     return View(viewModel);
                 }
@@ -229,14 +229,14 @@ namespace FribergCarRentals.Areas.Admin.Controllers
             {
                 var category = _mapper.Map<CarCategoryEntity>(editCarCategoryViewModel);
                 await _carCategoryRepository.UpdateAsync(category);
-                EditCarCategoryViewModel viewModel = new EditCarCategoryViewModel(category);
-                viewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
+                EditCarCategoryViewModel viewModel = _mapper.Map<EditCarCategoryViewModel>(category);
+                viewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
                 return View(viewModel);
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempDataKey, out string? pageSubTitle))
             {
-                editCarCategoryViewModel.PageSubTitle = pageSubTitle;
+                editCarCategoryViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempDataKey, editCarCategoryViewModel.PageSubTitle!); // The user can fail again.
             }
 
@@ -251,13 +251,13 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
             }
 
-            ListViewModel<CarCategoryViewModel> viewModel = new((await _carCategoryRepository.GetCategoryStatistics()).Select(x => new CarCategoryViewModel(x)));
-            TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
+            ListViewModel<CarCategoryViewModel> viewModel = new(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetCategoryStatistics()));
+			TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
                 new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarCategoryController>(), area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeletedCarCategoryIdTempDataKey, out int deletedCarCategoryId))
             {
-                viewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryDeletionSuccessMessage(deletedCarCategoryId));
+                viewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryDeletionSuccessMessage(deletedCarCategoryId));
             }
 
             return View(viewModel);

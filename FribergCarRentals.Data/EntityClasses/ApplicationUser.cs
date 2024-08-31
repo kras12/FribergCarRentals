@@ -61,7 +61,7 @@ namespace FribergCarRentals.Data.Entities
             Email = email;            
             EmailConfirmed = emailConfirmed;
             PhoneNumber = phoneNumber;
-            NewPassword = password;
+            Password = password;
         }
 
         #endregion
@@ -82,7 +82,7 @@ namespace FribergCarRentals.Data.Entities
         /// The password to use when creating or updating users.
         /// </summary>
         [NotMapped]
-        public string? NewPassword { get; set; } = null;
+        public string? Password { get; set; } = null;
 
         #endregion
 

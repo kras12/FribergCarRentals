@@ -1,39 +1,42 @@
-﻿@using MvcRazorPages.Shared.ViewModels.Image
-@using MvcRazorPages.Shared.ViewModels.Other
+﻿@using FribergCarRentals.Shared.Models.ViewModels.Image
+@using FribergCarRentals.Shared.Models.ViewModels.Other
 @model ListViewModel<SlideShowImageViewModel>
 
 <div class="image-slideshow-container">
-	@foreach (var image in Model.Models)
+	@if (Model.Models.Count > 0)
 	{
-		<div class="image-slide image-fade">
-			@if (image.Link is not null)
-			{
-				<a href="@image.Link">
+		@foreach (var image in Model.Models)
+		{
+			<div class="image-slide image-fade">
+				@if (image.Link is not null)
+				{
+					<a href="@image.Link">
+						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
+						@if (image.HaveCaption)
+						{
+							<div class="image-slide-caption">@image.ImageCaption</div>
+						}
+					</a>				
+				}
+				else
+				{
 					<img src="@image.Url" class="full-width max-height__50vh cover-image" />
 					@if (image.HaveCaption)
 					{
 						<div class="image-slide-caption">@image.ImageCaption</div>
 					}
-				</a>				
-			}
-			else
-			{
-				<img src="@image.Url" class="full-width max-height__50vh cover-image" />
-				@if (image.HaveCaption)
-				{
-					<div class="image-slide-caption">@image.ImageCaption</div>
 				}
+			</div>
+		}
+		<a class="previous-slider-button" onclick="ShowNextSlide(-1)">&#10094;</a>
+		<a class="next-slider-button" onclick="ShowNextSlide(1)">&#10095;</a>
+		<div class="text-align-center">
+			@for (int i = 0; i < Model.Models.Count; i++)
+			{
+				<span class="navigation-dot" onclick="SetNextSlide(@i)"></span>
 			}
 		</div>
 	}
-	<a class="previous-slider-button" onclick="ShowNextSlide(-1)">&#10094;</a>
-	<a class="next-slider-button" onclick="ShowNextSlide(1)">&#10095;</a>
-	<div class="text-align-center">
-		@for (int i = 0; i < Model.Models.Count; i++)
-		{
-			<span class="navigation-dot" onclick="SetNextSlide(@i)"></span>
-		}
-	</div>
 </div>
 <script defer type="text/javascript">
 

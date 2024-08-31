@@ -1,0 +1,63 @@
+﻿@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+@attribute [Route(PageUrlTemplate)]
+@inherits AdminPageComponentBase
+
+<AuthorizeView Context="AuthorizeContext" Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (EditCustomerViewModel != null)
+        {
+            <h1>Edit</h1>
+            @if (EditCustomerViewModel.HavePageSubTitle)
+            {
+                <h2>@EditCustomerViewModel.PageSubTitle</h2>
+            }
+            else
+            {
+                <h2>@($"#{EditCustomerViewModel.AccountId} - {EditCustomerViewModel.FullName}")</h2>
+            }
+            <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Customer.ListCustomers.GetPageUrl()" class="button navigational-button">View Customers</a>
+                    <DeleteCustomerButton Customer="_customer" OnDeletedCustomer="OnDeletedCustomer"></DeleteCustomerButton>
+                </div>
+                <UserMessages Messages="EditCustomerViewModel.Messages"></UserMessages>
+                <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__0-5-rem filled-container flex-container__padding__1-rem full-width">
+                    <EditForm Model="EditCustomerViewModel" class="vertical-form full-width" OnValidSubmit="OnEditCustomer">
+                        <DataAnnotationsValidator></DataAnnotationsValidator>
+                        @if (_apiValidationErrors.Count > 0)
+                        {
+                            <UserMessages Messages="_apiValidationErrors"></UserMessages>
+                        }
+                        <div class="vertical-form-field">
+                            <label for="first-name">First Name</label>
+                            <InputText id="first-name" @bind-Value="EditCustomerViewModel.FirstName"></InputText>
+                            <ValidationMessage For="@(() => EditCustomerViewModel.FirstName)" class="error-text" />
+                        </div>
+                        <div class="vertical-form-field">
+                            <label for="last-name">Last Name</label>
+                            <InputText id="last-name" @bind-Value="EditCustomerViewModel.LastName"></InputText>
+                            <ValidationMessage For="@(() => EditCustomerViewModel.LastName)" class="error-text" />
+                        </div>
+                        <div class="vertical-form-field">
+                            <label for="email">Email</label>
+                            <InputText id="email" @bind-Value="EditCustomerViewModel.Email"></InputText>
+                            <ValidationMessage For="@(() => EditCustomerViewModel.Email)" class="error-text" />
+                        </div>
+                        <div class="vertical-form-field">
+                            <label for="new-password">Password</label>
+                            <InputText id="new-password" @bind-Value="EditCustomerViewModel.Password"></InputText>
+                            <ValidationMessage For="@(() => EditCustomerViewModel.Password)" class="error-text" />
+                        </div>
+                        <div class="vertical-form-field">
+                            <button type="submit">Save</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        }        
+    </Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

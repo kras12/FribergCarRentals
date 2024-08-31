@@ -2,9 +2,9 @@
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Data.Entities;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -60,7 +60,7 @@ namespace FribergCarRentals.Data.Repositories
             #endregion
 
             // Create user
-            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.NewPassword!);
+            IdentityResult? createUserResult = await _userManager.CreateAsync(admin.User, admin.User.Password!);
             IdentityResult? addRoleResult = null;
 
             if (!createUserResult.Succeeded)
@@ -87,6 +87,16 @@ namespace FribergCarRentals.Data.Repositories
             _databaseContext.Admins.Add(admin);
             await _databaseContext.SaveChangesAsync();
             return admin;
+        }
+
+        /// <summary>
+        /// Attempts to find an admin with a matching email address.
+        /// </summary>
+        /// <param name="email">The email of the admin.</param>
+        /// <returns>A <see cref="Task"/> object containing true if a matching admin was found.</returns>
+        public Task<bool> AdminExistsAsync(string email)
+        {
+            return _databaseContext.Admins.AnyAsync(x => x.User.Email == email.ToLower());
         }
 
         /// <summary>

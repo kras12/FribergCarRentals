@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.CarCategory;
-using MvcRazorPages.Shared.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 {
@@ -95,7 +96,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 
                 if (category is not null)
                 {
-                    EditCarCategoryViewModel = new EditCarCategoryViewModel(category);
+                    EditCarCategoryViewModel = _mapper.Map<EditCarCategoryViewModel>(category);
                     TempDataHelper.Set(TempData, PageSubTitleTempDataKey, EditCarCategoryViewModel.PageSubTitle!);
                     return Page();
                 }
@@ -125,14 +126,14 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
             {
                 var category = _mapper.Map<CarCategoryEntity>(EditCarCategoryViewModel);
                 await _carCategoryRepository.UpdateAsync(category);
-                EditCarCategoryViewModel = new EditCarCategoryViewModel(category);
-                EditCarCategoryViewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
+                EditCarCategoryViewModel = _mapper.Map<EditCarCategoryViewModel>(category);
+                EditCarCategoryViewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryUpdateSuccessMessage(category.CarCategoryId));
                 return Page();
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempDataKey, out string? pageSubTitle))
             {
-                EditCarCategoryViewModel.PageSubTitle = pageSubTitle;
+				EditCarCategoryViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempDataKey, EditCarCategoryViewModel.PageSubTitle!); // The user can fail again.
             }
 

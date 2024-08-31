@@ -2,10 +2,10 @@
 @model FribergCarRentals.Areas.Admin.Pages.Customer.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Customer Details";
 }
 
-<h1>@($"Customer - #{Model.CustomerViewModel.CustomerId}")</h1>
+<h1>Customer</h1>
 <h2>@($"#{Model!.CustomerViewModel.CustomerId} - {Model!.CustomerViewModel.FullName}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
@@ -49,6 +49,12 @@
             </dt>
             <dd>
                 @Html.DisplayFor(model => model.CustomerViewModel.Email)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.CustomerViewModel.IsEmailConfirmed)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CustomerViewModel.IsEmailConfirmed)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.CustomerViewModel.OrderCount)

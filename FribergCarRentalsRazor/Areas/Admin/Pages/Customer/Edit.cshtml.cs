@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Customer;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -99,7 +100,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
 
                 if (customer is not null)
                 {
-                    EditCustomerViewModel = new EditCustomerViewModel(customer);
+                    EditCustomerViewModel = _mapper.Map<EditCustomerViewModel>(customer);
                     TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCustomerViewModel.PageSubTitle!);
                     return Page();
                 }
@@ -136,22 +137,22 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
                 _mapper.Map(EditCustomerViewModel, user);
                 await _userManager.UpdateAsync(user);
 
-                if (!string.IsNullOrEmpty(EditCustomerViewModel.NewPassword))
+                if (!string.IsNullOrEmpty(EditCustomerViewModel.Password))
                 {
                     await _userManager.RemovePasswordAsync(user);
-                    await _userManager.AddPasswordAsync(user, EditCustomerViewModel.NewPassword!);
+                    await _userManager.AddPasswordAsync(user, EditCustomerViewModel.Password!);
                 }
 
                 var customer = await _customerRepository.GetByUserIdAsync(user.Id) ?? throw new Exception($"Failed to find customer with ID: {EditCustomerViewModel.AccountId}");
-                EditCustomerViewModel = new EditCustomerViewModel(customer);
-                EditCustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerUpdateSuccessMessage(id));
+                EditCustomerViewModel = _mapper.Map<EditCustomerViewModel>(customer);
+				EditCustomerViewModel.Messages.Add(MessageViewModelHelper.CreateCustomerUpdateSuccessMessage(id));
 
                 return Page();
             }
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))
             {
-                EditCustomerViewModel.PageSubTitle = pageSubTitle;
+				EditCustomerViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCustomerViewModel.PageSubTitle!);  // The user can fail again.
             }
 

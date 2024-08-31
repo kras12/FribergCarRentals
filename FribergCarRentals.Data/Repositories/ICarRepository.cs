@@ -76,7 +76,7 @@ namespace FribergCarRentals.Data.Repositories
         /// Retrieves the first car with images in each car category. 
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> containing a collection containing the cars found.</returns>
-        public Task<IEnumerable<CarEntity>> GetFirstCarWithImagesByCategory();
+        public Task<IEnumerable<CarEntity>> GetFirstCarPerCategory();
 
         /// <summary>
         /// Returns all the cars that matches the specified category and that are available to be rented out within the desired timespan. 

@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Order;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.ViewModels.Car;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Order;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Pages.Order
 {
@@ -31,20 +34,6 @@ namespace FribergCarRentals.Pages.Order
 
         #endregion
 
-        #region ErrorMessages
-
-        /// <summary>
-        /// Error message for when the pickup date is not in the future. 
-        /// </summary>
-        private const string PickupDateMustBeInFutureErrorMessage = "The pickup date must be at least one day into the future.";
-
-        /// <summary>
-        /// Error message for when the return date occurrs before the pickup date.
-        /// </summary>
-        private const string ReturnDateOccursBeforePickupDateErrorMessage = "The return date can't occur before the pickup date.";
-
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -58,9 +47,12 @@ namespace FribergCarRentals.Pages.Order
         private readonly ICarRepository _carRepository;
 
         /// <summary>
-        /// The injected image upload service.
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
+
+        // The injected Auto Mapper.
+        private readonly IMapper _mapper;
 
         #endregion
 
@@ -73,13 +65,15 @@ namespace FribergCarRentals.Pages.Order
         /// <param name="carCategoryRepository">Injected car category repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public BookModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageDownloadService imageDownloadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
-            _imageUploadService = imageUploadService;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -102,11 +96,11 @@ namespace FribergCarRentals.Pages.Order
             {
                 if (!ValidatePickupDate(createOrderViewModel.PickupDateLocalTime))
                 {
-                    throw new Exception(PickupDateMustBeInFutureErrorMessage);
+                    throw new Exception(ValidationMessages.PickupDateMustBeInFutureErrorMessage);
                 }
                 else if (!ValidateReturnDate(createOrderViewModel.PickupDateLocalTime, createOrderViewModel.ReturnDateLocalTime))
                 {
-                    throw new Exception(ReturnDateOccursBeforePickupDateErrorMessage);
+                    throw new Exception(ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage);
                 }
 
                 TempDataHelper.Set(TempData, PendingOrderTempDataKey, createOrderViewModel);
@@ -134,7 +128,9 @@ namespace FribergCarRentals.Pages.Order
                 throw new Exception($"Invalid ID: {carCategoryId}");
             }
 
-            BookCarViewModel = new BookCarViewModel(availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(), havePerformedCarSearch: false);
+            BookCarViewModel = new BookCarViewModel(
+                availableCarCategoryFilters: _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()), 
+                havePerformedCarSearch: false);
 
             if (carCategoryId != null)
             {
@@ -154,19 +150,19 @@ namespace FribergCarRentals.Pages.Order
             {
                 if (!ValidatePickupDate(BookCarViewModel.PickupDateLocalTime))
                 {
-                    ModelState.AddModelError($"{nameof(BookCarViewModel.PickupDateLocalTime)}",
-                        PickupDateMustBeInFutureErrorMessage);
+                    ModelState.AddModelError($"{nameof(BookCarViewModel)}.{nameof(BookCarViewModel.PickupDateLocalTime)}",
+                        ValidationMessages.PickupDateMustBeInFutureErrorMessage);
                 }
                 else if (!ValidateReturnDate(BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime))
                 {
-                    ModelState.AddModelError($"{nameof(BookCarViewModel.ReturnDateLocalTime)}",
-                        ReturnDateOccursBeforePickupDateErrorMessage);
+                    ModelState.AddModelError($"{nameof(BookCarViewModel)}.{nameof(BookCarViewModel.ReturnDateLocalTime)}",
+                        ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage);
                 }
                 else
                 {
                     int? selectedCarCategoryFilter = null;
 
-                    if (BookCarViewModel.SelectedCarCategoryFilter > 0)
+                    if (BookCarViewModel.SelectedCarCategoryFilter != BookCarViewModel.AllCarCategoriesValue)
                     {
                         if (!await _carCategoryRepository.CategoryExists(BookCarViewModel.SelectedCarCategoryFilter))
                         {
@@ -177,10 +173,13 @@ namespace FribergCarRentals.Pages.Order
                     }
 
                     var cars = (await _carRepository.GetRentableCarsAsync(BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime, selectedCarCategoryFilter)).ToList();
+                    List<CarViewModel> availableCars = _mapper.Map<List<CarViewModel>>(cars);
+                    SetImageUrls(availableCars.SelectMany(x => x.Images).ToList());
+
                     BookCarViewModel = new BookCarViewModel(
-                        availableCarCategoryFilters: (await _carCategoryRepository.GetAllAsync()).ToList(),
+                        availableCarCategoryFilters: _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()),
                         havePerformedCarSearch: true,
-                        availableCars: cars.Select(x => new CarViewModel(x, _imageUploadService)).ToList(),
+                        availableCars: availableCars,
                         pickupDateFilter: BookCarViewModel.PickupDateLocalTime,
                         returnDateFilter: BookCarViewModel.ReturnDateLocalTime,
                         carCategoryFilter: BookCarViewModel.SelectedCarCategoryFilter);
@@ -189,20 +188,29 @@ namespace FribergCarRentals.Pages.Order
                 }
             }
 
-            BookCarViewModel.SetAvailableCarCategoryFilters(await _carCategoryRepository.GetAllAsync());
+            BookCarViewModel.SetAvailableCarCategoryFilters(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()));
             return Page();
         }
 
-        #endregion
+		#endregion
 
-        #region OtherMethods
+		#region OtherMethods
 
-        /// <summary>
-        /// Validates the pickup date for car rentals.
-        /// </summary>
-        /// <param name="pickupDate">The pickup date.</param>
-        /// <returns>True if the date is valid.</returns>
-        private bool ValidatePickupDate(DateTime pickupDate)
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
+		}
+
+		/// <summary>
+		/// Validates the pickup date for car rentals.
+		/// </summary>
+		/// <param name="pickupDate">The pickup date.</param>
+		/// <returns>True if the date is valid.</returns>
+		private bool ValidatePickupDate(DateTime pickupDate)
         {
             return pickupDate.Date > DateTime.Now.Date;
         }

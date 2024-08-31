@@ -1,0 +1,101 @@
+﻿@attribute [Route(PageUrlTemplate)]
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+@inherits AdminPageComponentBase
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (_cars != null)
+        {
+            <h1>Cars</h1>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-items-center">
+                @if (_cars.Count <= 0)
+                {
+                    <p class="text-align-center">No cars found.</p>
+                }
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Car.CreateCar.GetPageUrl()" class="button function-button">Create Car</a>
+                </div>
+                <UserMessages Messages="_cars.Messages"></UserMessages>
+                @if (_cars.Count > 0)
+                {
+                    <table class="slim-table colored-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].CarId)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].RentalStatus)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].Category.CategoryName)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].Brand)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].Model)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].ModelYear)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].PropulsionSystem)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _cars.Models[0].RentalCostPerDay)
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in _cars.Models)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.CarId
+                                    </td>
+                                    <td>
+                                        @item.RentalStatus.StatusDescription
+                                    </td>
+                                    <td>
+                                        @item.Category.CategoryName
+                                    </td>
+                                    <td>
+                                        @item.Brand
+                                    </td>
+                                    <td>
+                                        @item.Model
+                                    </td>
+                                    <td>
+                                        @item.ModelYear
+                                    </td>
+                                    <td>
+                                        @item.PropulsionSystem.PropulsionName
+                                    </td>
+                                    <td>
+                                        @item.RentalCostPerDay
+                                    </td>
+                                    <td>
+                                        <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                            <a href="@Pages.Admin.Car.CarDetails.GetPageUrl(item.CarId)" class="button navigational-button">Details</a>
+                                            <a href="@Pages.Admin.Car.EditCar.GetPageUrl(item.CarId)" class="button function-button">Edit</a>
+                                            <DeleteCarButton Car="item" OnDeletedCar="OnDeletedCar"></DeleteCarButton>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }        
+</Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

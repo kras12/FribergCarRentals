@@ -1,0 +1,44 @@
+﻿@using FribergCarRentalsBlazor.Components
+
+<AuthorizeView Context="OuterContext" Policy="@ApplicationUserPolicies.Admin">
+    <NotAuthorized>
+        <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
+            <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
+                <ul>
+                    <li>
+                        <a href="@Pages.CustomerHome.GetPageUrl()">Home</a>
+                    </li>
+                    <li>
+                        <a href="@Pages.Customer.Order.BookCar.GetPageUrl()">Book</a>
+                    </li>
+                    <AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+                        <Authorized>
+                            <li>
+                                <a href="@Pages.Customer.Order.ListOrders.GetPageUrl()">Orders</a>
+                            </li>
+                        </Authorized>
+                    </AuthorizeView>
+                    <div class="menu-group right-aligned">
+                        <AuthorizeView Context="CustomerContext" Policy="@ApplicationUserPolicies.Customer">
+                            <Authorized>
+                                <li>
+                                    <a href="/customer" class="nav-link"><i class='fas fa-user'></i></a>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+                        <li>
+                            <LoginCustomerButton></LoginCustomerButton>
+                        </li>
+                        <AuthorizeView Context="CustomerContext" Policy="@ApplicationUserPolicies.Customer">
+                            <NotAuthorized>
+                                <li>
+                                    <RegisterCustomerButton></RegisterCustomerButton>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

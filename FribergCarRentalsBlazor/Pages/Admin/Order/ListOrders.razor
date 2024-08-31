@@ -1,0 +1,86 @@
+﻿@attribute [Route(PageUrlTemplate)]
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+@inherits AdminPageComponentBase
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (_orders != null)
+        {
+            <h1>Orders</h1>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-items-center">
+                @if (_orders.Count <= 0)
+                {
+                    <p class="text-align-center">No orders found.</p>
+                }
+                <UserMessages Messages="_orders.Messages"></UserMessages>
+                @if (_orders.Count > 0)
+                {
+                    <table class="slim-table colored-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].CarOrderId)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].OrderStatusName)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].OrderDateLocal)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].CarBooking.Car.CarInfoWithRegistrationNumber)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].OrderSum)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _orders.Models[0].Paid)
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in _orders.Models)
+                            {
+                                <tr>
+                                    <td>
+                                        @order.CarOrderId
+                                    </td>
+                                    <td>
+                                        @order.OrderStatusName
+                                    </td>
+                                    <td>
+                                        @order.OrderDateLocal
+                                    </td>
+                                    <td>
+                                        @order.CarBooking.Car.CarInfoWithRegistrationNumber
+                                    </td>
+                                    <td>
+                                        @order.OrderSum
+                                    </td>
+                                    <td>
+                                        @order.Paid
+                                    </td>                                    
+                                    <td>
+                                        <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                            <a href="@Pages.Admin.Order.OrderDetails.GetPageUrl(order.CarOrderId)" class="button navigational-button">Details</a>
+                                            <CompleteOrderButton Order="order" OnCompletedOrder="OnCompletedOrder"></CompleteOrderButton>
+                                            <DeleteOrderButton Order="order" OnDeletedOrder="OnDeletedOrder"></DeleteOrderButton>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }        
+</Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

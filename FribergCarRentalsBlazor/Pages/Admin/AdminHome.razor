@@ -1,0 +1,50 @@
+﻿@attribute [Route(PageUrlTemplate)]
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+@inherits AdminPageComponentBase
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (_admin != null)
+        {
+            <h1>Admin Panel</h1>
+            <p></p>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem">
+                <div class="vertical-flex-container flex-container__padding__1-rem flex-container__row-gap__1-rem">
+                    <div class="vertical-flex-container flex-container__padding__1-rem filled-container ">
+                        <h2>@(_admin.FullName)</h2>
+                        <p class="font-size_large text-align-center">Welcome to the admin panel. Your information can be seen below.</p>
+                        <dl>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => _admin.FirstName)
+                            </dt>
+                            <dd>
+                                @_admin.FirstName
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => _admin.LastName)
+                            </dt>
+                            <dd>
+                                @_admin.LastName
+                            </dd>
+                            <dt>
+                                @AttributeHelper.GetDisplayName(() => _admin.Email)
+                            </dt>
+                            <dd>
+                                @_admin.Email
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="vertical-flex-container flex-container__padding__1-rem filled-container ">
+                        <h2>Navigation</h2>
+                        <p class="text-align-center">You can use the navigation at the top of the page to browse your cars, customers and orders. More actions can be found in respective section.</p>
+                    </div>
+                </div>
+            </div>
+        }        
+</Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

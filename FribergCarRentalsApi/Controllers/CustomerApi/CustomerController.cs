@@ -3,12 +3,12 @@ using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Data.Repositories;
-using FribergCarRentals.Shared;
-using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared.Dto.Customer;
-using FribergCarRentals.Shared.Dto.User;
+using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Enums;
+using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.Customer;
+using FribergCarRentals.Shared.Models.Dto.User;
 using FribergCarRentalsApi.Services;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
     /// <summary>
     /// Handles customer related activites like registration and login. 
     /// </summary>
-    [Route("api/customer")]
+    [Route("customer-api/customer")]
     [ApiController]
     public class CustomerController : ApiControllerBase
     {
@@ -141,7 +141,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                     {
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(customer.User);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        createdCustomerDto.ConfirmEmailLink = Url.Action(nameof(ConfirmEmail), new { userId = customer.User.Id, code = code });
+                        createdCustomerDto.ConfirmEmailData = new ConfirmEmailDto(code, customer.User.Email!);
                     }
                     else
                     {

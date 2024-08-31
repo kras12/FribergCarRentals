@@ -1,24 +1,22 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using FribergCarRentals.Helpers;
-using FribergCarRentals.Shared;
-using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared.Dto.Car;
-using FribergCarRentals.Shared.Dto.CarCategory;
-using FribergCarRentals.Shared.Dto.Image;
-using FribergCarRentalsApi.Services;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Enums;
+using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.Car;
+using FribergCarRentals.Shared.Models.Dto.CarCategory;
+using FribergCarRentals.Shared.Models.Dto.Image;
+using FribergCarRentals.Shared.Mvc.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MvcRazorPages.Shared.Services;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {
     /// <summary>
     /// Handles admin related activites for cars.
     /// </summary>
-    [Route("api/admin/car/")]
+    [Route("admin-api/car")]
     [ApiController]
     public class AdminCarController : ApiControllerBase
     {
@@ -37,7 +35,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <summary>
         /// The injected image download service.
         /// </summary>
-        private readonly IImageDownloadService _imageDownloadService;
+        private readonly IImageApiDownloadService _imageDownloadService;
 
         /// <summary>
         /// The injected image upload service.
@@ -63,7 +61,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="imageUploadService">The injected image upload service.</param>
         /// <param name="imageDownloadService">The injected image download service.</param>
         public AdminCarController(IAuthorizationService authorizationService, IMapper mapper, ICarRepository carRepository,
-            ICarCategoryRepository carCategoryRepository, IImageUploadService imageUploadService, IImageDownloadService imageDownloadService)
+            ICarCategoryRepository carCategoryRepository, IImageUploadService imageUploadService, IImageApiDownloadService imageDownloadService)
             : base(authorizationService)
         {
             _mapper = mapper;
@@ -118,7 +116,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
-        [HttpPost("{id}/images")]
+        [HttpPost("{id}/image")]
         public async Task<IActionResult> CreateCarImages(int id, [FromForm] IFormFileCollection files)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -153,7 +151,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteCar(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
@@ -185,15 +183,15 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <summary>
         /// Deletes car images.
         /// </summary>
-        /// <param name="id">The ID for the car.</param>
+        /// <param name="carId">The ID for the car.</param>
         /// <param name="deleteCarImagesDto">Contains a collection of IDs for the images to delete.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
-        [HttpDelete("{id}/images")]
-        public async Task<IActionResult> DeleteImages(int id, DeleteCarImagesDto deleteCarImagesDto)
+        [HttpDelete("{carId:int}/image")]
+        public async Task<IActionResult> DeleteCarImages(int carId, DeleteCarImagesDto deleteCarImagesDto)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
             {
@@ -205,17 +203,17 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"The collection of images to delete is empty."));
             }
 
-            if (id <= 0)
+            if (carId <= 0)
             {
-                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid car id: {id}"));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid car id: {carId}"));
             }
 
-            if (!await _carRepository.CarExists(id))
+            if (!await _carRepository.CarExists(carId))
             {
-                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {id}"));
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car with ID: {carId}"));
             }
 
-            await _carRepository.DeleteCarImages(id, deleteCarImagesDto.ImageIds);
+            await _carRepository.DeleteCarImages(carId, deleteCarImagesDto.ImageIds);
 
             return Ok(ApiResponseDto.CreateSuccessfulResponse());
         }
@@ -251,6 +249,18 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
 
             _mapper.Map(editCarDto, car);
 
+            if (car.Category!.CarCategoryId != editCarDto.CategoryId)
+            {
+                var category = await _carCategoryRepository.GetByIdAsync(editCarDto.CategoryId);
+
+                if (category == null)
+                {
+                    return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, $"Failed to find car category with ID: {editCarDto.CategoryId}"));
+                }
+
+                car.Category = category;
+            }
+
             if (editCarDto.DeleteImages != null && editCarDto.DeleteImages.Count > 0)
             {
                 car.Images.RemoveAll(x => editCarDto.DeleteImages.Contains(x.ImageId));
@@ -259,9 +269,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             await _carRepository.UpdateAsync(car);            
 
             var finalCar = _mapper.Map<CarDto>(car);
-            finalCar.Images.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(
-                Url.Action(nameof(AdminFileController.GetImageFile), ControllerHelper.GetControllerName<AdminFileController>())!,
-                x.FileName));
+            SetImageUrls(finalCar.Images);
 
             return Ok(ApiValueResponseDto<CarDto>.CreateSuccessfulResponse(finalCar));
         }
@@ -296,9 +304,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             var finalCar = _mapper.Map<CarDto>(car);
-            finalCar.Images.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(
-                Url.Action(nameof(AdminFileController.GetImageFile), ControllerHelper.GetControllerName<AdminFileController>())!,
-                x.FileName));
+            SetImageUrls(finalCar.Images);
 
             return Ok(ApiValueResponseDto<CarDto>.CreateSuccessfulResponse(finalCar));
         }
@@ -320,12 +326,22 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             var cars = _mapper.Map<List<CarDto>>((await _carRepository.GetAllAsync()).ToList());
 
             var finalCars = _mapper.Map<List<CarDto>>(cars);
-            finalCars.ForEach(car => 
-                car.Images.ForEach(image => image.Url = _imageDownloadService.GetImageUrl(
-                    Url.Action(nameof(AdminFileController.GetImageFile), ControllerHelper.GetControllerName<AdminFileController>())!,
-                    image.FileName)));
+            SetImageUrls(finalCars.SelectMany(x => x.Images).ToList());
 
             return Ok(ApiValueResponseDto<List<CarDto>>.CreateSuccessfulResponse(finalCars));
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+		/// Sets the image urls for image DTOs.
+		/// </summary>
+		/// <param name="images">A collection of image DTOs to process.</param>
+		private void SetImageUrls(List<CarImageDto> images)
+        {
+            images.ForEach(x => x.Url = AdminFileController.GetImageUrl(HttpContext, x.FileName));
         }
 
         #endregion

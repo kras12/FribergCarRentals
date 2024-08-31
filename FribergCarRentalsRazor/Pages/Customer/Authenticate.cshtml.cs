@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.ViewModels.Customer;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Data.Exceptions;
-using FribergCarRentals.Shared.Dto.Customer;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
 
 namespace FribergCarRentals.Pages.Customer
 {
@@ -126,7 +125,7 @@ namespace FribergCarRentals.Pages.Customer
                     }
                     catch (CreateUserException ex)
                     {
-                        ModelState.AddModelError(string.Empty, ex.Message);
+                        ModelState.AddModelError("", ex.Message);
                     }
                 }
             }
@@ -148,17 +147,18 @@ namespace FribergCarRentals.Pages.Customer
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginCustomerViewModel.Email, loginCustomerViewModel.Password, isPersistent: true, lockoutOnFailure: false);
+                if (await _customerRepository.CustomerExists(loginCustomerViewModel.Email))
+                {
+                    var result = await _signInManager.PasswordSignInAsync(loginCustomerViewModel.Email, loginCustomerViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (result.Succeeded)
-                {
-                    return TempDataOrHomeRedirect();
+                    if (result.Succeeded)
+                    {
+                        return TempDataOrHomeRedirect();
+                    }
                 }
-                else
-                {
-                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
-                    ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
-                }
+
+                // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
+                ModelState.AddModelError(nameof(LoginCustomerViewModel), "No account matched the entered email/password.");
             }
 
             return Page();

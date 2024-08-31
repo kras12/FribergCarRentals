@@ -9,13 +9,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppSettings.Shared", "Fribe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsRazor", "FribergCarRentalsRazor\FribergCarRentalsRazor.csproj", "{24F544E2-6401-4A66-A2B3-73232312E96A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcRazorPages.Shared", "MvcRazorPages.Shared\MvcRazorPages.Shared.csproj", "{7757336C-6369-40ED-91E6-8B163DD012CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Mvc", "MvcRazorPages.Shared\FribergCarRentals.Shared.Mvc.csproj", "{7757336C-6369-40ED-91E6-8B163DD012CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Data", "FribergCarRentals.Data\FribergCarRentals.Data.csproj", "{27C1F33B-ACE7-4F27-A8D4-051D7CD8770F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared", "FribergCarRentals.Shared\FribergCarRentals.Shared.csproj", "{C5F358A7-3FA3-420C-9725-4CC0E3035F10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentalsApi", "FribergCarRentalsApi\FribergCarRentalsApi.csproj", "{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsApi", "FribergCarRentalsApi\FribergCarRentalsApi.csproj", "{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentalsBlazor", "FribergCarRentalsBlazor\FribergCarRentalsBlazor.csproj", "{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Models", "FribergCarRentals.Shared.Models\FribergCarRentals.Shared.Models.csproj", "{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergCarRentals.Shared.Models.Mvc", "FribergCarRentals.Shared.Models.Mvc\FribergCarRentals.Shared.Models.Mvc.csproj", "{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergCarRentals.Shared.Models.Blazor", "FribergCarRentals.Shared.Models.Blazor\FribergCarRentals.Shared.Models.Blazor.csproj", "{78E3E304-A4DB-4E07-844D-68B53E899271}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +59,22 @@ Global
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEA48E6-C98F-49FA-988C-7BC817CDBEC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AEBCE49-FE8E-4851-816E-2D5E69E528BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F62DE40-80A0-4D9A-AEEC-DE27D7B9AEA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B13F3DD-FBFB-4A77-BA2D-4E8245974BD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E3E304-A4DB-4E07-844D-68B53E899271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E3E304-A4DB-4E07-844D-68B53E899271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E3E304-A4DB-4E07-844D-68B53E899271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E3E304-A4DB-4E07-844D-68B53E899271}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

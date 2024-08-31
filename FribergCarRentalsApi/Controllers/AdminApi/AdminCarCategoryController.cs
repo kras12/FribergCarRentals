@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using FribergCarRentals.Shared;
-using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared.Dto.CarCategory;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Enums;
+using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.CarCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +13,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
     /// <summary>
     /// Handles admin related activites for car categories.
     /// </summary>
-    [Route("api/admin/car/category")]
+    [Route("admin-api/car/category")]
     [ApiController]
     public class AdminCarCategoryController : ApiControllerBase
     {
@@ -204,6 +204,38 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             return Ok(ApiValueResponseDto<CarCategoryDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryDto>(category)));
+        }
+
+        /// <summary>
+        /// Gets statistics for a car category by ID.
+        /// </summary>
+        /// <param name="id">The ID of the category.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
+        [HttpGet("{id}/statistics")]
+        [ProducesResponseType<ApiValueResponseDto<CarCategoryStatisticsDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCategoryStatisticsById(int id)
+        {
+            if (!await IsAuthorized(ApplicationUserPolicies.Admin))
+            {
+                return Unauthorized(CreateUnauthorizedResponse());
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Invalid category id: {id}"));
+            }
+
+            var category = await _carCategoryRepository.GetCategoryStatisticsById(id);
+
+            if (category == null)
+            {
+                return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Car category not found."));
+            }
+
+            return Ok(ApiValueResponseDto<CarCategoryStatisticsDto>.CreateSuccessfulResponse(_mapper.Map<CarCategoryStatisticsDto>(category)));
         }
 
         #endregion

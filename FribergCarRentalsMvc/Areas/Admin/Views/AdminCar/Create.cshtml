@@ -1,12 +1,10 @@
-﻿@using FribergCarRentals.Data.Types
-@using FribergCarRentals.Data.EntityClasses
+﻿@using FribergCarRentals.Data.EntityClasses
 @using AppSettings.Shared.Settings;
-@using FribergCarRentals.Data.Attributes
-@using FribergCarRentals.Data.Extensions
-@using MvcRazorPages.Shared.ViewModels.Car
+@using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car
+@using FribergCarRentals.Shared.Models.ViewModels.CarCategory
+@using FribergCarRentals.Shared.Models.ViewModels.Car
 @using FribergCarRentals.Areas.Admin.Controllers
-@using FribergCarRentals.Helpers
-@using MvcRazorPages.Shared.ViewModels.CarCategory
+@using FribergCarRentals.Shared.Mvc.Helpers
 @model CreateCarViewModel
 
 @{
@@ -26,20 +24,20 @@
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="RentalStatus"></label>
-                <select asp-for="RentalStatus">
-                    @foreach (var value in Enum.GetValues<RentalCarStatus>())
+                <label asp-for="SelectedRentalStatusId"></label>
+                <select asp-for="SelectedRentalStatusId">
+                    @foreach (var status in Model.RentalStatuses)
                     {
-                        <!option value="@value" @(value == RentalCarStatus.None ? "selected" : "")>
-                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        <!option value="@status.CarRentalStatusId" @(status.IsStatusNone ? "selected" : "")>
+                            @(status.StatusName)
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="RentalStatus" class="error-text"></span>
+                <span asp-validation-for="SelectedRentalStatusId" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="SelectedCategoryId" class="control-label">Category</label>
-                <select class="form-input-box form-control" asp-for="SelectedCategoryId" asp-items="@(new SelectList(Model.Categories, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.SelectedCategoryId))"></select>
+                <select class="form-input-box form-control" asp-for="SelectedCategoryId" asp-items="@(new SelectList(Model.Categories, nameof(CarCategoryViewModel.CarCategoryId), nameof(CarCategoryViewModel.CategoryName), Model.SelectedCategoryId))"></select>
                 <span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
             </div>
             <div class="vertical-form-field">
@@ -68,16 +66,16 @@
                 <span asp-validation-for="RegistrationNumber" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="PropulsionSystem"></label>
-                <select asp-for="PropulsionSystem">
-                    @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
+                <label asp-for="SelectedPropulsionSystemId"></label>
+                <select asp-for="SelectedPropulsionSystemId">
+                    @foreach (var propulsion in Model.VehiclePropulsions)
                     {
-                        <!option value="@value" @(value == VehiclePropulsionType.None ? "selected" : "")>
-                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        <!option value="@propulsion.VehiclePropulsionId" @(propulsion.IsStatusNone ? "selected" : "")>
+                            @(propulsion.PropulsionName)
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="PropulsionSystem" class="error-text"></span>
+                <span asp-validation-for="SelectedPropulsionSystemId" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="RentalCostPerDay"></label>

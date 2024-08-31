@@ -1,22 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Car;
-using MvcRazorPages.Shared.ViewModels.Image;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
-    /// <summary>
-    /// Page model class for editing a car in the admin back office. 
-    /// </summary>
-    public class EditModel : AdminPageModelBase
+	/// <summary>
+	/// Page model class for editing a car in the admin back office. 
+	/// </summary>
+	public class EditModel : AdminPageModelBase
     {
         #region Constants
 
@@ -45,6 +47,11 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         private readonly ICarRepository _carRepository;
 
         /// <summary>
+        /// The injected image download service.
+        /// </summary>
+        private readonly IImageDownloadService _imageDownloadService;
+
+        /// <summary>
         /// The injected image upload service.
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
@@ -65,13 +72,16 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
         /// <param name="imageUploadService">The injected image upload service.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public EditModel(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService, IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
             _mapper = mapper;
             _imageUploadService = imageUploadService;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -111,9 +121,11 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 
                 if (car is not null)
                 {
-                    var carCategories = await _carCategoryRepository.GetAllAsync();
-                    EditCarViewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
-                    TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCarViewModel.PageSubTitle!);
+                    EditCarViewModel = _mapper.Map<EditCarViewModel>(car);
+                    EditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
+					SetImageUrls(EditCarViewModel.Images);
+
+					TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCarViewModel.PageSubTitle!);
                     return Page();
                 }
             }
@@ -147,13 +159,13 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                 car.Category = await _carCategoryRepository.GetByIdAsync(EditCarViewModel.SelectedCategoryId);
                 car.Images.AddRange(carImages);
 
-                if (EditCarViewModel.UploadImages is not null && EditCarViewModel.UploadImages.Count > 0)
+                if (EditCarViewModel.UploadImages.Count > 0)
                 {
                     var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(EditCarViewModel.UploadImages!);
                     car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
 
-                if (EditCarViewModel.DeleteImages is not null && EditCarViewModel.DeleteImages.Count > 0)
+                if (EditCarViewModel.DeleteImages.Count > 0)
                 {
                     var imagesToDelete = car.Images.IntersectBy(EditCarViewModel.DeleteImages, x => x.ImageId).ToList();
 
@@ -165,24 +177,41 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                 }
 
                 await _carRepository.UpdateAsync(car);
-                var carCategories = await _carCategoryRepository.GetAllAsync();
-                EditCarViewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
-                EditCarViewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
+
+				EditCarViewModel = _mapper.Map<EditCarViewModel>(car);
+				EditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
+				SetImageUrls(EditCarViewModel.Images);
+                EditCarViewModel.Messages.Add(MessageViewModelHelper.CreateCarUpdateSuccessMessage(id));
 
                 return Page();
             }
 
-            EditCarViewModel.Images = carImages.Select(x => new ImageViewModel(_imageUploadService.GetImageUrl(x))).ToList();
+			List<ImageViewModel> imageViewModels = _mapper.Map<List<ImageViewModel>>(carImages);
+			SetImageUrls(imageViewModels);
+			EditCarViewModel.Images = imageViewModels;
 
             if (TempDataHelper.TryGet(TempData, PageSubTitleTempStorageKey, out string? pageSubTitle))
             {
-                EditCarViewModel.PageSubTitle = pageSubTitle;
+				EditCarViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempStorageKey, EditCarViewModel.PageSubTitle!); // The user can fail again.
             }
 
             return Page();
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region OtherMethods
+
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
+		}
+
+		#endregion
+	}
 }

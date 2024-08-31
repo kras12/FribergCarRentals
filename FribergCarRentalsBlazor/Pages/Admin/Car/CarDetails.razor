@@ -1,0 +1,113 @@
+﻿@attribute [Route(PageUrlTemplate)]
+@inherits AdminPageComponentBase
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (Car != null)
+        {
+            <h1>Car</h1>
+            <h2>@($"#{Car.CarId} - {Car.CarInfo}")</h2>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem">
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Car.ListCars.GetPageUrl()" class="button navigational-button">View Cars</a>
+                    <a href="@Pages.Admin.Car.EditCar.GetPageUrl(Car.CarId)" class="button function-button">Edit</a>
+                    <DeleteCarButton Car="Car" OnDeletedCar="@OnDeleteCar"></DeleteCarButton>
+                </div>
+                <UserMessages Messages="Car.Messages"></UserMessages>
+                <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
+                    <dl>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.CarId)
+                        </dt>
+                        <dd>
+                            @Car.CarId
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.RentalStatus)
+                        </dt>
+                        <dd>
+                            @Car.RentalStatus.StatusDescription
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.Category.CategoryName)
+                        </dt>
+                        <dd>
+                            @Car.Category.CategoryName
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.RegistrationNumber)
+                        </dt>
+                        <dd>
+                            @Car.RegistrationNumber
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.Brand)
+                        </dt>
+                        <dd>
+                            @Car.Brand
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.Model)
+                        </dt>
+                        <dd>
+                            @Car.Model
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.ModelYear)
+                        </dt>
+                        <dd>
+                            @Car.ModelYear
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.Color)
+                        </dt>
+                        <dd>
+                            @Car.Color
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.PropulsionSystem)
+                        </dt>
+                        <dd>
+                            @Car.PropulsionSystem.PropulsionDescription
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.RentalCostPerDay)
+                        </dt>
+                        <dd>
+                            @Car.RentalCostPerDay
+                        </dd>
+                        <dt>
+                            @AttributeHelper.GetDisplayName(() => Car.Images)
+                        </dt>
+                        <dd>
+                            @if (Car.Images.Count > 0)
+                            {
+                                <div class="tiled-image-gallery tiled-image-gallery__image-size_medium">
+                                    @foreach (var image in Car.Images)
+                                    {
+                                        <figure>
+                                            <div class="vertical-flex-container">
+                                                <img src="@image.Url" />
+                                                <figcaption>@image.FileName</figcaption>
+                                            </div>
+                                        </figure>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <span>None</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        }  
+    </Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

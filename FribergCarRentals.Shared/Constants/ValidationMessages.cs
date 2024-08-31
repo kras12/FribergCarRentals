@@ -38,9 +38,19 @@
         public const string PasswordLengthValidationMessage = "The password must be between 6 and 50 characters long.";
 
         /// <summary>
+        /// Error message for when the pickup date is not in the future. 
+        /// </summary>
+        public const string PickupDateMustBeInFutureErrorMessage = "The pickup date must be at least one day into the future.";
+
+        /// <summary>
         /// A message to inform the user about the valid input format for a registration number.
         /// </summary>
         public const string RegistrationNumberValidationMessage = "Registration numbers must be entered in the format abc123 or acb12d.";
+
+        /// <summary>
+        /// Error message for when the return date occurrs before the pickup date.
+        /// </summary>
+        public const string ReturnDateOccursBeforePickupDateErrorMessage = "The return date can't occur before the pickup date.";
 
         #endregion
     }

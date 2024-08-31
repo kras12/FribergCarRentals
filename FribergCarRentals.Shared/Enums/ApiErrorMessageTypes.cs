@@ -1,4 +1,4 @@
-﻿namespace FribergCarRentals.Shared
+﻿namespace FribergCarRentals.Shared.Enums
 {
     /// <summary>
     /// Supported API error message types.

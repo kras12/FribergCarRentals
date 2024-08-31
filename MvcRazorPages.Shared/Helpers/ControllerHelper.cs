@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace FribergCarRentals.Helpers
+namespace FribergCarRentals.Shared.Mvc.Helpers
 {
     /// <summary>
     /// Helper class for controllers.

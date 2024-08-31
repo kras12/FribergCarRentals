@@ -2,17 +2,17 @@
 @model FribergCarRentals.Areas.Admin.Pages.CarCategories.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Category Details";
 }
 
-<h1>Details</h1>
-<h2>@($"#{Model.CarCategoryViewModel.CategoryId} - {Model.CarCategoryViewModel.CategoryName}")</h2>
+<h1>Category</h1>
+<h2>@($"#{Model.CarCategoryViewModel.CarCategoryId} - {Model.CarCategoryViewModel.CategoryName}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
         <a asp-area="@AdminPageModelBase.Area" asp-page="List" class="button navigational-button">View Categories</a>
-        <a asp-area="@AdminPageModelBase.Area" asp-page="Edit" asp-route-id="@Model.CarCategoryViewModel.CategoryId" class="button function-button">Edit</a>
+        <a asp-area="@AdminPageModelBase.Area" asp-page="Edit" asp-route-id="@Model.CarCategoryViewModel.CarCategoryId" class="button function-button">Edit</a>
         <form asp-area="@AdminPageModelBase.Area" asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
-            <input type="hidden" name="id" value="@Model.CarCategoryViewModel.CategoryId" asp-for="CarCategoryViewModel.CategoryId" />
+            <input type="hidden" name="id" value="@Model.CarCategoryViewModel.CarCategoryId" asp-for="CarCategoryViewModel.CarCategoryId" />
             <button type="submit" class="negative-button">Delete</button>
         </form>
     </div>
@@ -20,10 +20,10 @@
     <div class="vertical-flex-container filled-container flex-container__padding__1-rem">
         <dl>
             <dt>
-                @Html.DisplayNameFor(model => Model.CarCategoryViewModel.CategoryId)
+                @Html.DisplayNameFor(model => Model.CarCategoryViewModel.CarCategoryId)
             </dt>
             <dd>
-                @Html.DisplayFor(model => Model.CarCategoryViewModel.CategoryId)
+                @Html.DisplayFor(model => Model.CarCategoryViewModel.CarCategoryId)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => Model.CarCategoryViewModel.CategoryName)

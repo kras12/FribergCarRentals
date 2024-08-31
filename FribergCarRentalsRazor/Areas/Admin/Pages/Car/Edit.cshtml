@@ -1,11 +1,9 @@
 ﻿@page "{id}"
-@using FribergCarRentals.Data.Types
 @using FribergCarRentals.Data.EntityClasses
 @using AppSettings.Shared.Settings;
-@using FribergCarRentals.Data.Attributes
-@using FribergCarRentals.Data.Extensions
-@using MvcRazorPages.Shared.ViewModels.Car
-@using MvcRazorPages.Shared.ViewModels.CarCategory
+@using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car
+@using FribergCarRentals.Shared.Models.ViewModels.Car
+@using FribergCarRentals.Shared.Models.ViewModels.CarCategory
 @model FribergCarRentals.Areas.Admin.Pages.Car.EditModel
 
 @{
@@ -38,20 +36,20 @@ else
                 <div asp-validation-summary="ModelOnly" class="error-text"></div>
             </div>            
             <div class="vertical-form-field">
-                <label asp-for="EditCarViewModel.RentalStatus"></label>
-                <select asp-for="EditCarViewModel.RentalStatus">
-                    @foreach (var value in Enum.GetValues<RentalCarStatus>())
+                <label asp-for="EditCarViewModel.SelectedRentalStatusId"></label>
+                <select asp-for="EditCarViewModel.SelectedRentalStatusId">
+                    @foreach (var status in Model.EditCarViewModel.RentalStatuses)
                     {
-                        <!option value="@value" @(value == Model.EditCarViewModel.RentalStatus.StatusType ? "selected" : "")>
-                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        <!option value="@status.CarRentalStatusId" @(status.CarRentalStatusId == Model.EditCarViewModel.SelectedRentalStatusId ? "selected" : "")>
+                            @(status.StatusName)
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="EditCarViewModel.RentalStatus" class="error-text"></span>
+                <span asp-validation-for="EditCarViewModel.SelectedRentalStatusId" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="EditCarViewModel.SelectedCategoryId" class="control-label">Category</label>
-                <select class="form-input-box form-control" asp-for="EditCarViewModel.SelectedCategoryId" asp-items="@(new SelectList(Model.EditCarViewModel.Categories, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.EditCarViewModel.SelectedCategoryId))"></select>
+                <select class="form-input-box form-control" asp-for="EditCarViewModel.SelectedCategoryId" asp-items="@(new SelectList(Model.EditCarViewModel.Categories, nameof(CarCategoryViewModel.CarCategoryId), nameof(CarCategoryViewModel.CategoryName), Model.EditCarViewModel.SelectedCategoryId))"></select>
                 <span asp-validation-for="EditCarViewModel.SelectedCategoryId" class="text-danger"></span>
             </div>
             <div class="vertical-form-field">
@@ -80,16 +78,16 @@ else
                 <span asp-validation-for="EditCarViewModel.RegistrationNumber" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
-                <label asp-for="EditCarViewModel.PropulsionSystem"></label>
-                <select asp-for="EditCarViewModel.PropulsionSystem">
-                    @foreach (var value in Enum.GetValues<VehiclePropulsionType>())
+                <label asp-for="EditCarViewModel.SelectedPropulsionSystemId"></label>
+                <select asp-for="EditCarViewModel.SelectedPropulsionSystemId">
+                    @foreach (var propulsion in Model.EditCarViewModel.VehiclePropulsions)
                     {
-                        <!option value="@value" @(value == Model.EditCarViewModel.PropulsionSystem.PropulsionType ? "selected" : "")>
-                            @(value.GetAttribute<EnumDatabaseValueAttribute>().Value ?? "")
+                        <!option value="@propulsion.VehiclePropulsionId" @(propulsion.VehiclePropulsionId == Model.EditCarViewModel.SelectedPropulsionSystemId ? "selected" : "")>
+                            @(propulsion.PropulsionName)
                         </!option>
                     }
                 </select>
-                <span asp-validation-for="EditCarViewModel.PropulsionSystem" class="error-text"></span>
+                <span asp-validation-for="EditCarViewModel.SelectedPropulsionSystemId" class="error-text"></span>
             </div>
             <div class="vertical-form-field">
                 <label asp-for="EditCarViewModel.RentalCostPerDay"></label>

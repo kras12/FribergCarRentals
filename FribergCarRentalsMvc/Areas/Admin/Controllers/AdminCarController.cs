@@ -1,21 +1,24 @@
-﻿using MvcRazorPages.Shared.Helpers;
+﻿using FribergCarRentals.Shared.Mvc.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Other;
-using MvcRazorPages.Shared.Data;
-using FribergCarRentals.Helpers;
-using MvcRazorPages.Shared.ViewModels.Car;
-using MvcRazorPages.Shared.ViewModels.Image;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
-    [Route($"{Area}/{CurrentControllerRoutePart}/[action]")]
+	[Route($"{Area}/{CurrentControllerRoutePart}/[action]")]
     [Area(Area)]
     public class AdminCarController : AdminControllerBase
     {
@@ -61,6 +64,11 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         private readonly ICarRepository _carRepository;
 
         /// <summary>
+        /// The injected image download service.
+        /// </summary>
+        private readonly IImageDownloadService _imageDownloadService;
+
+        /// <summary>
         /// The injected image upload service.
         /// </summary>
         private readonly IImageUploadService _imageUploadService;
@@ -81,14 +89,17 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="mapper">The injected Auto Mapper.</param>
         /// <param name="imageUploadService">The injected image upload service</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public AdminCarController(ICarRepository carRepository, ICarCategoryRepository carCategoryRepository,
-            IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageUploadService imageUploadService)
+            IAuthorizationService authorizationService, SignInManager<ApplicationUser> signInManager, IMapper mapper, 
+            IImageUploadService imageUploadService, IImageDownloadService imageDownloadService)
             : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _carCategoryRepository = carCategoryRepository;
             _mapper = mapper;
             _imageUploadService = imageUploadService;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -103,7 +114,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 return RedirectToLogin(new RedirectToActionData(nameof(Create), ControllerHelper.GetControllerName<AdminCarController>(), area: Area));
             }
 
-            CreateCarViewModel viewmodel = new CreateCarViewModel(await _carCategoryRepository.GetAllAsync());
+            CreateCarViewModel viewmodel = new CreateCarViewModel(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()));
 
             return View(viewmodel);
         }
@@ -124,7 +135,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 var selectedCategory = await _carCategoryRepository.GetByIdAsync(createCarViewModel.SelectedCategoryId!.Value);
                 car.Category = selectedCategory;
 
-                if (createCarViewModel.UploadImages is not null && createCarViewModel.UploadImages.Count > 0)
+                if (createCarViewModel.UploadImages.Count > 0)
                 {
                     var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(createCarViewModel.UploadImages);
 
@@ -203,14 +214,15 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (car is not null)
                 {
-                    CarViewModel viewModel = new CarViewModel(car, _imageUploadService);
+                    CarViewModel carViewModel = _mapper.Map<CarViewModel>(car);
+                    SetImageUrls(carViewModel.Images);
 
                     if (TempDataHelper.TryGet(TempData, CreatedCarIdTempDataKey, out int carId))
                     {
-                        viewModel.Messages.Add(UserMesssageHelper.CreateCarCreationSuccessMessage(carId));
+                        carViewModel.Messages.Add(MessageViewModelHelper.CreateCarCreationSuccessMessage(carId));
                     }
 
-                    return View(viewModel);
+                    return View(carViewModel);
                 }
             }
 
@@ -237,10 +249,12 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
                 if (car is not null)
                 {
-                    var carCategories = await _carCategoryRepository.GetAllAsync();
-                    EditCarViewModel viewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
-                    TempDataHelper.Set(TempData, PageSubTitleTempDataKey, viewModel.PageSubTitle!);
-                    return View(viewModel);
+                    EditCarViewModel editCarViewModel = _mapper.Map<EditCarViewModel>(car);
+                    editCarViewModel.Categories = _mapper.Map <List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
+					TempDataHelper.Set(TempData, PageSubTitleTempDataKey, editCarViewModel.PageSubTitle!);
+                    SetImageUrls(editCarViewModel.Images);
+
+                    return View(editCarViewModel);
                 }
             }
 
@@ -271,13 +285,13 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 car.Category = await _carCategoryRepository.GetByIdAsync(editCarViewModel.SelectedCategoryId);
                 car.Images.AddRange(carImages);
 
-                if (editCarViewModel.UploadImages is not null && editCarViewModel.UploadImages.Count > 0)
+                if (editCarViewModel.UploadImages.Count > 0)
                 {
                     var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(editCarViewModel.UploadImages!);
                     car.Images.AddRange(savedImageFileNames.Select(x => new ImageEntity(x, car)));
                 }
 
-                if (editCarViewModel.DeleteImages is not null && editCarViewModel.DeleteImages.Count > 0)
+                if (editCarViewModel.DeleteImages.Count > 0)
                 {
                     var imagesToDelete = car.Images.IntersectBy(editCarViewModel.DeleteImages, x => x.ImageId).ToList();
 
@@ -289,19 +303,21 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 }
 
                 await _carRepository.UpdateAsync(car);
-                var carCategories = await _carCategoryRepository.GetAllAsync();
-                EditCarViewModel viewModel = new EditCarViewModel(car, carCategories, _imageUploadService);
-                viewModel.Messages.Add(UserMesssageHelper.CreateCarUpdateSuccessMessage(id));
-                return View(viewModel);
+                EditCarViewModel newEditCarViewModel = _mapper.Map<EditCarViewModel>(car);
+                newEditCarViewModel.Categories = _mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync());
+				newEditCarViewModel.Messages.Add(MessageViewModelHelper.CreateCarUpdateSuccessMessage(id));
+                SetImageUrls(newEditCarViewModel.Images);
 
-                throw new Exception("Failed to transfer data from view model to entity.");
+                return View(newEditCarViewModel);
             }
 
-            editCarViewModel.Images = carImages.Select(x => new ImageViewModel(_imageUploadService.GetImageUrl(x))).ToList();
+            List<ImageViewModel> imageViewModels = _mapper.Map<List<ImageViewModel>>(carImages);
+            SetImageUrls(imageViewModels);
+            editCarViewModel.Images = imageViewModels;
 
-            if (TempDataHelper.TryGet(TempData, PageSubTitleTempDataKey, out string? pageSubTitle))
+			if (TempDataHelper.TryGet(TempData, PageSubTitleTempDataKey, out string? pageSubTitle))
             {
-                editCarViewModel.PageSubTitle = pageSubTitle;
+				editCarViewModel.SetPageSubTitle(pageSubTitle);
                 TempDataHelper.Set(TempData, PageSubTitleTempDataKey, editCarViewModel.PageSubTitle!); // The user can fail again.
             }
 
@@ -316,17 +332,33 @@ namespace FribergCarRentals.Areas.Admin.Controllers
                 return RedirectToLogin(new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarController>(), area: Area));
             }
 
-            ListViewModel<CarViewModel> carListViewModel = new((await _carRepository.GetAllAsync()).Select(x => new CarViewModel(x, _imageUploadService)));
-            TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
+            List<CarViewModel> carViewModels = _mapper.Map<List<CarViewModel>>(await _carRepository.GetAllAsync());
+            SetImageUrls(carViewModels.SelectMany(x => x.Images).ToList());
+			ListViewModel<CarViewModel> carListViewModel = new(carViewModels);
+			
+			TempDataHelper.Set(TempData, RedirectToPageAfterDeleteTempDataKey, 
                 new RedirectToActionData(nameof(List), ControllerHelper.GetControllerName<AdminCarController>(), area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeletedCarIdTempDataKey, out int deletedCarId))
             {
-                carListViewModel.Messages.Add(UserMesssageHelper.CreateCarDeletionSuccessMessage(deletedCarId));
+                carListViewModel.Messages.Add(MessageViewModelHelper.CreateCarDeletionSuccessMessage(deletedCarId));
             }
 
             return View(carListViewModel);
         }
+
+        #endregion
+
+        #region OtherMethods
+
+        /// <summary>
+        /// Sets the image urls for image view models.
+        /// </summary>
+        /// <param name="imageViewModels">A collection of image view models to process.</param>
+        private void SetImageUrls(List<ImageViewModel> imageViewModels)
+        {
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
+		}
 
         #endregion
     }

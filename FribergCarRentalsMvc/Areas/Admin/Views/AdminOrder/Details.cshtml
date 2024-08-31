@@ -1,13 +1,13 @@
 ﻿@using FribergCarRentals.Areas.Admin.Controllers
-@using MvcRazorPages.Shared.ViewModels.Order
+@using FribergCarRentals.Shared.Models.ViewModels.Order
 @model OrderViewModel
 
 @{
     ViewData["Title"] = "Order Details";
 }
 
-<h1>@($"Order - #{Model.CarOrderId}")</h1>
-<h2>@($"{Model.Customer.FullName} - {Model.CarBooking.Car.CarInfo}")</h2>
+<h1>Order</h1>
+<h2>@($"#{Model.CarOrderId} - {Model.Customer.FullName} - {Model.CarBooking.Car.CarInfo}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem flex-container__row-gap__0-5-rem flex-container__wrap">
         <a asp-area="@AdminControllerBase.Area" asp-action="List" class="button navigational-button">View Orders</a>
@@ -100,12 +100,6 @@
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.Customer.Email)
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Customer.OrderCount)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.Customer.OrderCount)
                 </dd>
             </dl>
         </div>

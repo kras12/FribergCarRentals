@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Other;
 using FribergCarRentals.Controllers.Customer;
-using FribergCarRentals.Helpers;
-using MvcRazorPages.Shared.ViewModels.Image;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
 
 namespace FribergCarRentals.Controllers
 {
@@ -21,6 +21,11 @@ namespace FribergCarRentals.Controllers
         /// Injected car repository.
         /// </summary>
         private readonly ICarRepository _carRepository;
+
+        /// <summary>
+        /// The injected image download service.
+        /// </summary>
+        private readonly IImageDownloadService _imageDownloadService;
 
         /// <summary>
         /// The injected image upload service
@@ -38,11 +43,14 @@ namespace FribergCarRentals.Controllers
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
         /// <param name="imageUploadService">The injected image upload service</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public HomeController(ICarRepository carRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService, IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
             _imageUploadService = imageUploadService;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -54,14 +62,14 @@ namespace FribergCarRentals.Controllers
         {
             List<SlideShowImageViewModel> images = new();
 
-            var cars = (await _carRepository.GetFirstCarWithImagesByCategory()).ToList();
+            var cars = (await _carRepository.GetFirstCarPerCategory()).ToList();
 
             foreach (var car in cars)
             {
                 var image = car.Images.First();
 
                 images.Add(new SlideShowImageViewModel(
-                    _imageUploadService.GetImageUrl(image), image.FileName, image.ImageId,
+                    _imageDownloadService.GetImageUrl(image.FileName), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
                     linksToPage: Url.Action(
                         action: nameof(CustomerOrderController.Book),

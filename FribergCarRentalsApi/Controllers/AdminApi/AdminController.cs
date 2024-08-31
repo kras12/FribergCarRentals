@@ -1,23 +1,23 @@
-﻿using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared;
-using FribergFastigheter.Shared.Constants;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FribergCarRentals.Data.Repositories;
 using AutoMapper;
-using FribergCarRentals.Shared.Dto.Admin;
-using FribergCarRentals.Shared.Dto.User;
 using Microsoft.AspNetCore.Identity;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentalsApi.Services;
+using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Models.Dto.Admin;
+using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.User;
+using FribergCarRentals.Shared.Enums;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {
     /// <summary>
     /// Handles admin related activites like login and fetching user data.
     /// </summary>
-    [Route("api/admin")]
+    [Route("admin-api/admin")]
     [ApiController]
     public class AdminController : ApiControllerBase
     {

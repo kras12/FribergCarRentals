@@ -1,0 +1,12 @@
+﻿@attribute [Route(PageUrlTemplate)]
+
+@if (_invalidQueryParameters)
+{
+	<h1>Error</h1>
+	<p class="error-text text-align-center">Invalid confirmation link.</p>
+}
+else if (_emailConfirmationFailed)
+{
+	<h1>Error</h1>
+	<p class="error-text text-align-center">Email confirmation failed.</p>
+}

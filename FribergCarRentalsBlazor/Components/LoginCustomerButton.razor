@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Customer">
+    <Authorized>
+        <a class="@LogoutButtonCssClasses" type="button" @onclick="OnLogoutButtonClicked">Logout</a>
+    </Authorized>
+    <NotAuthorized>
+        <a class="login-modal-toggle @LoginButtonCssClasses" id="@(_modalDialogId)-toggle" data-bs-toggle="modal" data-bs-target="#@_modalDialogId">Login</a>
+        <div class="modal fade" id="@_modalDialogId" tabindex="-1" aria-labelledby="@(_modalDialogId)-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="@(_modalDialogId)-label">Login</h1>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <LoginCustomer OnBeforeLogin="OnBeforeLogin" OnLoginFailed="OnLoginFailed"></LoginCustomer>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+<script>
+    function HideCustomerLoginModal(id) {
+        let modal = bootstrap.Modal.getInstance(document.getElementById(id))
+        modal.hide();
+    }
+
+    function ShowCustomerLoginModal(id) {
+        let modal = bootstrap.Modal.getInstance(document.getElementById(id))
+        let modalToggle = document.getElementById('id' + '-toggle')
+        modal.show(modalToggle);
+    }
+</script>

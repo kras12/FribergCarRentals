@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Other;
-using MvcRazorPages.Shared.ViewModels.Car;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
@@ -33,9 +36,12 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         private readonly ICarRepository _carRepository;
 
         /// <summary>
-        /// The injected image upload service.
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
+
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
         #endregion
 
@@ -47,12 +53,15 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         /// <param name="carRepository">Injected car repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public ListModel(ICarRepository carRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageDownloadService imageDownloadService) 
+            : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
-            _imageUploadService = imageUploadService;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -79,18 +88,34 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                 return RedirectToLogin(new RedirectToPageData(PageUrlRelativeToLoginPage, area: Area));
             }
 
-            CarListViewModel = new ListViewModel<CarViewModel>((await _carRepository.GetAllAsync()).Select(x => new CarViewModel(x, _imageUploadService)));
+			List<CarViewModel> carViewModels = _mapper.Map<List<CarViewModel>>(await _carRepository.GetAllAsync());
+			SetImageUrls(carViewModels.SelectMany(x => x.Images).ToList());
+			CarListViewModel = new ListViewModel<CarViewModel>(carViewModels);
+
             TempDataHelper.Set(TempData, DeleteModel.RedirectToPageAfterDeleteTempDataKey, 
                 new RedirectToPageData("List", area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedCarIdTempDataKey, out int deletedCarId))
             {
-                CarListViewModel.Messages.Add(UserMesssageHelper.CreateCarDeletionSuccessMessage(deletedCarId));
+                CarListViewModel.Messages.Add(MessageViewModelHelper.CreateCarDeletionSuccessMessage(deletedCarId));
             }
 
             return Page();
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region OtherMethods
+
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
+		}
+
+		#endregion
+	}
 }

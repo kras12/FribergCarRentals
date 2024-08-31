@@ -21,7 +21,7 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => Model.CarCategoryListViewModel.Models[0].CategoryId)
+                        @Html.DisplayNameFor(model => Model.CarCategoryListViewModel.Models[0].CarCategoryId)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => Model.CarCategoryListViewModel.Models[0].CategoryName)
@@ -39,7 +39,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CategoryId)
+                            @Html.DisplayFor(modelItem => item.CarCategoryId)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.CategoryName)
@@ -49,12 +49,12 @@
                         </td>
                         <td>
                             <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
-                                <a asp-area="@AdminPageModelBase.Area" asp-page="Details" asp-route-id="@item.CategoryId" class="button navigational-button">Details</a>
-                                <a asp-area="@AdminPageModelBase.Area" asp-page="Edit" asp-route-id="@item.CategoryId" class="button function-button">Edit</a>
+                                <a asp-area="@AdminPageModelBase.Area" asp-page="Details" asp-route-id="@item.CarCategoryId" class="button navigational-button">Details</a>
+                                <a asp-area="@AdminPageModelBase.Area" asp-page="Edit" asp-route-id="@item.CarCategoryId" class="button function-button">Edit</a>
                                 @if (item.HaveCarCount && item.CarCount == 0)
                                 {
                                     <form asp-area="@AdminPageModelBase.Area" asp-page="Delete" onsubmit="return confirm('Are you sure you want to delete this car?');">
-                                        <input type="hidden" name="id" value="@item.CategoryId" asp-for="@item.CategoryId" />
+                                        <input type="hidden" name="id" value="@item.CarCategoryId" asp-for="@item.CarCategoryId" />
                                         <button type="submit" class="negative-button">Delete</button>
                                     </form>
                                 }

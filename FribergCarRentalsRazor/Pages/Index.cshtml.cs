@@ -1,10 +1,10 @@
-using MvcRazorPages.Shared.Data;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.ViewModels.Image;
-using MvcRazorPages.Shared.ViewModels.Other;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
 
 namespace FribergCarRentals.Pages
 {
@@ -21,9 +21,9 @@ namespace FribergCarRentals.Pages
         private readonly ICarRepository _carRepository;
 
         /// <summary>
-        /// The injected image upload service
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
 
         #endregion
 
@@ -33,11 +33,11 @@ namespace FribergCarRentals.Pages
         /// A constructor.
         /// </summary>
         /// <param name="carRepository">Injected car repository.</param>
-        /// <param name="imageUploadService"> The injected image upload service</param>
-        public IndexModel(ICarRepository carRepository, IImageUploadService imageUploadService)
+        /// <param name="imageDownloadService">The injected image download service.</param>
+        public IndexModel(ICarRepository carRepository, IImageDownloadService imageDownloadService)
         {
             _carRepository = carRepository;
-            _imageUploadService = imageUploadService;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -60,14 +60,14 @@ namespace FribergCarRentals.Pages
         {
             List<SlideShowImageViewModel> images = new();
 
-            var cars = (await _carRepository.GetFirstCarWithImagesByCategory()).ToList();
+            var cars = (await _carRepository.GetFirstCarPerCategory()).ToList();
 
             foreach (var car in cars)
             {
                 var image = car.Images.First();
 
                 images.Add(new SlideShowImageViewModel(
-                    _imageUploadService.GetImageUrl(image), image.FileName, image.ImageId,
+                    _imageDownloadService.GetImageUrl(image.FileName), image.FileName, image.ImageId,
                     imageCaption: car.Category!.CategoryName,
                     linksToPage: Url.Page(
                         pageName: "Order/Book",

@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.ViewModels.Car;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.Car;
+using FribergCarRentals.Shared.Models.ViewModels.Image;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
@@ -32,9 +35,12 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         private readonly ICarRepository _carRepository;
 
         /// <summary>
-        /// The injected image upload service.
+        /// The injected image download service.
         /// </summary>
-        private readonly IImageUploadService _imageUploadService;
+        private readonly IImageDownloadService _imageDownloadService;
+
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
         #endregion
 
@@ -46,12 +52,14 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
         /// <param name="carRepository">Injected car repository.</param>
         /// <param name="authorizationService">The injected authorization service.</param>
         /// <param name="signInManager">The injected signin manager.</param>
-        /// <param name="imageUploadService">The injected image upload service.</param>
+        /// <param name="mapper">The injected Auto Mapper.</param>
+        /// <param name="imageDownloadService">The injected image download service.</param>
         public DetailsModel(ICarRepository carRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager, IImageUploadService imageUploadService) : base(authorizationService, signInManager)
+            SignInManager<ApplicationUser> signInManager, IMapper mapper, IImageDownloadService imageDownloadService) : base(authorizationService, signInManager)
         {
             _carRepository = carRepository;
-            _imageUploadService = imageUploadService;
+            _mapper = mapper;
+            _imageDownloadService = imageDownloadService;
         }
 
         #endregion
@@ -90,11 +98,12 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
 
                 if (car is not null)
                 {
-                    CarViewModel = new CarViewModel(car, _imageUploadService);
+                    CarViewModel = _mapper.Map<CarViewModel>(car);
+                    SetImageUrls(CarViewModel.Images);
 
-                    if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCarIdTempDataKey, out int carId))
+					if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCarIdTempDataKey, out int carId))
                     {
-                        CarViewModel.Messages.Add(UserMesssageHelper.CreateCarCreationSuccessMessage(carId));
+                        CarViewModel.Messages.Add(MessageViewModelHelper.CreateCarCreationSuccessMessage(carId));
                     }
 
                     return Page();
@@ -104,6 +113,19 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
             throw new Exception($"Failed to show the car with id: {id} - ModelState.Count: {ModelState.Count} - ModelState.IsValid: {ModelState.IsValid}");
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region OtherMethods
+
+		/// <summary>
+		/// Sets the image urls for image view models.
+		/// </summary>
+		/// <param name="imageViewModels">A collection of image view models to process.</param>
+		private void SetImageUrls(List<ImageViewModel> imageViewModels)
+		{
+			imageViewModels.ForEach(x => x.Url = _imageDownloadService.GetImageUrl(x.FileName));
+		}
+
+		#endregion
+	}
 }

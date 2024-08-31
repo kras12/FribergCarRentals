@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using FribergCarRentals.Data.EntityClasses;
 
-namespace MvcRazorPages.Shared.ModelBinders
+namespace FribergCarRentals.Shared.Mvc.ModelBinders
 {
     /// <summary>
     /// A model binder provider class that provides model binders for the Friberg Car Rentals project. 
@@ -20,7 +20,7 @@ namespace MvcRazorPages.Shared.ModelBinders
         public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
             #region Checks
-            
+
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));

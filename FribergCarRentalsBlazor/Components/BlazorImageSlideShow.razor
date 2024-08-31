@@ -1,0 +1,48 @@
+﻿<div class="image-slideshow-container">
+	@if (Images.Count > 0)
+	{
+		@foreach (var image in Images)
+		{
+			string activeClass = image.IsActive ? "active" : "not-active";
+			<div class="image-slide image-fade @activeClass">
+				@if (image.Link is not null)
+				{
+					<a href="@image.Link">
+						<img src="@image.Url" class="full-width max-height__50vh cover-image" />
+						@if (image.HaveCaption)
+						{
+							<div class="image-slide-caption">@image.ImageCaption</div>
+						}
+					</a>
+				}
+				else
+				{
+					<img src="@image.Url" class="full-width max-height__50vh cover-image" />
+					@if (image.HaveCaption)
+					{
+						<div class="image-slide-caption">@image.ImageCaption</div>
+					}
+				}
+			</div>
+		}
+		<a class="previous-slider-button" @onclick="@(() => ShowPreviousSlide())">&#10094;</a>
+		<a class="next-slider-button" @onclick="@(() => ShowNextSlide())">&#10095;</a>
+		@if (ShowNavigationalDots)
+		{
+			<div class="text-center">
+				@for (int i = 0; i < Images.Count; i++)
+				{
+					// Needed because how lambdas works here
+					int indexSlide = i;
+					<span class="navigation-dot @(Images[i].IsActive ? "active" : "not-active")" @onclick="@(() => SetSlide(indexSlide))"></span>
+				}
+			</div>
+		}
+		else
+		{
+			<div class="text-center">
+				@(_currentSlideIndex + 1) av @(Images.Count)
+			</div>
+		}
+	}
+</div>

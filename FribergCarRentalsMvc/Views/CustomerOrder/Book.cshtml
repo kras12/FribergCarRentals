@@ -1,6 +1,6 @@
 ﻿@using FribergCarRentals.Areas.Admin.Controllers
-@using MvcRazorPages.Shared.ViewModels.Order
-@using MvcRazorPages.Shared.ViewModels.CarCategory
+@using FribergCarRentals.Shared.Models.ViewModels.Order
+@using FribergCarRentals.Shared.Models.ViewModels.CarCategory
 @model BookCarViewModel
 
 @{
@@ -16,7 +16,7 @@
                 <div class="vertical-flex-container">
                     <label asp-for="SelectedCarCategoryFilter"></label>
                     <select asp-for="SelectedCarCategoryFilter"
-                            asp-items="@(new SelectList(Model.AvailableCarCategoryFilters, nameof(CarCategoryViewModel.CategoryId), nameof(CarCategoryViewModel.CategoryName), Model.SelectedCarCategoryFilter))"></select>
+                            asp-items="@(new SelectList(Model.AvailableCarCategoryFilters, nameof(CarCategoryViewModel.CarCategoryId), nameof(CarCategoryViewModel.CategoryName), Model.SelectedCarCategoryFilter))"></select>
                     <span asp-validation-for="SelectedCarCategoryFilter" class="error-text"></span>
                 </div>
                 <div class="vertical-flex-container">

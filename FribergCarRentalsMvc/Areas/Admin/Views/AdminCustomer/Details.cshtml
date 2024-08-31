@@ -1,12 +1,12 @@
 ﻿@using FribergCarRentals.Areas.Admin.Controllers
-@using MvcRazorPages.Shared.ViewModels.Customer
+@using FribergCarRentals.Shared.Models.ViewModels.Customer
 @model CustomerViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Customer Details";
 }
 
-<h1>@($"Customer - #{Model.CustomerId}")</h1>
+<h1>Customer</h1>
 <h2>@($"#{Model.CustomerId} - {Model.FullName}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
@@ -50,6 +50,12 @@
             </dt>
             <dd>
                 @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.IsEmailConfirmed)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IsEmailConfirmed)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.OrderCount)

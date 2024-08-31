@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using FribergCarRentals.Shared.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.Api;
 
 namespace FribergCarRentalsApi.Filters
 {

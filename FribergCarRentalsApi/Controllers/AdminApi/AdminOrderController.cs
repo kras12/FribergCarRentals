@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using FribergFastigheter.Shared.Constants;
-using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared;
-using FribergCarRentals.Shared.Dto.Order;
 using AutoMapper;
+using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Models.Dto.Image;
+using FribergCarRentals.Shared.Enums;
 
 namespace FribergCarRentalsApi.Controllers.AdminApi
 {
     /// <summary>
     /// Handles admin related activites for orders.
     /// </summary>
-    [Route("api/admin/order/")]
+    [Route("admin-api/order/")]
     [ApiController]
     public class AdminOrderController : ApiControllerBase
     {
@@ -51,11 +52,11 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// </summary>
         /// <param name="id">The ID of the order. </param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
-        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiValueResponseDto<CarOrderDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
-        [HttpPost("{id}/complete")]
+        [HttpPut("{id}/complete")]
         public async Task<IActionResult> Complete(int id)
         {
             if (!await IsAuthorized(ApplicationUserPolicies.Admin))
@@ -73,12 +74,14 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Failed to find an order with ID: {id}"));
             }
 
-            if (await _orderRepository.TryCompleteOrderAsync(id))
+            if (!await _orderRepository.TryCompleteOrderAsync(id))
             {
-                return Ok(ApiResponseDto.CreateSuccessfulResponse());
+                return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotModified, "Failed to complete order. Please check the status of the order."));
             }
 
-            return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotModified, "Failed to complete order. Please check the status of the order."));
+            var order = await _orderRepository.GetByIdAsync(id);
+
+            return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));            
         }
 
         /// <summary>
@@ -143,7 +146,10 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
                 return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData, $"Failed to find an order with ID: {id}"));
             }
 
-            return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
+            var orderDto = _mapper.Map<CarOrderDto>(order);
+            SetImageUrls(orderDto.CarBooking.Car.Images.ToList());
+
+            return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(orderDto));
         }
 
         /// <summary>
@@ -161,7 +167,22 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             var orders = _mapper.Map<List<CarOrderDto>>((await _orderRepository.GetAllAsync()).ToList());
+            SetImageUrls(orders.SelectMany(x => x.CarBooking.Car.Images).ToList());
+
             return Ok(ApiValueResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(orders));
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+		/// Sets the image urls for image DTOs.
+		/// </summary>
+		/// <param name="images">A collection of image DTOs to process.</param>
+		private void SetImageUrls(List<CarImageDto> images)
+        {
+            images.ForEach(x => x.Url = AdminFileController.GetImageUrl(HttpContext, x.FileName));
         }
 
         #endregion

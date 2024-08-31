@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using FribergCarRentals.Data.Types;
-using FribergCarRentals.Data.Attributes;
-using FribergCarRentals.Data.Extensions;
+using FribergCarRentals.Shared.Enums;
+using FribergCarRentals.Shared.Attributes;
+using FribergCarRentals.Shared.Extensions;
 
 namespace FribergCarRentals.Data.EntityClasses
 {
@@ -97,6 +97,16 @@ namespace FribergCarRentals.Data.EntityClasses
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Creates a new entity that represents an entity stored in the database.
+        /// </summary>
+        /// <param name="propulsionId">The ID of the propulsion type.</param>
+        /// <returns>A <see cref="VehiclePropulsionEntity"/> object.</returns>
+        public static VehiclePropulsionEntity CreateFromId(int propulsionId)
+        {
+            return new VehiclePropulsionEntity((VehiclePropulsionType)propulsionId);
+        }
 
         /// <summary>
         /// Creates a new entity that represents an entity stored in the database.

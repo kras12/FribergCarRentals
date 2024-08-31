@@ -1,13 +1,14 @@
-﻿using MvcRazorPages.Shared.Helpers;
+﻿using FribergCarRentals.Shared.Mvc.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using FribergCarRentals.Helpers;
-using MvcRazorPages.Shared.ViewModels.Admin;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Models.ViewModels.Admin;
+using AutoMapper;
+using FribergCarRentals.Shared.Constants;
 
 namespace FribergCarRentals.Areas.Admin.Controllers
 {
@@ -34,32 +35,37 @@ namespace FribergCarRentals.Areas.Admin.Controllers
         /// </summary>
         private readonly IAdminRepository _adminRepository;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="_adminRepository">The injected admin repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        public AdminHomeController(IAdminRepository _adminRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
-        {
-            this._adminRepository = _adminRepository;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="_adminRepository">The injected admin repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public AdminHomeController(IAdminRepository _adminRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			this._adminRepository = _adminRepository;
+			_mapper = mapper;
+		}
 
-        #region Actions
+		#endregion
 
-        /// <summary>
-        /// Serves the admin home page.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> containing a <see cref="IActionResult"/>.</returns>
-        /// <exception cref="Exception"></exception>
-        [HttpGet]
+		#region Actions
+
+		/// <summary>
+		/// Serves the admin home page.
+		/// </summary>
+		/// <returns>A <see cref="Task"/> containing a <see cref="IActionResult"/>.</returns>
+		/// <exception cref="Exception"></exception>
+		[HttpGet]
         [Route($"/{Area}")]
         public async Task<IActionResult> Index()
         {
@@ -73,7 +79,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
             if (admin is not null)
             {
-                AdminViewModel viewModel = new AdminViewModel(admin);
+                AdminViewModel viewModel = _mapper.Map<AdminViewModel>(admin);
                 return View(viewModel);
             }
 
@@ -118,17 +124,17 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginAdminViewModel.Email, loginAdminViewModel.Password, isPersistent: true, lockoutOnFailure: false);
+                if (await _adminRepository.AdminExistsAsync(loginAdminViewModel.Email))
+                {
+                    var result = await _signInManager.PasswordSignInAsync(loginAdminViewModel.Email, loginAdminViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (result.Succeeded)
-                {
-                    return TempDataOrHomeRedirect();
-                }
-                else
-                {
-                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
-                    ModelState.AddModelError(nameof(LoginAdminViewModel), "No account matched the entered email/password.");
-                }
+                    if (result.Succeeded)
+                    {
+                        return TempDataOrHomeRedirect();
+                    }
+                } 
+                
+                ModelState.AddModelError("", "No account matched the entered email/password.");
             }
 
             return View(loginAdminViewModel);

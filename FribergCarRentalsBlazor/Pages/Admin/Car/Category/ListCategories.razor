@@ -1,0 +1,71 @@
+﻿@attribute [Route(PageUrlTemplate)]
+@using FribergCarRentals.Shared.Helpers
+@using FribergCarRentalsBlazor.Components
+@using FribergCarRentalsBlazor.Components.Admin
+@inherits AdminPageComponentBase
+
+<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
+	<Authorized>
+        @if (_categories != null)
+        {
+            <h1>Categories</h1>
+            <div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-items-center">
+                @if (_categories.Count <= 0)
+                {
+                    <p class="text-align-center">No categories found.</p>
+                }
+                <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+                    <a href="@Pages.Admin.Car.Category.CreateCategory.GetPageUrl()" class="button function-button">Create Category</a>
+                </div>
+                <UserMessages Messages="_categories.Messages"></UserMessages>
+                @if (_categories.Count > 0)
+                {
+                    <table class="slim-table colored-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _categories.Models[0].CarCategoryId)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _categories.Models[0].CategoryName)
+                                </th>
+                                <th>
+                                    @AttributeHelper.GetDisplayName(() => _categories.Models[0].CarCount)
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in _categories.Models)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.CarCategoryId
+                                    </td>
+                                    <td>
+                                        @item.CategoryName
+                                    </td>
+                                    <td>
+                                        @item.CarCount
+                                    </td>
+                                    <td>
+                                        <div class="horizontal-flex-container flex-container__column-gap__0-5-rem">
+                                            <a href="@Pages.Admin.Car.Category.CategoryDetails.GetPageUrl(item.CarCategoryId)" class="button navigational-button">Details</a>
+                                            <a href="@Pages.Admin.Car.Category.EditCategory.GetPageUrl(item.CarCategoryId)" class="button function-button">Edit</a>
+                                            <DeleteCarCategoryButton CarCategory="item" OnDeletedCategory="OnDeleteCategory"></DeleteCarCategoryButton>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }        
+</Authorized>
+    <NotAuthorized>
+		<RedirectToLogin ReturnToUrl="@NavigationManager.Uri"></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>

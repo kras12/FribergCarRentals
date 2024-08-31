@@ -1,0 +1,17 @@
+﻿@if (Messages.Count > 0)
+{
+    <div class="vertical-flex-container flex-container__row-gap__1-rem">
+        @foreach (var message in Messages)
+        {
+            <div class="message @(GetMessageClass(message.MessageType))">
+                <div class="horizontal-flex-container flex-container__justify-content__space-between">
+                    <div class="message-title">@(message.Title ?? "")</div>
+                    <button onclick="this.parentElement.parentElement.style.display='none'" class="message-x-button">X</button>
+                </div>
+                <p>
+                    @message.Body
+                </p>
+            </div>
+        }
+    </div>
+}

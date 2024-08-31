@@ -1,0 +1,28 @@
+﻿<AuthorizeView Context="OuterContext" Policy="@ApplicationUserPolicies.Admin">
+    <div id="header-menu-container" class="horizontal-menu-container horizontal-menu-container__justify-content__center">
+        <nav id="primary-navigation-menu" class="horizontal-menu full-width" aria-label="Primary navigation menu">
+            <ul>
+                <li>
+                    <a href="/admin">Home</a>
+                </li>
+                <li>
+                    <a href="@Pages.Admin.Car.Category.ListCategories.GetPageUrl()">Car Categories</a>
+                </li>
+                <li>
+                    <a href="/admin/car/list">Cars</a>
+                </li>
+                <li>
+                    <a href="/admin/customer/list">Customers</a>
+                </li>
+                <li>
+                    <a href="/admin/order/list">Orders</a>
+                </li>
+                <div class="menu-group right-aligned">
+                    <li>
+                        <a href="/admin/logout">Logout</a>
+                    </li>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</AuthorizeView>

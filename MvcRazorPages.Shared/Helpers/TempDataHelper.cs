@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MvcRazorPages.Shared.Helpers
+namespace FribergCarRentals.Shared.Mvc.Helpers
 {
     /// <summary>
     /// A helper class for storing and retrieving temp data between requests. 
@@ -96,7 +96,7 @@ namespace MvcRazorPages.Shared.Helpers
         {
             if (TryGet(tempData, key, out T? value))
             {
-                Set(tempData, key, value); 
+                Set(tempData, key, value);
                 return true;
             }
 

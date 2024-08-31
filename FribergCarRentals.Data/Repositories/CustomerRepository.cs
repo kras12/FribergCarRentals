@@ -3,9 +3,10 @@ using System.Linq.Expressions;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.DatabaseContexts;
 using Microsoft.AspNetCore.Identity;
-using FribergFastigheter.Shared.Constants;
 using FribergCarRentals.Data.Exceptions;
 using FribergCarRentals.Data.Entities;
+using FribergCarRentals.Shared.Constants;
+using System.Text;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -56,7 +57,7 @@ namespace FribergCarRentals.Data.Repositories
             #endregion
 
             // Create user
-            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.NewPassword!);
+            IdentityResult? createUserResult = await _userManager.CreateAsync(customer.User, customer.User.Password!);
             IdentityResult? addRoleResult = null;
 
             if (!createUserResult.Succeeded)
@@ -137,13 +138,28 @@ namespace FribergCarRentals.Data.Repositories
         /// <param name="id">The ID of the customer to delete.</param>
         /// <returns>A <see cref="Task"/>.</returns>
         /// <exception cref="EntityNotFoundException"></exception>
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             try
             {
-                var entity = new CustomerEntity() { CustomerId = id };
-                _databaseContext.Customers.Remove(entity);
-                return _databaseContext.SaveChangesAsync();
+                var customer = await _databaseContext.Customers.FirstOrDefaultAsync(x => x.CustomerId == id);
+
+                if (customer == null )
+                {
+                    throw new EntityNotFoundException($"The customer with ID '{id}' was not found.");
+				}
+
+				_databaseContext.Customers.Remove(customer);
+				await _databaseContext.SaveChangesAsync();                    
+                var result = await _userManager.DeleteAsync(customer.User);
+
+                if (!result.Succeeded)
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.AppendLine($"Failed to delete customer with ID '{id}'.");
+                    result.Errors.ToList().ForEach(x => stringBuilder.AppendLine($"{x.Code}: {x.Description}"));
+                    throw new Exception(stringBuilder.ToString());
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -249,9 +265,9 @@ namespace FribergCarRentals.Data.Repositories
         {
             _databaseContext.Customers.Update(customer);
 
-            if (!string.IsNullOrEmpty(customer.User.NewPassword))
+            if (!string.IsNullOrEmpty(customer.User.Password))
             {
-                await UpdatePasswordAsync(customer.CustomerId, customer.User.NewPassword);
+                await UpdatePasswordAsync(customer.CustomerId, customer.User.Password);
             }
 
             await _databaseContext.SaveChangesAsync();
@@ -272,7 +288,7 @@ namespace FribergCarRentals.Data.Repositories
                 throw new ArgumentException("Customer ID must be larger than zero.", nameof(customerId));
             }
 
-            if (!string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
                 throw new ArgumentException("Password can't be null or empty.", nameof(password));
             }

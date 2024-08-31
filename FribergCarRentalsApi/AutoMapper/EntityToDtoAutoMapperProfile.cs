@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
-using FribergCarRentals.Shared.Dto.Admin;
-using FribergCarRentals.Shared.Dto.Car;
-using FribergCarRentals.Shared.Dto.CarCategory;
-using FribergCarRentals.Shared.Dto.Customer;
-using FribergCarRentals.Shared.Dto.Image;
-using FribergCarRentals.Shared.Dto.Order;
-using FribergCarRentals.Shared.Dto.User;
+using FribergCarRentals.Shared.Models.Dto.Admin;
+using FribergCarRentals.Shared.Models.Dto.Car;
+using FribergCarRentals.Shared.Models.Dto.CarCategory;
+using FribergCarRentals.Shared.Models.Dto.Customer;
+using FribergCarRentals.Shared.Models.Dto.Image;
+using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Models.Dto.User;
 
 namespace FribergCarRentalsApi.AutoMapper
 {
@@ -34,9 +34,14 @@ namespace FribergCarRentalsApi.AutoMapper
 
         #region Methods
 
+        /// <summary>
+        /// Creates mappings for admins. 
+        /// </summary>
         private void CreateAdminMappings()
         {
-            CreateMap<AdminEntity, AdminDto>();
+            CreateMap<ApplicationUser, AdminDto>();
+            CreateMap<AdminEntity, AdminDto>()
+                .IncludeMembers(src => src.User);
         }
 
         /// <summary>
@@ -45,6 +50,7 @@ namespace FribergCarRentalsApi.AutoMapper
         private void CreateCarMappings()
         {
             CreateMap<CarCategoryEntity, CarCategoryDto>();
+            CreateMap<CarCategoryEntity, CarCategoryStatisticsDto>();
             CreateMap<VehiclePropulsionEntity, VehiclePropulsionDto>();
             CreateMap<CarRentalStatusEntity, CarRentalStatusDto>();
             CreateMap<CarEntity, CarDto>();
@@ -58,8 +64,26 @@ namespace FribergCarRentalsApi.AutoMapper
         /// </summary>
         private void CreateCustomerMappings()
         {
-            CreateMap<CustomerEntity, CustomerDto>();
-            CreateMap<CustomerEntity, CreatedCustomerDto>();
+            CreateMap<ApplicationUser, UserDto>();
+            CreateMap<ApplicationUser, CreatedCustomerDto>();
+            CreateMap<ApplicationUser, CarOrderCustomerDto>();
+
+            CreateMap<ApplicationUser, CustomerDto>()
+                .ForMember(dest => dest.IsEmailConfirmed, opt => opt.MapFrom(src => src.EmailConfirmed));
+
+            CreateMap<CustomerEntity, UserDto>()
+                .IncludeMembers(src => src.User);
+
+            CreateMap<CustomerEntity, CustomerDto>()
+                .IncludeMembers(src => src.User)
+                .ForMember(dest => dest.OrderCount, opt => opt.MapFrom(src => src.Orders.Count));
+
+            CreateMap<CustomerEntity, CreatedCustomerDto>()
+                .IncludeMembers(src => src.User)
+                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId));
+
+            CreateMap<CustomerEntity, CarOrderCustomerDto>()
+                .IncludeMembers(src => src.User);
         }
 
         /// <summary>
@@ -70,7 +94,7 @@ namespace FribergCarRentalsApi.AutoMapper
             CreateMap<OrderStatusEntity, OrderStatusDto>();
 
             CreateMap<CarOrderEntity, CarOrderDto>()
-                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.Customer!.CustomerId));
+                .ForMember(dest => dest.CarBooking, opt => opt.MapFrom(src => src.CarBookings.First()));
 
             CreateMap<CarBookingEntity, CarBookingDto>()
                 .ForMember(dest => dest.CarOrderId, opt => opt.MapFrom(src => src.CarOrder!.CarOrderId));

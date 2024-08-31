@@ -6,16 +6,15 @@ using FribergCarRentals.Shared.Constants;
 using FribergCarRentalsApi.Filters;
 using FribergCarRentalsApi.Services;
 using FribergCarRentals.Data.Entities;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MvcRazorPages.Shared.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 using FribergCarRentalsApi.AutoMapper;
+using FribergCarRentals.Shared.Mvc.Services;
 
 namespace FribergCarRentalsApi
 {
@@ -71,7 +70,7 @@ namespace FribergCarRentalsApi
             // Images
             // ==================================================================================================================
             builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
-            builder.Services.AddScoped<IImageDownloadService, ImageDownloadService>();
+            builder.Services.AddScoped<IImageApiDownloadService, ImageApiDownloadService>();
 
             // ==================================================================================================================
             // Mapping

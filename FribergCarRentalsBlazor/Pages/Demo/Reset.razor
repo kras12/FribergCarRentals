@@ -1,0 +1,20 @@
+﻿@attribute [Route(PageUrlTemplate)]
+@using FribergCarRentalsBlazor.Components
+@inherits ComponentBase
+
+<PageTitle>Demo</PageTitle>
+
+@if (_isInitialized)
+{
+    <h1>Demo</h1>
+    <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+        @if (_apiValidationErrors.Count > 0)
+        {
+            <UserMessages Messages="_apiValidationErrors"></UserMessages>
+        }
+        else
+        {
+            <p>The demo have been reset.</p>
+        }
+    </div>
+}

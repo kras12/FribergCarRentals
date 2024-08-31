@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Other;
-using MvcRazorPages.Shared.ViewModels.CarCategory;
-using MvcRazorPages.Shared.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.ViewModels.Other;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
 {
@@ -31,30 +33,35 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
         /// </summary>
         private readonly ICarCategoryRepository _carCategoryRepository;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor. 
-        /// </summary>
-        /// <param name="carCategoryRepository">The injected car category repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        public ListModel(ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager) 
-        {
-            _carCategoryRepository = carCategoryRepository;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor. 
+		/// </summary>
+		/// <param name="carCategoryRepository">The injected car category repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="mapper">The injected Auto Mapper.</param>
+		public ListModel(ICarCategoryRepository carCategoryRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_carCategoryRepository = carCategoryRepository;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// A view model used to present a list of car categories. 
-        /// </summary>
-        public ListViewModel<CarCategoryViewModel> CarCategoryListViewModel { get; private set; } = new();
+		#region Properties
+
+		/// <summary>
+		/// A view model used to present a list of car categories. 
+		/// </summary>
+		public ListViewModel<CarCategoryViewModel> CarCategoryListViewModel { get; private set; } = new();
 
         #endregion
 
@@ -71,13 +78,13 @@ namespace FribergCarRentals.Areas.Admin.Pages.CarCategories
                 return RedirectToLogin(new RedirectToPageData(PageUrlRelativeToLoginPage, area: Area));
             }
 
-            CarCategoryListViewModel = new((await _carCategoryRepository.GetCategoryStatistics()).Select(x => new CarCategoryViewModel(x)));
+            CarCategoryListViewModel = new(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetCategoryStatistics()));
             TempDataHelper.Set(TempData, DeleteModel.RedirectToPageAfterDeleteTempDataKey, 
                 new RedirectToPageData("List", area: Area));
 
             if (TempDataHelper.TryGet(TempData, DeleteModel.DeletedCarCategoryIdTempDataKey, out int deletedCarCategoryId))
             {
-                CarCategoryListViewModel.Messages.Add(UserMesssageHelper.CreateCarCategoryDeletionSuccessMessage(deletedCarCategoryId));
+                CarCategoryListViewModel.Messages.Add(MessageViewModelHelper.CreateCarCategoryDeletionSuccessMessage(deletedCarCategoryId));
             }
 
             return Page();

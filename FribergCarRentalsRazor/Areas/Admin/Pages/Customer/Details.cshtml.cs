@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.ViewModels.Customer;
+using FribergCarRentals.Shared.Mvc.Data;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FribergCarRentals.Shared.Models.ViewModels.Customer;
+using AutoMapper;
+using FribergCarRentals.Shared.Models.ViewModels.Message;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Customer
 {
@@ -15,11 +17,6 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
     public class DetailsModel : AdminPageModelBase
     {
         #region Constants
-
-        /// <summary>
-        /// The key for the ID of the customer that was created.
-        /// </summary>
-        public const string CreatedCustomerIdTempDataKey = "AdminCreatedCustomerId";
 
         /// <summary>
         /// The page URL relative to the login page
@@ -35,30 +32,35 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
         /// </summary>
         private readonly ICustomerRepository _customerRepository;
 
-        #endregion
+		// The injected Auto Mapper.
+		private readonly IMapper _mapper;
 
-        #region Constructors
+		#endregion
 
-        /// <summary>
-        /// A constructor.
-        /// </summary>
-        /// <param name="customerRepository">Injected customer repository.</param>
-        /// <param name="authorizationService">The injected authorization service.</param>
-        /// <param name="signInManager">The injected signin manager.</param>
-        public DetailsModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
-            SignInManager<ApplicationUser> signInManager) : base(authorizationService, signInManager)
-        {
-            _customerRepository = customerRepository;
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// A constructor.
+		/// </summary>
+		/// <param name="customerRepository">Injected customer repository.</param>
+		/// <param name="authorizationService">The injected authorization service.</param>
+		/// <param name="signInManager">The injected signin manager.</param>
+		/// <param name="mapper"> The injected Auto Mapper.</param>
+		public DetailsModel(ICustomerRepository customerRepository, IAuthorizationService authorizationService,
+			SignInManager<ApplicationUser> signInManager, IMapper mapper) : base(authorizationService, signInManager)
+		{
+			_customerRepository = customerRepository;
+			_mapper = mapper;
+		}
 
-        #region Properties
+		#endregion
 
-        /// <summary>
-        /// The view model used for presenting customer details. 
-        /// </summary>
-        public CustomerViewModel CustomerViewModel { get; set; } = default!;
+		#region Properties
+
+		/// <summary>
+		/// The view model used for presenting customer details. 
+		/// </summary>
+		public CustomerViewModel CustomerViewModel { get; set; } = default!;
 
         #endregion
 
@@ -87,16 +89,16 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
 
                 if (customer is not null)
                 {
-                    CustomerViewModel = new CustomerViewModel(customer);
+                    CustomerViewModel = _mapper.Map<CustomerViewModel>(customer);
 
                     if (TempDataHelper.TryGet(TempData, CreateModel.CreatedCustomerIdTempDataKey, out int createdCustomerId))
                     {
-                        CustomerViewModel.Messages.Add(UserMesssageHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
+                        CustomerViewModel.Messages.Add(MessageViewModelHelper.CreateCustomerCreationSuccessMessage(createdCustomerId));
                     }
 
                     if (TempDataHelper.TryGet(TempData, ResendConfirmEmailLinkModel.ResentConfirmEmailLinkForCustomerIdTempDataKey, out int resentConfirmEmailLinkCustomerId))
                     {
-                        CustomerViewModel.Messages.Add(UserMesssageHelper.CreateResentConfirmEmailLinkToCustomerMessage(resentConfirmEmailLinkCustomerId));
+                        CustomerViewModel.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerSuccessMessage(resentConfirmEmailLinkCustomerId));
                     }
 
                     return Page();

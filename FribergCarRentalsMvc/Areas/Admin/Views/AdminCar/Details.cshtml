@@ -1,14 +1,14 @@
 ﻿@using System.Web
 @using FribergCarRentals.Areas.Admin.Controllers
-@using FribergCarRentals.Helpers
-@using MvcRazorPages.Shared.ViewModels.Car
+@using FribergCarRentals.Shared.Mvc.Helpers
+@using FribergCarRentals.Shared.Models.ViewModels.Car
 @model CarViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Car Details";
 }
 
-<h1>Details</h1>
+<h1>Car</h1>
 <h2>@($"#{Model.CarId} - {Model.CarInfo}")</h2>
 <div class="vertical-flex-container flex-container__row-gap__1-rem flex-container__align-items-center">
     <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">

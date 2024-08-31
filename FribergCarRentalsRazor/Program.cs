@@ -2,12 +2,13 @@ using FribergCarRentals.Data.DatabaseContexts;
 using FribergCarRentals.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using AppSettings.Shared.Settings;
-using MvcRazorPages.Shared.ModelBinders;
 using FribergCarRentals.Data.Entities;
-using FribergFastigheter.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
-using MvcRazorPages.Shared.Services;
-using MvcRazorPages.Shared.AutoMapper;
+using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Mvc.ModelBinders;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.AutoMapper;
+using FribergCarRentals.Shared.Models.Mvc.AutoMapper;
 
 namespace FribergCarRentals
 {
@@ -32,11 +33,17 @@ namespace FribergCarRentals
             // Images
             // ==================================================================================================================
             builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
+            builder.Services.AddScoped<IImageDownloadService, ImageDownloadService>();
 
             // ==================================================================================================================
             // Mapping
             // ==================================================================================================================
-            builder.Services.AddAutoMapper(typeof(ViewModelToEntityAutoMapperProfile));
+            builder.Services.AddAutoMapper(
+                typeof(ViewModelToEntityAutoMapperProfile),
+                typeof(EntityToViewModelAutoMapperProfile),
+                typeof(Shared.Models.AutoMapper.DtoToViewModelAutoMapperProfile),
+                typeof(Shared.Models.Mvc.AutoMapper.DtoToViewModelAutoMapperProfile)
+            );
 
             // ==================================================================================================================
             //  Repositories

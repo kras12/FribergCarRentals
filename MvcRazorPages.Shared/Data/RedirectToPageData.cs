@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace MvcRazorPages.Shared.Data
+namespace FribergCarRentals.Shared.Mvc.Data
 {
     /// <summary>
     /// A class that stores data for redirections to a Razor page. 

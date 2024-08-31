@@ -1,11 +1,11 @@
-﻿using MvcRazorPages.Shared.Data;
+﻿using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
+using FribergCarRentals.Shared.Mvc.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using MvcRazorPages.Shared.ViewModels.Admin;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FribergCarRentals.Shared.Models.ViewModels.Admin;
 
 namespace FribergCarRentals.Areas.Admin.Pages
 {
@@ -92,17 +92,17 @@ namespace FribergCarRentals.Areas.Admin.Pages
 
             if (ModelState.Count > 0 && ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(AdminLoginViewModel.Email, AdminLoginViewModel.Password, isPersistent: true, lockoutOnFailure: false);
+                if (await _adminRepository.AdminExistsAsync(AdminLoginViewModel.Email))
+                {
+                    var result = await _signInManager.PasswordSignInAsync(AdminLoginViewModel.Email, AdminLoginViewModel.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (result.Succeeded)
-                {
-                    return TempDataOrHomeRedirect();
-                }
-                else
-                {
-                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
-                    ModelState.AddModelError(nameof(AdminLoginViewModel), "No account matched the entered email/password.");
-                }
+                    if (result.Succeeded)
+                    {
+                        return TempDataOrHomeRedirect();
+                    }
+                } 
+                
+                ModelState.AddModelError("", "No account matched the entered email/password.");
             }
 
             return Page();

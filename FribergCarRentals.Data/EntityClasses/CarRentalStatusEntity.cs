@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using FribergCarRentals.Data.Types;
-using FribergCarRentals.Data.Attributes;
-using FribergCarRentals.Data.Extensions;
+using FribergCarRentals.Shared.Attributes;
+using FribergCarRentals.Shared.Enums;
+using FribergCarRentals.Shared.Extensions;
 
 namespace FribergCarRentals.Data.EntityClasses
 {
@@ -90,6 +90,16 @@ namespace FribergCarRentals.Data.EntityClasses
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Creates a new entity that represents an entity stored in the database.
+        /// </summary>
+        /// <param name="rentalStatusId">The ID of the rental status type.</param>
+        /// <returns>A <see cref="VehiclePropulsionEntity"/> object.</returns>
+        public static CarRentalStatusEntity CreateFromId(int rentalStatusId)
+        {
+            return new CarRentalStatusEntity((RentalCarStatus)rentalStatusId);
+        }
 
         /// <summary>
         /// Creates a new entity that represents an entity stored in the database.

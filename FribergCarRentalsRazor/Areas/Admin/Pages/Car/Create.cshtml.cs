@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using MvcRazorPages.Shared.Helpers;
-using MvcRazorPages.Shared.Data;
-using MvcRazorPages.Shared.ViewModels.Car;
+using FribergCarRentals.Shared.Mvc.Helpers;
+using FribergCarRentals.Shared.Mvc.Data;
 using FribergCarRentals.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using MvcRazorPages.Shared.Services;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentals.Shared.Models.ViewModels.CarCategory;
+using FribergCarRentals.Shared.Models.Mvc.ViewModels.Car;
 
 namespace FribergCarRentals.Areas.Admin.Pages.Car
 {
-    /// <summary>
-    /// A page model for creating cars in the admin back office.
-    /// </summary>
-    public class CreateModel : AdminPageModelBase
+	/// <summary>
+	/// A page model for creating cars in the admin back office.
+	/// </summary>
+	public class CreateModel : AdminPageModelBase
     {
         #region Constants
 
@@ -98,7 +99,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                 return RedirectToLogin(new RedirectToPageData(PageUrlRelativeToLoginPage, area: Area));
             }
 
-            CreateCarViewModel = new CreateCarViewModel(await _carCategoryRepository.GetAllAsync());
+            CreateCarViewModel = new CreateCarViewModel(_mapper.Map<List<CarCategoryViewModel>>(await _carCategoryRepository.GetAllAsync()));
 
             return Page();
         }
@@ -120,7 +121,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Car
                 var selectedCategory = await _carCategoryRepository.GetByIdAsync(CreateCarViewModel.SelectedCategoryId!.Value);
                 car.Category = selectedCategory;
 
-                if (CreateCarViewModel.UploadImages is not null && CreateCarViewModel.UploadImages.Count > 0)
+                if (CreateCarViewModel.UploadImages.Count > 0)
                 {
                     var savedImageFileNames = await _imageUploadService.SaveImagesToDisk(CreateCarViewModel.UploadImages);
 

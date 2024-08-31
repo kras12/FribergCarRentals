@@ -2,17 +2,18 @@
 using FribergCarRentals.Data.Entities;
 using FribergCarRentals.Data.EntityClasses;
 using FribergCarRentals.Data.Repositories;
-using FribergCarRentals.Data.Types;
-using FribergCarRentals.Shared;
-using FribergCarRentals.Shared.Dto.Api;
-using FribergCarRentals.Shared.Dto.Car;
-using FribergCarRentals.Shared.Dto.CarCategory;
-using FribergCarRentals.Shared.Dto.Order;
-using FribergFastigheter.Shared.Constants;
+using FribergCarRentals.Shared.Constants;
+using FribergCarRentals.Shared.Enums;
+using FribergCarRentals.Shared.Models.Dto.Api;
+using FribergCarRentals.Shared.Models.Dto.Car;
+using FribergCarRentals.Shared.Models.Dto.CarCategory;
+using FribergCarRentals.Shared.Models.Dto.Image;
+using FribergCarRentals.Shared.Models.Dto.Order;
+using FribergCarRentals.Shared.Mvc.Services;
+using FribergCarRentalsApi.Controllers.AdminApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MvcRazorPages.Shared.ViewModels.Order;
 using System.Security.Claims;
 
 namespace FribergCarRentalsApi.Controllers.CustomerApi
@@ -20,24 +21,10 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
     /// <summary>
     /// Handles customer related activites like booking a car and place an order for the booking.
     /// </summary>
-    [Route("api/customer/order")]
+    [Route("customer-api/order")]
     [ApiController]
     public class CustomerOrderController : ApiControllerBase
     {
-        #region ErrorMessages
-
-        /// <summary>
-        /// Error message for when the pickup date is not in the future. 
-        /// </summary>
-        private const string PickupDateMustBeInFutureErrorMessage = "The pickup date must be at least one day into the future.";
-
-        /// <summary>
-        /// Error message for when the return date occurrs before the pickup date.
-        /// </summary>
-        private const string ReturnDateOccursBeforePickupDateErrorMessage = "The return date can't occur before the pickup date.";
-
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -58,6 +45,11 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         ///The injected customer repository. 
         /// </summary>
         private readonly ICustomerRepository _customerRepository;
+
+        /// <summary>
+        /// The injected image upload service.
+        /// </summary>
+        private readonly IImageUploadService _imageUploadService;
 
         /// <summary>
         ///The injected Auto Mapper. 
@@ -88,10 +80,12 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// <param name="carCategoryRepository">The injected car category repository.</param>
         /// <param name="carRepository">The injected car repository.</param>
         /// <param name="orderRepository">The injected order repository.</param>
+        /// <param name="authorizationService">The injected authorization service.</param>
+        /// <param name="imageUploadService">The injected image upload service.</param>
         public CustomerOrderController(ICustomerRepository customerRepository, SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IMapper mapper, ICarCategoryRepository carCategoryRepository, ICarRepository carRepository, ICarOrderRepository orderRepository, 
-            IAuthorizationService authorizationService)
+            IMapper mapper, ICarCategoryRepository carCategoryRepository, ICarRepository carRepository, ICarOrderRepository orderRepository,
+            IAuthorizationService authorizationService, IImageUploadService imageUploadService)
             : base(authorizationService)
         {
             _customerRepository = customerRepository;
@@ -101,6 +95,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             _carCategoryRepository = carCategoryRepository;
             _carRepository = carRepository;
             _orderRepository = orderRepository;
+            _imageUploadService = imageUploadService;
         }
 
         #endregion
@@ -112,7 +107,7 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// </summary>
         /// <param name="id">The ID of the order.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
-        [HttpPost("{id}/cancel")]
+        [HttpPut("{id}/cancel")]
         [ProducesResponseType<ApiValueResponseDto<CarOrderDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
@@ -136,6 +131,11 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             if (await _orderRepository.TryCancelOrderAsync(id))
             {
                 var order = _mapper.Map<CarOrderDto>(await _orderRepository.GetByIdAsync(id));
+                SetImageUrls(order
+                    .CarBooking
+                    .Car.Images.Select(image => image)
+                    .ToList());
+
                 return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(order));
             }
 
@@ -162,13 +162,13 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             if (!ValidatePickupDate(createCarOrderDto.PickupDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    PickupDateMustBeInFutureErrorMessage));
+                    ValidationMessages.PickupDateMustBeInFutureErrorMessage));
             }
 
             if (!ValidateReturnDate(createCarOrderDto.PickupDateLocalTime, createCarOrderDto.ReturnDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    ReturnDateOccursBeforePickupDateErrorMessage));
+                    ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage));
             }
 
             if (createCarOrderDto.CarId <= 0)
@@ -198,7 +198,13 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                     returnDateUTC: createCarOrderDto.ReturnDateLocalTime.Date));
             await _orderRepository.AddAsync(order);
 
-            return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
+            var result = _mapper.Map<CarOrderDto>(order);
+            SetImageUrls(result
+                .CarBooking
+                .Car.Images.Select(image => image)
+                .ToList());
+
+            return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(result));
         }
 
         /// <summary>
@@ -224,7 +230,12 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                 return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Customer was not found."));
             }
 
-            return Ok(ApiValueResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(_mapper.Map<List<CarOrderDto>>(customer.Orders)));
+            var result = _mapper.Map<List<CarOrderDto>>(customer.Orders);
+            SetImageUrls(result
+                .SelectMany(order => order.CarBooking.Car.Images.Select(image => image))
+                .ToList());
+
+            return Ok(ApiValueResponseDto<List<CarOrderDto>>.CreateSuccessfulResponse(result));
         }
 
         /// <summary>
@@ -232,11 +243,28 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
         /// </summary>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpGet("car-categories")]
-        [ProducesResponseType<ApiValueResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiValueResponseDto<List<CarCategoryDto>>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCarCategories()
         {
             var carCategories = _mapper.Map<List<CarCategoryDto>>(await _carCategoryRepository.GetAllAsync());
             return Ok(ApiValueResponseDto<List<CarCategoryDto>>.CreateSuccessfulResponse(carCategories));
+        }
+
+        /// <summary>
+        /// Gets all orders.
+        /// </summary>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
+        [HttpGet("first-car-per-category")]
+        [ProducesResponseType<ApiValueResponseDto<List<CarDto>>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetFirstCarPerCategory()
+        {
+            var cars = (await _carRepository.GetFirstCarPerCategory()).ToList();
+            var result = _mapper.Map<List<CarDto>>(cars);
+            SetImageUrls(result.SelectMany(x => x.Images).ToList());
+
+            return Ok(ApiValueResponseDto<List<CarDto>>.CreateSuccessfulResponse(result));
         }
 
         /// <summary>
@@ -265,7 +293,13 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
 
             if (order is not null)
             {
-                return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(_mapper.Map<CarOrderDto>(order)));
+                var result = _mapper.Map<CarOrderDto>(order);
+                SetImageUrls(result
+                .CarBooking
+                .Car.Images.Select(image => image)
+                .ToList());
+
+                return Ok(ApiValueResponseDto<CarOrderDto>.CreateSuccessfulResponse(result));
             }
 
             return NotFound(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.ResourceNotFound, "Order was not found."));
@@ -284,12 +318,12 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
             if (!ValidatePickupDate(carRentalSearchDto.PickupDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    PickupDateMustBeInFutureErrorMessage));
+                    ValidationMessages.PickupDateMustBeInFutureErrorMessage));
             }
             else if (!ValidateReturnDate(carRentalSearchDto.PickupDateLocalTime, carRentalSearchDto.ReturnDateLocalTime))
             {
                 return BadRequest(ApiResponseDto.CreateErrorResponse(ApiErrorMessageTypes.InvalidInputData.ToString(),
-                    ReturnDateOccursBeforePickupDateErrorMessage));
+                    ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage));
             }
             else if (carRentalSearchDto.SelectedCarCategoryFilter != null && !await _carCategoryRepository.CategoryExists(carRentalSearchDto.SelectedCarCategoryFilter.Value))
             {
@@ -297,15 +331,27 @@ namespace FribergCarRentalsApi.Controllers.CustomerApi
                     "Failed to find the car category"));
             }
 
-            var cars = (await _carRepository.GetRentableCarsAsync(carRentalSearchDto.PickupDateLocalTime, carRentalSearchDto.ReturnDateLocalTime,
+            var carEntities = (await _carRepository.GetRentableCarsAsync(carRentalSearchDto.PickupDateLocalTime, carRentalSearchDto.ReturnDateLocalTime,
                 carRentalSearchDto.SelectedCarCategoryFilter)).ToList();
 
-            return Ok(ApiValueResponseDto<CarRentalSearchResultDto>.CreateSuccessfulResponse(new CarRentalSearchResultDto(_mapper.Map<List<CarDto>>(cars))));
+            var cars = _mapper.Map<List<CarDto>>(carEntities);
+            SetImageUrls(cars.SelectMany(x => x.Images).ToList());
+
+            return Ok(ApiValueResponseDto<CarRentalSearchResultDto>.CreateSuccessfulResponse(new CarRentalSearchResultDto(cars)));
         }
 
         #endregion
 
-        #region OtherMethods
+        #region Methods
+
+        /// <summary>
+		/// Sets the image urls for image DTOs.
+		/// </summary>
+		/// <param name="images">A collection of image DTOs to process.</param>
+		private void SetImageUrls(List<CarImageDto> images)
+        {
+            images.ForEach(x => x.Url = CustomerFileController.GetImageUrl(HttpContext, x.FileName));
+        }
 
         /// <summary>
         /// Validates the pickup date for car rentals.
