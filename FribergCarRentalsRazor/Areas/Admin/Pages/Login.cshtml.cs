@@ -100,8 +100,7 @@ namespace FribergCarRentals.Areas.Admin.Pages
                 }
                 else
                 {
-                    // The key needs to be the name of the view model (insted of empty string) because the error is shown in a partial view. 
-                    ModelState.AddModelError(nameof(AdminLoginViewModel), "No account matched the entered email/password.");
+                    ModelState.AddModelError("", "No account matched the entered email/password.");
                 }
             }
 
