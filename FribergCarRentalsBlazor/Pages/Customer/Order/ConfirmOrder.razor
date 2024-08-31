@@ -3,36 +3,39 @@
 @using FribergCarRentals.Shared.Helpers
 @using FribergCarRentalsBlazor.Components
 
-<h1>Confirm Order</h1>
-<div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
-    <h2>@_createOrderViewModel.CarDescription</h2>
-    <div class="vertical-flex-container flex-container__row-gap__0-5-rem">
-        <dl>
-            <dt>
-                @AttributeHelper.GetDisplayName(() => _createOrderViewModel.CarDescription)
-            </dt>
-            <dd>
-                @_createOrderViewModel.CarDescription
-            </dd>
-            <dt>
-                @AttributeHelper.GetDisplayName(() => _createOrderViewModel.PickupDateLocalTime)
-            </dt>
-            <dd>
-                @_createOrderViewModel.PickupDateLocalTime
-            </dd>
-            <dt>
-                @AttributeHelper.GetDisplayName(() => _createOrderViewModel.ReturnDateLocalTime)                
-            </dt>
-            <dd>
-                @_createOrderViewModel.ReturnDateLocalTime
-            </dd>
-        </dl>
+@if (_createOrderViewModel != null)
+{
+    <h1>Confirm Order</h1>
+    <div class="vertical-flex-container flex-container__align-items-center flex-container__row-gap__1-rem">
+        <h2>@_createOrderViewModel.CarDescription</h2>
+        <div class="vertical-flex-container flex-container__row-gap__0-5-rem">
+            <dl>
+                <dt>
+                    @AttributeHelper.GetDisplayName(() => _createOrderViewModel.CarDescription)
+                </dt>
+                <dd>
+                    @_createOrderViewModel.CarDescription
+                </dd>
+                <dt>
+                    @AttributeHelper.GetDisplayName(() => _createOrderViewModel.PickupDateLocalTime)
+                </dt>
+                <dd>
+                    @_createOrderViewModel.PickupDateLocalTime
+                </dd>
+                <dt>
+                    @AttributeHelper.GetDisplayName(() => _createOrderViewModel.ReturnDateLocalTime)
+                </dt>
+                <dd>
+                    @_createOrderViewModel.ReturnDateLocalTime
+                </dd>
+            </dl>
+        </div>
+        <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
+            <button class="positive-button" @onclick="@(() => CreateOrder())">Confirm</button>
+        </div>
+        @if (_apiValidationErrors.Count > 0)
+        {
+            <UserMessages Messages="_apiValidationErrors"></UserMessages>
+        }
     </div>
-    <div class="horizontal-flex-container flex-container__justify-content__center flex-container__column-gap__0-5-rem">
-        <button class="positive-button" @onclick="@(() => CreateOrder())">Confirm</button>
-    </div>
-    @if (_apiValidationErrors.Count > 0)
-    {
-        <UserMessages Messages="_apiValidationErrors"></UserMessages>
-    }
-</div>
+}

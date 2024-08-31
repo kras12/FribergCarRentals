@@ -1,5 +1,5 @@
 ﻿<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
-    @if (CarCategory.HaveCarCount && CarCategory.CarCount == 0)
+    @if (CarCategory != null && CarCategory.HaveCarCount && CarCategory.CarCount == 0)
     {
         <button class="negative-button" @onclick="@(() => DeleteCategory())">Delete</button>
     }

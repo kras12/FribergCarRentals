@@ -1,4 +1,7 @@
 ﻿<AuthorizeView Policy="@ApplicationUserPolicies.Admin">
-	<button class="negative-button" @onclick="@(() => DeleteOrder())">Delete</button>
+	@if (Order != null && Order.CarOrderId > 0)
+	{
+		<button class="negative-button" @onclick="@(() => DeleteOrder())">Delete</button>
+	}	
 </AuthorizeView>
 
