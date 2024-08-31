@@ -65,9 +65,11 @@ namespace FribergCarRentals.Shared.Models.Mvc.AutoMapper
         /// </summary>
         private void CreateCustomerMappings()
         {
-            CreateMap<ApplicationUser, CustomerViewModel>();
             CreateMap<ApplicationUser, EditCustomerViewModel>();
             CreateMap<ApplicationUser, CarOrderCustomerViewModel>();
+
+            CreateMap<ApplicationUser, CustomerViewModel>()
+                .ForMember(dest => dest.IsEmailConfirmed, opt => opt.MapFrom(src => src.EmailConfirmed));
 
             CreateMap<CustomerEntity, EditCustomerViewModel>()
                 .IncludeMembers(src => src.User)

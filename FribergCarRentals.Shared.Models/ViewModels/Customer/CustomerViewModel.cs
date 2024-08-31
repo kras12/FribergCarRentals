@@ -33,7 +33,8 @@ namespace FribergCarRentals.Shared.Models.ViewModels.Customer
         /// <summary>
         /// Returns true if the email address is confirmed.
         /// </summary>
-        public bool IsEmailConfirmed { get; }
+        [DisplayName("Email Confirmed")]
+        public bool IsEmailConfirmed { get; set; }
 
         /// <summary>
         /// The number of orders the customer have.

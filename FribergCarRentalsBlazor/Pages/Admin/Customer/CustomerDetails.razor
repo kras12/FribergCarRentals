@@ -49,6 +49,19 @@
                             @Customer.Email
                         </dd>
                         <dt>
+                            @AttributeHelper.GetDisplayName(() => Customer.IsEmailConfirmed)
+                        </dt>
+                        <dd>
+                            @if (Customer.IsEmailConfirmed)
+                            {
+                                <input type="checkbox" checked="checked" disabled />
+                            }
+                            else
+                            {
+                                <input type="checkbox" disabled />
+                            }
+                        </dd>
+                        <dt>
                             @AttributeHelper.GetDisplayName(() => Customer.OrderCount)
                         </dt>
                         <dd>

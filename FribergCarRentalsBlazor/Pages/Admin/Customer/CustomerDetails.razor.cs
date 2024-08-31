@@ -142,6 +142,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Customer
                     if (confirmEmailResult.Success)
                     {
                         Customer!.Messages.Add(MessageViewModelHelper.CreateResentConfirmEmailLinkToCustomerSuccessMessage(CustomerId));
+                        Customer.IsEmailConfirmed = true;
                         return;
                     }
                 }

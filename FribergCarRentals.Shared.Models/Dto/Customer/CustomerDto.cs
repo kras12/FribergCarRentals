@@ -15,6 +15,11 @@ namespace FribergCarRentals.Shared.Models.Dto.Customer
         public int CustomerId { get; set; }
 
         /// <summary>
+        /// Returns true if the email address is confirmed.
+        /// </summary>
+        public bool IsEmailConfirmed { get; set; }
+
+        /// <summary>
         /// The number of orders the customer have.
         /// </summary>
         public int OrderCount { get; set; }

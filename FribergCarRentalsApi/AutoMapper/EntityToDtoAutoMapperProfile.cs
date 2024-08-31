@@ -65,9 +65,11 @@ namespace FribergCarRentalsApi.AutoMapper
         private void CreateCustomerMappings()
         {
             CreateMap<ApplicationUser, UserDto>();
-            CreateMap<ApplicationUser, CustomerDto>();
             CreateMap<ApplicationUser, CreatedCustomerDto>();
             CreateMap<ApplicationUser, CarOrderCustomerDto>();
+
+            CreateMap<ApplicationUser, CustomerDto>()
+                .ForMember(dest => dest.IsEmailConfirmed, opt => opt.MapFrom(src => src.EmailConfirmed));
 
             CreateMap<CustomerEntity, UserDto>()
                 .IncludeMembers(src => src.User);
@@ -77,7 +79,8 @@ namespace FribergCarRentalsApi.AutoMapper
                 .ForMember(dest => dest.OrderCount, opt => opt.MapFrom(src => src.Orders.Count));
 
             CreateMap<CustomerEntity, CreatedCustomerDto>()
-                .IncludeMembers(src => src.User);
+                .IncludeMembers(src => src.User)
+                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId));
 
             CreateMap<CustomerEntity, CarOrderCustomerDto>()
                 .IncludeMembers(src => src.User);
