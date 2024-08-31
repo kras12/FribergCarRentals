@@ -150,12 +150,12 @@ namespace FribergCarRentals.Pages.Order
             {
                 if (!ValidatePickupDate(BookCarViewModel.PickupDateLocalTime))
                 {
-                    ModelState.AddModelError($"{nameof(BookCarViewModel.PickupDateLocalTime)}",
+                    ModelState.AddModelError($"{nameof(BookCarViewModel)}.{nameof(BookCarViewModel.PickupDateLocalTime)}",
                         ValidationMessages.PickupDateMustBeInFutureErrorMessage);
                 }
                 else if (!ValidateReturnDate(BookCarViewModel.PickupDateLocalTime, BookCarViewModel.ReturnDateLocalTime))
                 {
-                    ModelState.AddModelError($"{nameof(BookCarViewModel.ReturnDateLocalTime)}",
+                    ModelState.AddModelError($"{nameof(BookCarViewModel)}.{nameof(BookCarViewModel.ReturnDateLocalTime)}",
                         ValidationMessages.ReturnDateOccursBeforePickupDateErrorMessage);
                 }
                 else
