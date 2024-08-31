@@ -122,7 +122,7 @@ namespace FribergCarRentals.Areas.Admin.Pages.Customer
                     }
                     catch (CreateUserException ex)
                     {
-                        ModelState.AddModelError(string.Empty, ex.Message);
+                        ModelState.AddModelError("", ex.Message);
                     }
                 } 
             }
