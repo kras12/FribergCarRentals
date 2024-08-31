@@ -28,7 +28,9 @@ namespace FribergCarRentals.Shared.Models.Mvc.AutoMapper
         /// </summary>
         public void CreateMappingsForCars()
         {
-            CreateMap<CarCategoryCountDto, CarCategoryViewModel>();
+            CreateMap<CarCategoryCountDto, CarCategoryViewModel>()
+                .IncludeMembers(src => src.CarCategoryEntity)
+                .ForMember(dest => dest.CarCount, opt => opt.MapFrom(src => src.CarCount));
         }
 
         #endregion
