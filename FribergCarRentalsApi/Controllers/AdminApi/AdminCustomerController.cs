@@ -83,7 +83,7 @@ namespace FribergCarRentals.Areas.Admin.Controllers
 
             if (!confirmResult.Succeeded)
             {
-                return BadRequest(ApiResponseDto.CreateErrorResponse(confirmResult.Errors.Select(x => new KeyValuePair<string, string>(x.Code, x.Description)).ToList()));
+                return BadRequest(ApiResponseDto.CreateErrorResponse(confirmResult.Errors.Select(x => new ApiErrorDto(x.Code, x.Description)).ToList()));
             }
 
             return Ok(ApiResponseDto.CreateSuccessfulResponse());

@@ -20,7 +20,7 @@ namespace FribergCarRentalsApi.Filters
             {
                 if (result.Value is ValidationProblemDetails details)
                 {
-                    var errorMessages = details.Errors.SelectMany(x => x.Value.Select(y => new KeyValuePair<string, string>(x.Key, y))).ToList();
+                    var errorMessages = details.Errors.SelectMany(x => x.Value.Select(y => new ApiErrorDto(x.Key, y))).ToList();
                     context.Result = new BadRequestObjectResult(ApiResponseDto.CreateErrorResponse(errors: errorMessages));
                 }
             }

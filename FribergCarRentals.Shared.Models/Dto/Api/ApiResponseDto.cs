@@ -24,7 +24,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// Constructor.
         /// </summary>
         /// <param name="success">True if the operation was successful.</param>
-        public ApiResponseDto(bool success = false)
+        protected ApiResponseDto(bool success)
         {
             Success = success;
         }
@@ -33,7 +33,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// Constructor for an error response.
         /// </summary>
         /// <param name="errors">A collection of errors.</param>
-        protected ApiResponseDto(List<KeyValuePair<string, string>> errors)
+        protected ApiResponseDto(List<ApiErrorDto> errors)
         {
             Errors = errors;
             Success = false;
@@ -45,7 +45,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <param name="errorType">The type of error.</param>
         /// <param name="errorMessage">The error message.</param>
         protected ApiResponseDto(string errorType, string errorMessage)
-            : this(new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(errorType, errorMessage) })
+            : this(new List<ApiErrorDto>() { new ApiErrorDto(errorType, errorMessage) })
         {
 
         }
@@ -58,7 +58,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// A collection of errors. 
         /// </summary>
         [JsonInclude]
-        public List<KeyValuePair<string, string>> Errors { get; private set; } = new();
+        public List<ApiErrorDto> Errors { get; private set; } = new();
 
         /// <summary>
         /// True if operation was successful.
@@ -89,7 +89,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
         public static ApiResponseDto CreateErrorResponse(string errorType, string errorMessage)
         {
-            return CreateErrorResponse(new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(errorType, errorMessage) });
+            return CreateErrorResponse(new List<ApiErrorDto> { new ApiErrorDto(errorType, errorMessage) });
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// </summary>
         /// <param name="errors">A collection of errors having labels and descriptions.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
-        public static ApiResponseDto CreateErrorResponse(List<KeyValuePair<string, string>> errors)
+        public static ApiResponseDto CreateErrorResponse(List<ApiErrorDto> errors)
         {
             return new ApiResponseDto(errors);
         }
@@ -121,7 +121,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <returns>A <see cref="List{T}"/> of <see cref="string"/>.</returns>
         public List<string> GetErrorDescriptionsAsList()
         {
-            return Errors.Select(x => x.Value).ToList();
+            return Errors.Select(x => x.ErrorMessage).ToList();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         public string GetErrorsAsString()
         {
             var stringBuilder = new StringBuilder();
-            Errors.ForEach(x => stringBuilder.AppendLine($"{x.Key}: {x.Value}"));
+            Errors.ForEach(x => stringBuilder.AppendLine($"{x.ErrorType}: {x.ErrorMessage}"));
             return stringBuilder.ToString();
         }
 
@@ -141,7 +141,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <returns>A <see cref="List{T}"/> of <see cref="string"/>.</returns>
         public List<string> GetErrorsAsList()
         {
-            return Errors.Select(x => $"{x.Key}: {x.Value}").ToList();
+            return Errors.Select(x => $"{x.ErrorType}: {x.ErrorMessage}").ToList();
         }
 
         #endregion

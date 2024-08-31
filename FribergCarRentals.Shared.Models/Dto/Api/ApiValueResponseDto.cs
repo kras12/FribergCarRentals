@@ -14,7 +14,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// A constructor intended for JSON deserializers.
         /// </summary>
         [JsonConstructor]
-        private ApiValueResponseDto()
+        public ApiValueResponseDto()
         {
             
         }
@@ -23,7 +23,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// Constructor for a successful response.
         /// </summary>
         /// <param name="value">The value to send in the response body.</param>
-        private ApiValueResponseDto(T? value = null) : base(success: true)
+        private ApiValueResponseDto(T value) : base(success: true)
         {
             Value = value;
         }
@@ -32,7 +32,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// Constructor for an error response.
         /// </summary>
         /// <param name="errors">A collection of errors.</param>
-        private ApiValueResponseDto(List<KeyValuePair<string, string>> errors) : base(errors)
+        private ApiValueResponseDto(List<ApiErrorDto> errors) : base(errors)
         {
 
         }
@@ -43,7 +43,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <param name="errorType">The type of error.</param>
         /// <param name="errorMessage">The error message.</param>
         private ApiValueResponseDto(string errorType, string errorMessage)
-            : this(new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(errorType, errorMessage) })
+            : this(new List<ApiErrorDto>() { new ApiErrorDto(errorType, errorMessage) })
         {
 
         }
@@ -81,7 +81,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
         public static new ApiValueResponseDto<T> CreateErrorResponse(string errorType, string errorMessage)
         {
-            return CreateErrorResponse(new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(errorType, errorMessage) });
+            return CreateErrorResponse(new List<ApiErrorDto> { new ApiErrorDto(errorType, errorMessage) });
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// </summary>
         /// <param name="errors">A collection of errors having labels and descriptions.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied errors.</returns>
-        public static new ApiValueResponseDto<T> CreateErrorResponse(List<KeyValuePair<string, string>> errors)
+        public static new ApiValueResponseDto<T> CreateErrorResponse(List<ApiErrorDto> errors)
         {
             return new ApiValueResponseDto<T>(errors);
         }
@@ -100,7 +100,7 @@ namespace FribergCarRentals.Shared.Models.Dto.Api
         /// <typeparam name="T">The type of the response value</typeparam>
         /// <param name="value">The response value.</param>
         /// <returns><see cref="ApiResponseDto"/> containing the supplied response value.</returns>
-        public static ApiValueResponseDto<T> CreateSuccessfulResponse(T? value)
+        public static ApiValueResponseDto<T> CreateSuccessfulResponse(T value)
         {
             return new ApiValueResponseDto<T>(value);
         }

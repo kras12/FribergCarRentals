@@ -77,7 +77,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
         /// <param name="id">The ID of the category.</param>
         /// <returns>An <see cref="ApiResponseDto{T}"/> containing the result of the operation.</returns>
         [HttpDelete("{id}")]
-        [ProducesResponseType<ApiValueResponseDto<CarCategoryDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponseDto>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType<ApiResponseDto>(StatusCodes.Status404NotFound)]
@@ -99,7 +99,7 @@ namespace FribergCarRentalsApi.Controllers.AdminApi
             }
 
             await _carCategoryRepository.DeleteAsync(id);
-            return Ok(ApiValueResponseDto<CarCategoryDto>.CreateSuccessfulResponse(null!));
+            return Ok(ApiResponseDto.CreateSuccessfulResponse());
         }
 
         /// <summary>

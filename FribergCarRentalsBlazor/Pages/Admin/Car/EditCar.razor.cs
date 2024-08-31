@@ -116,8 +116,8 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
             else
             {
                 _apiValidationErrors.Clear();
-                _apiValidationErrors.AddRange(carResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList());
-                _apiValidationErrors.AddRange(categoriesResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList());
+                _apiValidationErrors.AddRange(carResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList());
+                _apiValidationErrors.AddRange(categoriesResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList());
             }
         }
 
@@ -135,7 +135,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
             }
             else
             {
-                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList();
             }
         }
 
@@ -167,7 +167,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
 
             if (!editCarResult.Success)
             {
-                _apiValidationErrors.AddRange(editCarResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList());
+                _apiValidationErrors.AddRange(editCarResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList());
                 return;
             }
 
@@ -177,7 +177,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
 
                 if (!uploadImagesResult.Success)
                 {
-                    _apiValidationErrors.AddRange(uploadImagesResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList());
+                    _apiValidationErrors.AddRange(uploadImagesResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList());
                     return;
                 }
 
@@ -190,7 +190,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
 
                 if (!deleteImagesResult.Success)
                 {
-                    _apiValidationErrors.AddRange(deleteImagesResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList());
+                    _apiValidationErrors.AddRange(deleteImagesResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList());
                     return;
                 }
 
@@ -201,7 +201,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Car
 
             if (!fetchCarResult.Success)
             {
-                _apiValidationErrors.AddRange(fetchCarResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList());
+                _apiValidationErrors.AddRange(fetchCarResult.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList());
                 return;
             }
 

@@ -79,7 +79,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
             }
             else
             {
-                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList();
             }
         }
 
@@ -96,7 +96,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
             }
             else
             {
-                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+                _apiValidationErrors = result.ApiResponse.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList();
             }
         }
 
@@ -123,7 +123,7 @@ namespace FribergCarRentalsBlazor.Pages.Admin.Order
             }
             else
             {
-                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.Value, title: x.Key)).ToList();
+                _apiValidationErrors = result.Errors.Select(x => new MessageViewModel(MessageType.Error, x.ErrorMessage, title: x.ErrorType)).ToList();
             }
         }
 
