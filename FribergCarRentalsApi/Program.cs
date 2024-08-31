@@ -90,9 +90,21 @@ namespace FribergCarRentalsApi
 
             // Cors policy
 #if DEBUG
+            string corsPolicyName = "LocalHostingCorsPolicy";
+
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("LocalHostingCorsPolicy", builder => builder
+                options.AddPolicy(corsPolicyName, builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+#else
+            string corsPolicyName = "ProductionCorsPolicy";
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(corsPolicyName, builder => builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
@@ -178,11 +190,8 @@ namespace FribergCarRentalsApi
 
             var app = builder.Build();
 
-#if DEBUG
-            app.UseCors("LocalHostingCorsPolicy");
-#endif
+            app.UseCors(corsPolicyName);
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
