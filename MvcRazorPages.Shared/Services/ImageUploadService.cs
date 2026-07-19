@@ -53,6 +53,11 @@ namespace FribergCarRentals.Shared.Mvc.Services
         /// </summary>
         public void ClearAllImagesFromDisk()
         {
+            if (!Directory.Exists(_ImageFolderPath))
+            {
+                return;
+            }
+
             foreach (var image in Directory.EnumerateFiles(_ImageFolderPath))
             {
                 File.Delete(image);
